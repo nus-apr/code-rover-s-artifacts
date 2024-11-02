@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/metadata/ColorFilterArray.cpp b/src/librawspeed/metadata/ColorFilterArray.cpp
+index 361d028..87bcfce 100644
+--- a/src/librawspeed/metadata/ColorFilterArray.cpp
++++ b/src/librawspeed/metadata/ColorFilterArray.cpp
+@@ -52,9 +52,7 @@ void ColorFilterArray::setSize(const iPoint2D& _size)
+     ThrowRDE("if your CFA pattern is really %d pixels "
+              "in area we may as well give up now",
+              size.area());
+-  }
+-  if (size.area() <= 0)
+-    return;
++ = { { CFA_FUJI_RED, "RED" }, { CFA_FUJI_GREEN, "GREEN" }, { CFA_FUJI_BLUE, "BLUE" }, { <vul-start> CFA_RED, "RED" 
+   cfa.resize(size.area());
+   fill(cfa.begin(), cfa.end(), CFA_UNKNOWN);
+ }

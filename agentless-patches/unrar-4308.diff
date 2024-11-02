@@ -1,0 +1,12 @@
+diff --git a/unrar/ulinks.cpp b/unrar/ulinks.cpp
+index 558a528..1e4abe3 100644
+--- a/unrar/ulinks.cpp
++++ b/unrar/ulinks.cpp
+@@ -48,6 +48,7 @@ static bool IsFullPath(const char *PathA) // Unix ASCII version.
+ bool ExtractUnixLink30(CommandData *Cmd,ComprDataIO &DataIO,Archive &Arc,const wchar *LinkName)
+ {
+   char Target[NM];
++  wchar_t TargetW[NM] = {0}; // Initialize TargetW to zero
+   if (IsLink(Arc.FileHead.FileAttr))
+   {
+     size_t DataSize=(size_t)Min(Arc.FileHead.PackSize,ASIZE(Target)-1);

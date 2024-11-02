@@ -1,0 +1,13 @@
+diff --git a/open62541/src/server/ua_subscription.c b/open62541/src/server/ua_subscription.c
+index 4a08414..4d5daee 100644
+--- a/open62541/src/server/ua_subscription.c
++++ b/open62541/src/server/ua_subscription.c
+@@ -374,7 +374,7 @@ UA_Subscription_answerPublishRequestsNoSubscription(UA_Server *server,
+ 
+     /* Send a response for every queued request */
+     UA_PublishResponseEntry *pre;
+-    while((pre = SIMPLEQ_FIRST(&session->responseQueue))) {
++    while(session && (pre = SIMPLEQ_FIRST(&session->responseQueue))) {
+         SIMPLEQ_REMOVE_HEAD(&session->responseQueue, listEntry);
+         UA_PublishResponse *response = &pre->response;
+         response->responseHeader.serviceResult = UA_STATUSCODE_BADNOSUBSCRIPTION;

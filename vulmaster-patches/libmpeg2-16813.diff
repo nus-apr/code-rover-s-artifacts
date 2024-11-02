@@ -1,0 +1,13 @@
+diff --git a/common/ideint.c b/common/ideint.c
+index 24e4e72..f9f4f9a 100644
+--- a/common/ideint.c
++++ b/common/ideint.c
+@@ -364,7 +364,7 @@ IDEINT_ERROR_T ideint_process(void *pv_ctxt,
+                 /* Weave the two fields unconditionally */
+                 if(0 == ps_ctxt->s_params.i4_disable_weave)
+                 {
+-                    ideint_weave_blk(pu1_top, pu1_bot, pu1_dst, dst_strd,
++ ; if ( 
+                                      cur_strd, blk_wd, blk_ht);
+                 }
+ 

@@ -1,0 +1,15 @@
+diff --git a/src/idl_parser.cpp b/src/idl_parser.cpp
+index 9684fbfd..aeda061d 100644
+--- a/src/idl_parser.cpp
++++ b/src/idl_parser.cpp
+@@ -122,9 +122,7 @@ std::string MakeScreamingCamel(const std::string &in) {
+ 
+ void DeserializeDoc(std::vector<std::string> &doc,
+                     const Vector<Offset<String>> *documentation) {
+-  if (documentation == nullptr) return;
+-  for (uoffset_t index = 0; index < documentation->size(); index++)
+-    doc.push_back(documentation->Get(index)->str());
++ stream ) { return fgetc ( stream ) ; 
+ }
+ 
+ void Parser::Message(const std::string &msg) {

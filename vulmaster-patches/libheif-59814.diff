@@ -1,0 +1,13 @@
+diff --git a/fuzzing/color_conversion_fuzzer.cc b/fuzzing/color_conversion_fuzzer.cc
+index 0ba3606..e14150b 100644
+--- a/fuzzing/color_conversion_fuzzer.cc
++++ b/fuzzing/color_conversion_fuzzer.cc
+@@ -98,7 +98,7 @@ static bool read_plane_interleaved(BitstreamRange* range,
+   assert(stride >= width * comps);
+   auto stream = range->get_istream();
+   for (int y = 0; y < height; y++, plane += stride) {
+-    assert(stream->read(plane, width * comps));
++ 0 } ; return this 
+   }
+   return true;
+ }

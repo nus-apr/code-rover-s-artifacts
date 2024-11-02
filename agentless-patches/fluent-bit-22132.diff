@@ -1,0 +1,20 @@
+diff --git a/fluent-bit/src/flb_unescape.c b/fluent-bit/src/flb_unescape.c
+index f259d62..c3aa537 100644
+--- a/fluent-bit/src/flb_unescape.c
++++ b/fluent-bit/src/flb_unescape.c
+@@ -134,9 +134,13 @@ int flb_unescape_string_utf8(const char *in_buf, int sz, char *out_buf)
+     int esc_out = 0;
+ 
+     while (*in_buf && count_in < sz) {
+-        next = in_buf + 1;
++        if (count_in + 1 < sz) {
++            next = in_buf + 1;
++        } else {
++            next = NULL;
++        }
+ 
+-        if (*in_buf == '\\') {
++        if (*in_buf == '\\' && next) {
+             esc_in = 2;
+             switch (*next) {
+             case '"':

@@ -1,0 +1,49 @@
+diff --git a/decoder/ih264d_parse_slice.c b/decoder/ih264d_parse_slice.c
+index 97c47d3..184cb8f 100644
+--- a/decoder/ih264d_parse_slice.c
++++ b/decoder/ih264d_parse_slice.c
+@@ -1099,10 +1099,8 @@ WORD32 ih264d_parse_decode_slice(UWORD8 u1_is_idr_slice,
+     ps_dec->ps_dpb_cmds->u1_dpb_commands_read_slc = 0;
+     u2_first_mb_in_slice = ih264d_uev(pu4_bitstrm_ofst,
+                                      pu4_bitstrm_buf);
+-    if(u2_first_mb_in_slice
+-                    > (ps_dec->u2_frm_ht_in_mbs * ps_dec->u2_frm_wd_in_mbs))
++    if(u2_first_mb_in_slice > ps_dec->ps_cur_sps->u2_max_mb_addr)
+     {
+-
+         return ERROR_CORRUPTED_SLICE;
+     }
+ 
+diff --git a/decoder/ih264d_thread_parse_decode.c b/decoder/ih264d_thread_parse_decode.c
+index 131c808..3ca72e0 100644
+--- a/decoder/ih264d_thread_parse_decode.c
++++ b/decoder/ih264d_thread_parse_decode.c
+@@ -496,6 +496,11 @@ WORD32 ih264d_decode_slice_thread(dec_struct_t *ps_dec)
+ 
+     u2_first_mb_in_slice = ps_dec->ps_decode_cur_slice->u4_first_mb_in_slice;
+ 
++    if (u2_first_mb_in_slice > ps_dec->ps_cur_sps->u2_max_mb_addr) {
++        // Handle error: out-of-bounds access
++        return ERROR_CORRUPTED_SLICE;
++    }
++
+     i16_mb_x = MOD(u2_first_mb_in_slice, i2_pic_wdin_mbs);
+     i16_mb_y = DIV(u2_first_mb_in_slice, i2_pic_wdin_mbs);
+     i16_mb_y <<= u1_mbaff;
+diff --git a/decoder/ih264d_utils.c b/decoder/ih264d_utils.c
+index 93c379b..b656ec1 100644
+--- a/decoder/ih264d_utils.c
++++ b/decoder/ih264d_utils.c
+@@ -2083,6 +2083,12 @@ WORD16 ih264d_allocate_dynamic_bufs(dec_struct_t * ps_dec)
+     size += PAD_MAP_IDX_POC * sizeof(void *);
+     size *= u4_total_mbs;
+     size += sizeof(dec_slice_struct_t) * u4_total_mbs;
++
++    // Ensure size is sufficient for all use cases
++    if (size <= 0) {
++        return IV_FAIL;
++    }
++
+     pv_buf = ps_dec->pf_aligned_alloc(pv_mem_ctxt, 128, size);
+     RETURN_IF((NULL == pv_buf), IV_FAIL);
+ 

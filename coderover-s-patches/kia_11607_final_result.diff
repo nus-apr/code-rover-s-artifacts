@@ -1,0 +1,44 @@
+diff --git a/fuzz/FuzzCanvas.cpp b/fuzz/FuzzCanvas.cpp
+index 7ba19618cf..9c33bcd866 100644
+--- a/fuzz/FuzzCanvas.cpp
++++ b/fuzz/FuzzCanvas.cpp
+@@ -1560,11 +1560,13 @@ static void fuzz_canvas(Fuzz* fuzz, SkCanvas* canvas, int depth = 9) {
+             }
+ #endif
+             case 51: {
+-                sk_sp<SkTextBlob> blob = make_fuzz_textblob(fuzz);
+-                fuzz_paint(fuzz, &paint, depth - 1);
+-                SkScalar x, y;
+-                fuzz->next(&x, &y);
+-                canvas->drawTextBlob(blob, x, y, paint);
++    sk_sp<SkTextBlob> blob = make_fuzz_textblob(fuzz);
++    if (blob) { // Ensure blob is valid before use
++        fuzz_paint(fuzz, &paint, depth - 1);
++        SkScalar x, y;
++        fuzz->next(&x, &y);
++        canvas->drawTextBlob(blob, x, y, paint);
++    }
+                 break;
+             }
+             case 52: {
+diff --git a/src/core/SkGlyphRun.cpp b/src/core/SkGlyphRun.cpp
+index 7043de8d1a..4736573b8b 100644
+--- a/src/core/SkGlyphRun.cpp
++++ b/src/core/SkGlyphRun.cpp
+@@ -60,10 +60,12 @@ void SkGlyphRun::eachGlyphToGlyphRun(SkGlyphRun::PerGlyph perGlyph) {
+     };
+ 
+     auto runSize = fGlyphIDs.size();
+-    for (size_t i = 0; i < runSize; i++) {
+-        glyphID = fGlyphIDs[i];
+-        point = fPositions[i];
+-        perGlyph(run);
++    if (runSize > 0) { // Ensure fGlyphIDs is valid
++        for (size_t i = 0; i < runSize; i++) {
++            glyphID = fGlyphIDs[i];
++            point = fPositions[i];
++            perGlyph(run);
++        }
+     }
+ }
+ 

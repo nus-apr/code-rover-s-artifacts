@@ -1,0 +1,37 @@
+diff --git a/Shell/Parser.cpp b/Shell/Parser.cpp
+index d7d173cb98..5bbef7382a 100644
+--- a/Shell/Parser.cpp
++++ b/Shell/Parser.cpp
+@@ -1376,19 +1376,19 @@ RefPtr<AST::Node> Parser::parse_glob()
+ 
+         auto glob_after = parse_glob();
+         if (glob_after) {
+-            if (glob_after->is_glob()) {
+-                auto glob = static_cast<AST::BarewordLiteral*>(glob_after.ptr());
+-                textbuilder.append(glob->text());
+-            } else if (glob_after->is_bareword()) {
+-                auto bareword = static_cast<AST::BarewordLiteral*>(glob_after.ptr());
+-                textbuilder.append(bareword->text());
+-            } else if (glob_after->is_tilde()) {
+-                auto bareword = static_cast<AST::Tilde*>(glob_after.ptr());
+-                textbuilder.append("~");
+-                textbuilder.append(bareword->text());
+-            } else {
+-                return create<AST::SyntaxError>(String::formatted("Invalid node '{}' in glob position, escape shell special characters", glob_after->class_name()));
+-            }
++                if (glob_after->is_glob()) {
++                    auto glob = static_cast<AST::Glob*>(glob_after.ptr());
++                    textbuilder.append(glob->text());
++                } else if (glob_after->is_bareword()) {
++                    auto bareword = static_cast<AST::BarewordLiteral*>(glob_after.ptr());
++                    textbuilder.append(bareword->text());
++                } else if (glob_after->is_tilde()) {
++                    auto tilde = static_cast<AST::Tilde*>(glob_after.ptr());
++                    textbuilder.append("~");
++                    textbuilder.append(tilde->text());
++                } else {
++                    return create<AST::SyntaxError>(String::formatted("Invalid node '{}' in glob position, escape shell special characters", glob_after->class_name()));
++                }
+         }
+ 
+         return create<AST::Glob>(textbuilder.to_string()); // Glob

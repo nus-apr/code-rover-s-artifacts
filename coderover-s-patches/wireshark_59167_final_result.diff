@@ -1,0 +1,28 @@
+diff --git a/epan/reassemble.c b/epan/reassemble.c
+index affeaee047..d55c031cf6 100644
+--- a/epan/reassemble.c
++++ b/epan/reassemble.c
+@@ -603,7 +603,10 @@ fragment_delete(reassembly_table *table, const packet_info *pinfo,
+ 		fd=tmp_fd;
+ 	}
+ 	g_slice_free(fragment_head, fd_head);
+-	g_hash_table_remove(table->fragment_table, key);
++	if (g_hash_table_remove(table->fragment_table, key)) {
++	    fragment_addresses_free_persistent_key(key);
++	    key = NULL; // Nullify the key to prevent further access
++	}
+ 
+ 	return fd_tvb_data;
+ }
+@@ -981,7 +984,10 @@ fragment_unhash(reassembly_table *table, gpointer key)
+ 	/*
+ 	 * Remove the entry from the fragment table.
+ 	 */
+-	g_hash_table_remove(table->fragment_table, key);
++	if (g_hash_table_remove(table->fragment_table, key)) {
++	    fragment_addresses_ports_free_persistent_key(key);
++	    key = NULL; // Nullify the key to prevent further access
++	}
+ }
+ 
+ /*

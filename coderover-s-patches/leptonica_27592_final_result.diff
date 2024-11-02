@@ -1,0 +1,38 @@
+diff --git a/jdcolor.c b/jdcolor.c
+index d3ae40c7..22adc9e0 100644
+--- a/jdcolor.c
++++ b/jdcolor.c
+@@ -550,18 +550,21 @@ ycck_cmyk_convert(j_decompress_ptr cinfo, JSAMPIMAGE input_buf,
+     input_row++;
+     outptr = *output_buf++;
+     for (col = 0; col < num_cols; col++) {
+-      y  = GETJSAMPLE(inptr0[col]);
+-      cb = GETJSAMPLE(inptr1[col]);
+-      cr = GETJSAMPLE(inptr2[col]);
+-      /* Range-limiting is essential due to noise introduced by DCT losses. */
+-      outptr[0] = range_limit[MAXJSAMPLE - (y + Crrtab[cr])];   /* red */
+-      outptr[1] = range_limit[MAXJSAMPLE - (y +                 /* green */
+-                              ((int)RIGHT_SHIFT(Cbgtab[cb] + Crgtab[cr],
+-                                                 SCALEBITS)))];
+-      outptr[2] = range_limit[MAXJSAMPLE - (y + Cbbtab[cb])];   /* blue */
+-      /* K passes through unchanged */
+-      outptr[3] = inptr3[col];  /* don't need GETJSAMPLE here */
+-      outptr += 4;
++      /* Ensure input data is initialized */
++       if (inptr0 && inptr1 && inptr2 && inptr3) {
++        y  = GETJSAMPLE(inptr0[col]);
++        cb = GETJSAMPLE(inptr1[col]);
++        cr = GETJSAMPLE(inptr2[col]);
++        /* Range-limiting is essential due to noise introduced by DCT losses. */
++        outptr[0] = range_limit[MAXJSAMPLE - (y + Crrtab[cr])];   /* red */
++        outptr[1] = range_limit[MAXJSAMPLE - (y +                 /* green */
++                                ((int)RIGHT_SHIFT(Cbgtab[cb] + Crgtab[cr],
++                                                   SCALEBITS)))];
++        outptr[2] = range_limit[MAXJSAMPLE - (y + Cbbtab[cb])];   /* blue */
++        /* K passes through unchanged */
++        outptr[3] = inptr3[col];  /* don't need GETJSAMPLE here */
++        outptr += 4;
++       }
+     }
+   }
+ }

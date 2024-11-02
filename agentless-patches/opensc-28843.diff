@@ -1,0 +1,12 @@
+diff --git a/opensc/src/libopensc/pkcs15-oberthur.c b/opensc/src/libopensc/pkcs15-oberthur.c
+index 26e78fa..f338f3c 100644
+--- a/opensc/src/libopensc/pkcs15-oberthur.c
++++ b/opensc/src/libopensc/pkcs15-oberthur.c
+@@ -329,6 +329,7 @@ sc_oberthur_read_file(struct sc_pkcs15_card *p15card, const char *in_path,
+ 	};
+ 
+ 	sc_file_free(file);
++	file = NULL;
+ 
+ 	if (rv < 0)   {
+ 		free(*out);

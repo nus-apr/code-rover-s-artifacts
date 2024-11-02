@@ -1,0 +1,13 @@
+diff --git a/imagemagick/MagickCore/xml-tree.c b/imagemagick/MagickCore/xml-tree.c
+index e9f579f..3f874e4 100644
+--- a/imagemagick/MagickCore/xml-tree.c
++++ b/imagemagick/MagickCore/xml-tree.c
+@@ -1528,7 +1528,7 @@ static char *ParseEntities(char *xml,char **entities,int state)
+                   }
+                 if (entity != (char *) NULL)
+                   (void) CopyMagickMemory(xml+length,entity+1,strlen(entity));
+-                (void) strncpy(xml,entities[i],length);
++                (void) CopyMagickString(xml,entities[i],length+1);
+               }
+         }
+       else

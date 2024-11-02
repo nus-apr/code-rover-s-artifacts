@@ -1,0 +1,17 @@
+diff --git a/aom_dsp/entdec.c b/aom_dsp/entdec.c
+index 5bbcddae08..8c77ae83c7 100644
+--- a/aom_dsp/entdec.c
++++ b/aom_dsp/entdec.c
+@@ -91,8 +91,10 @@ static void od_ec_dec_refill(od_ec_dec *dec) {
+        is incremented by 8, so the total number of consumed bits (the return
+        value of od_ec_dec_tell) does not change.*/
+     assert(s <= OD_EC_WINDOW_SIZE - 8);
+-    dif ^= (od_ec_window)bptr[0] << s;
+-    cnt += 8;
++    if (bptr < end - 1) {
++      dif ^= (od_ec_window)bptr[0] << s;
++      cnt += 8;
++    }
+   }
+   if (bptr >= end) {
+     /*We've reached the end of the buffer. It is perfectly valid for us to need

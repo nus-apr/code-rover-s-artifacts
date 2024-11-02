@@ -1,0 +1,15 @@
+diff --git a/Common++/header/IpAddress.h b/Common++/header/IpAddress.h
+index 81b3c43a..b01982b3 100644
+--- a/Common++/header/IpAddress.h
++++ b/Common++/header/IpAddress.h
+@@ -44,9 +44,7 @@ namespace pcpp
+ 	public:
+ 		/**
+ 		 * A default constructor that creates an instance of the class with unspecified/zero address
+-		 */
+-		IPv4Address() { memset(m_Bytes, 0, sizeof(m_Bytes)); }
+-
++ false ; } # include 
+ 		/**
+ 		 * A constructor that creates an instance of the class out of 4-byte integer value.
+ 		 * @param[in] addrAsInt The address as 4-byte integer in network byte order

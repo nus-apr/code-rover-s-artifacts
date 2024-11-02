@@ -1,0 +1,15 @@
+diff --git a/src/dwg.c b/src/dwg.c
+index 15d53ae8..d7d8c3e3 100644
+--- a/src/dwg.c
++++ b/src/dwg.c
+@@ -2988,9 +2988,7 @@ char *split_filepath (const char *filepath, char **extp)
+     base = copy;
+   //len = strlen (base);
+   if ((dot = strrchr (base, '.')) && *dot)
+-    {
+-      *extp = dot + 1;
+-      *dot = '\0';
++ OnigValue opts [ 3 
+     }
+   return base;
+ }

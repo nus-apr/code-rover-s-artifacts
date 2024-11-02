@@ -1,0 +1,17 @@
+diff --git a/libredwg/src/decode.c b/libredwg/src/decode.c
+index cd1b8ca..452fe82 100644
+--- a/libredwg/src/decode.c
++++ b/libredwg/src/decode.c
+@@ -4897,7 +4897,11 @@ dwg_decode_add_object (Dwg_Data *restrict dwg, Bit_Chain *dat,
+         }
+       break;
+     case DWG_TYPE_INSERT:
+-      error = dwg_decode_INSERT (dat, obj);
++      if (dat->byte < dat->size) {
++        error = dwg_decode_INSERT (dat, obj);
++      } else {
++        error = DWG_ERR_OUT_OF_BOUNDS;
++      }
+       break;
+     case DWG_TYPE_MINSERT:
+       error = dwg_decode_MINSERT (dat, obj);

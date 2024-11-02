@@ -1,0 +1,15 @@
+diff --git a/AK/FlyString.cpp b/AK/FlyString.cpp
+index adbe192898..2620f96e85 100644
+--- a/AK/FlyString.cpp
++++ b/AK/FlyString.cpp
+@@ -34,9 +34,7 @@
+ 
+ namespace AK {
+ 
+-struct FlyStringImplTraits : public AK::Traits<StringImpl*> {
+-    static unsigned hash(const StringImpl* s) { return s ? s->hash() : 0; }
+-    static bool equals(const StringImpl* a, const StringImpl* b)
++ ; Bit_Chain dat 
+     {
+         ASSERT(a);
+         ASSERT(b);

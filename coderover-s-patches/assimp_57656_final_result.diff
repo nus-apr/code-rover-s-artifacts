@@ -1,0 +1,41 @@
+diff --git a/code/AssetLib/LWS/LWSLoader.cpp b/code/AssetLib/LWS/LWSLoader.cpp
+index e046b6f58..ef9d244d4 100644
+--- a/code/AssetLib/LWS/LWSLoader.cpp
++++ b/code/AssetLib/LWS/LWSLoader.cpp
+@@ -918,10 +918,12 @@ void LWSImporter::InternReadFile(const std::string &pFile, aiScene *pScene, IOSy
+     flipper.Execute(master);
+ 
+     // OK ... finally build the output graph
+-    SceneCombiner::MergeScenes(&pScene, master, attach,
++    std::unique_ptr<aiScene> masterScene(master);
++    SceneCombiner::MergeScenes(&pScene, masterScene.get(), attach,
+             AI_INT_MERGE_SCENE_GEN_UNIQUE_NAMES | (!configSpeedFlag ? (
+                                                                               AI_INT_MERGE_SCENE_GEN_UNIQUE_NAMES_IF_NECESSARY | AI_INT_MERGE_SCENE_GEN_UNIQUE_MATNAMES) :
+                                                                       0));
++    masterScene.reset(); // Reset the unique_ptr to ensure it is not used after merging
+ 
+     // Check flags
+     if (!pScene->mNumMeshes || !pScene->mNumMaterials) {
+diff --git a/code/Common/SceneCombiner.cpp b/code/Common/SceneCombiner.cpp
+index 7dbbf8860..3b622fd76 100644
+--- a/code/Common/SceneCombiner.cpp
++++ b/code/Common/SceneCombiner.cpp
+@@ -638,7 +638,7 @@ void SceneCombiner::MergeScenes(aiScene **_dest, aiScene *master, std::vector<At
+         if (n != duplicates[n]) // duplicate scene?
+             continue;
+ 
+-        aiScene *deleteMe = src[n].scene;
++        std::unique_ptr<aiScene> deleteMe(src[n].scene);
+ 
+         // We need to delete the arrays before the destructor is called -
+         // we are reusing the array members
+@@ -658,7 +658,8 @@ void SceneCombiner::MergeScenes(aiScene **_dest, aiScene *master, std::vector<At
+         deleteMe->mRootNode = nullptr;
+ 
+         // Now we can safely delete the scene
+-        delete deleteMe;
++        // deleteMe will be automatically deleted when it goes out of scope
++        src[n].scene = nullptr; // Set the pointer to nullptr after deletion
+     }
+ 
+     // Check flags

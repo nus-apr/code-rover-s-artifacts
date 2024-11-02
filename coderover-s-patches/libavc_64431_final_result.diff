@@ -1,0 +1,25 @@
+diff --git a/decoder/svc/isvcd_intra_resamp.c b/decoder/svc/isvcd_intra_resamp.c
+index 34e3779..1fff457 100644
+--- a/decoder/svc/isvcd_intra_resamp.c
++++ b/decoder/svc/isvcd_intra_resamp.c
+@@ -4797,13 +4797,16 @@ WORD32 isvcd_populate_res_prms(void *pv_svc_dec)
+         /* Set the left and right border pixels of each row to 0 */
+         ps_tmp_prms = ps_ref_mb_prms - 1;
+ 
+-        for(i4_i = 0; i4_i < i4_ht_in_mbs; i4_i++)
++    for(i4_i = 0; i4_i < i4_ht_in_mbs; i4_i++)
++    {
++        ps_tmp_prms->i1_mb_mode = (WORD8) 0xFF;
++        ps_tmp_prms_2 = ps_tmp_prms + (i4_wd_in_mbs + 1);
++        if (ps_tmp_prms_2 < (ps_ref_mb_prms + i4_stride * (i4_ht_in_mbs + 1)))
+         {
+-            ps_tmp_prms->i1_mb_mode = (WORD8) 0xFF;
+-            ps_tmp_prms_2 = ps_tmp_prms + (i4_wd_in_mbs + 1);
+             ps_tmp_prms_2->i1_mb_mode = (WORD8) 0xFF;
+-            ps_tmp_prms += i4_stride;
+         }
++        ps_tmp_prms += i4_stride;
++    }
+ 
+         /* Set the last border row to 0xFF */
+         for(i4_i = 0; i4_i < (i4_wd_in_mbs + 2); i4_i++)

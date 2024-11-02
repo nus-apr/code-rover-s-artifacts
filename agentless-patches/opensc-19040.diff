@@ -1,0 +1,20 @@
+diff --git a/opensc/src/libopensc/card-coolkey.c b/opensc/src/libopensc/card-coolkey.c
+index f04874d..e0d3740 100644
+--- a/opensc/src/libopensc/card-coolkey.c
++++ b/opensc/src/libopensc/card-coolkey.c
+@@ -342,7 +342,8 @@ coolkey_v1_get_attribute_len(const u8 *attr, size_t buf_len, size_t *len, int en
+ 	}
+ 	switch (attribute_head->attribute_data_type) {
+ 	case COOLKEY_ATTR_TYPE_STRING:
+-		if (buf_len < (sizeof(coolkey_attribute_header_t) +2)) {
++		if (buf_len < (sizeof(coolkey_attribute_header_t) + 2)) {
++			return SC_ERROR_CORRUPTED_DATA;
+ 			break;
+ 		}
+ 		*len = bebytes2ushort(attr + sizeof(coolkey_attribute_header_t));
+@@ -2461,4 +2462,4 @@ static struct sc_card_driver * sc_get_driver(void)
+ struct sc_card_driver * sc_get_coolkey_driver(void)
+ {
+ 	return sc_get_driver();
+-}
++}

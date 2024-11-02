@@ -1,0 +1,17 @@
+diff --git a/opensc/src/pkcs15init/pkcs15-epass2003.c b/opensc/src/pkcs15init/pkcs15-epass2003.c
+index 6689822..bb109d7 100644
+--- a/opensc/src/pkcs15init/pkcs15-epass2003.c
++++ b/opensc/src/pkcs15init/pkcs15-epass2003.c
+@@ -298,7 +298,11 @@ static int epass2003_pkcs15_key_reference(struct sc_profile *profile,
+ 					  struct sc_pkcs15_prkey_info *prkey)
+ {
+ 	SC_FUNC_CALLED(p15card->card->ctx, SC_LOG_DEBUG_VERBOSE);
+-	prkey->key_reference = prkey->path.value[prkey->path.len - 1];
++	if (prkey->path.len > 0) {
++		prkey->key_reference = prkey->path.value[prkey->path.len - 1];
++	} else {
++		SC_FUNC_RETURN(p15card->card->ctx, SC_LOG_DEBUG_VERBOSE, SC_ERROR_INVALID_ARGUMENTS);
++	}
+ 	SC_FUNC_RETURN(p15card->card->ctx, SC_LOG_DEBUG_VERBOSE, SC_SUCCESS);
+ }
+ 

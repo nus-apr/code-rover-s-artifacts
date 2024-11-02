@@ -1,0 +1,15 @@
+diff --git a/AK/Format.cpp b/AK/Format.cpp
+index f90d62d3bd..07b876e0d5 100644
+--- a/AK/Format.cpp
++++ b/AK/Format.cpp
+@@ -51,9 +51,7 @@ inline size_t convert_unsigned_to_string(u64 value, Array<u8, 128>& buffer, u8 b
+ 
+     static constexpr const char* lowercase_lookup = "0123456789abcdef";
+     static constexpr const char* uppercase_lookup = "0123456789ABCDEF";
+-
+-    if (value == 0) {
+-        buffer[0] = '0';
++ res = 0 ; if ( size > UINT32_MAX / sizeof ( uint8_t ) ) { BLOSC_TRACE_ERROR ( "Error allocating memory!" ) ; return NULL ; } if ( check_mul_overflow ( size, & block ) ) { BLOSC_TRACE_ERROR ( "Error allocating memory!" ) ; return NULL ; } 
+         return 1;
+     }
+ 

@@ -1,0 +1,41 @@
+diff --git a/src/lib/ndpi_domain_classify.c b/src/lib/ndpi_domain_classify.c
+index 8b66c940..22fa7068 100644
+--- a/src/lib/ndpi_domain_classify.c
++++ b/src/lib/ndpi_domain_classify.c
+@@ -391,7 +391,7 @@ u_int16_t ndpi_domain_classify_contains(ndpi_domain_classify *_s,
+   char *dot;
+ 
+   if(!domain)                                             return(0);
+-  if((len = strlen(domain)) == 0)                         return(0);
++  if((len = strnlen(domain, 45)) == 45)                   return(0); // Ensure domain is null-terminated within allocated size
+   if((dot = strrchr(domain, '.')) == NULL)                return(0);
+   if((!strcmp(dot, ".arpa")) || (!strcmp(dot, ".local"))) return(0);
+ 
+diff --git a/src/lib/ndpi_main.c b/src/lib/ndpi_main.c
+index 41e4fb53..2a76cdd2 100644
+--- a/src/lib/ndpi_main.c
++++ b/src/lib/ndpi_main.c
+@@ -3402,6 +3402,7 @@ int ndpi_match_custom_category(struct ndpi_detection_module_struct *ndpi_str,
+   if(rc < 0) return rc;
+   return(id != NDPI_PROTOCOL_UNKNOWN ? 0 : -1);
+ #else  
++  if(name == NULL || strnlen(name, name_len) == name_len) return -1; // Ensure name is null-terminated within name_len
+   u_int16_t rc = ndpi_domain_classify_contains(ndpi_str->custom_categories.sc_hostnames, name);
+ 
+   if(rc == 0)
+@@ -3454,6 +3455,7 @@ int ndpi_get_custom_category_match(struct ndpi_detection_module_struct *ndpi_str
+     return(-1);
+   } else {
+     /* Search Host */
++    if(name_or_ip == NULL || strnlen(name_or_ip, name_len) == name_len) return -1; // Ensure name_or_ip is null-terminated within name_len
+     return(ndpi_match_custom_category(ndpi_str, name_or_ip, name_len, id));
+   }
+ }
+@@ -8992,6 +8994,7 @@ u_int16_t ndpi_match_host_subprotocol(struct ndpi_detection_module_struct *ndpi_
+ 					    master_protocol_id, ret_match);
+   id = ret_match->protocol_category;
+ 
++  if(string_to_match == NULL || strnlen(string_to_match, string_to_match_len) == string_to_match_len) return -1; // Ensure string_to_match is null-terminated within string_to_match_len
+   if(ndpi_get_custom_category_match(ndpi_str, string_to_match,
+ 				    string_to_match_len, &id) != -1) {
+     /* if(id != -1) */ {

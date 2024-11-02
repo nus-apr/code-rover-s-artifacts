@@ -1,0 +1,80 @@
+diff --git a/base/gscolor2.c b/base/gscolor2.c
+index e730ae02c..f54e5e09d 100644
+--- a/base/gscolor2.c
++++ b/base/gscolor2.c
+@@ -788,14 +788,22 @@ gx_serialize_Indexed(const gs_color_space * pcs, stream * s)
+                 sizeof(p->lookup.map->num_values), &n);
+         if (code < 0)
+             return code;
++    if (sizeof(p->lookup.map->values[0]) * p->lookup.map->num_values <= s->cursor.w.limit - s->cursor.w.ptr) {
+         code = sputs(s, (const byte *)&p->lookup.map->values[0],
+                 sizeof(p->lookup.map->values[0]) * p->lookup.map->num_values, &n);
++    } else {
++        return gs_error_rangecheck;
++    }
+     } else {
+         code = sputs(s, (const byte *)&p->lookup.table.size,
+                         sizeof(p->lookup.table.size), &n);
+         if (code < 0)
+             return code;
++    if (p->lookup.table.size <= s->cursor.w.limit - s->cursor.w.ptr) {
+         code = sputs(s, p->lookup.table.data, p->lookup.table.size, &n);
++    } else {
++        return gs_error_rangecheck;
++    }
+     }
+     return code;
+ }
+diff --git a/devices/vector/gdevpdfc.c b/devices/vector/gdevpdfc.c
+index c573ad847..cf6bd2ad9 100644
+--- a/devices/vector/gdevpdfc.c
++++ b/devices/vector/gdevpdfc.c
+@@ -874,23 +874,19 @@ pdf_color_space_named(gx_device_pdf *pdev, const gs_gstate * pgs,
+ 
+         s_init(&s, pdev->memory);
+         swrite_position_only(&s);
+-        code = cs_serialize(pcs, &s);
+-        if (code < 0)
+-            return_error(gs_error_unregistered); /* Must not happen. */
+-        serialized_size = stell(&s);
+-        /* I think this is another case where we use sclose() and not sclose_filters().
+-         * It seems like we don't actually write anything, but it allows us to find the
+-         * length of the serialised data. No buffer hre, so we must no call
+-         * s_close_filters() as that will try to free it.
+-         */
+-        sclose(&s);
+-        if (serialized_size <= sizeof(serialized0))
+-            serialized = serialized0;
+-        else {
+-            serialized = gs_alloc_bytes(pdev->pdf_memory, serialized_size, "pdf_color_space");
+-            if (serialized == NULL)
+-                return_error(gs_error_VMerror);
+-        }
++    code = cs_serialize(pcs, &s);
++    if (code < 0)
++        return_error(gs_error_unregistered); /* Must not happen. */
++    serialized_size = stell(&s);
++    sclose(&s);
++    if (serialized_size <= sizeof(serialized0))
++        serialized = serialized0;
++    else {
++        serialized = gs_alloc_bytes(pdev->pdf_memory, serialized_size, "pdf_color_space");
++        if (serialized == NULL)
++            return_error(gs_error_VMerror);
++    }
++    if (serialized_size <= s.cursor.w.limit - s.cursor.w.ptr) {
+         swrite_string(&s, serialized, serialized_size);
+         code = cs_serialize(pcs, &s);
+         if (code < 0)
+@@ -898,6 +894,11 @@ pdf_color_space_named(gx_device_pdf *pdev, const gs_gstate * pgs,
+         if (stell(&s) != serialized_size)
+             return_error(gs_error_unregistered); /* Must not happen. */
+         sclose(&s);
++    } else {
++        if (serialized != serialized0)
++            gs_free_object(pdev->pdf_memory, serialized, "pdf_color_space");
++        return_error(gs_error_rangecheck);
++    }
+         pres = pdf_find_cspace_resource(pdev, serialized, serialized_size);
+         if (pres != NULL) {
+             if (serialized != serialized0)

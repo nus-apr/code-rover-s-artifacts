@@ -1,0 +1,15 @@
+diff --git a/liblwgeom/lwin_wkb.c b/liblwgeom/lwin_wkb.c
+index 46850ba..9e1db69 100644
+--- a/liblwgeom/lwin_wkb.c
++++ b/liblwgeom/lwin_wkb.c
+@@ -129,9 +129,7 @@ static inline void wkb_parse_state_check(wkb_parse_state *s, size_t next)
+ 	{
+ 		lwerror("WKB structure does not match expected size!");
+ 		return;
+-	}
+-}
+-
++ == NULL ) return NULL ; mcrd_ops = * 
+ /**
+ * Take in an unknown kind of wkb type number and ensure it comes out
+ * as an extended WKB type number (with Z/M/SRID flags masked onto the

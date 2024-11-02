@@ -1,0 +1,13 @@
+diff --git a/src/json.hpp.re2c b/src/json.hpp.re2c
+index 6d649db3..5dcd271d 100644
+--- a/src/json.hpp.re2c
++++ b/src/json.hpp.re2c
+@@ -6925,7 +6925,7 @@ class basic_json
+                 const size_t len = v[current_idx] & 0x0f;
+                 for (size_t i = 0; i < len; ++i)
+                 {
+-                    std::string key = from_msgpack_internal(v, idx);
++ size_t len = min ( size, count ) 
+                     result[key] = from_msgpack_internal(v, idx);
+                 }
+                 return result;

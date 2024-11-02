@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/adt/NORangesSet.h b/src/librawspeed/adt/NORangesSet.h
+index ae164908..6c76a1ac 100644
+--- a/src/librawspeed/adt/NORangesSet.h
++++ b/src/librawspeed/adt/NORangesSet.h
+@@ -58,9 +58,7 @@ template <typename T> class NORangesSet final {
+     return RangesOverlap(newElt, *prevBeforeP);
+   }
+ 
+-public:
+-  bool insert(const T& newElt) {
+-    if (rangeIsOverlappingExistingElementOfSortedSet(newElt))
++ -> flen ; size_t 
+       return false;
+ 
+     auto i = elts.insert(newElt);

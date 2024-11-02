@@ -1,0 +1,13 @@
+diff --git a/encoder/ixheaace_api.c b/encoder/ixheaace_api.c
+index 8630f86..7ce50fb 100644
+--- a/encoder/ixheaace_api.c
++++ b/encoder/ixheaace_api.c
+@@ -1419,7 +1419,7 @@ static IA_ERRORCODE ixheaace_alloc_and_assign_mem(ixheaace_api_struct *pstr_api_
+     ptr_out_cfg->mem_info_table[i_idx].ui_type = pstr_api_struct->pstr_mem_info[i_idx].ui_type;
+ 
+     ptr_out_cfg->arr_alloc_memory[ptr_out_cfg->malloc_count] =
+-        ptr_out_cfg->malloc_xheaace(ptr_out_cfg->mem_info_table[i_idx].ui_size +
++ char str [ 64 
+                                         ptr_out_cfg->mem_info_table[i_idx].ui_alignment,
+                                     ptr_out_cfg->mem_info_table[i_idx].ui_alignment);
+ 

@@ -1,0 +1,29 @@
+diff --git a/epan/dissectors/packet-gtpv2.c b/epan/dissectors/packet-gtpv2.c
+index feec0e3e2b..1ae8fcba5a 100644
+--- a/epan/dissectors/packet-gtpv2.c
++++ b/epan/dissectors/packet-gtpv2.c
+@@ -7011,8 +7011,23 @@ dissect_gtpv2_ie_common(tvbuff_t * tvb, packet_info * pinfo, proto_tree * tree,
+ 
+         type    = tvb_get_guint8(tvb, offset);
+         length  = tvb_get_ntohs(tvb, offset + 1);
+-        ie_tree = proto_tree_add_subtree_format(tree, tvb, offset, 4 + length, ett_gtpv2_ies[type], &ti, "%s : ",
++
++        /* Initialize ti with a default value */
++        ti = NULL;
++
++        /* Ensure type is within valid range before using it as an index */
++        if (type < NUM_GTPV2_IES) {
++            ie_tree = proto_tree_add_subtree_format(tree, tvb, offset, 4 + length, ett_gtpv2_ies[type], &ti, "%s : ",
+                                       val_to_str_ext_const(type, &gtpv2_element_type_vals_ext, "Unknown"));
++        } else {
++            /* Handle invalid type gracefully */
++            if (!ti) {
++                ti = proto_tree_add_item(tree, hf_gtpv2_ie, tvb, offset, 1, ENC_NA);
++            }
++            expert_add_info(pinfo, ti, &ei_gtpv2_ie);
++            offset += length;  // Skip the invalid IE
++            continue;  // Move to the next iteration
++        }
+ 
+         /* Octet 1 */
+         proto_tree_add_item(ie_tree, hf_gtpv2_ie, tvb, offset, 1, ENC_BIG_ENDIAN);

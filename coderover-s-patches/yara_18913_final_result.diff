@@ -1,0 +1,37 @@
+diff --git a/libyara/compiler.c b/libyara/compiler.c
+index 0f596360..8287579f 100644
+--- a/libyara/compiler.c
++++ b/libyara/compiler.c
+@@ -847,16 +847,30 @@ YR_API int yr_compiler_get_rules(
+   *rules = NULL;
+ 
+   if (compiler->compiled_rules_arena == NULL)
+-     FAIL_ON_ERROR(_yr_compiler_compile_rules(compiler));
++     if (compiler->compiled_rules_arena == NULL)
++     {
++         int compile_result = _yr_compiler_compile_rules(compiler);
++         if (compile_result != ERROR_SUCCESS)
++         {
++             return compile_result;
++         }
++     }
+ 
+   yara_rules = (YR_RULES*) yr_malloc(sizeof(YR_RULES));
+ 
+   if (yara_rules == NULL)
+     return ERROR_INSUFFICIENT_MEMORY;
+ 
++  if (compiler->compiled_rules_arena == NULL)
++  {
++    yr_free(yara_rules);
++    return ERROR_INVALID_ARGUMENT;
++  }
++
+   FAIL_ON_ERROR_WITH_CLEANUP(
+       yr_arena_duplicate(compiler->compiled_rules_arena, &yara_rules->arena),
+-      yr_free(yara_rules));
++      yr_free(yara_rules);
++      *rules = NULL);
+ 
+   rules_file_header = (YARA_RULES_FILE_HEADER*) yr_arena_base_address(
+       yara_rules->arena);

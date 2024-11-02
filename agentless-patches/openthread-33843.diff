@@ -1,0 +1,16 @@
+diff --git a/openthread/src/core/common/string.cpp b/openthread/src/core/common/string.cpp
+index 5f5e559..becdc62 100644
+--- a/openthread/src/core/common/string.cpp
++++ b/openthread/src/core/common/string.cpp
+@@ -41,6 +41,11 @@ uint16_t StringLength(const char *aString, uint16_t aMaxLength)
+ {
+     uint16_t ret;
+ 
++    if (aString == nullptr)
++    {
++        return 0;
++    }
++
+     for (ret = 0; (ret < aMaxLength) && (aString[ret] != 0); ret++)
+     {
+         // Empty loop.

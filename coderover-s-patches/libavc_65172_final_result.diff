@@ -1,0 +1,36 @@
+diff --git a/common/x86/ih264_chroma_intra_pred_filters_ssse3.c b/common/x86/ih264_chroma_intra_pred_filters_ssse3.c
+index d43ce20..91b501f 100644
+--- a/common/x86/ih264_chroma_intra_pred_filters_ssse3.c
++++ b/common/x86/ih264_chroma_intra_pred_filters_ssse3.c
+@@ -183,6 +183,7 @@ void ih264_intra_pred_chroma_8x8_mode_vert_ssse3(UWORD8 *pu1_src,
+     UNUSED(src_strd);
+     UNUSED(ngbr_avail);
+ 
++    if (pu1_src == NULL || pu1_dst == NULL) return;
+     pu1_top = pu1_src + 2 * BLK8x8SIZE + 2;
+ 
+     top_16x8b = _mm_loadu_si128((__m128i *)pu1_top);
+diff --git a/common/x86/ih264_deblk_chroma_ssse3.c b/common/x86/ih264_deblk_chroma_ssse3.c
+index a36447a..93793ee 100644
+--- a/common/x86/ih264_deblk_chroma_ssse3.c
++++ b/common/x86/ih264_deblk_chroma_ssse3.c
+@@ -295,6 +295,7 @@ void ih264_deblk_chroma_horz_bs4_ssse3(UWORD8 *pu1_src,
+     __m128i p0_uv_8x16_1, p0_uv_8x16_2, q0_uv_8x16_1, q0_uv_8x16_2;
+     __m128i temp1, temp2;
+ 
++    if (pu1_src_uv == NULL) return;
+     pu1_HorzPixelUV = pu1_src_uv - (src_strd << 1);
+ 
+     i16_posQ1 = src_strd;
+diff --git a/common/x86/ih264_deblk_luma_ssse3.c b/common/x86/ih264_deblk_luma_ssse3.c
+index e29bebb..6603f51 100644
+--- a/common/x86/ih264_deblk_luma_ssse3.c
++++ b/common/x86/ih264_deblk_luma_ssse3.c
+@@ -530,6 +530,7 @@ void ih264_deblk_luma_horz_bs4_ssse3(UWORD8 *pu1_src,
+     __m128i flag1_16x8, flag2_16x8, flag3_16x8, flag4_16x8;
+     __m128i const_val2_16x8 = _mm_set1_epi16(2);
+ 
++    if (pu1_src == NULL) return;
+     pu1_HorzPixel = pu1_src - (src_strd << 2);
+ 
+     i16_posQ1 = src_strd;

@@ -1,0 +1,39 @@
+diff --git a/encoder/ihevce_plugin.c b/encoder/ihevce_plugin.c
+index 9dbf376..b8e07c5 100644
+--- a/encoder/ihevce_plugin.c
++++ b/encoder/ihevce_plugin.c
+@@ -791,7 +791,9 @@ IHEVCE_PLUGIN_STATUS_T ihevce_init(ihevce_static_cfg_params_t *ps_params, void *
+         status = ihevce_hle_interface_create(ps_interface_ctxt);
+         if((WORD32)IV_FAIL == status)
+         {
+-            ihevce_hle_interface_delete(ps_interface_ctxt);
++    if (ps_interface_ctxt != NULL) {
++        ihevce_hle_interface_delete(ps_interface_ctxt);
++    }
+ 
+             memory_free(NULL, ps_interface_ctxt);
+ 
+@@ -1519,6 +1521,9 @@ IHEVCE_PLUGIN_STATUS_T ihevce_close(void *pv_ihevce_hdl)
+         return (IHEVCE_EFAIL);
+ 
+     /* derive local variables */
++    if (pv_ihevce_hdl == NULL) {
++        return IHEVCE_EFAIL;
++    }
+     ps_ctxt = (plugin_ctxt_t *)pv_ihevce_hdl;
+ 
+     ps_sys_api = &ps_ctxt->ps_static_cfg_prms->s_sys_api;
+@@ -1526,8 +1531,11 @@ IHEVCE_PLUGIN_STATUS_T ihevce_close(void *pv_ihevce_hdl)
+     if((0 == ps_ctxt->ps_static_cfg_prms->i4_res_id) &&
+        (0 == ps_ctxt->ps_static_cfg_prms->i4_br_id))
+     {
+-        ps_interface_ctxt = (ihevce_hle_ctxt_t *)ps_ctxt->pv_hle_interface_ctxt;
+-        ps_app_ctxt = &ps_ctxt->s_app_ctxt;
++    if (ps_ctxt->pv_hle_interface_ctxt == NULL) {
++        return IHEVCE_EFAIL;
++    }
++    ps_interface_ctxt = (ihevce_hle_ctxt_t *)ps_ctxt->pv_hle_interface_ctxt;
++    ps_app_ctxt = &ps_ctxt->s_app_ctxt;
+         i4_num_resolutions = ps_ctxt->ps_static_cfg_prms->s_tgt_lyr_prms.i4_num_res_layers;
+ 
+         if(1 != ps_ctxt->i4_flush_mode_on)

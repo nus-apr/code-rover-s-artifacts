@@ -1,0 +1,58 @@
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x70a83e1ff800 at pc 0x00000049cfd7 bp 0x7ffed400d550 sp 0x7ffed400cd18
+READ of size 2097320 at 0x70a83e1ff800 thread T0
+SCARINESS: 26 (multi-byte-read-heap-buffer-overflow)
+    #0 0x49cfd6 in __asan_memcpy /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3
+    #1 0x54c182 in exif_mnote_data_canon_load /src/libexif/libexif/canon/exif-mnote-data-canon.c:306:4
+    #2 0x531481 in exif_mnote_data_load /src/libexif/libexif/exif-mnote-data.c:84:2
+    #3 0x4e6d5d in interpret_maker_note /src/libexif/libexif/exif-data.c:835:3
+    #4 0x4e16f2 in exif_data_load_data /src/libexif/libexif/exif-data.c:1012:2
+    #5 0x4dfa3e in exif_data_new_from_data /src/libexif/libexif/exif-data.c:159:2
+    #6 0x4d7033 in LLVMFuzzerTestOneInput /src/exif_from_data_fuzzer.cc:51:16
+    #7 0x4d8025 in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:191:7
+    #8 0x4d7e95 in main /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c
+    #9 0x70a83f437082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #10 0x41d45d in _start (/out/exif_from_data_fuzzer+0x41d45d)
+
+DEDUP_TOKEN: __asan_memcpy--exif_mnote_data_canon_load--exif_mnote_data_load
+0x70a83e1ff800 is located 0 bytes to the right of 1048576-byte region [0x70a83e0ff800,0x70a83e1ff800)
+allocated by thread T0 here:
+LLVMSymbolizer: error reading file: No such file or directory
+    #0 0x49dc1d in __interceptor_malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:129:3
+    #1 0x4d7f89 in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:176:41
+    #2 0x7ffed400f5de  ([stack]+0x205de)
+
+DEDUP_TOKEN: __interceptor_malloc--ExecuteFilesOnyByOne--
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3 in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x0e1587c37eb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0e1587c37ec0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0e1587c37ed0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0e1587c37ee0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0e1587c37ef0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0e1587c37f00:[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0e1587c37f10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0e1587c37f20: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0e1587c37f30: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0e1587c37f40: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0e1587c37f50: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

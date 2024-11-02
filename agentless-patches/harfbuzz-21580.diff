@@ -1,0 +1,13 @@
+diff --git a/harfbuzz/src/hb-subset.cc b/harfbuzz/src/hb-subset.cc
+index 87482a6..2d3f449 100644
+--- a/harfbuzz/src/hb-subset.cc
++++ b/harfbuzz/src/hb-subset.cc
+@@ -87,7 +87,7 @@ _subset (hb_subset_plan_t *plan)
+       return false;
+     }
+   retry:
+-    hb_serialize_context_t serializer ((void *) buf, buf_size);
++    hb_serialize_context_t serializer ((void *) buf, buf_size - 1); // Ensure space for null terminator
+     serializer.start_serialize<TableType> ();
+     hb_subset_context_t c (source_blob, plan, &serializer);
+     bool needed = table->subset (&c);

@@ -1,0 +1,44 @@
+diff --git a/src/librawspeed/decoders/DngDecoder.cpp b/src/librawspeed/decoders/DngDecoder.cpp
+index 9922eaa0..95e3de89 100644
+--- a/src/librawspeed/decoders/DngDecoder.cpp
++++ b/src/librawspeed/decoders/DngDecoder.cpp
+@@ -273,12 +273,15 @@ void DngDecoder::parseColorMatrix() const {
+ 
+   const auto srat_vals = mat->getSRationalArray(mat->count);
+   bool Success = true;
++  mRaw->metadata.colorMatrix.clear(); // Clear existing data
+   mRaw->metadata.colorMatrix.reserve(mat->count);
+   for (const auto& val : srat_vals) {
+-    Success &= val.den != 0;
+-    if (!Success)
++    if (val.den != 0) {
++      mRaw->metadata.colorMatrix.emplace_back(val);
++    } else {
++      Success = false;
+       break;
+-    mRaw->metadata.colorMatrix.emplace_back(val);
++    }
+   }
+   if (!Success)
+     mRaw->metadata.colorMatrix.clear();
+@@ -688,12 +691,14 @@ void DngDecoder::decodeMetaDataInternal(const CameraMetaData* meta) {
+             {x * Y / y, Y, (1 - x - y) * Y / y}};
+ 
+         // Convert from XYZ to camera reference values first
+-        for (uint32_t i = 0; i < 3; i++) {
+-          float c =
+-              float(mRaw->metadata.colorMatrix[i * 3 + 0]) * as_shot_white[0] +
+-              float(mRaw->metadata.colorMatrix[i * 3 + 1]) * as_shot_white[1] +
+-              float(mRaw->metadata.colorMatrix[i * 3 + 2]) * as_shot_white[2];
+-          mRaw->metadata.wbCoeffs[i] = (c > 0.0F) ? (1.0F / c) : 0.0F;
++        if (mRaw->metadata.colorMatrix.size() >= 9) { // Ensure sufficient size
++          for (uint32_t i = 0; i < 3; i++) {
++            float c =
++                float(mRaw->metadata.colorMatrix.at(i * 3 + 0)) * as_shot_white[0] +
++                float(mRaw->metadata.colorMatrix.at(i * 3 + 1)) * as_shot_white[1] +
++                float(mRaw->metadata.colorMatrix.at(i * 3 + 2)) * as_shot_white[2];
++            mRaw->metadata.wbCoeffs[i] = (c > 0.0F) ? (1.0F / c) : 0.0F;
++          }
+         }
+       }
+     }

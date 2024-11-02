@@ -1,0 +1,61 @@
+diff --git a/Zend/zend_object_handlers.c b/Zend/zend_object_handlers.c
+index b3eb2d1ba5..4b7bb18b3c 100644
+--- a/Zend/zend_object_handlers.c
++++ b/Zend/zend_object_handlers.c
+@@ -1792,6 +1792,10 @@ ZEND_API HashTable *zend_std_get_properties_for(zend_object *obj, zend_prop_purp
+ ZEND_API HashTable *zend_get_properties_for(zval *obj, zend_prop_purpose purpose) {
+ 	zend_object *zobj = Z_OBJ_P(obj);
+ 
++	if (GC_REFCOUNT(zobj) == 0 || GC_TYPE(zobj) == IS_NULL) {
++		return NULL; // Object is invalid or freed
++	}
++
+ 	if (zobj->handlers->get_properties_for) {
+ 		return zobj->handlers->get_properties_for(zobj, purpose);
+ 	}
+diff --git a/Zend/zend_objects_API.c b/Zend/zend_objects_API.c
+index 80359b5e1e..0c4b0c58dd 100644
+--- a/Zend/zend_objects_API.c
++++ b/Zend/zend_objects_API.c
+@@ -194,8 +194,10 @@ ZEND_API void ZEND_FASTCALL zend_objects_store_del(zend_object *object) /* {{{ *
+ 		}
+ 		ptr = ((char*)object) - object->handlers->offset;
+ 		GC_REMOVE_FROM_BUFFER(object);
+-		efree(ptr);
+-		ZEND_OBJECTS_STORE_ADD_TO_FREE_LIST(handle);
++		if (GC_REFCOUNT(object) == 0) { // Ensure no references remain
++			efree(ptr);
++			ZEND_OBJECTS_STORE_ADD_TO_FREE_LIST(handle);
++		}
+ 	}
+ }
+ /* }}} */
+diff --git a/ext/standard/var.c b/ext/standard/var.c
+index a9b85903a5..a9c1871f94 100644
+--- a/ext/standard/var.c
++++ b/ext/standard/var.c
+@@ -152,11 +152,11 @@ again:
+ 			Z_PROTECT_RECURSION_P(struc);
+ 
+ 			myht = zend_get_properties_for(struc, ZEND_PROP_PURPOSE_DEBUG);
+-			class_name = Z_OBJ_HANDLER_P(struc, get_class_name)(Z_OBJ_P(struc));
+-			php_printf("%sobject(%s)#%d (%d) {\n", COMMON, ZSTR_VAL(class_name), Z_OBJ_HANDLE_P(struc), myht ? zend_array_count(myht) : 0);
+-			zend_string_release_ex(class_name, 0);
+-
+ 			if (myht) {
++				class_name = Z_OBJ_HANDLER_P(struc, get_class_name)(Z_OBJ_P(struc));
++				php_printf("%sobject(%s)#%d (%d) {\n", COMMON, ZSTR_VAL(class_name), Z_OBJ_HANDLE_P(struc), zend_array_count(myht));
++				zend_string_release_ex(class_name, 0);
++
+ 				zend_ulong num;
+ 				zend_string *key;
+ 				zval *val;
+@@ -176,6 +176,8 @@ again:
+ 					}
+ 				} ZEND_HASH_FOREACH_END();
+ 				zend_release_properties(myht);
++			} else {
++				php_printf("%sobject(unknown)#%d (0) {\n", COMMON, Z_OBJ_HANDLE_P(struc));
+ 			}
+ 			if (level > 1) {
+ 				php_printf("%*c", level-1, ' ');

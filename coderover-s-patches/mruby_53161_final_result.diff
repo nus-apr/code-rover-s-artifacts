@@ -1,0 +1,29 @@
+diff --git a/mrbgems/mruby-pack/src/pack.c b/mrbgems/mruby-pack/src/pack.c
+index 08c22b5eb..a040682c3 100644
+--- a/mrbgems/mruby-pack/src/pack.c
++++ b/mrbgems/mruby-pack/src/pack.c
+@@ -522,6 +522,11 @@ unpack_float(mrb_state *mrb, const unsigned char * src, int srclen, mrb_value ar
+   float f;
+   uint8_t *buffer = (uint8_t *)&f;
+ 
++  if (src == NULL || srclen < 4) {
++    mrb_ary_push(mrb, ary, mrb_nil_value());
++    return 0; // Return 0 to indicate no bytes processed
++  }
++
+   if (flags & PACK_FLAG_LITTLEENDIAN) {
+     if (littleendian) {
+       memcpy(buffer, src, 4);
+@@ -1559,7 +1564,11 @@ pack_unpack(mrb_state *mrb, mrb_value str, int single)
+         break;
+ #ifndef MRB_NO_FLOAT
+       case PACK_DIR_FLOAT:
+-        srcidx += unpack_float(mrb, sptr, srclen - srcidx, result, flags);
++        if (srclen - srcidx >= 4) {
++          srcidx += unpack_float(mrb, sptr, srclen - srcidx, result, flags);
++        } else {
++          mrb_ary_push(mrb, result, mrb_nil_value());
++        }
+         break;
+       case PACK_DIR_DOUBLE:
+         srcidx += unpack_double(mrb, sptr, srclen - srcidx, result, flags);

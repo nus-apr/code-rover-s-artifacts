@@ -1,0 +1,20 @@
+diff --git a/binutils-gdb/bfd/elf64-bpf.c b/binutils-gdb/bfd/elf64-bpf.c
+index 9b0148b..757b92c 100644
+--- a/binutils-gdb/bfd/elf64-bpf.c
++++ b/binutils-gdb/bfd/elf64-bpf.c
+@@ -649,8 +649,13 @@ bpf_elf_generic_reloc (bfd *abfd, arelent *reloc_entry, asymbol *symbol,
+ 	 instructions, and the upper 32 bits placed at the very end of the
+ 	 instruction. that is, there are 32 unused bits between them. */
+ 
+-      bfd_put_32 (abfd, (relocation & 0xFFFFFFFF), where + 4);
+-      bfd_put_32 (abfd, (relocation >> 32), where + 12);
++      if (where + 16 <= end_of_buffer) {
++        bfd_put_32 (abfd, (relocation & 0xFFFFFFFF), where + 4);
++        bfd_put_32 (abfd, (relocation >> 32), where + 12);
++      } else {
++        // Handle error: buffer overflow risk
++        return bfd_reloc_overflow;
++      }
+     }
+   else
+     {

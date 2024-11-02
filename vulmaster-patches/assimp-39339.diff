@@ -1,0 +1,13 @@
+diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
+index 0f41e9e65..3d0e0ad8f 100644
+--- a/code/Common/BaseImporter.cpp
++++ b/code/Common/BaseImporter.cpp
+@@ -444,7 +444,7 @@ void BaseImporter::TextFileToBuffer(IOStream *stream,
+             throw DeadlyImportError("File read error");
+         }
+ 
+-        ConvertToUTF8(data);
++, BufSize, "%s.%s" 
+     }
+ 
+     // append a binary zero to simplify string parsing

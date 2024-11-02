@@ -1,0 +1,14 @@
+diff --git a/radare2/libr/bin/p/bin_omf.c b/radare2/libr/bin/p/bin_omf.c
+index b8a26d3..0ca8ae8 100644
+--- a/radare2/libr/bin/p/bin_omf.c
++++ b/radare2/libr/bin/p/bin_omf.c
+@@ -40,6 +40,9 @@ static bool check_buffer(RBuffer *b) {
+ 		return false;
+ 	}
+ 	// check that the string is ASCII
++	if (str_size + 4 > length) {
++		return false;
++	}
+ 	for (i = 4; i < str_size + 4; ++i) {
+ 		if (buf[i] > 0x7f) {
+ 			return false;

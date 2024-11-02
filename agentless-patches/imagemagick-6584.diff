@@ -1,0 +1,15 @@
+diff --git a/imagemagick/MagickCore/draw.c b/imagemagick/MagickCore/draw.c
+index eb062cb..0bff20f 100644
+--- a/imagemagick/MagickCore/draw.c
++++ b/imagemagick/MagickCore/draw.c
+@@ -5379,8 +5379,8 @@ static void TraceBezier(PrimitiveInfo *primitive_info,
+     (double) BezierQuantum);
+   control_points=quantum*number_coordinates;
+   coefficients=(double *) AcquireQuantumMemory((size_t)
+-    number_coordinates,sizeof(*coefficients));
+-  points=(PointInfo *) AcquireQuantumMemory((size_t) control_points,
++    (number_coordinates+1),sizeof(*coefficients));
++  points=(PointInfo *) AcquireQuantumMemory((size_t) (control_points+1),
+     sizeof(*points));
+   if ((coefficients == (double *) NULL) || (points == (PointInfo *) NULL))
+     ThrowFatalException(ResourceLimitFatalError,"MemoryAllocationFailed");

@@ -1,0 +1,13 @@
+diff --git a/lib/legacy/zstd_v02.c b/lib/legacy/zstd_v02.c
+index 561bc412..42ab08ba 100644
+--- a/lib/legacy/zstd_v02.c
++++ b/lib/legacy/zstd_v02.c
+@@ -2885,6 +2885,8 @@ static size_t ZSTD_decodeLiteralsBlock(void* ctx,
+             if (litSize > srcSize-11)   /* risk of reading too far with wildcopy */
+             {
+                 if (litSize > srcSize-3) return ERROR(corruption_detected);
++                const size_t maxLitBufferSize = BLOCKSIZE; // Assuming BLOCKSIZE is the safe limit for litBuffer
++                if (litSize > maxLitBufferSize) return ERROR(corruption_detected);
+                 memcpy(dctx->litBuffer, istart, litSize);
+                 dctx->litPtr = dctx->litBuffer;
+                 dctx->litSize = litSize;

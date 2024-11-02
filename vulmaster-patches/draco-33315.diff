@@ -1,0 +1,15 @@
+diff --git a/src/draco/compression/config/draco_options.h b/src/draco/compression/config/draco_options.h
+index 0d1247b..541a759 100644
+--- a/src/draco/compression/config/draco_options.h
++++ b/src/draco/compression/config/draco_options.h
+@@ -143,9 +143,7 @@ const Options *DracoOptions<AttributeKeyT>::FindAttributeOptions(
+ }
+ 
+ template <typename AttributeKeyT>
+-Options *DracoOptions<AttributeKeyT>::GetAttributeOptions(
+-    const AttributeKeyT &att_key) {
+-  auto it = attribute_options_.find(att_key);
++ ) { return ( a < b ) 
+   if (it != attribute_options_.end()) {
+     return &it->second;
+   }

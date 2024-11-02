@@ -1,0 +1,18 @@
+diff --git a/flac/src/libFLAC/bitreader.c b/flac/src/libFLAC/bitreader.c
+index 452a856..7af7aaa 100644
+--- a/flac/src/libFLAC/bitreader.c
++++ b/flac/src/libFLAC/bitreader.c
+@@ -815,8 +815,11 @@ FLAC__bool FLAC__bitreader_read_rice_signed_block(FLAC__BitReader *br, int vals[
+ 		} else {
+ 			/* there are still bits left to read, they will all be in the next word */
+ 			cwords++;
+-			if (cwords >= words)
+-				goto incomplete_lsbs;
++			if (cwords >= words) {
++				br->consumed_bits = 0;
++				br->consumed_words = cwords;
++				return false; // Prevent buffer overflow by returning false
++			}
+ 			b = br->buffer[cwords];
+ 			ucbits += FLAC__BITS_PER_WORD - parameter;
+ 			x |= (FLAC__uint32)(b >> ucbits);

@@ -1,0 +1,46 @@
+diff --git a/src/cmsxform.c b/src/cmsxform.c
+index 7f6636e..7734a06 100644
+--- a/src/cmsxform.c
++++ b/src/cmsxform.c
+@@ -198,11 +198,38 @@ void CMSEXPORT cmsDoTransform(cmsHTRANSFORM  Transform,
+     _cmsTRANSFORM* p = (_cmsTRANSFORM*) Transform;
+     cmsStride stride;
+ 
++    // Validate pointers
++    if (p == NULL || InputBuffer == NULL || OutputBuffer == NULL) {
++        cmsSignalError(0, cmsERROR_NULL, "Null pointer detected in cmsDoTransform");
++        return;
++    }
++
++    // Validate InputFormat and OutputFormat
++    if (p->InputFormat == 0 || p->OutputFormat == 0) {
++        cmsSignalError(p->ContextID, cmsERROR_UNKNOWN_EXTENSION, "Invalid format detected in cmsDoTransform");
++        return;
++    }
++
++    // Calculate pixel sizes and validate
++    cmsUInt32Number inputPixelSize = PixelSize(p->InputFormat);
++    cmsUInt32Number outputPixelSize = PixelSize(p->OutputFormat);
++
++    if (inputPixelSize == 0 || outputPixelSize == 0) {
++        cmsSignalError(p->ContextID, cmsERROR_UNKNOWN_EXTENSION, "PixelSize returned zero in cmsDoTransform");
++        return;
++    }
++
+     stride.BytesPerLineIn = 0;  // Not used
+     stride.BytesPerLineOut = 0;
+-    stride.BytesPerPlaneIn = Size * PixelSize(p->InputFormat);
+-    stride.BytesPerPlaneOut = Size * PixelSize(p->OutputFormat);
+-           
++    stride.BytesPerPlaneIn = Size * inputPixelSize;
++    stride.BytesPerPlaneOut = Size * outputPixelSize;
++
++    // Ensure xform is not NULL before calling
++    if (p->xform == NULL) {
++        cmsSignalError(p->ContextID, cmsERROR_NULL, "xform function pointer is NULL");
++        return;
++    }
++
+     p -> xform(p, InputBuffer, OutputBuffer, Size, 1, &stride);
+ }
+ 

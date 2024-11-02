@@ -1,0 +1,12 @@
+diff --git a/imagemagick/MagickCore/xml-tree.c b/imagemagick/MagickCore/xml-tree.c
+index 78962ae..9916128 100644
+--- a/imagemagick/MagickCore/xml-tree.c
++++ b/imagemagick/MagickCore/xml-tree.c
+@@ -465,6 +465,7 @@ static char **DestroyXMLTreeAttributes(char **attributes)
+       attributes[i+1]=DestroyString(attributes[i+1]);
+   }
+   attributes=(char **) RelinquishMagickMemory(attributes);
++  attributes = NULL;
+   return((char **) NULL);
+ }
+ 

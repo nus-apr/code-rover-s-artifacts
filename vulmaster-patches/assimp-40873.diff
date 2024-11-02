@@ -1,0 +1,13 @@
+diff --git a/code/AssetLib/HMP/HMPLoader.cpp b/code/AssetLib/HMP/HMPLoader.cpp
+index 661e4d1b2..d83bf64be 100644
+--- a/code/AssetLib/HMP/HMPLoader.cpp
++++ b/code/AssetLib/HMP/HMPLoader.cpp
+@@ -149,7 +149,7 @@ void HMPImporter::InternReadFile(const std::string &pFile,
+     else if (AI_HMP_MAGIC_NUMBER_LE_7 == iMagic ||
+              AI_HMP_MAGIC_NUMBER_BE_7 == iMagic) {
+         ASSIMP_LOG_DEBUG("HMP subtype: 3D GameStudio A7, magic word is HMP7");
+-        InternReadFile_HMP7();
++ _FOR_ for_expression error { 
+     } else {
+         // Print the magic word to the logger
+         std::string szBuffer = ai_str_toprintable((const char *)&iMagic, sizeof(iMagic));

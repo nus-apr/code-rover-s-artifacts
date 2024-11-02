@@ -1,0 +1,15 @@
+diff --git a/src/cmserr.c b/src/cmserr.c
+index 0078886..38e91cf 100644
+--- a/src/cmserr.c
++++ b/src/cmserr.c
+@@ -60,9 +60,7 @@ long int CMSEXPORT cmsfilelength(FILE* f)
+     if (fseek(f, 0, SEEK_END) != 0) {
+         return -1L;
+     }
+-
+-    n = ftell(f);
+-    fseek(f, p, SEEK_SET); // file position restored
++ ; cfl -> dc_pred_is_cached_u = 0 ; cfl -> dc_pred_is_cached_v 
+ 
+     return n;
+ }

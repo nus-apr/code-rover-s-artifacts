@@ -1,0 +1,27 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index e6ad79f7..76dd996d 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -771,12 +771,16 @@ static int blosc_c(struct thread_context* thread_context, int32_t bsize,
+     uint8_t* ip = (uint8_t*)_src + j * neblock;
+     uint8_t* ipbound = (uint8_t*)_src + (j + 1) * neblock;
+     ip = get_run(ip, ipbound);
+-    if (ip == ipbound) {
+-      // A run.  Encode the repeated byte as a negative length in the length of the split.
+-      int32_t value = _src[j * neblock];
+-      _sw32(dest - 4, -value);
+-      continue;
+-    }
++      if (ip == ipbound) {
++        // A run.  Encode the repeated byte as a negative length in the length of the split.
++        int32_t value = _src[j * neblock];
++        if (ntbytes + sizeof(int32_t) <= maxbytes) {
++          _sw32(dest - 4, -value);
++        } else {
++          return 0;  // Avoid buffer overflow by returning non-compressible block
++        }
++        continue;
++      }
+ 
+     maxout = neblock;
+   #if defined(HAVE_SNAPPY)

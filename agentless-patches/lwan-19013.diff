@@ -1,0 +1,15 @@
+diff --git a/lwan/src/lib/lwan-template.c b/lwan/src/lib/lwan-template.c
+index 1615c80..414c25c 100644
+--- a/lwan/src/lib/lwan-template.c
++++ b/lwan/src/lib/lwan-template.c
+@@ -1002,6 +1002,10 @@ static bool post_process_template(struct parser *parser)
+     struct chunk *chunk;
+ 
+     LWAN_ARRAY_FOREACH(&parser->chunks, chunk) {
++        if (!chunk) {
++            lwan_status_error("Internal error: Reached end of chunk array");
++            return false;
++        }
+         if (chunk->action == ACTION_IF_VARIABLE_NOT_EMPTY) {
+             for (prev_chunk = chunk;; chunk++) {
+                 if (chunk->action == ACTION_LAST) {

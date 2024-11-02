@@ -1,0 +1,35 @@
+diff --git a/src/hb-atomic.hh b/src/hb-atomic.hh
+index a6283de14..67479405c 100644
+--- a/src/hb-atomic.hh
++++ b/src/hb-atomic.hh
+@@ -169,7 +169,12 @@ struct hb_atomic_short_t
+   hb_atomic_short_t& operator = (short v_) { set_relaxed (v_); return *this; }
+   operator short () const { return get_relaxed (); }
+ 
+-  void set_relaxed (short v_) { hb_atomic_int_impl_set_relaxed (&v, v_); }
++    void set_relaxed (short v_) {
++        // Ensure the atomic variable is initialized before setting
++        if (v != 0) { // Assuming 0 is an invalid/uninitialized state
++            hb_atomic_int_impl_set_relaxed (&v, v_);
++        }
++    }
+   void set_release (short v_) { hb_atomic_int_impl_set (&v, v_); }
+   short get_relaxed () const { return hb_atomic_int_impl_get_relaxed (&v); }
+   short get_acquire () const { return hb_atomic_int_impl_get (&v); }
+diff --git a/src/hb-cache.hh b/src/hb-cache.hh
+index 8371465c6..377c94bc3 100644
+--- a/src/hb-cache.hh
++++ b/src/hb-cache.hh
+@@ -89,7 +89,11 @@ struct hb_cache_t
+       return false; /* Overflows */
+     unsigned int k = key & ((1u<<cache_bits)-1);
+     unsigned int v = ((key>>cache_bits)<<value_bits) | value;
+-    values[k] = v;
++    if (values != nullptr) { // Ensure the values array is initialized
++        values[k] = v;
++    } else {
++        return false; // Handle uninitialized array
++    }
+     return true;
+   }
+ 

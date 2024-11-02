@@ -1,0 +1,21 @@
+diff --git a/opcodes/v850-dis.c b/opcodes/v850-dis.c
+index 84cf2d39a6e..fad26472f8e 100644
+--- a/opcodes/v850-dis.c
++++ b/opcodes/v850-dis.c
+@@ -433,9 +433,13 @@ disassemble (bfd_vma memaddr,
+ 		case V850_OPERAND_EP:
+ 		  info->fprintf_func (info->stream, "ep");
+ 		  break;
+-		case V850_OPERAND_SRG:
+-		  info->fprintf_func (info->stream, "%s", v850_sreg_names[value]);
+-		  break;
++        case V850_OPERAND_SRG:
++          if (value >= 0 && (unsigned long)value < sizeof(v850_sreg_names) / sizeof(v850_sreg_names[0])) {
++            info->fprintf_func (info->stream, "%s", v850_sreg_names[value]);
++          } else {
++            info->fprintf_func (info->stream, "unknown_sreg");
++          }
++          break;
+ 		case V850E_OPERAND_REG_LIST:
+ 		  {
+ 		    static int list12_regs[32]   = { 30, 0, 0, 0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,

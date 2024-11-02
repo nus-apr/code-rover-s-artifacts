@@ -1,0 +1,35 @@
+diff --git a/mip/mip.c b/mip/mip.c
+index 60a416c3..8cc60670 100644
+--- a/mip/mip.c
++++ b/mip/mip.c
+@@ -445,16 +445,20 @@ static void rx_arp(struct mip_if *ifp, struct pkt *pkt) {
+ 
+ static void rx_icmp(struct mip_if *ifp, struct pkt *pkt) {
+   // MG_DEBUG(("ICMP %d", (int) len));
+-  if (pkt->icmp->type == 8 && pkt->ip->dst == ifp->ip) {
+-    struct ip *ip = tx_ip(ifp, 1, ifp->ip, pkt->ip->src,
+-                          sizeof(struct icmp) + pkt->pay.len);
+-    struct icmp *icmp = (struct icmp *) (ip + 1);
+-    memset(icmp, 0, sizeof(*icmp));  // Important - set csum to 0
+-    memcpy(icmp + 1, pkt->pay.buf, pkt->pay.len);
+-    icmp->csum = ipcsum(icmp, sizeof(*icmp) + pkt->pay.len);
+-    ifp->driver->tx(ifp->tx.buf, PDIFF(ifp->tx.buf, icmp + 1) + pkt->pay.len,
+-                    ifp->driver_data);
+-  }
++    if (pkt->icmp->type == 8 && pkt->ip->dst == ifp->ip) {
++        struct ip *ip = tx_ip(ifp, 1, ifp->ip, pkt->ip->src,
++                              sizeof(struct icmp) + pkt->pay.len);
++        struct icmp *icmp = (struct icmp *) (ip + 1);
++        memset(icmp, 0, sizeof(*icmp));  // Important - set csum to 0
++        // Validate payload length to prevent buffer overflow
++        if (pkt->pay.len > (ifp->tx.buf + sizeof(ifp->tx.buf) - (uint8_t *)(icmp + 1))) {
++            return;  // Payload too large, return early
++        }
++        memcpy(icmp + 1, pkt->pay.buf, pkt->pay.len);
++        icmp->csum = ipcsum(icmp, sizeof(*icmp) + pkt->pay.len);
++        ifp->driver->tx(ifp->tx.buf, PDIFF(ifp->tx.buf, icmp + 1) + pkt->pay.len,
++                        ifp->driver_data);
++    }
+ }
+ 
+ static void rx_dhcp(struct mip_if *ifp, struct pkt *pkt) {

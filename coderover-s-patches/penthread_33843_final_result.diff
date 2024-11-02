@@ -1,0 +1,44 @@
+diff --git a/src/core/common/string.cpp b/src/core/common/string.cpp
+index b787ee5d7..5efa9936e 100644
+--- a/src/core/common/string.cpp
++++ b/src/core/common/string.cpp
+@@ -41,6 +41,11 @@ uint16_t StringLength(const char *aString, uint16_t aMaxLength)
+ {
+     uint16_t ret;
+ 
++    if (aString == nullptr)
++    {
++        return 0;
++    }
++
+     for (ret = 0; (ret < aMaxLength) && (aString[ret] != 0); ret++)
+     {
+         // Empty loop.
+diff --git a/src/core/net/dns_client.cpp b/src/core/net/dns_client.cpp
+index 28e3d0e46..1dd5585ca 100644
+--- a/src/core/net/dns_client.cpp
++++ b/src/core/net/dns_client.cpp
+@@ -697,6 +697,8 @@ Error Client::AllocateQuery(const QueryInfo &aInfo, const char *aLabel, const ch
+ 
+     if (aLabel != nullptr)
+     {
++        uint8_t labelLength = static_cast<uint8_t>(StringLength(aLabel, kMaxLabelSize));
++        VerifyOrExit(labelLength < kMaxLabelSize, error = kErrorInvalidArgs);
+         SuccessOrExit(error = Name::AppendLabel(aLabel, *aQuery));
+     }
+ 
+diff --git a/src/core/net/dns_types.cpp b/src/core/net/dns_types.cpp
+index 7f2c4fc4d..b6bc8a919 100644
+--- a/src/core/net/dns_types.cpp
++++ b/src/core/net/dns_types.cpp
+@@ -148,7 +148,9 @@ exit:
+ 
+ Error Name::AppendLabel(const char *aLabel, Message &aMessage)
+ {
+-    return AppendLabel(aLabel, static_cast<uint8_t>(StringLength(aLabel, kMaxLabelSize)), aMessage);
++    uint8_t length = static_cast<uint8_t>(StringLength(aLabel, kMaxLabelSize));
++    VerifyOrExit(length < kMaxLabelSize, error = kErrorInvalidArgs);
++    return AppendLabel(aLabel, length, aMessage);
+ }
+ 
+ Error Name::AppendLabel(const char *aLabel, uint8_t aLength, Message &aMessage)

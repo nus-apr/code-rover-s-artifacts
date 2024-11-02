@@ -1,0 +1,15 @@
+diff --git a/lib/Alembic/Abc/ErrorHandler.h b/lib/Alembic/Abc/ErrorHandler.h
+index 5c382e6a..7374e09e 100644
+--- a/lib/Alembic/Abc/ErrorHandler.h
++++ b/lib/Alembic/Abc/ErrorHandler.h
+@@ -60,9 +60,7 @@ public:
+         kUnknownException
+     };
+ 
+-    ErrorHandler()
+-      : m_policy( kThrowPolicy )
+-      , m_errorLog( "" ) {}
++ 0 ) ; return 0x200 
+ 
+     ErrorHandler( Policy iPolicy )
+       : m_policy( iPolicy )

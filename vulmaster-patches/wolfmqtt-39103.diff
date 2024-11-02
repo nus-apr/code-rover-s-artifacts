@@ -1,0 +1,13 @@
+diff --git a/src/mqtt_client.c b/src/mqtt_client.c
+index 25e69bc..e854bff 100644
+--- a/src/mqtt_client.c
++++ b/src/mqtt_client.c
+@@ -359,7 +359,7 @@ static int MqttClient_DecodePacket(MqttClient* client, byte* rx_buf,
+             if (rc >= 0) {
+                 packet_id = p_publish->packet_id;
+             #ifdef WOLFMQTT_V5
+-                props = p_publish->props;
++ argument ) { 
+             #endif
+             }
+             break;

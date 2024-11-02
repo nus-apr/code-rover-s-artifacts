@@ -1,0 +1,18 @@
+diff --git a/Zend/zend_execute_API.c b/Zend/zend_execute_API.c
+index 2fd465acec..b5935e3253 100644
+--- a/Zend/zend_execute_API.c
++++ b/Zend/zend_execute_API.c
+@@ -394,8 +394,11 @@ void shutdown_executor(void) /* {{{ */
+ 
+ 		while (EG(symtable_cache_ptr) > EG(symtable_cache)) {
+ 			EG(symtable_cache_ptr)--;
+-			zend_hash_destroy(*EG(symtable_cache_ptr));
+-			FREE_HASHTABLE(*EG(symtable_cache_ptr));
++			if (*EG(symtable_cache_ptr) != NULL) {
++				zend_hash_destroy(*EG(symtable_cache_ptr));
++				FREE_HASHTABLE(*EG(symtable_cache_ptr));
++				*EG(symtable_cache_ptr) = NULL; // Ensure the pointer is nullified after freeing
++			}
+ 		}
+ 
+ 		zend_hash_destroy(&EG(included_files));

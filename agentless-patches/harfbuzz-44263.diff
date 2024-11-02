@@ -1,0 +1,13 @@
+diff --git a/harfbuzz/src/hb-bit-set-invertible.hh b/harfbuzz/src/hb-bit-set-invertible.hh
+index 9e604b2..a7de7c4 100644
+--- a/harfbuzz/src/hb-bit-set-invertible.hh
++++ b/harfbuzz/src/hb-bit-set-invertible.hh
+@@ -243,7 +243,7 @@ struct hb_bit_set_invertible_t
+       return s.next (codepoint);
+ 
+     auto old = *codepoint;
+-    if (unlikely (old + 1 == INVALID))
++    if (unlikely (old + 1 == INVALID || codepoint == nullptr))
+     {
+       *codepoint = INVALID;
+       return false;

@@ -1,0 +1,68 @@
+diff --git a/coders/png.c b/coders/png.c
+index e581cc93..8f3c64af 100644
+--- a/coders/png.c
++++ b/coders/png.c
+@@ -4279,8 +4279,14 @@ static Image *ReadMNGImage(const ImageInfo *image_info,
+               /* To quiet a Coverity complaint */
+               LockSemaphoreInfo(png_semaphore);
+ #endif
+-              mng_info->mng_width=(unsigned long) mng_get_long(p);
+-              mng_info->mng_height=(unsigned long) mng_get_long(&p[4]);
++               if (length >= 8) {
++                 mng_info->mng_width=(unsigned long) mng_get_long(p);
++                 mng_info->mng_height=(unsigned long) mng_get_long(&p[4]);
++               } else {
++                 MagickFreeMemory(chunk);
++                 MngInfoFreeStruct(mng_info,&have_mng_structure);
++                 ThrowReaderException(CorruptImageError,CorruptImage,image);
++               }
+               if (logging)
+                 {
+                   (void) LogMagickEvent(CoderEvent,GetMagickModule(),
+@@ -4308,7 +4314,13 @@ static Image *ReadMNGImage(const ImageInfo *image_info,
+                 }
+ 
+               p+=8;
+-              mng_info->ticks_per_second=mng_get_long(p);
++               if (length >= 12) {
++                 mng_info->ticks_per_second=mng_get_long(p);
++               } else {
++                 MagickFreeMemory(chunk);
++                 MngInfoFreeStruct(mng_info,&have_mng_structure);
++                 ThrowReaderException(CorruptImageError,CorruptImage,image);
++               }
+               if (mng_info->ticks_per_second == 0)
+                 default_frame_delay=0;
+               else
+@@ -4318,7 +4330,13 @@ static Image *ReadMNGImage(const ImageInfo *image_info,
+               if (length >= 28)
+                 {
+                   p+=16;
+-                  simplicity=mng_get_long(p);
++                   if (length >= 28) {
++                     simplicity=mng_get_long(p);
++                   } else {
++                     MagickFreeMemory(chunk);
++                     MngInfoFreeStruct(mng_info,&have_mng_structure);
++                     ThrowReaderException(CorruptImageError,CorruptImage,image);
++                   }
+                 }
+               if (logging)
+                 {
+@@ -4387,8 +4405,14 @@ static Image *ReadMNGImage(const ImageInfo *image_info,
+                 repeat=p[0];
+               if (repeat == 3 && length > 8)
+                 {
+-                  final_delay=(png_uint_32) mng_get_long(&p[2]);
+-                  mng_iterations=(png_uint_32) mng_get_long(&p[6]);
++                   if (length >= 10) {
++                     final_delay=(png_uint_32) mng_get_long(&p[2]);
++                     mng_iterations=(png_uint_32) mng_get_long(&p[6]);
++                   } else {
++                     MagickFreeMemory(chunk);
++                     MngInfoFreeStruct(mng_info,&have_mng_structure);
++                     ThrowReaderException(CorruptImageError,CorruptImage,image);
++                   }
+                   if (mng_iterations == PNG_MAX_UINT)
+                     mng_iterations=0;
+                   image->iterations=mng_iterations;

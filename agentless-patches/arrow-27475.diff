@@ -1,0 +1,13 @@
+diff --git a/arrow/cpp/src/arrow/array/validate.cc b/arrow/cpp/src/arrow/array/validate.cc
+index 5b0d221..b55bd69 100644
+--- a/arrow/cpp/src/arrow/array/validate.cc
++++ b/arrow/cpp/src/arrow/array/validate.cc
+@@ -606,7 +606,7 @@ struct ValidateArrayFullImpl {
+       return Status::Invalid("Offset invariant failure: array starts at negative offset ",
+                              prev_offset);
+     }
+-    for (int64_t i = 1; i <= data.length; ++i) {
++    for (int64_t i = 1; i < data.length; ++i) {
+       const auto current_offset = offsets[i];
+       if (current_offset < prev_offset) {
+         return Status::Invalid("Offset invariant failure: non-monotonic offset at slot ",

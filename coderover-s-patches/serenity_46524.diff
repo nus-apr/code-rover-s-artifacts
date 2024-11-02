@@ -1,0 +1,21 @@
+diff --git a/AK/Format.h b/AK/Format.h
+index 2034980594..ddc84b3f7d 100644
+--- a/AK/Format.h
++++ b/AK/Format.h
+@@ -264,9 +264,14 @@ public:
+     static_assert(sizeof...(Parameters) <= max_format_arguments);
+ 
+     explicit VariadicFormatParams(const Parameters&... parameters)
+-        : m_data({ TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }... })
+     {
+-        this->set_parameters(m_data);
++        if constexpr (sizeof...(Parameters) > 0) {
++            m_data = { TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }... };
++            this->set_parameters(m_data);
++        } else {
++            // Initialize m_data to a valid empty state
++            m_data = {};
++        }
+     }
+ 
+ private:

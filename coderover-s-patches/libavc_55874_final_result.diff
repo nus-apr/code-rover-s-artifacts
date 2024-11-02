@@ -1,0 +1,36 @@
+diff --git a/decoder/svc/isvcd_residual_resamp.c b/decoder/svc/isvcd_residual_resamp.c
+index c444402..5e42e48 100644
+--- a/decoder/svc/isvcd_residual_resamp.c
++++ b/decoder/svc/isvcd_residual_resamp.c
+@@ -2049,9 +2049,12 @@ WORD32 isvcd_residual_samp_mb_dyadic(void *pv_residual_samp_ctxt, mem_element_t
+             pi2_inp += i4_inp_stride;
+         }
+ 
+-        ps_ctxt->pf_residual_luma_dyadic(pv_residual_samp_ctxt, pi2_inp, i4_inp_stride, pi2_out,
+-                                         i4_out_stride, ps_ref_mb_mode, u2_mb_x, u2_mb_y,
+-                                         i4_luma_nnz, i4_tx_size);
++        if (pi2_inp + 8 <= (WORD16 *)ps_ref_luma->pv_buffer + ps_ref_luma->i4_num_element_stride * ps_ctxt->i4_ref_height)
++        {
++            ps_ctxt->pf_residual_luma_dyadic(pv_residual_samp_ctxt, pi2_inp, i4_inp_stride, pi2_out,
++                                             i4_out_stride, ps_ref_mb_mode, u2_mb_x, u2_mb_y,
++                                             i4_luma_nnz, i4_tx_size);
++        }
+     }
+ 
+     /* --------------------------------------------------------------------- */
+diff --git a/decoder/x86/svc/isvcd_residual_resamp_sse42.c b/decoder/x86/svc/isvcd_residual_resamp_sse42.c
+index 19a6469..3554258 100644
+--- a/decoder/x86/svc/isvcd_residual_resamp_sse42.c
++++ b/decoder/x86/svc/isvcd_residual_resamp_sse42.c
+@@ -109,6 +109,11 @@ void isvcd_residual_luma_dyadic_sse42(void *pv_residual_samp_ctxt, WORD16 *pi2_i
+         /* ----------- Horizontal Interpolation ---------------- */
+         for(i4_i = 0; i4_i < BLOCK_HEIGHT; i4_i += 2)
+         {
++            if ((pi2_ref_data_byte + 8 > pi2_inp_data + ps_ctxt->i4_ref_width) || 
++                (pi2_ref_data_byte + i4_inp_data_stride + 8 > pi2_inp_data + ps_ctxt->i4_ref_width))
++            {
++                break; // Prevent buffer overflow
++            }
+             i2_coeff_8x16b_r1_0 =
+                 _mm_loadu_si128((__m128i *) pi2_ref_data_byte);         // a0 a1 a2 a3 a4 a5 a6 a7
+             i2_coeff_8x16b_r2_0 = _mm_loadu_si128(

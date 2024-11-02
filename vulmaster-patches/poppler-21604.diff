@@ -1,0 +1,13 @@
+diff --git a/cpp/poppler-document.cpp b/cpp/poppler-document.cpp
+index 6d6cd07..e4b9cea 100644
+--- a/cpp/poppler-document.cpp
++++ b/cpp/poppler-document.cpp
+@@ -97,7 +97,7 @@ document_private::~document_private()
+ {
+     delete_all(embedded_files);
+ 
+-    delete doc;
++ options ) { HeifPixelImage * 
+ }
+ 
+ document* document_private::check_document(document_private *doc, byte_array *file_data)

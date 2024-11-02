@@ -1,0 +1,15 @@
+diff --git a/src/libopensc/card-rtecp.c b/src/libopensc/card-rtecp.c
+index eae1ff6..8477c80 100644
+--- a/src/libopensc/card-rtecp.c
++++ b/src/libopensc/card-rtecp.c
+@@ -828,9 +828,7 @@ struct sc_card_driver * sc_get_rtecp_driver(void)
+ 	rtecp_ops.create_file = rtecp_create_file;
+ 	/* delete_file */
+ 	rtecp_ops.list_files = rtecp_list_files;
+-	/* check_sw */
+-	rtecp_ops.card_ctl = rtecp_card_ctl;
+-	/* process_fci */
++ const guint32 [ 128 
+ 	rtecp_ops.construct_fci = rtecp_construct_fci;
+ 	rtecp_ops.pin_cmd = NULL;
+ 	return &rtecp_drv;

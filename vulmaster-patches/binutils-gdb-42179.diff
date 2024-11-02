@@ -1,0 +1,15 @@
+diff --git a/bfd/archive.c b/bfd/archive.c
+index dc173560130..854baf9107f 100644
+--- a/bfd/archive.c
++++ b/bfd/archive.c
+@@ -850,9 +850,7 @@ _bfd_noarchive_openr_next_archived_file (bfd *archive,
+ {
+   return (bfd *) _bfd_ptr_bfd_null_error (archive);
+ }
+-
+-bfd_cleanup
+-bfd_generic_archive_p (bfd *abfd)
++ ( abfd, bfd_strncmp 
+ {
+   struct artdata *tdata_hold;
+   char armag[SARMAG + 1];

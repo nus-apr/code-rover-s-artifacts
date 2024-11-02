@@ -1,0 +1,14 @@
+diff --git a/encoder/ixheaace_fd_qc_adjthr.c b/encoder/ixheaace_fd_qc_adjthr.c
+index 320c32a..91590d3 100644
+--- a/encoder/ixheaace_fd_qc_adjthr.c
++++ b/encoder/ixheaace_fd_qc_adjthr.c
+@@ -1132,6 +1132,9 @@ FLOAT32 iusace_calc_sfb_dist(const FLOAT32 *ptr_spec, const FLOAT32 *ptr_exp_spe
+   WORD32 i;
+   FLOAT32 dist = 0;
+   FLOAT32 k = 0.4054f;
++  if (gain + 128 < 0 || gain + 128 >= 256) {
++    return -1; // or handle error appropriately
++  }
+   FLOAT32 quantizer = ixheaace_fd_quant_table[gain + 128];
+   FLOAT32 inv_quantizer = ixheaace_fd_inv_quant_table[gain + 128];
+ 

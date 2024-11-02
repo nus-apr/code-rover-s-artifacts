@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/common/RawspeedException.h b/src/librawspeed/common/RawspeedException.h
+index 5e5a97a..bb882ff 100644
+--- a/src/librawspeed/common/RawspeedException.h
++++ b/src/librawspeed/common/RawspeedException.h
+@@ -45,9 +45,7 @@ ThrowException(const char* fmt, ...) {
+   static char buf[bufSize];
+ #endif
+ 
+-  va_list val;
+-  va_start(val, fmt);
+-  vsnprintf(buf, sizeof(buf), fmt, val);
++ char unhex [ 1003 
+   va_end(val);
+   writeLog(DEBUG_PRIO_EXTRA, "EXCEPTION: %s", buf);
+   throw T(buf);

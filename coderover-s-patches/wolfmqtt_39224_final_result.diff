@@ -1,0 +1,42 @@
+diff --git a/src/mqtt_packet.c b/src/mqtt_packet.c
+index d345178..cd1f996 100755
+--- a/src/mqtt_packet.c
++++ b/src/mqtt_packet.c
+@@ -491,8 +491,23 @@ int MqttDecode_Props(MqttPacketType packet, MqttProp** props, byte* pbuf,
+     {
+         /* Allocate a structure and add to head. */
+         cur_prop = MqttProps_Add(props);
+-        if (cur_prop == NULL)
++        if (cur_prop == NULL) {
++            MqttProps_Free(*props); // Free any previously allocated properties
++            *props = NULL; // Ensure props is set to NULL to avoid dangling pointers
+             return MQTT_CODE_ERROR_MEMORY;
++        }
++        // Initialize the new property node to avoid accessing uninitialized memory
++        cur_prop->next = NULL;
++        cur_prop->type = (MqttPropertyType)0;
++        cur_prop->data_byte = 0;
++        cur_prop->data_short = 0;
++        cur_prop->data_int = 0;
++        cur_prop->data_str.str = NULL;
++        cur_prop->data_str.len = 0;
++        cur_prop->data_bin.data = NULL;
++        cur_prop->data_bin.len = 0;
++        cur_prop->data_str2.str = NULL;
++        cur_prop->data_str2.len = 0;
+ 
+         /* Decode the Identifier */
+         tmp = MqttDecode_Vbi(buf, (word32*)&cur_prop->type,
+@@ -1811,8 +1826,10 @@ int MqttProps_Free(MqttProp *head)
+         return -1;
+ #endif
+     while (head != NULL) {
+-        head->type = (MqttPropertyType)0;
+-        head = head->next;
++        MqttProp* next = head->next;
++        // Free the current property node
++        free(head);
++        head = next;
+     }
+ #ifdef WOLFMQTT_MULTITHREAD
+     return wm_SemUnlock(&clientPropStack_lock);

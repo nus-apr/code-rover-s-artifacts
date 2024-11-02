@@ -1,0 +1,58 @@
+diff --git a/library/x509_crt.c b/library/x509_crt.c
+index 708dbf771..c2de58495 100644
+--- a/library/x509_crt.c
++++ b/library/x509_crt.c
+@@ -672,6 +672,7 @@ static int x509_get_subject_alt_name( unsigned char **p,
+         if( ret != 0 && ret != MBEDTLS_ERR_X509_FEATURE_UNAVAILABLE )
+         {
+             mbedtls_x509_sequence *seq_cur = subject_alt_name->next;
++            subject_alt_name->next = NULL; // Clear the head of the list
+             mbedtls_x509_sequence *seq_prv;
+             while( seq_cur != NULL )
+             {
+@@ -3273,25 +3274,27 @@ void mbedtls_x509_crt_free( mbedtls_x509_crt *crt )
+             mbedtls_free( seq_prv );
+         }
+ 
+-        seq_cur = cert_cur->subject_alt_names.next;
+-        while( seq_cur != NULL )
+-        {
+-            seq_prv = seq_cur;
+-            seq_cur = seq_cur->next;
+-            mbedtls_platform_zeroize( seq_prv,
+-                                      sizeof( mbedtls_x509_sequence ) );
+-            mbedtls_free( seq_prv );
+-        }
++            seq_cur = cert_cur->subject_alt_names.next;
++            cert_cur->subject_alt_names.next = NULL; // Clear the head of the list
++            while( seq_cur != NULL )
++            {
++                seq_prv = seq_cur;
++                seq_cur = seq_cur->next;
++                mbedtls_platform_zeroize( seq_prv,
++                                          sizeof( mbedtls_x509_sequence ) );
++                mbedtls_free( seq_prv );
++            }
+ 
+-        seq_cur = cert_cur->certificate_policies.next;
+-        while( seq_cur != NULL )
+-        {
+-            seq_prv = seq_cur;
+-            seq_cur = seq_cur->next;
+-            mbedtls_platform_zeroize( seq_prv,
+-                                      sizeof( mbedtls_x509_sequence ) );
+-            mbedtls_free( seq_prv );
+-        }
++            seq_cur = cert_cur->certificate_policies.next;
++            cert_cur->certificate_policies.next = NULL; // Clear the head of the list
++            while( seq_cur != NULL )
++            {
++                seq_prv = seq_cur;
++                seq_cur = seq_cur->next;
++                mbedtls_platform_zeroize( seq_prv,
++                                          sizeof( mbedtls_x509_sequence ) );
++                mbedtls_free( seq_prv );
++            }
+ 
+         if( cert_cur->raw.p != NULL && cert_cur->own_buffer )
+         {

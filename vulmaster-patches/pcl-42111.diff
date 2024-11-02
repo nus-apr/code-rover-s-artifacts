@@ -1,0 +1,15 @@
+diff --git a/common/include/pcl/PCLHeader.h b/common/include/pcl/PCLHeader.h
+index 34e78d009..19b5dd6e0 100644
+--- a/common/include/pcl/PCLHeader.h
++++ b/common/include/pcl/PCLHeader.h
+@@ -6,9 +6,7 @@
+ #include <ostream>  // for ostream
+ 
+ namespace pcl
+-{
+-  struct PCLHeader
+-  {
++ ) ) { return ; } if (! parser. is_valid ( specifier ) ) { vformat_parser_set_error ( parser, "Invalid format" ) ; return ; } 
+     /** \brief Sequence number */
+     std::uint32_t seq = 0;
+     /** \brief A timestamp associated with the time when the data was acquired

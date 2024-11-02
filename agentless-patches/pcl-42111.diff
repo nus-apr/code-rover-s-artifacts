@@ -1,0 +1,20 @@
+diff --git a/pcl/io/src/ply_io.cpp b/pcl/io/src/ply_io.cpp
+index be62e64..34ed8d1 100644
+--- a/pcl/io/src/ply_io.cpp
++++ b/pcl/io/src/ply_io.cpp
+@@ -121,10 +121,11 @@ pcl::PLYReader::amendProperty (const std::string& old_name, const std::string& n
+   for (; finder != cloud_->fields.rend (); ++finder)
+     if (finder->name == old_name)
+       break;
+-  assert (finder != cloud_->fields.rend ());
+-  finder->name = new_name;
+-  if (new_datatype > 0 && new_datatype != finder->datatype)
+-    finder->datatype = new_datatype;
++  if (finder != cloud_->fields.rend ()) {
++    finder->name = new_name;
++    if (new_datatype > 0 && new_datatype != finder->datatype)
++      finder->datatype = new_datatype;
++  }
+ }
+ 
+ namespace pcl

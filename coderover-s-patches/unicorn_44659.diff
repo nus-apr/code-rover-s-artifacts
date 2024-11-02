@@ -1,0 +1,65 @@
+diff --git a/qemu/target/i386/ops_sse.h b/qemu/target/i386/ops_sse.h
+index ec1ec745..6597cd71 100644
+--- a/qemu/target/i386/ops_sse.h
++++ b/qemu/target/i386/ops_sse.h
+@@ -2014,20 +2014,25 @@ static inline int pcmp_ilen(Reg *r, uint8_t ctrl)
+     return val;
+ }
+ 
+-static inline int pcmp_val(Reg *r, uint8_t ctrl, int i)
+-{
+-    switch ((ctrl >> 0) & 3) {
+-    case 0:
+-        return r->B(i);
+-    case 1:
+-        return r->W(i);
+-    case 2:
+-        return (int8_t)r->B(i);
+-    case 3:
+-    default:
+-        return (int16_t)r->W(i);
++    static inline int pcmp_val(Reg *r, uint8_t ctrl, int i)
++    {
++        const int MAX_REG_INDEX = 15; // Assuming a maximum size for Reg
++        if (!r || i < 0 || i > MAX_REG_INDEX) {
++            // Handle error or return a safe default value
++            return 0;
++        }
++        switch ((ctrl >> 0) & 3) {
++        case 0:
++            return r->B(i);
++        case 1:
++            return r->W(i);
++        case 2:
++            return (int8_t)r->B(i);
++        case 3:
++        default:
++            return (int16_t)r->W(i);
++        }
+     }
+-}
+ 
+ static inline unsigned pcmpxstrx(CPUX86State *env, Reg *d, Reg *s,
+                                  int8_t ctrl, int valids, int validd)
+@@ -2044,13 +2049,15 @@ static inline unsigned pcmpxstrx(CPUX86State *env, Reg *d, Reg *s,
+ 
+     switch ((ctrl >> 2) & 3) {
+     case 0:
+-        for (j = valids; j >= 0; j--) {
+-            res <<= 1;
+-            v = pcmp_val(s, ctrl, j);
+-            for (i = validd; i >= 0; i--) {
+-                res |= (v == pcmp_val(d, ctrl, i));
+-            }
++    for (j = valids; j >= 0; j--) {
++        if (j < 0 || j > 15) continue; // Assuming a maximum size for Reg
++        res <<= 1;
++        v = pcmp_val(s, ctrl, j);
++        for (i = validd; i >= 0; i--) {
++            if (i < 0 || i > 15) continue; // Assuming a maximum size for Reg
++            res |= (v == pcmp_val(d, ctrl, i));
+         }
++    }
+         break;
+     case 1:
+         for (j = valids; j >= 0; j--) {

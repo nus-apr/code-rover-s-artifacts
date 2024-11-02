@@ -1,0 +1,20 @@
+diff --git a/blosc/frame.c b/blosc/frame.c
+index a87d691e..beaef931 100644
+--- a/blosc/frame.c
++++ b/blosc/frame.c
+@@ -1546,6 +1546,15 @@ int64_t get_coffset(blosc2_frame* frame, int32_t header_len, int64_t cbytes, int
+     return -3;
+   }
+ 
++  // Calculate the number of offsets available
++  int32_t num_offsets = (frame->len - header_len - cbytes) / sizeof(int64_t);
++
++  // Validate nchunk index
++  if (nchunk < 0 || nchunk >= num_offsets) {
++    BLOSC_TRACE_ERROR("nchunk index out of bounds.");
++    return -4;
++  }
++
+   // Get the 64-bit offset
+   int rc = blosc_getitem(coffsets, nchunk, 1, &offset);
+   if (rc < 0) {

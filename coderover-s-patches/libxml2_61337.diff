@@ -1,0 +1,35 @@
+diff --git a/HTMLparser.c b/HTMLparser.c
+index ba3eb16d..7e1cb225 100644
+--- a/HTMLparser.c
++++ b/HTMLparser.c
+@@ -445,8 +445,8 @@ htmlCurrentChar(xmlParserCtxtPtr ctxt, int *len) {
+             xmlSwitchEncoding(ctxt, XML_CHAR_ENCODING_8859_1);
+         } else {
+             handler = xmlFindCharEncodingHandler((const char *) guess);
+-            xmlFree(guess);
+             if (handler != NULL) {
++                xmlFree(guess);
+                 /*
+                  * Don't use UTF-8 encoder which isn't required and
+                  * can produce invalid UTF-8.
+@@ -456,6 +456,7 @@ htmlCurrentChar(xmlParserCtxtPtr ctxt, int *len) {
+             } else {
+                 htmlParseErr(ctxt, XML_ERR_INVALID_ENCODING,
+                              "Unsupported encoding %s", guess, NULL);
++                xmlFree(guess);
+             }
+         }
+         ctxt->input->flags |= XML_INPUT_HAS_ENCODING;
+@@ -3185,7 +3186,11 @@ htmlParseCharDataInternal(htmlParserCtxtPtr ctxt, int readahead) {
+ 	    htmlParseErrInt(ctxt, XML_ERR_INVALID_CHAR,
+ 	                "Invalid char in CDATA 0x%X\n", cur);
+ 	} else {
+-	    COPY_BUF(l,buf,nbchar,cur);
++	    if (nbchar < HTML_PARSER_BIG_BUFFER_SIZE) {
++	        COPY_BUF(l,buf,nbchar,cur);
++	    } else {
++	        break; // Prevent buffer overflow
++	    }
+ 	}
+ 	NEXTL(l);
+ 	if (nbchar >= HTML_PARSER_BIG_BUFFER_SIZE) {

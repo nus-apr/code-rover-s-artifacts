@@ -1,0 +1,44 @@
+diff --git a/source/fitz/draw-unpack.c b/source/fitz/draw-unpack.c
+index 9657f2abb..ec6adb3f9 100644
+--- a/source/fitz/draw-unpack.c
++++ b/source/fitz/draw-unpack.c
+@@ -382,6 +382,8 @@ unpack_next(fz_context *ctx, fz_stream *stm, size_t max)
+ {
+ 	unpack_state *state = (unpack_state *)stm->state;
+ 	size_t n = state->src_stride;
++	if (!state || !state->src || !state->buf)
++		return EOF;
+ 
+ 	stm->rp = state->buf;
+ 	do
+@@ -391,7 +393,10 @@ unpack_next(fz_context *ctx, fz_stream *stm, size_t max)
+ 			return EOF;
+ 		if (a > n)
+ 			a = n;
+-		memcpy(stm->rp, state->src->rp, a);
++		if (a <= (state->dst_stride - (stm->rp - state->buf)))
++			memcpy(stm->rp, state->src->rp, a);
++		else
++			return EOF;
+ 		stm->rp += a;
+ 		state->src->rp += a;
+ 		n -= a;
+diff --git a/source/fitz/image.c b/source/fitz/image.c
+index ae53cc044..2756a4acc 100644
+--- a/source/fitz/image.c
++++ b/source/fitz/image.c
+@@ -589,8 +589,13 @@ fz_decomp_image_from_stream(fz_context *ctx, fz_stream *stm, fz_compressed_image
+ 
+ 		samples = tile->samples;
+ 		stride = tile->stride;
++		if (!samples)
++			return NULL;
+ 
+-		len = fz_read(ctx, read_stream, samples, h * stride);
++		if (h * stride <= tile->stride * tile->x)
++			len = fz_read(ctx, read_stream, samples, h * stride);
++		else
++			len = 0;
+ 
+ 		/* Pad truncated images */
+ 		if (len < stride * h)

@@ -1,0 +1,27 @@
+diff --git a/libsepol/cil/src/cil_resolve_ast.c b/libsepol/cil/src/cil_resolve_ast.c
+index 208bc01a..b0e937d0 100644
+--- a/libsepol/cil/src/cil_resolve_ast.c
++++ b/libsepol/cil/src/cil_resolve_ast.c
+@@ -1253,7 +1253,7 @@ struct cil_list_item *__cil_ordered_item_insert(struct cil_list *old, struct cil
+ 
+ int __cil_ordered_list_insert(struct cil_list *old, struct cil_list_item *ocurr, struct cil_list_item *nstart, struct cil_list_item *nstop)
+ {
+-	struct cil_list_item *ncurr = NULL;
++	struct cil_list_item *ncurr = nstart;
+ 
+ 	for (ncurr = nstart; ncurr != nstop; ncurr = ncurr->next) {
+ 		ocurr = __cil_ordered_item_insert(old, ocurr, ncurr);
+@@ -1279,11 +1279,11 @@ int __cil_ordered_lists_merge(struct cil_list *old, struct cil_list *new)
+ {
+ 	struct cil_list_item *omatch = NULL;
+ 	struct cil_list_item *ofirst = old->head;
+-	struct cil_list_item *ocurr = NULL;
++	struct cil_list_item *ocurr = ofirst;
+ 	struct cil_list_item *oprev = NULL;
+ 	struct cil_list_item *nmatch = NULL;
+ 	struct cil_list_item *nfirst = new->head;
+-	struct cil_list_item *ncurr = NULL;
++	struct cil_list_item *ncurr = nfirst;
+ 	int rc = SEPOL_ERR;
+ 
+ 	if (nfirst == NULL) {

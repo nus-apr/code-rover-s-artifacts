@@ -1,0 +1,19 @@
+diff --git a/epan/dissectors/packet-gsm_rlp.c b/epan/dissectors/packet-gsm_rlp.c
+index 2f0fd7b9ce..27289a2cef 100644
+--- a/epan/dissectors/packet-gsm_rlp.c
++++ b/epan/dissectors/packet-gsm_rlp.c
+@@ -257,9 +257,12 @@ dissect_gsmrlp(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void* data _
+ 	}
+ 
+ 	/* FCS is always the last 3 bytes of the message */
+-	guint32 fcs_computed = rlp_fcs_compute(tvb_get_ptr(tvb, 0, reported_len - 3), reported_len - 3);
+-	proto_tree_add_checksum(rlp_tree, tvb, reported_len - 3, hf_gsmrlp_fcs, hf_gsmrlp_fcs_status,
++	guint32 fcs_computed = 0;
++	if (reported_len >= 3) {
++	    fcs_computed = rlp_fcs_compute(tvb_get_ptr(tvb, 0, reported_len - 3), reported_len - 3);
++	    proto_tree_add_checksum(rlp_tree, tvb, reported_len - 3, hf_gsmrlp_fcs, hf_gsmrlp_fcs_status,
+ 				&ei_gsmrlp_fcs_bad, pinfo, fcs_computed, ENC_BIG_ENDIAN, PROTO_CHECKSUM_VERIFY);
++	}
+ 
+ 	return tvb_reported_length(tvb);
+ }

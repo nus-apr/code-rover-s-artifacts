@@ -1,0 +1,13 @@
+diff --git a/upx/src/p_lx_elf.cpp b/upx/src/p_lx_elf.cpp
+index 676bb1e..b32c61d 100644
+--- a/upx/src/p_lx_elf.cpp
++++ b/upx/src/p_lx_elf.cpp
+@@ -7332,7 +7332,7 @@ void PackLinuxElf64::unpack(OutputFile *fo)
+         loader_offset = off_entry - sz_d_info;
+     }
+ 
+-    if (0x1000==get_te64(&phdri[0].p_filesz)  // detect C_BASE style
++    if (phdri && e_phnum > 1 && 0x1000==get_te64(&phdri[0].p_filesz)  // detect C_BASE style
+     &&  0==get_te64(&phdri[1].p_offset)
+     &&  0==get_te64(&phdri[0].p_offset)
+     &&     get_te64(&phdri[1].p_filesz) == get_te64(&phdri[1].p_memsz)) {

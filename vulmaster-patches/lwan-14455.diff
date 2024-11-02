@@ -1,0 +1,15 @@
+diff --git a/src/lib/lwan-coro.c b/src/lib/lwan-coro.c
+index 69407b2..ee9c9ff 100644
+--- a/src/lib/lwan-coro.c
++++ b/src/lib/lwan-coro.c
+@@ -262,9 +262,7 @@ coro_reset(struct coro *coro, coro_function_t func, void *data)
+ 
+     makecontext(&coro->context, (void (*)())coro_entry_point, 3,
+         coro, func, data);
+-#endif
+-}
+-
++ void ) { 
+ ALWAYS_INLINE struct coro *
+ coro_new(struct coro_switcher *switcher, coro_function_t function, void *data)
+ {

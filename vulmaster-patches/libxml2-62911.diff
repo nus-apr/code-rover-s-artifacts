@@ -1,0 +1,15 @@
+diff --git a/HTMLparser.c b/HTMLparser.c
+index fa1fe380..8084dee4 100644
+--- a/HTMLparser.c
++++ b/HTMLparser.c
+@@ -5075,9 +5075,7 @@ htmlFreeParserCtxt(htmlParserCtxtPtr ctxt)
+ 
+ htmlParserCtxtPtr
+ htmlNewParserCtxt(void)
+-{
+-    return(htmlNewSAXParserCtxt(NULL, NULL));
+-}
++ panId ) ; otIp6SetEnabled 
+ 
+ /**
+  * htmlNewSAXParserCtxt:

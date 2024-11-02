@@ -1,0 +1,13 @@
+diff --git a/src/type1/t1objs.c b/src/type1/t1objs.c
+index 50dad038f..5bc4b9041 100644
+--- a/src/type1/t1objs.c
++++ b/src/type1/t1objs.c
+@@ -346,7 +346,7 @@
+     FT_TRACE2(( "Type 1 driver\n" ));
+ 
+     /* open the tokenizer; this will also check the font format */
+-    error = T1_Open_Face( face );
++ void ) { 
+     if ( error )
+       goto Exit;
+ 

@@ -1,0 +1,53 @@
+diff --git a/AK/Assertions.cpp b/AK/Assertions.cpp
+index 95d4662638..a1dbeadc2b 100644
+--- a/AK/Assertions.cpp
++++ b/AK/Assertions.cpp
+@@ -62,14 +62,18 @@ ALWAYS_INLINE void dump_backtrace()
+ 
+ extern "C" {
+ 
+-void ak_verification_failed(char const* message)
+-{
+-    dbgln("VERIFICATION FAILED: {}", message);
+-#    if defined(EXECINFO_BACKTRACE)
+-    dump_backtrace();
+-#    endif
+-    __builtin_trap();
+-}
++    void ak_verification_failed(char const* message)
++    {
++        constexpr size_t max_message_length = 1024;
++        char safe_message[max_message_length];
++        snprintf(safe_message, max_message_length, "%s", message);
++
++        dbgln("VERIFICATION FAILED: {}", safe_message);
++    #    if defined(EXECINFO_BACKTRACE)
++        dump_backtrace();
++    #    endif
++        __builtin_trap();
++    }
+ }
+ 
+ #endif
+diff --git a/Userland/Libraries/LibPDF/Parser.cpp b/Userland/Libraries/LibPDF/Parser.cpp
+index bf66f103fe..75400dba54 100644
+--- a/Userland/Libraries/LibPDF/Parser.cpp
++++ b/Userland/Libraries/LibPDF/Parser.cpp
+@@ -79,10 +79,14 @@ PDFErrorOr<Value> Parser::parse_value(CanBeIndirectValue can_be_indirect_value)
+     }
+ 
+     if (m_reader.matches_number()) {
+-        if (can_be_indirect_value == CanBeIndirectValue::Yes)
+-            return parse_possible_indirect_value_or_ref();
+-        else
++        if (can_be_indirect_value == CanBeIndirectValue::Yes) {
++            auto result = parse_possible_indirect_value_or_ref();
++            if (result.is_error())
++                return error("Failed to parse indirect value or reference");
++            return result;
++        } else {
+             return parse_number();
++        }
+     }
+ 
+     if (m_reader.matches('/'))

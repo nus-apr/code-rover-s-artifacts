@@ -1,0 +1,55 @@
+diff --git a/Packet++/src/SipLayer.cpp b/Packet++/src/SipLayer.cpp
+index 7ba81575..b12bd00f 100644
+--- a/Packet++/src/SipLayer.cpp
++++ b/Packet++/src/SipLayer.cpp
+@@ -123,6 +123,17 @@ void SipLayer::computeCalculateFields()
+ 
+ SipRequestFirstLine::SipRequestFirstLine(SipRequestLayer* sipRequest) : m_SipRequest(sipRequest)
+ {
++	if (m_SipRequest == nullptr || m_SipRequest->m_Data == nullptr || m_SipRequest->getDataLen() == 0)
++	{
++		PCPP_LOG_ERROR("Invalid SIP request data");
++		m_Method = SipRequestLayer::SipMethodUnknown;
++		m_UriOffset = -1;
++		m_VersionOffset = -1;
++		m_FirstLineEndOffset = 0;
++		m_IsComplete = false;
++		return;
++	}
++
+ 	m_Method = parseMethod((char*)m_SipRequest->m_Data, m_SipRequest->getDataLen());
+ 	if (m_Method == SipRequestLayer::SipMethodUnknown)
+ 	{
+@@ -134,11 +145,28 @@ SipRequestFirstLine::SipRequestFirstLine(SipRequestLayer* sipRequest) : m_SipReq
+ 
+ 	parseVersion();
+ 
+-	char* endOfFirstLine;
+-	if ((endOfFirstLine = (char *)memchr((char*)(m_SipRequest->m_Data + m_VersionOffset), '\n', m_SipRequest->m_DataLen-(size_t)m_VersionOffset)) != nullptr)
++	if (m_VersionOffset < 0 || m_VersionOffset >= m_SipRequest->getDataLen())
+ 	{
+-		m_FirstLineEndOffset = endOfFirstLine - (char*)m_SipRequest->m_Data + 1;
+-		m_IsComplete = true;
++		PCPP_LOG_ERROR("Invalid version offset");
++		m_FirstLineEndOffset = m_SipRequest->getDataLen();
++		m_IsComplete = false;
++		return;
++	}
++
++	size_t remainingDataLen = m_SipRequest->getDataLen() - (size_t)m_VersionOffset;
++	if (remainingDataLen > 0)
++	{
++		char* endOfFirstLine = (char *)memchr((char*)(m_SipRequest->m_Data + m_VersionOffset), '\n', remainingDataLen);
++		if (endOfFirstLine != nullptr)
++		{
++			m_FirstLineEndOffset = endOfFirstLine - (char*)m_SipRequest->m_Data + 1;
++			m_IsComplete = true;
++		}
++		else
++		{
++			m_FirstLineEndOffset = m_SipRequest->getDataLen();
++			m_IsComplete = false;
++		}
+ 	}
+ 	else
+ 	{

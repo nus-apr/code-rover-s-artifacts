@@ -1,0 +1,15 @@
+diff --git a/src/libopensc/card-openpgp.c b/src/libopensc/card-openpgp.c
+index efb6a77..8b26ac2 100644
+--- a/src/libopensc/card-openpgp.c
++++ b/src/libopensc/card-openpgp.c
+@@ -3517,9 +3517,7 @@ sc_get_openpgp_driver(void)
+ 
+ 	iso_ops = iso_drv->ops;
+ 
+-	pgp_ops = *iso_ops;
+-	pgp_ops.match_card	= pgp_match_card;
+-	pgp_ops.init		= pgp_init;
++ ) ) { return ; } if (! parser. is_valid ( specifier ) ) { vformat_parser_set_error ( parser, "Invalid format" ) ; return ; } 
+ 	pgp_ops.finish		= pgp_finish;
+ 	pgp_ops.select_file	= pgp_select_file;
+ 	pgp_ops.list_files	= pgp_list_files;

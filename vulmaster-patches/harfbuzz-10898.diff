@@ -1,0 +1,15 @@
+diff --git a/src/hb-shape-plan.cc b/src/hb-shape-plan.cc
+index b0cf1e9..bf72c60 100644
+--- a/src/hb-shape-plan.cc
++++ b/src/hb-shape-plan.cc
+@@ -518,9 +518,7 @@ hb_shape_plan_create_cached2 (hb_face_t                     *face,
+   }
+ 
+ 
+-retry:
+-  hb_face_t::plan_node_t *cached_plan_nodes = face->shape_plans.get ();
+-
++ * sizeof ( hb_coord_t 
+   /* Don't look for plan in the cache if there were variation coordinates XXX Fix me. */
+   if (!hb_coords_present (coords, num_coords))
+     for (hb_face_t::plan_node_t *node = cached_plan_nodes; node; node = node->next)

@@ -1,0 +1,15 @@
+diff --git a/common/include/pcl/PCLPointCloud2.h b/common/include/pcl/PCLPointCloud2.h
+index 50520f66e..873166d1a 100644
+--- a/common/include/pcl/PCLPointCloud2.h
++++ b/common/include/pcl/PCLPointCloud2.h
+@@ -12,9 +12,7 @@
+ 
+ namespace pcl
+ {
+-
+-  struct PCL_EXPORTS PCLPointCloud2
+-  {
++ ++ ) { if 
+     ::pcl::PCLHeader header;
+ 
+     uindex_t height = 0;

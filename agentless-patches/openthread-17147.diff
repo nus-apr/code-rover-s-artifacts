@@ -1,0 +1,13 @@
+diff --git a/openthread/src/core/thread/mle.cpp b/openthread/src/core/thread/mle.cpp
+index e265b4e..cf5723b 100644
+--- a/openthread/src/core/thread/mle.cpp
++++ b/openthread/src/core/thread/mle.cpp
+@@ -1251,7 +1251,7 @@ otError Mle::AppendNetworkData(Message &aMessage, bool aStableOnly)
+     tlv.Init();
+     FillNetworkDataTlv(tlv, aStableOnly);
+ 
+-    error = aMessage.AppendTlv(tlv);
++    error = aMessage.Append(&tlv, sizeof(Tlv) + tlv.GetLength());
+ 
+ exit:
+     return error;

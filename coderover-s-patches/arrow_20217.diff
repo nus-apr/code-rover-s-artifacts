@@ -1,0 +1,31 @@
+diff --git a/cpp/src/arrow/ipc/metadata_internal.cc b/cpp/src/arrow/ipc/metadata_internal.cc
+index 0cbae9bb5..1ba51aed7 100644
+--- a/cpp/src/arrow/ipc/metadata_internal.cc
++++ b/cpp/src/arrow/ipc/metadata_internal.cc
+@@ -167,8 +167,9 @@ Status UnionFromFlatbuffer(const flatbuf::Union* union_data,
+     }
+   } else {
+     for (int32_t id : (*fb_type_ids)) {
+-      // TODO(wesm): can these values exceed 127?
+-      type_codes.push_back(static_cast<int8_t>(id));
++      if (id >= 0 && id <= 127) {  // Ensure id fits within int8_t range
++        type_codes.push_back(static_cast<int8_t>(id));
++      }
+     }
+   }
+ 
+diff --git a/cpp/src/arrow/type.cc b/cpp/src/arrow/type.cc
+index 185bb9303..bfbed959d 100644
+--- a/cpp/src/arrow/type.cc
++++ b/cpp/src/arrow/type.cc
+@@ -359,7 +359,9 @@ UnionType::UnionType(const std::vector<std::shared_ptr<Field>>& fields,
+     const auto type_code = type_codes_[child_id];
+     DCHECK_GE(type_code, 0);
+     DCHECK_LE(type_code, kMaxTypeCode);
+-    child_ids_[type_code] = child_id;
++    if (type_code >= 0 && type_code <= kMaxTypeCode) {
++      child_ids_[type_code] = child_id;
++    }
+   }
+ }
+ 

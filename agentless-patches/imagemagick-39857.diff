@@ -1,0 +1,14 @@
+diff --git a/imagemagick/MagickCore/annotate.c b/imagemagick/MagickCore/annotate.c
+index 2271e2e..43e2908 100644
+--- a/imagemagick/MagickCore/annotate.c
++++ b/imagemagick/MagickCore/annotate.c
+@@ -1462,6 +1462,9 @@ static MagickBooleanType RenderFreetype(Image *image,const DrawInfo *draw_info,
+       args.pathname=ConstantString(draw_info->font);
+     else
+       args.pathname=ConstantString(draw_info->font+1);
++
++  if (args.pathname == (char *) NULL)
++    ThrowBinaryException(TypeError,"InvalidFontPath",image->filename);
+   face=(FT_Face) NULL;
+   ft_status=FT_Open_Face(library,&args,(long) draw_info->face,&face);
+   if (ft_status != 0)

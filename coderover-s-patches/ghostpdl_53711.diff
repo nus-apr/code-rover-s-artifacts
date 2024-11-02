@@ -1,0 +1,15 @@
+diff --git a/devices/vector/gdevpsfm.c b/devices/vector/gdevpsfm.c
+index fc85c3560..f0d9fd80b 100644
+--- a/devices/vector/gdevpsfm.c
++++ b/devices/vector/gdevpsfm.c
+@@ -70,6 +70,10 @@ cmap_put_ranges(stream *s, const gx_code_space_range_t *pcsr, int count)
+ 
+     pprintd1(s, "%d begincodespacerange\n", count);
+     for (i = 0; i < count; ++i, ++pcsr) {
++        if (pcsr->size > MAX_CMAP_CODE_SIZE) {
++            // Handle error: size is out of bounds
++            continue; // Skip this range or handle it appropriately
++        }
+         stream_puts(s, "<");
+         pput_hex(s, pcsr->first, pcsr->size);
+         stream_puts(s, "><");

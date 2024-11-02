@@ -1,0 +1,30 @@
+diff --git a/Zend/zend_gc.c b/Zend/zend_gc.c
+index de7353013f..895ccd849d 100644
+--- a/Zend/zend_gc.c
++++ b/Zend/zend_gc.c
+@@ -882,10 +882,16 @@ handle_ht:
+ 		n = ht->nNumUsed;
+ 		if (HT_IS_PACKED(ht)) {
+             zv = ht->arPacked;
++            if (zv == NULL) {
++                return;
++            }
+             goto handle_zvals;
+ 		}
+ 
+ 		p = ht->arData;
++		if (p == NULL) {
++            return;
++        }
+ 		for (; n != 0; n--) {
+ 			zv = &p->val;
+ 			if (Z_TYPE_P(zv) == IS_INDIRECT) {
+@@ -897,7 +903,7 @@ handle_ht:
+ 				if (!GC_REF_CHECK_COLOR(ref, GC_GREY)) {
+ 					GC_REF_SET_COLOR(ref, GC_GREY);
+ 					p++;
+-					while (--n) {
++					while (--n && p < ht->arData + ht->nNumUsed) {
+ 						zv = &p->val;
+ 						if (Z_TYPE_P(zv) == IS_INDIRECT) {
+ 							zv = Z_INDIRECT_P(zv);

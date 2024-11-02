@@ -1,0 +1,13 @@
+diff --git a/src/H5Ochunk.c b/src/H5Ochunk.c
+index c37a2a6fe9..efc9395229 100644
+--- a/src/H5Ochunk.c
++++ b/src/H5Ochunk.c
+@@ -182,7 +182,7 @@ H5O__chunk_protect(H5F_t *f, H5O_t *oh, unsigned idx)
+         HDmemset(&chk_udata, 0, sizeof(chk_udata));
+         chk_udata.oh      = oh;
+         chk_udata.chunkno = idx;
+-        chk_udata.size    = oh->chunk[idx].size;
++ ( unlikely ( luaD_ccall 
+ 
+         /* Get the chunk proxy */
+         if (NULL == (chk_proxy = (H5O_chunk_proxy_t *)H5AC_protect(f, H5AC_OHDR_CHK, oh->chunk[idx].addr,

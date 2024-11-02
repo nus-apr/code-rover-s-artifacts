@@ -1,0 +1,80 @@
+diff --git a/decoder/svc/isvcd_api.c b/decoder/svc/isvcd_api.c
+index f3ac778..d2f8f8c 100644
+--- a/decoder/svc/isvcd_api.c
++++ b/decoder/svc/isvcd_api.c
+@@ -1854,20 +1854,26 @@ WORD32 isvcd_intra_resample_ctxt_create(svc_dec_ctxt_t *ps_svcd_ctxt, void *pv_a
+             ps_off_len_map = pv_buf;
+ 
+             /* loop over num layers -1 */
+-            for(i4_lyr_id = 0; i4_lyr_id < MAX_NUM_RES_LYRS; i4_lyr_id++)
++        for(i4_lyr_id = 0; i4_lyr_id < MAX_NUM_RES_LYRS; i4_lyr_id++)
++        {
++            /* derive the layer map ctxt */
++            ps_lyr_ctxt = &ps_ctxt->as_res_lyrs[i4_lyr_id];
++            ps_luma_map = &ps_lyr_ctxt->s_luma_map_ctxt;
++            ps_chroma_map = &ps_lyr_ctxt->s_chroma_map_ctxt;
++
++            /* ensure the allocated buffer is within bounds */
++            if ((ps_off_len_map + (H264_MAX_FRAME_WIDTH >> 4) * 2) > (ref_mb_map_t *)((UWORD8 *)pv_buf + size))
+             {
+-                /* derive the layer map ctxt */
+-                ps_lyr_ctxt = &ps_ctxt->as_res_lyrs[i4_lyr_id];
+-                ps_luma_map = &ps_lyr_ctxt->s_luma_map_ctxt;
+-                ps_chroma_map = &ps_lyr_ctxt->s_chroma_map_ctxt;
++                return IV_FAIL;
++            }
+ 
+-                /* initialise the pointers */
+-                ps_luma_map->ps_x_offset_length = ps_off_len_map;
+-                ps_off_len_map += (H264_MAX_FRAME_WIDTH >> 4);
+-                ps_chroma_map->ps_x_offset_length = ps_off_len_map;
+-                ps_off_len_map += (H264_MAX_FRAME_WIDTH >> 4);
++            /* initialise the pointers */
++            ps_luma_map->ps_x_offset_length = ps_off_len_map;
++            ps_off_len_map += (H264_MAX_FRAME_WIDTH >> 4);
++            ps_chroma_map->ps_x_offset_length = ps_off_len_map;
++            ps_off_len_map += (H264_MAX_FRAME_WIDTH >> 4);
+ 
+-            } /* end of loop over resolution layers */
++        } /* end of loop over resolution layers */
+ 
+             /****************** Vert offset length ******************/
+             size = (H264_MAX_FRAME_HEIGHT >> 4) * MAX_NUM_RES_LYRS * 2 * sizeof(ref_mb_map_t);
+@@ -1877,20 +1883,26 @@ WORD32 isvcd_intra_resample_ctxt_create(svc_dec_ctxt_t *ps_svcd_ctxt, void *pv_a
+             ps_off_len_map = pv_buf;
+ 
+             /* loop over num layers -1 */
+-            for(i4_lyr_id = 0; i4_lyr_id < MAX_NUM_RES_LYRS; i4_lyr_id++)
++        for(i4_lyr_id = 0; i4_lyr_id < MAX_NUM_RES_LYRS; i4_lyr_id++)
++        {
++            /* derive the layer map ctxt */
++            ps_lyr_ctxt = &ps_ctxt->as_res_lyrs[i4_lyr_id];
++            ps_luma_map = &ps_lyr_ctxt->s_luma_map_ctxt;
++            ps_chroma_map = &ps_lyr_ctxt->s_chroma_map_ctxt;
++
++            /* ensure the allocated buffer is within bounds */
++            if ((ps_off_len_map + (H264_MAX_FRAME_HEIGHT >> 4) * 2) > (ref_mb_map_t *)((UWORD8 *)pv_buf + size))
+             {
+-                /* derive the layer map ctxt */
+-                ps_lyr_ctxt = &ps_ctxt->as_res_lyrs[i4_lyr_id];
+-                ps_luma_map = &ps_lyr_ctxt->s_luma_map_ctxt;
+-                ps_chroma_map = &ps_lyr_ctxt->s_chroma_map_ctxt;
++                return IV_FAIL;
++            }
+ 
+-                /* initialise the pointers */
+-                ps_luma_map->ps_y_offset_length = ps_off_len_map;
+-                ps_off_len_map += (H264_MAX_FRAME_HEIGHT >> 4);
+-                ps_chroma_map->ps_y_offset_length = ps_off_len_map;
+-                ps_off_len_map += (H264_MAX_FRAME_HEIGHT >> 4);
++            /* initialise the pointers */
++            ps_luma_map->ps_y_offset_length = ps_off_len_map;
++            ps_off_len_map += (H264_MAX_FRAME_HEIGHT >> 4);
++            ps_chroma_map->ps_y_offset_length = ps_off_len_map;
++            ps_off_len_map += (H264_MAX_FRAME_HEIGHT >> 4);
+ 
+-            } /* end of loop over resolution layers */
++        } /* end of loop over resolution layers */
+ 
+             /****************** Horz Min Max Pos ******************/
+ 

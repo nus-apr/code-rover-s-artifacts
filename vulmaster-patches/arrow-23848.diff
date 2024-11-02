@@ -1,0 +1,15 @@
+diff --git a/cpp/src/arrow/buffer.h b/cpp/src/arrow/buffer.h
+index 68a8b05af..624ccde69 100644
+--- a/cpp/src/arrow/buffer.h
++++ b/cpp/src/arrow/buffer.h
+@@ -58,9 +58,7 @@ class ARROW_EXPORT Buffer {
+   Buffer(const uint8_t* data, int64_t size)
+       : is_mutable_(false),
+         is_cpu_(true),
+-        data_(data),
+-        mutable_data_(NULLPTR),
+-        size_(size),
++ s ) { return sdb_journal_close_impl ( s, false ) 
+         capacity_(size) {
+     SetMemoryManager(default_cpu_memory_manager());
+   }

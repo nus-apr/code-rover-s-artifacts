@@ -1,0 +1,28 @@
+diff --git a/aom/av1/decoder/decoder.c b/aom/av1/decoder/decoder.c
+index 12db4ac..820dd36 100644
+--- a/aom/av1/decoder/decoder.c
++++ b/aom/av1/decoder/decoder.c
+@@ -88,11 +88,18 @@ AV1Decoder *av1_decoder_create(BufferPool *const pool) {
+ 
+   cm->error.setjmp = 1;
+ 
+-  CHECK_MEM_ERROR(cm, cm->fc,
+-                  (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->fc)));
+-  CHECK_MEM_ERROR(
+-      cm, cm->default_frame_context,
+-      (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->default_frame_context)));
++  cm->fc = (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->fc));
++  if (!cm->fc) {
++    cm->error.error_code = AOM_CODEC_MEM_ERROR;
++    av1_decoder_remove(pbi);
++    return NULL;
++  }
++  cm->default_frame_context = (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->default_frame_context));
++  if (!cm->default_frame_context) {
++    cm->error.error_code = AOM_CODEC_MEM_ERROR;
++    av1_decoder_remove(pbi);
++    return NULL;
++  }
+   memset(cm->fc, 0, sizeof(*cm->fc));
+   memset(cm->default_frame_context, 0, sizeof(*cm->default_frame_context));
+ 

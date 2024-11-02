@@ -1,0 +1,22 @@
+diff --git a/src/lib/protocols/irc.c b/src/lib/protocols/irc.c
+index 367ec86b..03325b28 100644
+--- a/src/lib/protocols/irc.c
++++ b/src/lib/protocols/irc.c
+@@ -408,7 +408,16 @@ void ndpi_search_irc_tcp(struct ndpi_detection_module_struct *ndpi_struct, struc
+ 	if(user) {
+ 	  char buf[32], msg[64], *sp;
+ 
+-	  snprintf(buf, sizeof(buf), "%s", &user[5]);
++	  // Calculate the maximum length to copy, ensuring it does not exceed the buffer size
++	  size_t max_len = packet->payload_packet_len - (user - (char*)packet->payload) - 5;
++	  if(max_len > sizeof(buf) - 1) {
++	    max_len = sizeof(buf) - 1;
++	  }
++
++	  // Use strncpy to safely copy the username into buf
++	  strncpy(buf, &user[5], max_len);
++	  buf[max_len] = '\0'; // Ensure null-termination
++
+ 	  if((sp = strchr(buf, ' ')) != NULL)
+ 	    sp[0] = '\0';
+ 	  

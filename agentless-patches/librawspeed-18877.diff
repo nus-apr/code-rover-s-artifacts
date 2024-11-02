@@ -1,0 +1,13 @@
+diff --git a/librawspeed/src/librawspeed/decompressors/PhaseOneDecompressor.cpp b/librawspeed/src/librawspeed/decompressors/PhaseOneDecompressor.cpp
+index 2a5cdb7..c392824 100644
+--- a/librawspeed/src/librawspeed/decompressors/PhaseOneDecompressor.cpp
++++ b/librawspeed/src/librawspeed/decompressors/PhaseOneDecompressor.cpp
+@@ -58,7 +58,7 @@ void PhaseOneDecompressor::prepareStrips() {
+   // The 'strips' vector should contain exactly one element per row of image.
+ 
+   // If the length is different, then the 'strips' vector is clearly incorrect.
+-  if (strips.size() != static_cast<decltype(strips)::size_type>(mRaw->dim.y)) {
++  if (strips.empty() || strips.size() != static_cast<decltype(strips)::size_type>(mRaw->dim.y)) {
+     ThrowRDE("Height (%u) vs strip count %zu mismatch", mRaw->dim.y,
+              strips.size());
+   }

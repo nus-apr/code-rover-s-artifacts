@@ -1,0 +1,52 @@
+diff --git a/src/bmpio.c b/src/bmpio.c
+index 6a61e73..e1c7151 100644
+--- a/src/bmpio.c
++++ b/src/bmpio.c
+@@ -249,6 +249,10 @@ PIXCMAP   *cmap;
+                 procName, depth, ncolors, maxcolors);
+         return NULL;
+     }
++    if (ncolors < 0 || ncolors > 256) {
++        L_ERROR("invalid number of colors: ncolors = %d\n", procName, ncolors);
++        return NULL;
++    }
+     if (size != 1LL * offset + 1LL * fdatabytes)
+         return (PIX *)ERROR_PTR("size incommensurate with image data",
+                                 procName,NULL);
+diff --git a/src/pix2.c b/src/pix2.c
+index e1a24b3..b25028a 100644
+--- a/src/pix2.c
++++ b/src/pix2.c
+@@ -2632,20 +2632,26 @@ RGBA_QUAD  *cta;
+         if (comp == COLOR_RED) {
+             for (j = 0; j < w; j++) {
+                 index = GET_DATA_BYTE(linec, j);
+-                val = cta[index].red;
+-                SET_DATA_BYTE(lined, j, val);
++                if (index >= 0 && index < cmap->n) {
++                    val = cta[index].red;
++                    SET_DATA_BYTE(lined, j, val);
++                }
+             }
+         } else if (comp == COLOR_GREEN) {
+             for (j = 0; j < w; j++) {
+                 index = GET_DATA_BYTE(linec, j);
+-                val = cta[index].green;
+-                SET_DATA_BYTE(lined, j, val);
++                if (index >= 0 && index < cmap->n) {
++                    val = cta[index].green;
++                    SET_DATA_BYTE(lined, j, val);
++                }
+             }
+         } else if (comp == COLOR_BLUE) {
+             for (j = 0; j < w; j++) {
+                 index = GET_DATA_BYTE(linec, j);
+-                val = cta[index].blue;
+-                SET_DATA_BYTE(lined, j, val);
++                if (index >= 0 && index < cmap->n) {
++                    val = cta[index].blue;
++                    SET_DATA_BYTE(lined, j, val);
++                }
+             }
+         }
+     }

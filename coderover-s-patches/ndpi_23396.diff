@@ -1,0 +1,15 @@
+diff --git a/src/lib/ndpi_main.c b/src/lib/ndpi_main.c
+index dcb34f2a..eeb35a2c 100644
+--- a/src/lib/ndpi_main.c
++++ b/src/lib/ndpi_main.c
+@@ -4795,8 +4795,8 @@ void ndpi_parse_packet_line_info(struct ndpi_detection_module_struct *ndpi_str,
+   packet->line[packet->parsed_lines].len = 0;
+ 
+   for (a = 0; (a < packet->payload_packet_len) && (packet->parsed_lines < NDPI_MAX_PARSE_LINES_PER_PACKET); a++) {
+-    if((a + 1) >= packet->payload_packet_len)
+-      return; /* Return if only one byte remains (prevent invalid reads past end-of-buffer) */
++    if((a + 3) >= packet->payload_packet_len)
++      return; /* Return if less than four bytes remain (prevent invalid reads past end-of-buffer) */
+ 
+     if(get_u_int16_t(packet->payload, a) == ntohs(0x0d0a)) {
+       /* If end of line char sequence CR+NL "\r\n", process line */

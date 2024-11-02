@@ -1,0 +1,12 @@
+diff --git a/pcre2/src/pcre2_auto_possess.c b/pcre2/src/pcre2_auto_possess.c
+index 254a074..df842f5 100644
+--- a/pcre2/src/pcre2_auto_possess.c
++++ b/pcre2/src/pcre2_auto_possess.c
+@@ -459,6 +459,7 @@ switch(c)
+   else
+ #endif
+     end = code + 32 / sizeof(PCRE2_UCHAR);
++    if (end > code_end) return FALSE;  /* Ensure end does not exceed buffer */
+ 
+   switch(*end)
+     {

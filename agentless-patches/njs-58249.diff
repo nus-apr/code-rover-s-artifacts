@@ -1,0 +1,13 @@
+diff --git a/njs/src/njs_scope.h b/njs/src/njs_scope.h
+index 1580cdb..db6b0bf 100644
+--- a/njs/src/njs_scope.h
++++ b/njs/src/njs_scope.h
+@@ -91,7 +91,7 @@ njs_scope_valid_value(njs_vm_t *vm, njs_index_t index)
+ 
+     value = njs_scope_value(vm, index);
+ 
+-    if (!njs_is_valid(value)) {
++    if (value == NULL || !njs_is_valid(value)) {
+         if (njs_scope_index_var(index) <= NJS_VARIABLE_LET) {
+             njs_reference_error(vm, "cannot access variable "
+                                     "before initialization");

@@ -1,0 +1,31 @@
+diff --git a/tsk/fs/hfs.c b/tsk/fs/hfs.c
+index 22618534e..216e3083c 100644
+--- a/tsk/fs/hfs.c
++++ b/tsk/fs/hfs.c
+@@ -692,6 +692,13 @@ hfs_cat_compare_keys(HFS_INFO * hfs, const hfs_btree_key_cat * key1,
+     TSK_FS_INFO *fs = (TSK_FS_INFO *) & (hfs->fs_info);
+     uint32_t cnid1, cnid2;
+ 
++    if (tsk_getu16(fs->endian, key1->key_len) < sizeof(key1->parent_cnid) ||
++        tsk_getu16(fs->endian, key2->key_len) < sizeof(key2->parent_cnid)) {
++        tsk_error_set_errno(TSK_ERR_FS_GENFS);
++        tsk_error_set_errstr("hfs_cat_compare_keys: Key length is too short");
++        return -1;
++    }
++
+     cnid1 = tsk_getu32(fs->endian, key1->parent_cnid);
+     cnid2 = tsk_getu32(fs->endian, key2->parent_cnid);
+ 
+@@ -948,10 +955,10 @@ hfs_cat_traverse(HFS_INFO * hfs,
+                 key = (hfs_btree_key_cat *) & node[rec_off];
+                 keylen = 2 + tsk_getu16(hfs->fs_info.endian, key->key_len);
+ 
+-                if (keylen > nodesize - rec_off) {
++                if (keylen > nodesize - rec_off || keylen < sizeof(key->parent_cnid)) {
+                     tsk_error_set_errno(TSK_ERR_FS_GENFS);
+                     tsk_error_set_errstr
+-                        ("hfs_cat_traverse: length of key %d in leaf node %d too large (%d vs %"
++                        ("hfs_cat_traverse: length of key %d in leaf node %d too large or too small (%d vs %"
+                         PRIu16 ")", rec, cur_node, keylen, nodesize);
+                     free(node);
+                     return 1;

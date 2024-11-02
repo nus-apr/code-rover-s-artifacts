@@ -1,0 +1,47 @@
+diff --git a/source/m3_compile.c b/source/m3_compile.c
+index e057719..ced2ae4 100644
+--- a/source/m3_compile.c
++++ b/source/m3_compile.c
+@@ -137,7 +137,7 @@ u8  GetStackTypeFromBottom  (IM3Compilation o, u16 i_offset)
+ {
+     u8 type = c_m3Type_none;
+ 
+-    if (i_offset < o->stackIndex)
++    if (o && i_offset < o->stackIndex && i_offset < sizeof(o->typeStack) / sizeof(o->typeStack[0]))
+         type = o->typeStack [i_offset];
+ 
+     return type;
+@@ -145,8 +145,8 @@ u8  GetStackTypeFromBottom  (IM3Compilation o, u16 i_offset)
+ 
+ 
+ bool IsStackIndexInRegister  (IM3Compilation o, u16 i_stackIndex)
+-{                                                                           d_m3Assert (i_stackIndex < o->stackIndex or IsStackPolymorphic (o));
+-    if (i_stackIndex < o->stackIndex)
++{
++    if (o && i_stackIndex < o->stackIndex && i_stackIndex < sizeof(o->wasmStack) / sizeof(o->wasmStack[0]))
+         return (o->wasmStack [i_stackIndex] >= d_m3Reg0SlotAlias);
+     else
+         return false;
+@@ -310,9 +310,10 @@ void  AllocateRegister  (IM3Compilation o, u32 i_register, u16 i_stackIndex)
+ 
+ void  DeallocateRegister  (IM3Compilation o, u32 i_register)
+ {
+-    d_m3Assert (IsRegisterAllocated (o, i_register));
+-
+-    o->regStackIndexPlusOne [i_register] = c_m3RegisterUnallocated;
++    if (o && i_register < sizeof(o->regStackIndexPlusOne) / sizeof(o->regStackIndexPlusOne[0]) && IsRegisterAllocated (o, i_register))
++    {
++        o->regStackIndexPlusOne [i_register] = c_m3RegisterUnallocated;
++    }
+ }
+ 
+ 
+@@ -465,7 +466,7 @@ M3Result  Pop  (IM3Compilation o)
+ {
+     M3Result result = m3Err_none;
+ 
+-    if (o->stackIndex > o->block.initStackIndex)
++    if (o && o->stackIndex > o->block.initStackIndex && o->stackIndex < sizeof(o->wasmStack) / sizeof(o->wasmStack[0]))
+     {
+         o->stackIndex--;                                                //  printf ("pop: %d\n", (i32) o->stackIndex);
+ 

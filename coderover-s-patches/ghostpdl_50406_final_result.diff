@@ -1,0 +1,26 @@
+diff --git a/pdf/pdf_stack.c b/pdf/pdf_stack.c
+index 12dae2677..d5745aa63 100644
+--- a/pdf/pdf_stack.c
++++ b/pdf/pdf_stack.c
+@@ -31,11 +31,19 @@ int pdfi_pop(pdf_context *ctx, int num)
+         num = pdfi_count_stack(ctx);
+         pdfi_set_warning(ctx, 0, NULL, W_PDF_STACKUNDERFLOW, "pdfi_pop", NULL);
+     }
+-    while(num) {
+-        pdfi_countdown(ctx->stack_top[-1]);
++    while(num > 0 && ctx->stack_top > ctx->stack_bot) {
++        if (ctx->stack_top[-1] != NULL) {
++            pdfi_countdown(ctx->stack_top[-1]);
++        } else {
++            emprintf(ctx->memory, "Attempted to pop a null object from the stack!\n");
++        }
+         ctx->stack_top--;
+         num--;
+     }
++    if (num > 0) {
++        gs_note_error(gs_error_stackunderflow);
++        emprintf(ctx->memory, "Stack underflow detected in pdfi_pop!\n");
++    }
+     return code;
+ }
+ 

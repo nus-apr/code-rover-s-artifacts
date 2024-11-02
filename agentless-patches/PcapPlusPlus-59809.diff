@@ -1,0 +1,31 @@
+diff --git a/PcapPlusPlus/Common++/src/GeneralUtils.cpp b/PcapPlusPlus/Common++/src/GeneralUtils.cpp
+index 07a856a..b8012f2 100644
+--- a/PcapPlusPlus/Common++/src/GeneralUtils.cpp
++++ b/PcapPlusPlus/Common++/src/GeneralUtils.cpp
+@@ -72,19 +72,18 @@ size_t hexStringToByteArray(const std::string& hexString, uint8_t* resultByteArr
+ char* cross_platform_memmem(const char* haystack, size_t haystackLen, const char* needle, size_t needleLen)
+ {
+ 	char* ptr = (char*)haystack;
+-	while (needleLen <= (haystackLen - (ptr - haystack)))
++	while (needleLen <= haystackLen && needleLen <= (haystackLen - (ptr - haystack)))
+ 	{
+-		if (nullptr != (ptr = (char*)memchr(ptr, (int)(*needle), haystackLen - (ptr - haystack))))
++		ptr = (char*)memchr(ptr, (int)(*needle), haystackLen - (ptr - haystack));
++		if (ptr != nullptr)
+ 		{
+ 			// check if there is room to do a memcmp
+-			if(needleLen > (haystackLen - (ptr - haystack)))
++			if (needleLen <= (haystackLen - (ptr - haystack)))
+ 			{
+-				return nullptr;
++				if (0 == memcmp(ptr, needle, needleLen))
++					return ptr;
+ 			}
+-
+-			if (0 == memcmp(ptr, needle, needleLen))
+-				return ptr;
+-			else
++			ptr++;
+ 				++ptr;
+ 		}
+ 		else

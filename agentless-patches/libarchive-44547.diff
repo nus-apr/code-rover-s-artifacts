@@ -1,0 +1,12 @@
+diff --git a/libarchive/libarchive/archive_read_support_format_rar.c b/libarchive/libarchive/archive_read_support_format_rar.c
+index 2f8d7f3..7a27142 100644
+--- a/libarchive/libarchive/archive_read_support_format_rar.c
++++ b/libarchive/libarchive/archive_read_support_format_rar.c
+@@ -3188,6 +3188,7 @@ parse_filter(struct archive_read *a, const uint8_t *bytes, uint16_t length, uint
+       filters->stack = NULL;
+       delete_program_code(filters->progs);
+       filters->progs = NULL;
++      filters->progs = NULL;
+     }
+     else
+       num--;

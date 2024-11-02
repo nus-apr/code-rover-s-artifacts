@@ -1,0 +1,15 @@
+diff --git a/irssi/src/irc/core/irc.c b/irssi/src/irc/core/irc.c
+index 1a2d3ef..2f118e1 100644
+--- a/irssi/src/irc/core/irc.c
++++ b/irssi/src/irc/core/irc.c
+@@ -434,7 +434,9 @@ GHashTable *irc_parse_message_tags(const char *tags)
+ 	split = g_strsplit(tags, ";", -1);
+ 	for (tmp = split; *tmp != NULL; tmp++) {
+ 		kv = g_strsplit(*tmp, "=", 2);
+-		unescape_tag(kv[1]);
++		if (kv[1] != NULL) {
++			unescape_tag(kv[1]);
++		}
+ 		g_hash_table_replace(hash, i_refstr_intern(kv[0]),
+ 		                     g_strdup(kv[1] == NULL ? "" : kv[1]));
+ 		g_strfreev(kv);

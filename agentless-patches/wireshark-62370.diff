@@ -1,0 +1,13 @@
+diff --git a/wireshark/epan/addr_resolv.c b/wireshark/epan/addr_resolv.c
+index 72a3252..30610a0 100644
+--- a/wireshark/epan/addr_resolv.c
++++ b/wireshark/epan/addr_resolv.c
+@@ -3542,7 +3542,7 @@ uint_get_manuf_name_if_known(const guint32 manuf_key)
+ const gchar *
+ tvb_get_manuf_name_if_known(tvbuff_t *tvb, gint offset)
+ {
+-    return get_manuf_name_if_known(tvb_get_ptr(tvb, offset, 3));
++    return get_manuf_name_if_known(tvb_get_ptr(tvb, offset, 6));
+ }
+ 
+ char* get_hash_manuf_resolved_name(hashmanuf_t* manuf)

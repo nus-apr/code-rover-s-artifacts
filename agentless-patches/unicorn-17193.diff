@@ -1,0 +1,24 @@
+diff --git a/unicorn/qemu/exec.c b/unicorn/qemu/exec.c
+index da4fa9a..f579f4d 100644
+--- a/unicorn/qemu/exec.c
++++ b/unicorn/qemu/exec.c
+@@ -1430,13 +1430,17 @@ static uint16_t dummy_section(PhysPageMap *map, AddressSpace *as,
+ 
+ MemoryRegion *iotlb_to_region(AddressSpace *as, hwaddr index)
+ {
+-    return as->dispatch->map.sections[index & ~TARGET_PAGE_MASK].mr;
++    size_t masked_index = index & (TARGET_PAGE_MASK - 1);
++    return as->dispatch->map.sections[masked_index].mr;
+ }
+ 
+ void phys_mem_clean(struct uc_struct* uc)
+ {
+     AddressSpaceDispatch* d = uc->as.next_dispatch;
+-    g_free(d->map.sections);
++    if (d->map.sections) {
++        g_free(d->map.sections);
++        d->map.sections = NULL;
++    }
+ }
+ 
+ static void mem_begin(MemoryListener *listener)

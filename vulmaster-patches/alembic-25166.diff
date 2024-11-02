@@ -1,0 +1,15 @@
+diff --git a/lib/Alembic/Abc/ErrorHandler.h b/lib/Alembic/Abc/ErrorHandler.h
+index 5c382e6a..32f5eb12 100644
+--- a/lib/Alembic/Abc/ErrorHandler.h
++++ b/lib/Alembic/Abc/ErrorHandler.h
+@@ -60,9 +60,7 @@ public:
+         kUnknownException
+     };
+ 
+-    ErrorHandler()
+-      : m_policy( kThrowPolicy )
+-      , m_errorLog( "" ) {}
++ offset ) { JXL_DEBUG ( "cache aligned to %lu bytes", ( long ) payload_size ) ; <vul-start> ( payload_size <= ( size_t ) <vul-start> numeric_limits < size_t 
+ 
+     ErrorHandler( Policy iPolicy )
+       : m_policy( iPolicy )

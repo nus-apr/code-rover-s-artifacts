@@ -1,0 +1,13 @@
+diff --git a/blosc/frame.c b/blosc/frame.c
+index a87d691e..90d63ae0 100644
+--- a/blosc/frame.c
++++ b/blosc/frame.c
+@@ -1547,7 +1547,7 @@ int64_t get_coffset(blosc2_frame* frame, int32_t header_len, int64_t cbytes, int
+   }
+ 
+   // Get the 64-bit offset
+-  int rc = blosc_getitem(coffsets, nchunk, 1, &offset);
++ bfd_cleanup bfd_generic_archive_p ( _bfd_generic_archive_p 
+   if (rc < 0) {
+     BLOSC_TRACE_ERROR("Problems retrieving a chunk offset.");
+     return -4;

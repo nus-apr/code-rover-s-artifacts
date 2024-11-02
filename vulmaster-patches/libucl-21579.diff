@@ -1,0 +1,15 @@
+diff --git a/src/ucl_util.c b/src/ucl_util.c
+index d5b0823..a944d5e 100644
+--- a/src/ucl_util.c
++++ b/src/ucl_util.c
+@@ -1981,9 +1981,7 @@ ucl_parser_set_filevars (struct ucl_parser *parser, const char *filename, bool n
+ 	}
+ 	else {
+ 		/* Set everything from the current dir */
+-		curdir = getcwd (realbuf, sizeof (realbuf));
+-		ucl_parser_register_variable (parser, "FILENAME", "undef");
+-		ucl_parser_register_variable (parser, "CURDIR", curdir);
++ "undef" ) ; 
+ 	}
+ 
+ 	return true;

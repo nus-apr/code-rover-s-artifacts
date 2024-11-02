@@ -1,0 +1,26 @@
+diff --git a/io/src/ply_io.cpp b/io/src/ply_io.cpp
+index 775860cef..5ba3b66e5 100644
+--- a/io/src/ply_io.cpp
++++ b/io/src/ply_io.cpp
+@@ -300,10 +300,17 @@ namespace pcl
+   {
+     unsetDenseFlagIfNotFinite(value, cloud_);
+ 
+-    memcpy (&cloud_->data[vertex_count_ * cloud_->point_step + vertex_offset_before_],
+-            &value,
+-            sizeof (ContentType));
+-    vertex_offset_before_ += static_cast<int> (sizeof (ContentType));
++    size_t offset = vertex_count_ * cloud_->point_step + vertex_offset_before_;
++    size_t required_size = offset + sizeof(ContentType);
++
++    if (required_size <= cloud_->data.size()) {
++        memcpy(&cloud_->data[offset], &value, sizeof(ContentType));
++        vertex_offset_before_ += static_cast<int>(sizeof(ContentType));
++    } else {
++        // Handle the error, e.g., log an error message or throw an exception
++        // For now, we can just return or handle it appropriately
++        return;
++    }
+   }
+ 
+   template <>

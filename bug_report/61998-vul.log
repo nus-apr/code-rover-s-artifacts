@@ -1,0 +1,61 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2312122151
+INFO: Loaded 1 modules   (23416 inline 8-bit counters): 23416 [0xb07a40, 0xb0d5b8), 
+INFO: Loaded 1 PC tables (23416 PCs): 23416 [0xa4c060,0xaa77e0), 
+/out/xaac_enc_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: global-buffer-overflow on address 0x00000097dda4 at pc 0x000000746ac6 bp 0x7ffcbd9f6cf0 sp 0x7ffcbd9f6ce8
+READ of size 4 at 0x00000097dda4 thread T0
+SCARINESS: 17 (4-byte-read-global-buffer-overflow)
+    #0 0x746ac5 in iusace_calc_sfb_dist /src/libxaac/encoder/ixheaace_fd_qc_adjthr.c:1135:23
+    #1 0x746ac5 in iusace_improve_scf /src/libxaac/encoder/ixheaace_fd_qc_adjthr.c:1219:11
+    #2 0x746ac5 in iusace_estimate_scfs_chan /src/libxaac/encoder/ixheaace_fd_qc_adjthr.c:1629:19
+    #3 0x74f22a in iusace_quantize_spec /src/libxaac/encoder/ixheaace_fd_quant.c:520:3
+    #4 0x72e6e9 in iusace_fd_encode /src/libxaac/encoder/ixheaace_fd_enc.c:96:14
+    #5 0x69e6cf in ixheaace_usac_encode /src/libxaac/encoder/iusace_enc_main.c:1288:13
+    #6 0x598c43 in iusace_process /src/libxaac/encoder/ixheaace_api.c:3244:7
+    #7 0x598c43 in ixheaace_process /src/libxaac/encoder/ixheaace_api.c:3581:13
+    #8 0x5708b9 in LLVMFuzzerTestOneInput /src/libxaac/fuzzer/xaac_enc_fuzzer.cpp:408:5
+    #9 0x43df63 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #10 0x4296c2 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #11 0x42ef6c in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #12 0x4584a2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #13 0x7a459673b082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #14 0x41f88d in _start (/out/xaac_enc_fuzzer+0x41f88d)
+
+DEDUP_TOKEN: iusace_calc_sfb_dist--iusace_improve_scf--iusace_estimate_scfs_chan
+0x00000097dda4 is located 0 bytes to the right of global variable 'ixheaace_fd_quant_table' defined in '/src/libxaac/encoder/ixheaace_rom.c:1681:15' (0x97d9a0) of size 1028
+SUMMARY: AddressSanitizer: global-buffer-overflow /src/libxaac/encoder/ixheaace_fd_qc_adjthr.c:1135:23 in iusace_calc_sfb_dist
+Shadow bytes around the buggy address:
+  0x000080127b60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000080127b70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000080127b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000080127b90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000080127ba0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x000080127bb0: 00 00 00 00[04]f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x000080127bc0: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x000080127bd0: f9 f9 f9 f9 f9 f9 f9 f9 00 00 00 00 00 00 00 00
+  0x000080127be0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000080127bf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000080127c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

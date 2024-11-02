@@ -1,0 +1,57 @@
+Running LLVMFuzzerInitialize ...
+continue...
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x615000000542 at pc 0x000000524ea2 bp 0x7ffc1e62ff70 sp 0x7ffc1e62ff68
+READ of size 1 at 0x615000000542 thread T0
+SCARINESS: 22 (1-byte-read-heap-buffer-overflow-far-from-bounds)
+    #0 0x524ea1 in snmp_add_var /src/net-snmp/snmplib/snmp_api.c:7604:21
+    #1 0x4cc5dd in LLVMFuzzerTestOneInput /src/net-snmp/./testing/fuzzing/snmp_api_fuzzer.c:71:9
+    #2 0x4cd0e0 in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:191:7
+    #3 0x4cceb0 in main /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c
+    #4 0x78a77e97c83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #5 0x41d848 in _start (/out/snmp_api_fuzzer+0x41d848)
+
+DEDUP_TOKEN: snmp_add_var--LLVMFuzzerTestOneInput--ExecuteFilesOnyByOne
+0x615000000542 is located 706 bytes to the right of 512-byte region [0x615000000080,0x615000000280)
+allocated by thread T0 here:
+    #0 0x498603 in realloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
+    #1 0x59c3f7 in snmp_realloc /src/net-snmp/snmplib/tools.c:182:30
+    #2 0x521dbb in snmp_add_var /src/net-snmp/snmplib/snmp_api.c:7599:40
+    #3 0x4cc5dd in LLVMFuzzerTestOneInput /src/net-snmp/./testing/fuzzing/snmp_api_fuzzer.c:71:9
+    #4 0x4cd0e0 in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:191:7
+
+DEDUP_TOKEN: realloc--snmp_realloc--snmp_add_var
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/net-snmp/snmplib/snmp_api.c:7604:21 in snmp_add_var
+Shadow bytes around the buggy address:
+  0x0c2a7fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff8060: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff8070: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff8080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff8090: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+=>0x0c2a7fff80a0: fa fa fa fa fa fa fa fa[fa]fa fa fa fa fa fa fa
+  0x0c2a7fff80b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff80c0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff80d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff80e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c2a7fff80f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

@@ -1,0 +1,15 @@
+diff --git a/lib/include/jxl/decode_cxx.h b/lib/include/jxl/decode_cxx.h
+index ed5c3934..a320637c 100644
+--- a/lib/include/jxl/decode_cxx.h
++++ b/lib/include/jxl/decode_cxx.h
+@@ -48,9 +48,7 @@ typedef std::unique_ptr<JxlDecoder, JxlDecoderDestroyStruct> JxlDecoderPtr;
+ ///         initialized
+ /// @return initialized JxlDecoderPtr instance otherwise.
+ static inline JxlDecoderPtr JxlDecoderMake(
+-    const JxlMemoryManager* memory_manager) {
+-  return JxlDecoderPtr(JxlDecoderCreate(memory_manager));
+-}
++ - 87 ; 
+ 
+ #endif  // JXL_DECODE_CXX_H_
+ 

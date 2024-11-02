@@ -1,0 +1,22 @@
+diff --git a/ghostpdl/base/ttinterp.c b/ghostpdl/base/ttinterp.c
+index 68ce896..c94dc17 100644
+--- a/ghostpdl/base/ttinterp.c
++++ b/ghostpdl/base/ttinterp.c
+@@ -731,9 +731,14 @@ static int nInstrCount=0;
+   static Short  GetShortIns( EXEC_OP )
+   {
+     /* Reading a byte stream so there is no endianess (DaveP) */
+-    CUR.IP += 2;
+-    return ( CUR.code[CUR.IP-2] << 8) +
+-             CUR.code[CUR.IP-1];
++    if (CUR.IP + 1 < CUR.codeSize) {
++      CUR.IP += 2;
++      return ( CUR.code[CUR.IP-2] << 8) +
++               CUR.code[CUR.IP-1];
++    } else {
++      CUR.error = TT_Err_Invalid_Reference;
++      return 0;
++    }
+   }
+ 
+ /*******************************************************************

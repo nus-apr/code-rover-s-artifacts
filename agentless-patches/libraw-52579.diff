@@ -1,0 +1,16 @@
+diff --git a/libraw/src/utils/read_utils.cpp b/libraw/src/utils/read_utils.cpp
+index 6a1b8d1..fbddafe 100644
+--- a/libraw/src/utils/read_utils.cpp
++++ b/libraw/src/utils/read_utils.cpp
+@@ -169,8 +169,9 @@ double libraw_sgetreal_static(short _order, int type, uchar *s)
+ 
+ void LibRaw::read_shorts(ushort *pixel, unsigned count)
+ {
+-  if ((unsigned)fread(pixel, 2, count, ifp) < count)
++  size_t read_count = fread(pixel, 2, count, ifp);
++  if (read_count < count)
+     derror();
+   if ((order == 0x4949) == (ntohs(0x1234) == 0x1234))
+     libraw_swab(pixel, count * 2);
+-}
++}

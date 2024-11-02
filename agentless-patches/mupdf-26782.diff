@@ -1,0 +1,13 @@
+diff --git a/mupdf/source/fitz/stream-read.c b/mupdf/source/fitz/stream-read.c
+index 27f7e74..6e5ed5e 100644
+--- a/mupdf/source/fitz/stream-read.c
++++ b/mupdf/source/fitz/stream-read.c
+@@ -15,6 +15,8 @@ fz_read(fz_context *ctx, fz_stream *stm, unsigned char *buf, size_t len)
+ 		n = fz_available(ctx, stm, len);
+ 		if (n > len)
+ 			n = len;
++		if (n > (size_t)(stm->wp - stm->rp))
++			n = (size_t)(stm->wp - stm->rp);
+ 		if (n == 0)
+ 			break;
+ 

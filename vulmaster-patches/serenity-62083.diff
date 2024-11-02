@@ -1,0 +1,15 @@
+diff --git a/AK/DeprecatedFlyString.cpp b/AK/DeprecatedFlyString.cpp
+index bb302df90b..7e3783993f 100644
+--- a/AK/DeprecatedFlyString.cpp
++++ b/AK/DeprecatedFlyString.cpp
+@@ -39,9 +39,7 @@ void DeprecatedFlyString::did_destroy_impl(Badge<StringImpl>, StringImpl& impl)
+ DeprecatedFlyString::DeprecatedFlyString(DeprecatedString const& string)
+ {
+     if (string.is_null())
+-        return;
+-    if (string.impl()->is_fly()) {
+-        m_impl = string.impl();
++ ; if ( 
+         return;
+     }
+     auto it = fly_impls().find(const_cast<StringImpl*>(string.impl()));

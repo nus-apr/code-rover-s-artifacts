@@ -1,0 +1,68 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/fuzz_ndpi_reader_alloc_fail
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x619000000418 at pc 0x00000048af8d bp 0x7ffed0da1190 sp 0x7ffed0da0950
+WRITE of size 320 at 0x619000000418 thread T0
+SCARINESS: 45 (multi-byte-write-heap-buffer-overflow)
+    #0 0x48af8c in __interceptor_strncpy /src/llvm-project/compiler-rt/lib/asan/asan_interceptors.cpp:471:5
+    #1 0x60edbe in thrift_set_method /src/ndpi/src/lib/protocols/thrift.c:123:5
+    #2 0x60edbe in ndpi_dissect_strict_hdr /src/ndpi/src/lib/protocols/thrift.c:170:3
+    #3 0x60edbe in ndpi_search_thrift_tcp_udp /src/ndpi/src/lib/protocols/thrift.c:244:7
+    #4 0x573ef9 in check_ndpi_detection_func /src/ndpi/src/lib/ndpi_main.c:5943:6
+    #5 0x57530c in ndpi_check_flow_func /src/ndpi/src/lib/ndpi_main.c
+    #6 0x57e594 in ndpi_internal_detection_process_packet /src/ndpi/src/lib/ndpi_main.c:7008:15
+    #7 0x57e594 in ndpi_detection_process_packet /src/ndpi/src/lib/ndpi_main.c:7175:22
+    #8 0x4f434d in packet_processing /src/ndpi/fuzz/../example/reader_util.c:1714:31
+    #9 0x4f434d in ndpi_workflow_process_packet /src/ndpi/fuzz/../example/reader_util.c:2431:10
+    #10 0x4dd6f5 in LLVMFuzzerTestOneInput /src/ndpi/fuzz/fuzz_ndpi_reader.c:141:7
+    #11 0x4f814b in main (/out/fuzz_ndpi_reader_alloc_fail+0x4f814b)
+    #12 0x7c6c689e6082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #13 0x41e7ed in _start (/out/fuzz_ndpi_reader_alloc_fail+0x41e7ed)
+
+DEDUP_TOKEN: __interceptor_strncpy--thrift_set_method--ndpi_dissect_strict_hdr
+0x619000000418 is located 0 bytes to the right of 920-byte region [0x619000000080,0x619000000418)
+allocated by thread T0 here:
+    #0 0x49fc26 in __interceptor_malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:69:3
+    #1 0x4e90b9 in ndpi_malloc_wrapper /src/ndpi/fuzz/../example/reader_util.c:366:10
+    #2 0x545952 in ndpi_malloc /src/ndpi/src/lib/ndpi_memory.c:60:25
+    #3 0x545d30 in ndpi_flow_malloc /src/ndpi/src/lib/ndpi_main.c:243:56
+    #4 0x4f6c4d in get_ndpi_flow_info /src/ndpi/fuzz/../example/reader_util.c:950:32
+    #5 0x4f1e0d in packet_processing /src/ndpi/fuzz/../example/reader_util.c:1507:12
+    #6 0x4f1e0d in ndpi_workflow_process_packet /src/ndpi/fuzz/../example/reader_util.c:2431:10
+    #7 0x4dd6f5 in LLVMFuzzerTestOneInput /src/ndpi/fuzz/fuzz_ndpi_reader.c:141:7
+    #8 0x4f814b in main (/out/fuzz_ndpi_reader_alloc_fail+0x4f814b)
+
+DEDUP_TOKEN: __interceptor_malloc--ndpi_malloc_wrapper--ndpi_malloc
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/asan_interceptors.cpp:471:5 in __interceptor_strncpy
+Shadow bytes around the buggy address:
+  0x0c327fff8030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c327fff8040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c327fff8050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c327fff8060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c327fff8070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c327fff8080: 00 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c327fff8090: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c327fff80a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c327fff80b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c327fff80c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c327fff80d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

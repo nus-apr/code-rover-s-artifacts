@@ -1,0 +1,26 @@
+diff --git a/fuzzer.cpp b/fuzzer.cpp
+index 791d6dc..d5e7781 100644
+--- a/fuzzer.cpp
++++ b/fuzzer.cpp
+@@ -398,12 +398,17 @@ bool wolfMQTTFuzzer::Initialize(void) {
+         {
+             memset(client, 0, sizeof(*client));
+ 
+-            tx_size = ds.Get<uint16_t>();
+-            tx_size = 4096;
++            tx_size = 4096; // Ensure a fixed, safe buffer size
+             tx_buf = (uint8_t*)this->malloc(tx_size);
+-            rx_size = ds.Get<uint16_t>();
+-            rx_size = 4096;
++            if (tx_buf == nullptr) {
++                throw std::bad_alloc();
++            }
++            rx_size = 4096; // Ensure a fixed, safe buffer size
+             rx_buf = (uint8_t*)this->malloc(rx_size);
++            if (rx_buf == nullptr) {
++                free(tx_buf);
++                throw std::bad_alloc();
++            }
+             memset(tx_buf, 0, tx_size);
+             memset(rx_buf, 0, rx_size);
+ 

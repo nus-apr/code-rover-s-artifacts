@@ -1,0 +1,29 @@
+diff --git a/Code/GraphMol/SmilesParse/SmilesParse.cpp b/Code/GraphMol/SmilesParse/SmilesParse.cpp
+index a16b20fa5..55a6f1de6 100644
+--- a/Code/GraphMol/SmilesParse/SmilesParse.cpp
++++ b/Code/GraphMol/SmilesParse/SmilesParse.cpp
+@@ -109,8 +109,12 @@ int smiles_parse_helper(const std::string &inp,
+   TEST_ASSERT(!yysmiles_lex_init(&scanner));
+   try {
+     size_t ltrim = setup_smiles_string(inp, scanner);
+-    res = yysmiles_parse(inp.c_str() + ltrim, &molVect, atom, bond,
+-                         &branchPoints, scanner, start_tok);
++    if (!molVect.empty()) {
++      res = yysmiles_parse(inp.c_str() + ltrim, &molVect, atom, bond,
++                           &branchPoints, scanner, start_tok);
++    } else {
++      throw SmilesParseException("Molecule vector is empty before parsing");
++    }
+   } catch (...) {
+     yysmiles_lex_destroy(scanner);
+     throw;
+@@ -215,6 +219,9 @@ RWMol *toMol(const std::string &inp,
+     func(inp, molVect);
+     if (!molVect.empty()) {
+       res = molVect[0];
++      if (!res) {
++        throw SmilesParseException("Failed to retrieve molecule from vector");
++      }
+       SmilesParseOps::CloseMolRings(res, false);
+       SmilesParseOps::SetUnspecifiedBondTypes(res);
+       SmilesParseOps::AdjustAtomChiralityFlags(res);

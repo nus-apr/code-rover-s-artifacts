@@ -1,0 +1,13 @@
+diff --git a/libjxl/lib/jxl/render_pipeline/stage_write.cc b/libjxl/lib/jxl/render_pipeline/stage_write.cc
+index a10ffff..ab8c6f2 100644
+--- a/libjxl/lib/jxl/render_pipeline/stage_write.cc
++++ b/libjxl/lib/jxl/render_pipeline/stage_write.cc
+@@ -114,7 +114,7 @@ class WriteToU8Stage : public RenderPipelineStage {
+       msan::UnpoisonMemory(row_in_a + xsize, sizeof(float) * (x1 - xsize));
+     }
+ 
+-    for (ssize_t x = 0; x < x1; x += Lanes(d)) {
++    for (ssize_t x = 0; x < xsize; x += Lanes(d)) {
+       auto rf = Clamp(zero, Load(d, row_in_r + x), one) * mul;
+       auto gf = Clamp(zero, Load(d, row_in_g + x), one) * mul;
+       auto bf = Clamp(zero, Load(d, row_in_b + x), one) * mul;

@@ -1,0 +1,13 @@
+diff --git a/lwan/src/lib/lwan-config.c b/lwan/src/lib/lwan-config.c
+index d464490..f25776c 100644
+--- a/lwan/src/lib/lwan-config.c
++++ b/lwan/src/lib/lwan-config.c
+@@ -342,7 +342,7 @@ static void *lex_multiline_string(struct lexer *lexer)
+     advance_n(lexer, strlen("'''") - 1);
+ 
+     do {
+-        if (!strncmp(lexer->pos, end, 3)) {
++        if (lexer->pos + 3 <= lexer->end && !strncmp(lexer->pos, end, 3)) {
+             emit(lexer, LEXEME_STRING);
+             lexer->pos += 3;
+ 

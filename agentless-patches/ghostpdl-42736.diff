@@ -1,0 +1,16 @@
+diff --git a/ghostpdl/pdf/pdf_cmap.c b/ghostpdl/pdf/pdf_cmap.c
+index 692de22..f4e3cfe 100644
+--- a/ghostpdl/pdf/pdf_cmap.c
++++ b/ghostpdl/pdf/pdf_cmap.c
+@@ -636,10 +636,7 @@ pdf_cmap_open_file(pdf_context *ctx, gs_string *cmap_name, byte **buf, int64_t *
+     stream *s;
+     char fname[gp_file_name_sizeof];
+     const char *path_pfx = "CMap/";
+-    fname[0] = '\0';
+-
+-    strncat(fname, path_pfx, strlen(path_pfx));
+-    strncat(fname, (char *)cmap_name->data, cmap_name->size);
++    snprintf(fname, sizeof(fname), "%s%.*s", path_pfx, (int)cmap_name->size, (char *)cmap_name->data);
+     code = pdfi_open_resource_file(ctx, (const char *)fname, (const int)strlen(fname), &s);
+     if (code >= 0) {
+         sfseek(s, 0, SEEK_END);

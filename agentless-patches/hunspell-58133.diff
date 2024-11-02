@@ -1,0 +1,12 @@
+diff --git a/hunspell/src/hunspell/hashmgr.cxx b/hunspell/src/hunspell/hashmgr.cxx
+index 43a8dc4..29c31a2 100644
+--- a/hunspell/src/hunspell/hashmgr.cxx
++++ b/hunspell/src/hunspell/hashmgr.cxx
+@@ -130,6 +130,7 @@ HashMgr::~HashMgr() {
+   for (size_t j = 0, numaliasf = aliasf.size(); j < numaliasf; ++j)
+     delete[] aliasf[j];
+   aliasf.clear();
++  aliasf.shrink_to_fit();
+ 
+   for (size_t j = 0, numaliasm = aliasm.size(); j < numaliasm; ++j)
+     delete[] aliasm[j];

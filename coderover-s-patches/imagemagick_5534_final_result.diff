@@ -1,0 +1,23 @@
+diff --git a/MagickCore/xml-tree.c b/MagickCore/xml-tree.c
+index 989a520e8..b6b7344bc 100644
+--- a/MagickCore/xml-tree.c
++++ b/MagickCore/xml-tree.c
+@@ -457,6 +457,7 @@ static char **DestroyXMLTreeAttributes(char **attributes)
+       attributes[i+1]=DestroyString(attributes[i+1]);
+   }
+   attributes=(char **) RelinquishMagickMemory(attributes);
++  attributes = (char **) NULL;  // Invalidate the pointer after freeing
+   return((char **) NULL);
+ }
+ 
+@@ -565,7 +566,9 @@ MagickExport XMLTreeInfo *DestroyXMLTree(XMLTreeInfo *xml_info)
+   DestroyXMLTreeChild(xml_info);
+   DestroyXMLTreeOrdered(xml_info);
+   DestroyXMLTreeRoot(xml_info);
+-  xml_info->attributes=DestroyXMLTreeAttributes(xml_info->attributes);
++  if (xml_info->attributes != (char **) NULL)
++    xml_info->attributes=DestroyXMLTreeAttributes(xml_info->attributes);
++  xml_info->attributes = (char **) NULL;  // Ensure the pointer is invalidated after destruction
+   xml_info->content=DestroyString(xml_info->content);
+   xml_info->tag=DestroyString(xml_info->tag);
+   xml_info=(XMLTreeInfo *) RelinquishMagickMemory(xml_info);

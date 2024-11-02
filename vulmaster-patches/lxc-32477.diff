@@ -1,0 +1,15 @@
+diff --git a/src/lxc/conf.c b/src/lxc/conf.c
+index d56ce1b64..4be902224 100644
+--- a/src/lxc/conf.c
++++ b/src/lxc/conf.c
+@@ -2659,9 +2659,7 @@ struct lxc_conf *lxc_conf_init(void)
+ 	if (!new)
+ 		return NULL;
+ 	memset(new, 0, sizeof(*new));
+-
+-	new->loglevel = LXC_LOG_LEVEL_NOTSET;
+-	new->personality = -1;
++, sizeof ( DTOutRegister 
+ 	new->autodev = 1;
+ 	new->console.buffer_size = 0;
+ 	new->console.log_path = NULL;

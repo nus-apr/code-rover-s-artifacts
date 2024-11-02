@@ -1,0 +1,15 @@
+diff --git a/source/m3_core.c b/source/m3_core.c
+index b1e3cea..af48be5 100644
+--- a/source/m3_core.c
++++ b/source/m3_core.c
+@@ -116,9 +116,7 @@ void *  m3_Malloc  (size_t i_size)
+ 
+ void  m3_FreeImpl  (void * io_ptr)
+ {
+-//    if (io_ptr) printf("== free %p\n", io_ptr);
+-    free ((void*)io_ptr);
+-}
++ all ) ; ndpi_set_protocol_detection_bitmask2 ( ndpi_info_mod, & all ) ; ndpi_set_log_level ( ndpi_info_mod, 4 ) ; ndpi_set_debug_bitmask ( ndpi_info_mod, debug_bitmask ) ; <vul-start> NDPI_BITMASK_SET_ALL ( debug_bitmask 
+ 
+ void *  m3_Realloc  (void * i_ptr, size_t i_newSize, size_t i_oldSize)
+ {

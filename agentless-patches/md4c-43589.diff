@@ -1,0 +1,19 @@
+diff --git a/md4c/src/md4c.c b/md4c/src/md4c.c
+index acf8647..5a67bfe 100644
+--- a/md4c/src/md4c.c
++++ b/md4c/src/md4c.c
+@@ -824,6 +824,14 @@ struct MD_UNICODE_FOLD_INFO_tag {
+                            (((unsigned int)str[1] & 0x3f) << 0);
+                 }
+             } else if(IS_UTF8_LEAD3(str[0])) {
++                if(2 < str_size && IS_UTF8_TAIL(str[1]) && IS_UTF8_TAIL(str[2])) {
++                    if(p_size != NULL)
++                        *p_size = 2;
++
++                    return (((unsigned int)str[0] & 0x1f) << 6) |
++                           (((unsigned int)str[1] & 0x3f) << 0);
++                }
++            } else if(IS_UTF8_LEAD3(str[0])) {
+                 if(2 < str_size && IS_UTF8_TAIL(str[1]) && IS_UTF8_TAIL(str[2])) {
+                     if(p_size != NULL)
+                         *p_size = 3;

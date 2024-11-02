@@ -1,0 +1,26 @@
+diff --git a/Zend/zend_execute_API.c b/Zend/zend_execute_API.c
+index fed3ae1d29..ab73a6aaeb 100644
+--- a/Zend/zend_execute_API.c
++++ b/Zend/zend_execute_API.c
+@@ -204,7 +204,7 @@ static int zval_call_destructor(zval *zv) /* {{{ */
+ 	if (Z_TYPE_P(zv) == IS_INDIRECT) {
+ 		zv = Z_INDIRECT_P(zv);
+ 	}
+-	if (Z_TYPE_P(zv) == IS_OBJECT && Z_REFCOUNT_P(zv) == 1) {
++	if (Z_TYPE_P(zv) == IS_OBJECT && Z_REFCOUNT_P(zv) == 1 && !Z_OBJCE_P(zv)->ce_flags & ZEND_ACC_IMMUTABLE) {
+ 		return ZEND_HASH_APPLY_REMOVE;
+ 	} else {
+ 		return ZEND_HASH_APPLY_KEEP;
+diff --git a/Zend/zend_hash.c b/Zend/zend_hash.c
+index 680263b5cb..ac217032bb 100644
+--- a/Zend/zend_hash.c
++++ b/Zend/zend_hash.c
+@@ -1404,7 +1404,7 @@ static zend_always_inline void _zend_hash_del_el_ex(HashTable *ht, uint32_t idx,
+ 		} while (ht->nNumUsed > 0 && (UNEXPECTED(Z_TYPE(ht->arData[ht->nNumUsed-1].val) == IS_UNDEF)));
+ 		ht->nInternalPointer = MIN(ht->nInternalPointer, ht->nNumUsed);
+ 	}
+-	if (ht->pDestructor) {
++	if (ht->pDestructor && Z_TYPE(p->val) != IS_UNDEF) {
+ 		zval tmp;
+ 		ZVAL_COPY_VALUE(&tmp, &p->val);
+ 		ZVAL_UNDEF(&p->val);

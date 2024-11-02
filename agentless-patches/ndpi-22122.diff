@@ -1,0 +1,39 @@
+diff --git a/ndpi/example/reader_util.c b/ndpi/example/reader_util.c
+index 48a1a0c..89e10e0 100644
+--- a/ndpi/example/reader_util.c
++++ b/ndpi/example/reader_util.c
+@@ -1092,7 +1092,7 @@ void process_ndpi_collected_info(struct ndpi_workflow * workflow, struct ndpi_fl
+ 	     sizeof(flow->ssh_tls.client_requested_server_name), "%s",
+ 	     flow->ndpi_flow->protos.stun_ssl.ssl.client_requested_server_name);
+ 
+-    if(flow->ndpi_flow->protos.stun_ssl.ssl.server_names_len > 0)
++    if(flow->ndpi_flow->protos.stun_ssl.ssl.server_names_len > 0 && flow->ndpi_flow->protos.stun_ssl.ssl.server_names != NULL)
+       flow->ssh_tls.server_names = ndpi_strdup(flow->ndpi_flow->protos.stun_ssl.ssl.server_names);
+     flow->ssh_tls.notBefore = flow->ndpi_flow->protos.stun_ssl.ssl.notBefore;
+     flow->ssh_tls.notAfter = flow->ndpi_flow->protos.stun_ssl.ssl.notAfter;
+@@ -1109,20 +1109,20 @@ void process_ndpi_collected_info(struct ndpi_workflow * workflow, struct ndpi_fl
+       flow->ssh_tls.sha1_cert_fingerprint_set = 1;
+     }
+ 
+-    if(flow->ndpi_flow->protos.stun_ssl.ssl.alpn) {
++    if(flow->ndpi_flow->protos.stun_ssl.ssl.alpn != NULL) {
+       if((flow->ssh_tls.tls_alpn = ndpi_strdup(flow->ndpi_flow->protos.stun_ssl.ssl.alpn)) != NULL)
+         correct_csv_data_field(flow->ssh_tls.tls_alpn);
+     }
+ 
+-    if(flow->ndpi_flow->protos.stun_ssl.ssl.issuerDN)
++    if(flow->ndpi_flow->protos.stun_ssl.ssl.issuerDN != NULL)
+       flow->ssh_tls.tls_issuerDN = strdup(flow->ndpi_flow->protos.stun_ssl.ssl.issuerDN);
+     
+-    if(flow->ndpi_flow->protos.stun_ssl.ssl.subjectDN)
++    if(flow->ndpi_flow->protos.stun_ssl.ssl.subjectDN != NULL)
+       flow->ssh_tls.tls_subjectDN = strdup(flow->ndpi_flow->protos.stun_ssl.ssl.subjectDN);
+     
+-    if(flow->ssh_tls.tls_supported_versions) {
++    if(flow->ndpi_flow->protos.stun_ssl.ssl.tls_supported_versions != NULL) {
+       if((flow->ssh_tls.tls_supported_versions = ndpi_strdup(flow->ndpi_flow->protos.stun_ssl.ssl.tls_supported_versions)) != NULL)
+-	correct_csv_data_field(flow->ssh_tls.tls_supported_versions);
++        correct_csv_data_field(flow->ssh_tls.tls_supported_versions);
+     }
+ 
+     if(flow->ndpi_flow->protos.stun_ssl.ssl.alpn

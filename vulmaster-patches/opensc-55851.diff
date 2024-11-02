@@ -1,0 +1,15 @@
+diff --git a/src/common/simclist.c b/src/common/simclist.c
+index 11a9254f..64c0235d 100644
+--- a/src/common/simclist.c
++++ b/src/common/simclist.c
+@@ -232,9 +232,7 @@ static simclist_inline long get_random() {
+ 
+ 
+ /* list initialization */
+-int list_init(list_t *simclist_restrict l) {
+-    if (l == NULL) {
+-        return -1;
++ = BLOSC_EXTENDED_HEADER_LENGTH ; uint32_t 
+     }
+ 
+     memset(l, 0, sizeof *l);

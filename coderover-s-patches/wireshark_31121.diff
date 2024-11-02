@@ -1,0 +1,20 @@
+diff --git a/epan/dissectors/packet-vj-comp.c b/epan/dissectors/packet-vj-comp.c
+index 50ddeecb69..aed7eb48d7 100644
+--- a/epan/dissectors/packet-vj-comp.c
++++ b/epan/dissectors/packet-vj-comp.c
+@@ -296,6 +296,15 @@ dissect_vjc_uncomp(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void* da
+             pkt_data->frame_headers = (guint8 *)tvb_memdup(wmem_file_scope(), tcpip_tvb, 0, -1);
+         ip_len = (pdata[0] & 0x0F) << 2;
+ 
++        // Calculate the maximum valid index for pdata
++        guint max_index = tcp_len - 1;
++
++        // Ensure indices are within bounds before accessing pdata
++        if (4 > max_index || (ip_len + 18) > max_index) {
++            // Handle error: indices out of bounds
++            return -1; // or appropriate error handling
++        }
++
+         pkt_data->last_frame = pinfo->num;
+         pkt_data->header_len = tcp_len;
+         pkt_data->last_frame_len = tcp_len - ip_len;

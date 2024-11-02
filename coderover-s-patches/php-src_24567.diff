@@ -1,0 +1,47 @@
+diff --git a/Zend/zend_opcode.c b/Zend/zend_opcode.c
+index 14dd6e46db..733a5cc624 100644
+--- a/Zend/zend_opcode.c
++++ b/Zend/zend_opcode.c
+@@ -471,6 +471,10 @@ ZEND_API void destroy_op_array(zend_op_array *op_array)
+ 		return;
+ 	}
+ 
++	// Ensure literals and opcodes are not accessed after being freed
++	op_array->literals = NULL;
++	op_array->opcodes = NULL;
++
+ 	efree_size(op_array->refcount, sizeof(*(op_array->refcount)));
+ 
+ 	if (op_array->vars) {
+diff --git a/Zend/zend_variables.c b/Zend/zend_variables.c
+index 810866a1be..ab5911a0b4 100644
+--- a/Zend/zend_variables.c
++++ b/Zend/zend_variables.c
+@@ -54,7 +54,9 @@ static const zend_rc_dtor_func_t zend_rc_dtor_func[] = {
+ ZEND_API void ZEND_FASTCALL rc_dtor_func(zend_refcounted *p)
+ {
+ 	ZEND_ASSERT(GC_TYPE(p) <= IS_CONSTANT_AST);
+-	zend_rc_dtor_func[GC_TYPE(p)](p);
++	if (GC_REFCOUNT(p) == 0) {
++		zend_rc_dtor_func[GC_TYPE(p)](p);
++	}
+ }
+ 
+ #if ZEND_DEBUG
+diff --git a/Zend/zend_variables.h b/Zend/zend_variables.h
+index bdee8b1879..6f08bcf3d3 100644
+--- a/Zend/zend_variables.h
++++ b/Zend/zend_variables.h
+@@ -31,8 +31,10 @@ ZEND_API void ZEND_FASTCALL zval_copy_ctor_func(zval *zvalue);
+ 
+ static zend_always_inline void zval_ptr_dtor_nogc(zval *zval_ptr)
+ {
+-	if (Z_REFCOUNTED_P(zval_ptr) && !Z_DELREF_P(zval_ptr)) {
+-		rc_dtor_func(Z_COUNTED_P(zval_ptr));
++	if (Z_REFCOUNTED_P(zval_ptr) && Z_REFCOUNT_P(zval_ptr) > 0 && !Z_DELREF_P(zval_ptr)) {
++		if (Z_REFCOUNT_P(zval_ptr) == 0) {
++			rc_dtor_func(Z_COUNTED_P(zval_ptr));
++		}
+ 	}
+ }
+ 

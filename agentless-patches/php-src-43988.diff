@@ -1,0 +1,15 @@
+diff --git a/php-src/Zend/zend_object_handlers.c b/php-src/Zend/zend_object_handlers.c
+index 8cae1b4..d55b44d 100644
+--- a/php-src/Zend/zend_object_handlers.c
++++ b/php-src/Zend/zend_object_handlers.c
+@@ -1064,6 +1064,10 @@ ZEND_API zval *zend_std_get_property_ptr_ptr(zend_object *zobj, zend_string *nam
+ 			}
+ 			if (UNEXPECTED(!zobj->properties)) {
+ 				rebuild_object_properties(zobj);
++				if (UNEXPECTED(!zobj->properties)) {
++					// If properties are still NULL, return error zval to prevent use-after-free
++					return &EG(error_zval);
++				}
+ 			}
+ 			retval = zend_hash_update(zobj->properties, name, &EG(uninitialized_zval));
+ 			/* Notice is thrown after creation of the property, to avoid EG(std_property_info)

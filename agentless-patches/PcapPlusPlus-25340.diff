@@ -1,0 +1,13 @@
+diff --git a/PcapPlusPlus/Packet++/src/DnsResource.cpp b/PcapPlusPlus/Packet++/src/DnsResource.cpp
+index 9233474..54bea69 100644
+--- a/PcapPlusPlus/Packet++/src/DnsResource.cpp
++++ b/PcapPlusPlus/Packet++/src/DnsResource.cpp
+@@ -16,6 +16,8 @@ IDnsResource::IDnsResource(DnsLayer* dnsLayer, size_t offsetInLayer)
+ 	m_NameLength = decodeName((const char*)getRawData(), decodedName);
+ 	if (m_NameLength > 0)
+ 		m_DecodedName = decodedName;
++	else
++		m_DecodedName = "";
+ }
+ 
+ IDnsResource::IDnsResource(uint8_t* emptyRawData)

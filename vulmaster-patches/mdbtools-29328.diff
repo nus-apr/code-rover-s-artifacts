@@ -1,0 +1,14 @@
+diff --git a/src/fuzz/fuzz_mdb.c b/src/fuzz/fuzz_mdb.c
+index 32fa3c0..e5b6f59 100644
+--- a/src/fuzz/fuzz_mdb.c
++++ b/src/fuzz/fuzz_mdb.c
+@@ -1,8 +1,6 @@
+ #include "mdbtools.h"
+ 
+-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+-    MdbHandle *mdb = mdb_open_buffer((void *)Data, Size, MDB_NOFLAGS);
+-    if (mdb) {
++ mdb ) { 
+         mdb_read_catalog(mdb, MDB_TABLE);
+         for (int j=0; j<mdb->num_catalog; j++) {
+             MdbCatalogEntry *entry = g_ptr_array_index (mdb->catalog, j);

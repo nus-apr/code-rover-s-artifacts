@@ -1,0 +1,23 @@
+diff --git a/AK/Format.h b/AK/Format.h
+index ae4846eed6..a98f2ce2b1 100644
+--- a/AK/Format.h
++++ b/AK/Format.h
+@@ -222,13 +222,15 @@ public:
+     static_assert(sizeof...(Parameters) <= max_format_arguments);
+ 
+     explicit VariadicFormatParams(const Parameters&... parameters)
+-        : m_data({ TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }... })
++        : m_data()
+     {
+-        this->set_parameters(m_data);
++        size_t index = 0;
++        ((m_data[index++] = TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }), ...);
++        this->set_parameters({ m_data.data(), index });
+     }
+ 
+ private:
+-    Array<TypeErasedParameter, sizeof...(Parameters)> m_data;
++    AK::Array<TypeErasedParameter, sizeof...(Parameters)> m_data;
+ };
+ 
+ // We use the same format for most types for consistency. This is taken directly from

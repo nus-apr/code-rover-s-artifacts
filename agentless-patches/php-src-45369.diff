@@ -1,0 +1,17 @@
+diff --git a/php-src/Zend/zend_hash.c b/php-src/Zend/zend_hash.c
+index 6a1006c..0eaffe2 100644
+--- a/php-src/Zend/zend_hash.c
++++ b/php-src/Zend/zend_hash.c
+@@ -302,7 +302,11 @@ ZEND_API void ZEND_FASTCALL zend_hash_packed_grow(HashTable *ht)
+ 	if (ht->nTableSize >= HT_MAX_SIZE) {
+ 		zend_error_noreturn(E_ERROR, "Possible integer overflow in memory allocation (%u * %zu + %zu)", ht->nTableSize * 2, sizeof(Bucket), sizeof(Bucket));
+ 	}
+-	ht->nTableSize += ht->nTableSize;
++	if (ht->nTableSize < HT_MAX_SIZE / 2) {
++		ht->nTableSize += ht->nTableSize;
++	} else {
++		zend_error_noreturn(E_ERROR, "HashTable size overflow");
++	}
+ 	HT_SET_DATA_ADDR(ht, perealloc2(HT_GET_DATA_ADDR(ht), HT_PACKED_SIZE_EX(ht->nTableSize, HT_MIN_MASK), HT_PACKED_USED_SIZE(ht), GC_FLAGS(ht) & IS_ARRAY_PERSISTENT));
+ }
+ 

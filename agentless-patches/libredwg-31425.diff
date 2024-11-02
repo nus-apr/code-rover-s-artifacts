@@ -1,0 +1,13 @@
+diff --git a/libredwg/src/decode.c b/libredwg/src/decode.c
+index aa436bc..87cdc97 100644
+--- a/libredwg/src/decode.c
++++ b/libredwg/src/decode.c
+@@ -1106,7 +1106,7 @@ classes_section:
+             (long)dwg->header.section[SECTION_CLASSES_R13].size)
+   // check sentinel
+   dat->byte = dwg->header.section[SECTION_CLASSES_R13].address;
+-  if (memcmp (dwg_sentinel (DWG_SENTINEL_CLASS_BEGIN), &dat->chain[dat->byte], 16) == 0)
++  if (dat->byte + 16 <= dat->size && memcmp (dwg_sentinel (DWG_SENTINEL_CLASS_BEGIN), &dat->chain[dat->byte], 16) == 0)
+     dat->byte += 16;
+   else
+     LOG_TRACE ("no class sentinel\n");

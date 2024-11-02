@@ -1,0 +1,69 @@
+diff --git a/plugins/ua_accesscontrol_default.c b/plugins/ua_accesscontrol_default.c
+index 583aae098..613b26f8e 100644
+--- a/plugins/ua_accesscontrol_default.c
++++ b/plugins/ua_accesscontrol_default.c
+@@ -193,9 +193,13 @@ allowHistoryUpdateDeleteRawModified_default(UA_Server *server, UA_AccessControl
+ /***************************************/
+ 
+ static void deleteMembers_default(UA_AccessControl *ac) {
+-    UA_Array_delete((void*)(uintptr_t)ac->userTokenPolicies,
+-                    ac->userTokenPoliciesSize,
+-                    &UA_TYPES[UA_TYPES_USERTOKENPOLICY]);
++    if (ac->userTokenPolicies && ac->userTokenPoliciesSize > 0) {
++        UA_Array_delete((void*)(uintptr_t)ac->userTokenPolicies,
++                        ac->userTokenPoliciesSize,
++                        &UA_TYPES[UA_TYPES_USERTOKENPOLICY]);
++        ac->userTokenPolicies = NULL;
++        ac->userTokenPoliciesSize = 0;
++    }
+ 
+     AccessControlContext *context = (AccessControlContext*)ac->context;
+ 
+@@ -204,8 +208,11 @@ static void deleteMembers_default(UA_AccessControl *ac) {
+             UA_String_deleteMembers(&context->usernamePasswordLogin[i].username);
+             UA_String_deleteMembers(&context->usernamePasswordLogin[i].password);
+         }
+-        if(context->usernamePasswordLoginSize > 0)
++        if(context->usernamePasswordLoginSize > 0) {
+             UA_free(context->usernamePasswordLogin);
++            context->usernamePasswordLogin = NULL;
++            context->usernamePasswordLoginSize = 0;
++        }
+         UA_free(ac->context);
+     }
+ }
+diff --git a/src/server/ua_server_config.c b/src/server/ua_server_config.c
+index 71344fa38..46dc47dcd 100644
+--- a/src/server/ua_server_config.c
++++ b/src/server/ua_server_config.c
+@@ -55,8 +55,12 @@ UA_ServerConfig_clean(UA_ServerConfig *config) {
+         config->certificateVerification.deleteMembers(&config->certificateVerification);
+ 
+     /* Access Control */
+-    if(config->accessControl.deleteMembers)
+-        config->accessControl.deleteMembers(&config->accessControl);
++    if(config->accessControl.userTokenPolicies && config->accessControl.userTokenPoliciesSize > 0) {
++        if(config->accessControl.deleteMembers)
++            config->accessControl.deleteMembers(&config->accessControl);
++        config->accessControl.userTokenPolicies = NULL;
++        config->accessControl.userTokenPoliciesSize = 0;
++    }
+ 
+     /* Historical data */
+ #ifdef UA_ENABLE_HISTORIZING
+diff --git a/src/ua_types.c b/src/ua_types.c
+index a74f8f676..65274c136 100644
+--- a/src/ua_types.c
++++ b/src/ua_types.c
+@@ -1109,7 +1109,10 @@ UA_Array_delete(void *p, size_t size, const UA_DataType *type) {
+             ptr += type->memSize;
+         }
+     }
+-    UA_free((void*)((uintptr_t)p & ~(uintptr_t)UA_EMPTY_ARRAY_SENTINEL));
++    if (p) {
++        UA_free((void*)((uintptr_t)p & ~(uintptr_t)UA_EMPTY_ARRAY_SENTINEL));
++        p = NULL;
++    }
+ }
+ 
+ UA_Boolean

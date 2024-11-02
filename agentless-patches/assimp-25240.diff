@@ -1,0 +1,17 @@
+diff --git a/assimp/code/AssetLib/Obj/ObjFileMtlImporter.cpp b/assimp/code/AssetLib/Obj/ObjFileMtlImporter.cpp
+index 9076242..6809316 100644
+--- a/assimp/code/AssetLib/Obj/ObjFileMtlImporter.cpp
++++ b/assimp/code/AssetLib/Obj/ObjFileMtlImporter.cpp
+@@ -225,8 +225,10 @@ void ObjFileMtlImporter::getIlluminationModel(int &illum_model) {
+ // -------------------------------------------------------------------
+ //  Loads a single float value.
+ void ObjFileMtlImporter::getFloatValue(ai_real &value) {
+-    m_DataIt = CopyNextWord<DataArrayIt>(m_DataIt, m_DataItEnd, &m_buffer[0], BUFFERSIZE);
+-    value = (ai_real)fast_atof(&m_buffer[0]);
++    if (m_DataIt != m_DataItEnd) {
++        m_DataIt = CopyNextWord<DataArrayIt>(m_DataIt, m_DataItEnd, &m_buffer[0], BUFFERSIZE);
++        value = (ai_real)fast_atof(&m_buffer[0]);
++    }
+ }
+ 
+ // -------------------------------------------------------------------

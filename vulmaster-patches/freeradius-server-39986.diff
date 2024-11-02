@@ -1,0 +1,13 @@
+diff --git a/src/lib/util/base16.c b/src/lib/util/base16.c
+index db12794dd0..a820d4579e 100644
+--- a/src/lib/util/base16.c
++++ b/src/lib/util/base16.c
+@@ -152,7 +152,7 @@ ssize_t fr_base16_decode_nstd(fr_sbuff_parse_error_t *err, fr_dbuff_t *out, fr_s
+ 		bool	a, b;
+ 
+ 		a = fr_is_base16_nstd(p[0], alphabet);
+-		b = fr_is_base16_nstd(p[1], alphabet);
++ ( int32_t )64_to_int ( * offset ) 
+ 		if (!a || !b) {
+ 			if (a && !b && no_trailing) {
+ 		   		if (err) *err = FR_SBUFF_PARSE_ERROR_TRAILING;

@@ -1,0 +1,47 @@
+diff --git a/libexif/canon/exif-mnote-data-canon.c b/libexif/canon/exif-mnote-data-canon.c
+index ba79d16..de43f46 100644
+--- a/libexif/canon/exif-mnote-data-canon.c
++++ b/libexif/canon/exif-mnote-data-canon.c
+@@ -277,27 +277,37 @@ exif_mnote_data_canon_load (ExifMnoteData *ne,
+ 		 * Size? If bigger than 4 bytes, the actual data is not
+ 		 * in the entry but somewhere else (offset).
+ 		 */
+-		s = exif_format_get_size (n->entries[tcount].format) * 
++		s = exif_format_get_size(n->entries[tcount].format) * 
+ 								  n->entries[tcount].components;
+ 		n->entries[tcount].size = s;
+ 		if (!s) {
+-			exif_log (ne->log, EXIF_LOG_CODE_CORRUPT_DATA,
++			exif_log(ne->log, EXIF_LOG_CODE_CORRUPT_DATA,
+ 				  "ExifMnoteCanon",
+ 				  "Invalid zero-length tag size");
+ 			continue;
+ 
+ 		} else {
+ 			size_t dataofs = o + 8;
+-			if (s > 4) dataofs = exif_get_long (buf + dataofs, n->order) + 6;
++			if (s > 4) dataofs = exif_get_long(buf + dataofs, n->order) + 6;
+ 
+-			if (CHECKOVERFLOW(dataofs, buf_size, s)) {
+-				exif_log (ne->log, EXIF_LOG_CODE_DEBUG,
++			if (dataofs + s > buf_size) {
++				exif_log(ne->log, EXIF_LOG_CODE_DEBUG,
+ 					"ExifMnoteCanon",
+ 					"Tag data past end of buffer (%u > %u)",
+ 					(unsigned)(dataofs + s), buf_size);
+ 				continue;
+ 			}
+ 
++			/* Ensure the destination buffer is large enough */
++			if (n->entries[tcount].data && s <= buf_size - dataofs) {
++				memcpy(n->entries[tcount].data, buf + dataofs, s);
++			} else {
++				exif_log(ne->log, EXIF_LOG_CODE_CORRUPT_DATA,
++					"ExifMnoteCanon",
++					"Insufficient buffer size for memcpy");
++				continue;
++			}
++
+ 			n->entries[tcount].data = exif_mem_alloc (ne->mem, s);
+ 			if (!n->entries[tcount].data) {
+ 				EXIF_LOG_NO_MEMORY(ne->log, "ExifMnoteCanon", s);

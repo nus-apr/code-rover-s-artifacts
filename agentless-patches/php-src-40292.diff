@@ -1,0 +1,14 @@
+diff --git a/php-src/ext/opcache/jit/zend_jit_vm_helpers.c b/php-src/ext/opcache/jit/zend_jit_vm_helpers.c
+index 9997d0a..40c495a 100644
+--- a/php-src/ext/opcache/jit/zend_jit_vm_helpers.c
++++ b/php-src/ext/opcache/jit/zend_jit_vm_helpers.c
+@@ -311,6 +311,9 @@ static zend_always_inline ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL zend_jit_trace_c
+ 	size_t offset = jit_extension->offset;
+ #ifndef HAVE_GCC_GLOBAL_REGS
+ 	const zend_op *opline = EX(opline);
++	if (UNEXPECTED(opline == NULL)) {
++		return -1;
++	}
+ #endif
+ 
+ 	*(ZEND_OP_TRACE_INFO(opline, offset)->counter) -= cost;

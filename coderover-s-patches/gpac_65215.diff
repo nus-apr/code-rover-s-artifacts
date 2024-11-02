@@ -1,0 +1,22 @@
+diff --git a/src/utils/url.c b/src/utils/url.c
+index 6884a8d61..690e59649 100644
+--- a/src/utils/url.c
++++ b/src/utils/url.c
+@@ -429,10 +429,13 @@ void gf_url_to_fs_path(char *sURL)
+ {
+ 	if (!strnicmp(sURL, "file://", 7)) {
+ 		/*file:///C:\ scheme*/
+-		if ((sURL[7]=='/') && (sURL[9]==':')) {
+-			memmove(sURL, sURL+8, strlen(sURL)-7);
+-		} else {
+-			memmove(sURL, sURL+7, strlen(sURL)-6);
++		size_t len = strlen(sURL);
++		if (len > 9 && (sURL[7]=='/') && (sURL[9]==':')) {
++			memmove(sURL, sURL+8, len-8);
++			sURL[len-8] = '\0'; // Null-terminate the string
++		} else if (len > 7) {
++			memmove(sURL, sURL+7, len-7);
++			sURL[len-7] = '\0'; // Null-terminate the string
+ 		}
+ 	}
+ 

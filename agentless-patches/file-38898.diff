@@ -1,0 +1,13 @@
+diff --git a/file/src/cdf.c b/file/src/cdf.c
+index 06163f1..c20701e 100644
+--- a/file/src/cdf.c
++++ b/file/src/cdf.c
+@@ -588,7 +588,7 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
+ 	if (sid == CDF_SECID_END_OF_CHAIN || len == 0)
+ 		return cdf_zero_stream(scn);
+ 
+-	if (scn->sst_len == CAST(size_t, -1))
++	if (scn->sst_len == CAST(size_t, -1) || scn->sst_len > len / ss)
+ 		goto out;
+ 
+ 	scn->sst_tab = CDF_CALLOC(scn->sst_len, ss);

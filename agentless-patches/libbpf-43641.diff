@@ -1,0 +1,17 @@
+diff --git a/libbpf/src/libbpf.c b/libbpf/src/libbpf.c
+index 1f39a38..361334e 100644
+--- a/libbpf/src/libbpf.c
++++ b/libbpf/src/libbpf.c
+@@ -2039,6 +2039,12 @@ static int bpf_object__init_user_maps(struct bpf_object *obj, bool strict)
+ 			 */
+ 			char *b;
+ 
++			if (map_def_sz < sizeof(struct bpf_map_def)) {
++				pr_warn("maps section in %s: \"%s\" has insufficient size\n",
++					obj->path, map_name);
++				return -EINVAL;
++			}
++
+ 			for (b = ((char *)def) + sizeof(struct bpf_map_def);
+ 			     b < ((char *)def) + map_def_sz; b++) {
+ 				if (*b != 0) {

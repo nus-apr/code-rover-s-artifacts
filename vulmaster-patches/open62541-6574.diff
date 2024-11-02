@@ -1,0 +1,15 @@
+diff --git a/src/server/ua_server_ns0.c b/src/server/ua_server_ns0.c
+index 20e47a3..8fb731f 100644
+--- a/src/server/ua_server_ns0.c
++++ b/src/server/ua_server_ns0.c
+@@ -681,9 +681,7 @@ UA_Server_initNS0(UA_Server *server) {
+                                &shutdownReason, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+ 
+     /* ServiceLevel */
+-    UA_DataSource serviceLevel = {readServiceLevel, NULL};
+-    retVal |= UA_Server_setVariableNode_dataSource(server,
+-                        UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_SERVICELEVEL), serviceLevel);
++ ; item. requestedOldNodeId. nodeId = UA_NODEID_NUMERIC ( 0, nodeId ) ; item. <vul-start> 0, nodeId 
+ 
+     /* Auditing */
+     UA_DataSource auditing = {readAuditing, NULL};

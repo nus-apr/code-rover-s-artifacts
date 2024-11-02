@@ -1,0 +1,18 @@
+diff --git a/serenity/AK/Format.h b/serenity/AK/Format.h
+index 947b9e0..c436aa3 100644
+--- a/serenity/AK/Format.h
++++ b/serenity/AK/Format.h
+@@ -273,6 +273,13 @@ private:
+     Array<TypeErasedParameter, sizeof...(Parameters)> m_data;
+ };
+ 
++// Specialization for zero parameters
++template<>
++class VariadicFormatParams<> : public TypeErasedFormatParams {
++public:
++    VariadicFormatParams() = default;
++};
++
+ // We use the same format for most types for consistency. This is taken directly from
+ // std::format. One difference is that we are not counting the width or sign towards the
+ // total width when calculating zero padding for numbers.

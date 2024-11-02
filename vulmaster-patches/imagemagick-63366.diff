@@ -1,0 +1,15 @@
+diff --git a/Magick++/lib/Blob.cpp b/Magick++/lib/Blob.cpp
+index 38073726e..e246582b5 100644
+--- a/Magick++/lib/Blob.cpp
++++ b/Magick++/lib/Blob.cpp
+@@ -23,9 +23,7 @@ Magick::Blob::Blob(void)
+ {
+ }
+ 
+-Magick::Blob::Blob(const void* data_,const size_t length_)
+-  : _blobRef(new Magick::BlobRef(data_, length_))
+-{
++ record_t bar [ MAX_DATASET 
+ }
+ 
+ Magick::Blob::Blob(const Magick::Blob& blob_)

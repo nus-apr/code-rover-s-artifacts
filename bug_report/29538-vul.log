@@ -1,0 +1,77 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2287540807
+INFO: Loaded 1 modules   (118739 inline 8-bit counters): 118739 [0x196d200, 0x198a1d3), 
+INFO: Loaded 1 PC tables (118739 PCs): 118739 [0x198a1d8,0x1b59f08), 
+/out/php-fuzz-unserializehash: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x603000014ca0 at pc 0x000000547ce7 bp 0x7fffe4e78530 sp 0x7fffe4e77cf8
+READ of size 4294967258 at 0x603000014ca0 thread T0
+SCARINESS: 26 (multi-byte-read-heap-buffer-overflow)
+    #0 0x547ce6 in __asan_memcpy /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3
+    #1 0x78d01f in XXH_memcpy /src/php-src/ext/hash/xxhash/xxhash.h:916:12
+    #2 0x787b6d in XXH_INLINE_XXH64_update /src/php-src/ext/hash/xxhash/xxhash.h:2007:13
+    #3 0x787760 in PHP_XXH64Update /src/php-src/ext/hash/hash_xxhash.c:111:2
+    #4 0x738798 in zif_hash_update /src/php-src/ext/hash/hash.c:698:2
+    #5 0xbaa613 in zend_call_function /src/php-src/Zend/zend_execute_API.c
+    #6 0xba8920 in _call_user_function_impl /src/php-src/Zend/zend_execute_API.c:659:9
+    #7 0xe07b83 in fuzzer_call_php_func_zval /src/php-src/sapi/fuzzer/fuzzer-sapi.c:278:2
+    #8 0xe06c5f in LLVMFuzzerTestOneInput /src/php-src/sapi/fuzzer/fuzzer-unserializehash.c:63:4
+    #9 0x480291 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #10 0x46a022 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #11 0x470365 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #12 0x49a212 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #13 0x791783a7283f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #14 0x444f38 in _start (/out/php-fuzz-unserializehash+0x444f38)
+
+DEDUP_TOKEN: __asan_memcpy--XXH_memcpy--XXH_INLINE_XXH64_update
+0x603000014ca0 is located 0 bytes to the right of 32-byte region [0x603000014c80,0x603000014ca0)
+allocated by thread T0 here:
+    #0 0x54893d in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:145:3
+    #1 0xb53b99 in __zend_malloc /src/php-src/Zend/zend_alloc.c:3030:14
+    #2 0xb533c7 in _malloc_custom /src/php-src/Zend/zend_alloc.c:2418:10
+    #3 0xb532cf in _emalloc /src/php-src/Zend/zend_alloc.c:2537:10
+    #4 0xe06eff in zend_string_alloc /src/php-src/Zend/zend_string.h:141:36
+    #5 0xe06e3f in zend_string_init /src/php-src/Zend/zend_string.h:163:21
+    #6 0xe06c0f in LLVMFuzzerTestOneInput /src/php-src/sapi/fuzzer/fuzzer-unserializehash.c:62:4
+    #7 0x480291 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #8 0x46a022 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #9 0x470365 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #10 0x49a212 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #11 0x791783a7283f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: malloc--__zend_malloc--_malloc_custom
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3 in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x0c067fffa940: fa fa fd fd fd fa fa fa fd fd fd fa fa fa 00 00
+  0x0c067fffa950: 00 fa fa fa 00 00 01 fa fa fa 00 00 00 00 fa fa
+  0x0c067fffa960: 00 00 00 fa fa fa 00 00 00 00 fa fa 00 00 00 fa
+  0x0c067fffa970: fa fa 00 00 00 fa fa fa 00 00 00 00 fa fa 00 00
+  0x0c067fffa980: 00 04 fa fa 00 00 00 fa fa fa fd fd fd fd fa fa
+=>0x0c067fffa990: 00 00 00 00[fa]fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fffa9a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fffa9b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fffa9c0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fffa9d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fffa9e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

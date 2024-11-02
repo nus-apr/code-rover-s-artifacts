@@ -1,0 +1,50 @@
+diff --git a/src/server/ua_securechannel_manager.c b/src/server/ua_securechannel_manager.c
+index 24eeb85dc..e3f80ad39 100644
+--- a/src/server/ua_securechannel_manager.c
++++ b/src/server/ua_securechannel_manager.c
+@@ -24,8 +24,8 @@ UA_SecureChannelManager_init(UA_SecureChannelManager* cm, UA_Server* server) {
+ void UA_SecureChannelManager_deleteMembers(UA_SecureChannelManager* cm) {
+     channel_list_entry *entry, *temp;
+     LIST_FOREACH_SAFE(entry, &cm->channels, pointers, temp) {
+-        LIST_REMOVE(entry, pointers);
+         UA_SecureChannel_deleteMembersCleanup(&entry->channel);
++        LIST_REMOVE(entry, pointers);
+         UA_free(entry);
+     }
+ }
+diff --git a/src/server/ua_session.c b/src/server/ua_session.c
+index 835e4cfca..d70d7aa72 100644
+--- a/src/server/ua_session.c
++++ b/src/server/ua_session.c
+@@ -81,10 +81,10 @@ void UA_Session_attachToSecureChannel(UA_Session *session, UA_SecureChannel *cha
+ }
+ 
+ void UA_Session_detachFromSecureChannel(UA_Session *session) {
+-    if(!session->header.channel)
+-        return;
+-    session->header.channel = NULL;
+-    LIST_REMOVE(&session->header, pointers);
++    if(session->header.channel) {
++        LIST_REMOVE(&session->header, pointers);
++        session->header.channel = NULL;
++    }
+ }
+ 
+ void UA_Session_updateLifetime(UA_Session *session) {
+diff --git a/src/ua_securechannel.c b/src/ua_securechannel.c
+index 36fab2682..23b096bb9 100644
+--- a/src/ua_securechannel.c
++++ b/src/ua_securechannel.c
+@@ -82,8 +82,10 @@ UA_SecureChannel_deleteMembersCleanup(UA_SecureChannel *channel) {
+      * the SecureChannel in the Session */
+     UA_SessionHeader *sh, *temp;
+     LIST_FOREACH_SAFE(sh, &channel->sessions, pointers, temp) {
+-        sh->channel = NULL;
+-        LIST_REMOVE(sh, pointers);
++        if (sh->channel == channel) {
++            sh->channel = NULL;
++            LIST_REMOVE(sh, pointers);
++        }
+     }
+ 
+     /* Remove the buffered chunks */

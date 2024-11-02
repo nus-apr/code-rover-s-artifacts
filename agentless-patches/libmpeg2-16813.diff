@@ -1,0 +1,42 @@
+diff --git a/libmpeg2/common/ideint.c b/libmpeg2/common/ideint.c
+index 290f3b5..6a7cf4b 100644
+--- a/libmpeg2/common/ideint.c
++++ b/libmpeg2/common/ideint.c
+@@ -349,21 +349,19 @@ IDEINT_ERROR_T ideint_process(void *pv_ctxt,
+                 pu1_dst = pu1_out;
+                 dst_strd = out_strd;
+ 
+-                /* In case boundary blocks are not complete (dimensions non-multiple of 8)
+-                 * Use intermediate buffer as destination and copy required pixels to output
+-                 * buffer later
+-                 */
+-                if(input_boundary)
+-                {
+-                    pu1_dst = au1_dst;
+-                    dst_strd = BLK_WD;
+-                    ideint_weave_blk(pu1_top, pu1_bot, pu1_dst, dst_strd,
+-                                     cur_strd, blk_wd, blk_ht);
+-                }
+-
+                 /* Weave the two fields unconditionally */
+                 if(0 == ps_ctxt->s_params.i4_disable_weave)
+                 {
++                    /* In case boundary blocks are not complete (dimensions non-multiple of 8)
++                     * Use intermediate buffer as destination and copy required pixels to output
++                     * buffer later
++                     */
++                    if(input_boundary)
++                    {
++                        pu1_dst = au1_dst;
++                        dst_strd = BLK_WD;
++                    }
++
+                     ideint_weave_blk(pu1_top, pu1_bot, pu1_dst, dst_strd,
+                                      cur_strd, blk_wd, blk_ht);
+                 }
+@@ -416,4 +414,4 @@ IDEINT_ERROR_T ideint_process(void *pv_ctxt,
+         }
+     }
+     return IDEINT_ERROR_NONE;
+-}
++}

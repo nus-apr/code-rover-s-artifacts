@@ -1,0 +1,32 @@
+diff --git a/libavc/decoder/ih264d_compute_bs.c b/libavc/decoder/ih264d_compute_bs.c
+index 4a11467..2c3a06d 100644
+--- a/libavc/decoder/ih264d_compute_bs.c
++++ b/libavc/decoder/ih264d_compute_bs.c
+@@ -1,3 +1,4 @@
++
+ /******************************************************************************
+  *
+  * Copyright (C) 2015 The Android Open Source Project
+@@ -1316,12 +1317,16 @@ void ih264d_compute_bs_non_mbaff(dec_struct_t * ps_dec,
+         if(u1_top_mb_typ & D_INTRA_MB)
+             pu4_bs_table[0] = u4_cur_mb_fld ? 0x03030303 : 0x04040404;
+ 
+-        ps_dec->pf_fill_bs1[u4_is_b][u4_is_non16x16](
+-                        ps_cur_mv_pred, ps_top_mv_pred, apv_map_ref_idx_to_poc,
+-                        pu4_bs_table, ps_left_mv_pred,
+-                        &(ps_dec->ps_left_mvpred_addr[u1_pingpong][1]),
+-                        ps_cur_mb_info->ps_top_mb->u4_pic_addrress,
+-                        (4 >> u4_cur_mb_fld));
++        if (ps_cur_mv_pred && ps_top_mv_pred && apv_map_ref_idx_to_poc &&
++            pu4_bs_table && ps_left_mv_pred && ps_dec->ps_left_mvpred_addr &&
++            ps_cur_mb_info->ps_top_mb) {
++            ps_dec->pf_fill_bs1[u4_is_b][u4_is_non16x16](
++                            ps_cur_mv_pred, ps_top_mv_pred, apv_map_ref_idx_to_poc,
++                            pu4_bs_table, ps_left_mv_pred,
++                            &(ps_dec->ps_left_mvpred_addr[u1_pingpong][1]),
++                            ps_cur_mb_info->ps_top_mb->u4_pic_addrress,
++                            (4 >> u4_cur_mb_fld));
++        }
+     }
+ 
+     {

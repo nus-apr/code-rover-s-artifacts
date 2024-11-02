@@ -1,0 +1,15 @@
+diff --git a/dav1d/src/decode.c b/dav1d/src/decode.c
+index acb422f..b8f1972 100644
+--- a/dav1d/src/decode.c
++++ b/dav1d/src/decode.c
+@@ -732,6 +732,10 @@ static int decode_b(Dav1dTaskContext *const t,
+     const int bw4 = b_dim[0], bh4 = b_dim[1];
+     const int w4 = imin(bw4, f->bw - t->bx), h4 = imin(bh4, f->bh - t->by);
+     const int cbw4 = (bw4 + ss_hor) >> ss_hor, cbh4 = (bh4 + ss_ver) >> ss_ver;
++    if (cbw4 <= 0 || cbh4 <= 0) {
++        fprintf(stderr, "Invalid chroma block size: cbw4=%d, cbh4=%d\n", cbw4, cbh4);
++        return -1;
++    }
+     const int have_left = t->bx > ts->tiling.col_start;
+     const int have_top = t->by > ts->tiling.row_start;
+     const int has_chroma = f->cur.p.layout != DAV1D_PIXEL_LAYOUT_I400 &&

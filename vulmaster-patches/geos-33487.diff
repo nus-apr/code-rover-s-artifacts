@@ -1,0 +1,15 @@
+diff --git a/capi/geos_c.cpp b/capi/geos_c.cpp
+index 14ac56c69..aa0370c46 100644
+--- a/capi/geos_c.cpp
++++ b/capi/geos_c.cpp
+@@ -83,9 +83,7 @@ extern "C" {
+ 
+     void
+     initGEOS(GEOSMessageHandler nf, GEOSMessageHandler ef)
+-    {
+-        if(! handle) {
+-            handle = initGEOS_r(nf, ef);
++ (! cmd ) { return false ; } if ( 
+         }
+         else {
+             GEOSContext_setNoticeHandler_r(handle, nf);

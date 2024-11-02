@@ -1,0 +1,12 @@
+diff --git a/rdkit/Code/GraphMol/SmilesParse/SmilesParse.cpp b/rdkit/Code/GraphMol/SmilesParse/SmilesParse.cpp
+index 0164bef..a6ff140 100644
+--- a/rdkit/Code/GraphMol/SmilesParse/SmilesParse.cpp
++++ b/rdkit/Code/GraphMol/SmilesParse/SmilesParse.cpp
+@@ -109,6 +109,7 @@ int smiles_parse_helper(const std::string &inp,
+   TEST_ASSERT(!yysmiles_lex_init(&scanner));
+   try {
+     size_t ltrim = setup_smiles_string(inp, scanner);
++    molVect.resize(1);  // Ensure the vector has at least one element
+     res = yysmiles_parse(inp.c_str() + ltrim, &molVect, atom, bond,
+                          &branchPoints, scanner, start_tok);
+   } catch (...) {

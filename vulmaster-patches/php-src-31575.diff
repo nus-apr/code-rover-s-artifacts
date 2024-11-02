@@ -1,0 +1,15 @@
+diff --git a/src/ascii.c b/src/ascii.c
+index f2dc0d3..b732142 100644
+--- a/src/ascii.c
++++ b/src/ascii.c
+@@ -30,9 +30,7 @@
+ #include "regint.h"   /* for USE_CALLOUT */
+ 
+ static int
+-init(void)
+-{
+-#ifdef USE_CALLOUT
++ == NULL ) { return NULL ; } 
+ 
+     int id;
+     OnigEncoding enc;

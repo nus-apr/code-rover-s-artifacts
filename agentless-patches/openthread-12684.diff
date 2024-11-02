@@ -1,0 +1,27 @@
+diff --git a/openthread/src/core/api/ip6_api.cpp b/openthread/src/core/api/ip6_api.cpp
+index 6e6a5c7..1460cb6 100644
+--- a/openthread/src/core/api/ip6_api.cpp
++++ b/openthread/src/core/api/ip6_api.cpp
+@@ -51,14 +51,20 @@ otError otIp6SetEnabled(otInstance *aInstance, bool aEnabled)
+     if (aEnabled)
+     {
+ #if OPENTHREAD_ENABLE_RAW_LINK_API
+-        VerifyOrExit(!instance.GetLinkRaw().IsEnabled(), error = OT_ERROR_INVALID_STATE);
++        if (&instance.GetLinkRaw() != nullptr)
++        {
++            VerifyOrExit(!instance.GetLinkRaw().IsEnabled(), error = OT_ERROR_INVALID_STATE);
++        }
+ #endif // OPENTHREAD_ENABLE_RAW_LINK_API
+         error = instance.GetThreadNetif().Up();
+     }
+     else
+     {
+ #if OPENTHREAD_ENABLE_RAW_LINK_API
+-        VerifyOrExit(!instance.GetLinkRaw().IsEnabled(), error = OT_ERROR_INVALID_STATE);
++        if (&instance.GetLinkRaw() != nullptr)
++        {
++            VerifyOrExit(!instance.GetLinkRaw().IsEnabled(), error = OT_ERROR_INVALID_STATE);
++        }
+ #endif // OPENTHREAD_ENABLE_RAW_LINK_API
+         error = instance.GetThreadNetif().Down();
+     }

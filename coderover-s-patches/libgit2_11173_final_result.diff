@@ -1,0 +1,26 @@
+diff --git a/src/signature.c b/src/signature.c
+index 91864bb88..7b7b8edd1 100644
+--- a/src/signature.c
++++ b/src/signature.c
+@@ -232,7 +232,7 @@ int git_signature__parse(git_signature *sig, const char **buffer_out,
+ 		const char *time_end;
+ 
+ 		if (git__strntol64(&sig->when.time, time_start,
+-				   buffer_end - time_start, &time_end, 10) < 0) {
++				   (size_t)(buffer_end - time_start), &time_end, 10) < 0 || time_end > buffer_end) {
+ 			git__free(sig->name);
+ 			git__free(sig->email);
+ 			sig->name = sig->email = NULL;
+diff --git a/src/util.c b/src/util.c
+index 20c88a1d3..7c56b93dc 100644
+--- a/src/util.c
++++ b/src/util.c
+@@ -115,7 +115,7 @@ int git__strntol64(int64_t *result, const char *nptr, size_t nptr_len, const cha
+ 	/*
+ 	 * Non-empty sequence of digits
+ 	 */
+-	for (; nptr_len > 0; p++,ndig++,nptr_len--) {
++	for (; nptr_len > 0 && *p != '\0'; p++,ndig++,nptr_len--) {
+ 		c = *p;
+ 		v = base;
+ 		if ('0'<=c && c<='9')

@@ -1,0 +1,18 @@
+diff --git a/muparser/src/muParser.cpp b/muparser/src/muParser.cpp
+index 0a85941..b52af69 100644
+--- a/muparser/src/muParser.cpp
++++ b/muparser/src/muParser.cpp
+@@ -149,7 +149,12 @@ namespace mu
+       throw exception_type(_T("too few arguments for function sum."));
+ 
+     value_type fRes=0;
+-    for (int i=0; i<a_iArgc; ++i) fRes += a_afArg[i];
++    for (int i=0; i<a_iArgc; ++i) {
++      if (i >= sizeof(a_afArg) / sizeof(a_afArg[0])) {
++        throw exception_type(_T("argument count exceeds buffer size."));
++      }
++      fRes += a_afArg[i];
++    }
+     return fRes;
+   }
+ 

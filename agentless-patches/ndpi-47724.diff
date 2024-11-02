@@ -1,0 +1,22 @@
+diff --git a/ndpi/src/lib/protocols/http.c b/ndpi/src/lib/protocols/http.c
+index a359736..8d2a6ce 100644
+--- a/ndpi/src/lib/protocols/http.c
++++ b/ndpi/src/lib/protocols/http.c
+@@ -979,7 +979,7 @@ static void ndpi_check_http_header(struct ndpi_detection_module_struct *ndpi_str
+       if(is_a_suspicious_header(suspicious_http_header_keys_A, packet->line[i])) {
+ 	char str[64];
+ 
+-	snprintf(str, sizeof(str), "Found %s", packet->line[i].ptr);
++	snprintf(str, sizeof(str), "Found %.*s", (int)packet->line[i].len, packet->line[i].ptr);
+ 	ndpi_set_risk(ndpi_struct, flow, NDPI_HTTP_SUSPICIOUS_HEADER, str);
+ 	return;
+       }
+@@ -988,7 +988,7 @@ static void ndpi_check_http_header(struct ndpi_detection_module_struct *ndpi_str
+       if(is_a_suspicious_header(suspicious_http_header_keys_C, packet->line[i])) {
+ 	char str[64];
+ 
+-	snprintf(str, sizeof(str), "Found %s", packet->line[i].ptr);
++	snprintf(str, sizeof(str), "Found %.*s", (int)packet->line[i].len, packet->line[i].ptr);
+ 	ndpi_set_risk(ndpi_struct, flow, NDPI_HTTP_SUSPICIOUS_HEADER, str);
+ 	return;
+       }

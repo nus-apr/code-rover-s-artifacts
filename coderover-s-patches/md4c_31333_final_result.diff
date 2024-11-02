@@ -1,0 +1,40 @@
+diff --git a/src/md4c.c b/src/md4c.c
+index dc8a936..83eeba2 100644
+--- a/src/md4c.c
++++ b/src/md4c.c
+@@ -2266,18 +2266,21 @@ md_is_inline_link_spec(MD_CTX* ctx, const MD_LINE* lines, int n_lines,
+     OFF off = beg;
+     int ret = FALSE;
+ 
+-    while(off >= lines[line_index].end)
++    while(line_index < n_lines && off >= lines[line_index].end)
+         line_index++;
++    if(line_index >= n_lines || off >= ctx->size)
++        return FALSE;
+ 
+-    MD_ASSERT(CH(off) == _T('('));
++    if(off >= ctx->size || CH(off) != _T('('))
++        return FALSE;
+     off++;
+ 
+     /* Optional white space with up to one line break. */
+-    while(off < lines[line_index].end  &&  ISWHITESPACE(off))
++    while(line_index < n_lines && off < lines[line_index].end && ISWHITESPACE(off))
+         off++;
+-    if(off >= lines[line_index].end  &&  ISNEWLINE(off)) {
++    if(line_index < n_lines && off >= lines[line_index].end && ISNEWLINE(off)) {
+         line_index++;
+-        if(line_index >= n_lines)
++        if(line_index >= n_lines || off >= ctx->size)
+             return FALSE;
+         off = lines[line_index].beg;
+     }
+@@ -2324,7 +2327,7 @@ md_is_inline_link_spec(MD_CTX* ctx, const MD_LINE* lines, int n_lines,
+             return FALSE;
+         off = lines[line_index].beg;
+     }
+-    if(CH(off) != _T(')'))
++    if(off >= ctx->size || CH(off) != _T(')'))
+         goto abort;
+     off++;
+ 

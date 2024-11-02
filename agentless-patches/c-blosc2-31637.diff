@@ -1,0 +1,13 @@
+diff --git a/c-blosc2/blosc/bitshuffle-sse2.c b/c-blosc2/blosc/bitshuffle-sse2.c
+index 87f94d4..d5f2888 100644
+--- a/c-blosc2/blosc/bitshuffle-sse2.c
++++ b/c-blosc2/blosc/bitshuffle-sse2.c
+@@ -326,7 +326,7 @@ int64_t bshuf_trans_byte_bitrow_sse2(void* in, void* out, const size_t size,
+   CHECK_MULT_EIGHT(size);
+ 
+   for (ii = 0; ii + 7 < nrows; ii += 8) {
+-    for (jj = 0; jj + 15 < nbyte_row; jj += 16) {
++    for (jj = 0; jj + 15 < nbyte_row && jj + 15 < size; jj += 16) {
+       a0 = _mm_loadu_si128((__m128i*)&in_b[(ii + 0) * nbyte_row + jj]);
+       b0 = _mm_loadu_si128((__m128i*)&in_b[(ii + 1) * nbyte_row + jj]);
+       c0 = _mm_loadu_si128((__m128i*)&in_b[(ii + 2) * nbyte_row + jj]);

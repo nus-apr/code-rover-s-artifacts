@@ -1,0 +1,28 @@
+diff --git a/binutils/addr2line.c b/binutils/addr2line.c
+index 1fe9ce2a780..cdfde2d68ea 100644
+--- a/binutils/addr2line.c
++++ b/binutils/addr2line.c
+@@ -191,7 +191,7 @@ find_address_in_section (bfd *abfd, asection *section,
+     return;
+ 
+   size = bfd_section_size (section);
+-  if (pc >= vma + size)
++  if (pc >= vma + size || size > abfd->alloc_size)
+     return;
+ 
+   found = bfd_find_nearest_line_discriminator (abfd, section, syms, pc - vma,
+@@ -333,8 +333,13 @@ translate_addresses (bfd *abfd, asection *section)
+       found = false;
+       if (section)
+ 	find_offset_in_section (abfd, section);
+-      else
++      else {
++        if (abfd->alloc_size < sizeof(bfd_vma)) {
++          fprintf(stderr, "Buffer size too small, skipping\n");
++          continue;
++        }
+ 	bfd_map_over_sections (abfd, find_address_in_section, NULL);
++      }
+ 
+       if (! found)
+ 	{

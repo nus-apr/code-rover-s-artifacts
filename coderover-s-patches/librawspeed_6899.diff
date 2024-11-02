@@ -1,0 +1,31 @@
+diff --git a/src/librawspeed/common/RawImage.cpp b/src/librawspeed/common/RawImage.cpp
+index d4e70a21..ec1ca14f 100644
+--- a/src/librawspeed/common/RawImage.cpp
++++ b/src/librawspeed/common/RawImage.cpp
+@@ -118,7 +118,9 @@ void RawImageData::createData() {
+   }
+ #endif
+ 
+-  poisonPadding();
++  if (data) {
++    poisonPadding();
++  }
+ }
+ 
+ #if __has_feature(address_sanitizer) || defined(__SANITIZE_ADDRESS__)
+diff --git a/src/librawspeed/decompressors/Cr2Decompressor.cpp b/src/librawspeed/decompressors/Cr2Decompressor.cpp
+index ee58cc39..a9380d74 100644
+--- a/src/librawspeed/decompressors/Cr2Decompressor.cpp
++++ b/src/librawspeed/decompressors/Cr2Decompressor.cpp
+@@ -201,7 +201,10 @@ void Cr2Decompressor::decodeN_X_Y()
+ 
+         if (X_S_F == 1) { // will be optimized out
+           unroll_loop<N_COMP>([&](int i) {
+-            dest[i] = pred[i] += ht[i]->decodeNext(bitStream);
++            ushort16* endPtr = reinterpret_cast<ushort16*>(mRaw->getDataUncropped(mRaw->dim.x, mRaw->dim.y));
++            if (dest + i < endPtr) {
++              dest[i] = pred[i] += ht[i]->decodeNext(bitStream);
++            }
+           });
+         } else {
+           unroll_loop<Y_S_F>([&](int i) {

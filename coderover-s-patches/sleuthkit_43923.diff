@@ -1,0 +1,26 @@
+diff --git a/tsk/fs/ntfs_dent.cpp b/tsk/fs/ntfs_dent.cpp
+index ee3b772b4..8a9f9a7a8 100644
+--- a/tsk/fs/ntfs_dent.cpp
++++ b/tsk/fs/ntfs_dent.cpp
+@@ -255,11 +255,16 @@ ntfs_dent_copy(NTFS_INFO * ntfs, ntfs_idxentry * idxe,
+     name16 = (UTF16 *) & fname->name;
+     name8 = (UTF8 *) fs_name->name;
+ 
+-    retVal = tsk_UTF16toUTF8(fs->endian, (const UTF16 **) &name16,
+-        (UTF16 *) ((uintptr_t) name16 +
+-            fname->nlen * 2), &name8,
+-        (UTF8 *) ((uintptr_t) name8 +
+-            fs_name->name_size), TSKlenientConversion);
++    // Calculate the correct end pointers for source and target buffers
++    const UTF16 *sourceEnd = (UTF16 *) ((uintptr_t) name16 + fname->nlen * 2);
++    UTF8 *targetEnd = (UTF8 *) ((uintptr_t) name8 + fs_name->name_size - 1); // Reserve space for null terminator
++
++    // Ensure that sourceEnd does not exceed the allocated buffer
++    if (sourceEnd > (UTF16 *) ((uintptr_t) &fname->name + sizeof(fname->name))) {
++        sourceEnd = (UTF16 *) ((uintptr_t) &fname->name + sizeof(fname->name));
++    }
++
++    retVal = tsk_UTF16toUTF8(fs->endian, (const UTF16 **) &name16, sourceEnd, &name8, targetEnd, TSKlenientConversion);
+ 
+     if (retVal != TSKconversionOK) {
+         *name8 = '\0';

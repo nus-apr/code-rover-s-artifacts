@@ -1,0 +1,40 @@
+diff --git a/libSBRdec/src/env_extr.cpp b/libSBRdec/src/env_extr.cpp
+index c72a7b6..7e27260 100644
+--- a/libSBRdec/src/env_extr.cpp
++++ b/libSBRdec/src/env_extr.cpp
+@@ -759,20 +759,21 @@ int sbrGetChannelElement(HANDLE_SBR_HEADER_DATA hHeaderData,
+   }
+ 
+   /* sbr_invf() */
+-  for (i = 0; i < hHeaderData->freqBandData.nInvfBands; i++) {
+-    hFrameDataLeft->sbr_invf_mode[i] = (INVF_MODE)FDKreadBits(hBs, 2);
+-  }
+-  if (nCh == 2) {
+-    if (hFrameDataLeft->coupling) {
+-      for (i = 0; i < hHeaderData->freqBandData.nInvfBands; i++) {
+-        hFrameDataRight->sbr_invf_mode[i] = hFrameDataLeft->sbr_invf_mode[i];
+-      }
+-    } else {
+-      for (i = 0; i < hHeaderData->freqBandData.nInvfBands; i++) {
+-        hFrameDataRight->sbr_invf_mode[i] = (INVF_MODE)FDKreadBits(hBs, 2);
+-      }
+-    }
+-  }
++   int maxInvfBands = (hHeaderData->freqBandData.nInvfBands < 5) ? hHeaderData->freqBandData.nInvfBands : 5;
++   for (i = 0; i < maxInvfBands; i++) {
++     hFrameDataLeft->sbr_invf_mode[i] = (INVF_MODE)FDKreadBits(hBs, 2);
++   }
++   if (nCh == 2) {
++     if (hFrameDataLeft->coupling) {
++       for (i = 0; i < maxInvfBands; i++) {
++         hFrameDataRight->sbr_invf_mode[i] = hFrameDataLeft->sbr_invf_mode[i];
++       }
++     } else {
++       for (i = 0; i < maxInvfBands; i++) {
++         hFrameDataRight->sbr_invf_mode[i] = (INVF_MODE)FDKreadBits(hBs, 2);
++       }
++     }
++   }
+ 
+   if (nCh == 1) {
+     if (hHeaderData->bs_info.pvc_mode) {

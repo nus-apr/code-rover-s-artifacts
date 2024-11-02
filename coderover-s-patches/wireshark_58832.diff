@@ -1,0 +1,32 @@
+diff --git a/wsutil/wmem/wmem_tree.c b/wsutil/wmem/wmem_tree.c
+index 826a49eeea..009c6a20f8 100644
+--- a/wsutil/wmem/wmem_tree.c
++++ b/wsutil/wmem/wmem_tree.c
+@@ -561,13 +561,13 @@ wmem_tree_lookup32_le(wmem_tree_t *tree, guint32 key)
+         }
+         else if (key < GPOINTER_TO_UINT(node->key)) {
+             if (node->left == NULL) {
+-                break;
++                return NULL; // Return NULL if left child is not present
+             }
+             node = node->left;
+         }
+         else if (key > GPOINTER_TO_UINT(node->key)) {
+             if (node->right == NULL) {
+-                break;
++                return NULL; // Return NULL if right child is not present
+             }
+             node = node->right;
+         }
+@@ -718,7 +718,10 @@ wmem_tree_lookup32_array_helper(wmem_tree_t *tree, wmem_tree_key_t *key,
+                 lookup_tree =
+                     (wmem_tree_t *)(*helper)(lookup_tree, lookup_key32);
+                 if (!lookup_tree) {
+-                    return NULL;
++                    return NULL; // Return NULL if lookup_tree is invalid
++                }
++                if (!lookup_tree->root) {
++                    return NULL; // Ensure the root of the lookup_tree is valid
+                 }
+             }
+             lookup_key32 = cur_key->key[i];

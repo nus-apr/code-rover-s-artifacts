@@ -1,0 +1,18 @@
+diff --git a/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp b/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp
+index a341969..3960b4a 100644
+--- a/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp
++++ b/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp
+@@ -202,9 +202,10 @@ void FujiDecompressor::copy_line(fuji_compressed_block* info,
+ void FujiDecompressor::copy_line_to_xtrans(fuji_compressed_block* info,
+                                            const FujiStrip& strip,
+                                            int cur_line) const {
+-  auto index = [](int pixel_count) {
+-    return (((pixel_count * 2 / 3) & 0x7FFFFFFE) | ((pixel_count % 3) & 1)) +
+-           ((pixel_count % 3) >> 1);
++  auto index = [this](int pixel_count) {
++    int idx = (((pixel_count * 2 / 3) & 0x7FFFFFFE) | ((pixel_count % 3) & 1)) +
++              ((pixel_count % 3) >> 1);
++    return std::min(idx, this->common_info.line_width - 1);
+   };
+ 
+   copy_line(info, strip, cur_line, index);

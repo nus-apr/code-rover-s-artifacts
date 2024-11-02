@@ -1,0 +1,16 @@
+diff --git a/serenity/Libraries/LibCore/puff.cpp b/serenity/Libraries/LibCore/puff.cpp
+index 3795387..c4acc7f 100644
+--- a/serenity/Libraries/LibCore/puff.cpp
++++ b/serenity/Libraries/LibCore/puff.cpp
+@@ -465,7 +465,10 @@ local int codes(struct state *s,
+             if (s->out != NIL) {
+                 if (s->outcnt == s->outlen)
+                     return 1;
+-                s->out[s->outcnt] = symbol;
++                if (s->outcnt < s->outlen)
++                    s->out[s->outcnt] = symbol;
++                else
++                    return 1; // Buffer overflow, return error
+             }
+             s->outcnt++;
+         }

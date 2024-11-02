@@ -1,0 +1,52 @@
+diff --git a/magick/render.c b/magick/render.c
+index 3caf603b..481f4d9f 100644
+--- a/magick/render.c
++++ b/magick/render.c
+@@ -1869,7 +1869,7 @@ DrawDashPolygon(const DrawInfo *draw_info,const PrimitiveInfo *primitive_info,
+   for (i=0; primitive_info[i].primitive != UndefinedPrimitive; i++);
+   number_vertices=i;
+   dash_polygon=MagickAllocateArray(PrimitiveInfo *,
+-                                   (size_t) 2*number_vertices+1,
++                                   (size_t) 2*number_vertices+2,
+                                    sizeof(PrimitiveInfo));
+   if (dash_polygon == (PrimitiveInfo *) NULL)
+     {
+@@ -1931,7 +1931,7 @@ DrawDashPolygon(const DrawInfo *draw_info,const PrimitiveInfo *primitive_info,
+         }
+       else
+         {
+-          if (j+1 > number_vertices)
++          if (j >= 2*number_vertices+2)
+             break;
+           dash_polygon[j]=primitive_info[i-1];
+           dash_polygon[j].point.x=primitive_info[i-1].point.x+
+@@ -1952,17 +1952,21 @@ DrawDashPolygon(const DrawInfo *draw_info,const PrimitiveInfo *primitive_info,
+     length-=(maximum_length-total_length);
+     if (n & 0x01)
+       continue;
+-    dash_polygon[j]=primitive_info[i];
+-    dash_polygon[j].coordinates=1;
+-    j++;
++    if (j < 2*number_vertices+2) {
++      dash_polygon[j]=primitive_info[i];
++      dash_polygon[j].coordinates=1;
++      j++;
++    }
+   }
+   if ((total_length < maximum_length) && ((n & 0x01) == 0) && (j > 1))
+     {
+-      dash_polygon[j]=primitive_info[i-1];
+-      dash_polygon[j].point.x+=MagickEpsilon;
+-      dash_polygon[j].point.y+=MagickEpsilon;
+-      dash_polygon[j].coordinates=1;
+-      j++;
++      if (j < 2*number_vertices+2) {
++        dash_polygon[j]=primitive_info[i-1];
++        dash_polygon[j].point.x+=MagickEpsilon;
++        dash_polygon[j].point.y+=MagickEpsilon;
++        dash_polygon[j].coordinates=1;
++        j++;
++      }
+       dash_polygon[0].coordinates=(size_t) j;
+       dash_polygon[j].primitive=UndefinedPrimitive;
+       status&=DrawStrokePolygon(image,clone_info,dash_polygon);

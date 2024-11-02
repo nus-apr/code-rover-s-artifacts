@@ -1,0 +1,62 @@
+diff --git a/xinclude.c b/xinclude.c
+index 855ede3b..37b59375 100644
+--- a/xinclude.c
++++ b/xinclude.c
+@@ -1035,7 +1035,8 @@ xmlXIncludeCopyXPointer(xmlXIncludeCtxtPtr ctxt, xmlXPathObjectPtr obj) {
+                  */
+ 		copy = xmlXIncludeCopyNode(ctxt, node, 0);
+                 if (copy == NULL) {
+-                    xmlFreeNodeList(list);
++            xmlFreeNodeList(list);
++            list = NULL;  // Set list to NULL after freeing to prevent use-after-free
+                     return(NULL);
+                 }
+ 		if (last == NULL) {
+@@ -2050,10 +2051,14 @@ xmlXIncludeIncludeNode(xmlXIncludeCtxtPtr ctxt, xmlXIncludeRefPtr ref) {
+ 	return(-1);
+     cur = ref->elem;
+     if ((cur == NULL) || (cur->type == XML_NAMESPACE_DECL))
+-	return(-1);
++        return(-1);
+ 
+     list = ref->inc;
+     ref->inc = NULL;
++
++    if (list == NULL) {
++        return(-1);  // Ensure list is not NULL before proceeding
++    }
+     ref->emptyFb = 0;
+ 
+     /*
+diff --git a/xmlreader.c b/xmlreader.c
+index 9c2da90e..146fb092 100644
+--- a/xmlreader.c
++++ b/xmlreader.c
+@@ -347,16 +347,17 @@ xmlTextReaderFreeNodeList(xmlTextReaderPtr reader, xmlNodePtr cur) {
+ 	    if ((cur->type != XML_TEXT_NODE) &&
+ 		(cur->type != XML_COMMENT_NODE))
+ 		DICT_FREE(cur->name);
+-	    if (((cur->type == XML_ELEMENT_NODE) ||
+-		 (cur->type == XML_TEXT_NODE)) &&
+-	        (reader != NULL) && (reader->ctxt != NULL) &&
+-		(reader->ctxt->freeElemsNr < MAX_FREE_NODES)) {
+-	        cur->next = reader->ctxt->freeElems;
+-		reader->ctxt->freeElems = cur;
+-		reader->ctxt->freeElemsNr++;
+-	    } else {
+-		xmlFree(cur);
+-	    }
++    if (((cur->type == XML_ELEMENT_NODE) ||
++         (cur->type == XML_TEXT_NODE)) &&
++        (reader != NULL) && (reader->ctxt != NULL) &&
++        (reader->ctxt->freeElemsNr < MAX_FREE_NODES)) {
++        cur->next = reader->ctxt->freeElems;
++        reader->ctxt->freeElems = cur;
++        reader->ctxt->freeElemsNr++;
++    } else {
++        xmlFree(cur);
++    }
++    cur = NULL;  // Invalidate the pointer after freeing
+ 	}
+ 
+         if (next != NULL) {

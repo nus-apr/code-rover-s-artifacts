@@ -1,0 +1,17 @@
+diff --git a/ndpi/src/lib/ndpi_main.c b/ndpi/src/lib/ndpi_main.c
+index 532880c..1333629 100644
+--- a/ndpi/src/lib/ndpi_main.c
++++ b/ndpi/src/lib/ndpi_main.c
+@@ -3402,7 +3402,11 @@ int ndpi_match_custom_category(struct ndpi_detection_module_struct *ndpi_str,
+   if(rc < 0) return rc;
+   return(id != NDPI_PROTOCOL_UNKNOWN ? 0 : -1);
+ #else  
+-  u_int16_t rc = ndpi_domain_classify_contains(ndpi_str->custom_categories.sc_hostnames, name);
++  /* Ensure the name is null-terminated */
++  char *safe_name = strndup(name, name_len);
++  if (safe_name == NULL) return -1; /* Handle memory allocation failure */
++  u_int16_t rc = ndpi_domain_classify_contains(ndpi_str->custom_categories.sc_hostnames, safe_name);
++  free(safe_name);
+ 
+   if(rc == 0)
+     return(-1); /* Not found */

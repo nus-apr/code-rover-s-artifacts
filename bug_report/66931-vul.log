@@ -1,0 +1,71 @@
+[33m[iso file] Warning: trackID of MOOF/TRAF(67073) is not the same as MOOV/TRAK(1). Trying to fix.
+[0m=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000001731 at pc 0x000000765fee bp 0x7ffd3bcc85d0 sp 0x7ffd3bcc85c8
+READ of size 1 at 0x602000001731 thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x765fed in inspect_get_nal_size /src/gpac/src/filters/inspect.c:201:20
+    #1 0x765fed in inspect_dump_packet /src/gpac/src/filters/inspect.c:3217:19
+    #2 0x765fed in inspect_process /src/gpac/src/filters/inspect.c:4502:6
+    #3 0x51f59f in gf_filter_process_task /src/gpac/src/filter_core/filter.c:2971:7
+    #4 0x4f1fb8 in gf_fs_thread_proc /src/gpac/src/filter_core/filter_session.c:2105:3
+    #5 0x4eee61 in gf_fs_run /src/gpac/src/filter_core/filter_session.c:2405:3
+    #6 0x4e0018 in LLVMFuzzerTestOneInput /src/testsuite/oss-fuzzers/fuzz_probe_analyze.c:21:5
+    #7 0x4dfe0d in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:255:7
+    #8 0x4dfc18 in LLVMFuzzerRunDriver /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c
+    #9 0x4df7d8 in main /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:300:10
+    #10 0x7ad3c8b23082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #11 0x420e9d in _start (/out/fuzz_probe_analyze+0x420e9d)
+
+DEDUP_TOKEN: inspect_get_nal_size--inspect_dump_packet--inspect_process
+0x602000001731 is located 0 bytes to the right of 1-byte region [0x602000001730,0x602000001731)
+allocated by thread T0 here:
+    #0 0x4a22d6 in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:69:3
+    #1 0xdc8885 in gf_malloc /src/gpac/src/utils/alloc.c:150:9
+    #2 0x18b32a6 in gf_filter_pck_new_alloc_internal /src/gpac/src/filter_core/filter_pck.c:159:15
+    #3 0x18b29e5 in gf_filter_pck_new_alloc /src/gpac/src/filter_core/filter_pck.c:197:9
+    #4 0x79c64b in isor_sample_alloc /src/gpac/src/filters/isoffin_read_ch.c:322:12
+    #5 0x12e3f50 in Media_GetSample /src/gpac/src/isomedia/media.c:630:21
+    #6 0x124ace6 in gf_isom_get_sample_ex /src/gpac/src/isomedia/isom_read.c:1975:6
+    #7 0x7a01d1 in init_reader /src/gpac/src/filters/isoffin_read_ch.c:128:18
+    #8 0x7a01d1 in isor_reader_get_sample /src/gpac/src/filters/isoffin_read_ch.c:344:3
+    #9 0x7918ae in isoffin_process /src/gpac/src/filters/isoffin_read.c:1486:5
+    #10 0x51f59f in gf_filter_process_task /src/gpac/src/filter_core/filter.c:2971:7
+    #11 0x4f1fb8 in gf_fs_thread_proc /src/gpac/src/filter_core/filter_session.c:2105:3
+    #12 0x4eee61 in gf_fs_run /src/gpac/src/filter_core/filter_session.c:2405:3
+    #13 0x4e0018 in LLVMFuzzerTestOneInput /src/testsuite/oss-fuzzers/fuzz_probe_analyze.c:21:5
+    #14 0x4dfe0d in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:255:7
+
+DEDUP_TOKEN: malloc--gf_malloc--gf_filter_pck_new_alloc_internal
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/gpac/src/filters/inspect.c:201:20 in inspect_get_nal_size
+Shadow bytes around the buggy address:
+  0x0c047fff8290: fa fa fd fa fa fa 00 00 fa fa 00 00 fa fa 04 fa
+  0x0c047fff82a0: fa fa 00 00 fa fa fd fd fa fa fd fd fa fa fd fd
+  0x0c047fff82b0: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+  0x0c047fff82c0: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+  0x0c047fff82d0: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+=>0x0c047fff82e0: fa fa 00 00 fa fa[01]fa fa fa 00 00 fa fa 00 00
+  0x0c047fff82f0: fa fa fd fd fa fa fd fd fa fa fd fa fa fa fa fa
+  0x0c047fff8300: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8310: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8320: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8330: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

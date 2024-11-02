@@ -1,0 +1,26 @@
+diff --git a/decoder/ih264d_bitstrm.c b/decoder/ih264d_bitstrm.c
+index fd41bc6..ac65242 100644
+--- a/decoder/ih264d_bitstrm.c
++++ b/decoder/ih264d_bitstrm.c
+@@ -90,7 +90,7 @@ UWORD8 ih264d_get_bit_h264(dec_bit_stream_t *ps_stream)
+ UWORD32 ih264d_get_bits_h264(dec_bit_stream_t *ps_bitstrm, UWORD32 u4_num_bits)
+ {
+     UWORD32 u4_code = 0;
+-    if(u4_num_bits)
++    if(u4_num_bits && (ps_bitstrm->u4_ofst + u4_num_bits <= ps_bitstrm->u4_max_ofst))
+         GETBITS(u4_code, ps_bitstrm->u4_ofst, ps_bitstrm->pu4_buffer, u4_num_bits);
+     return (u4_code);
+ }
+diff --git a/decoder/ih264d_sei.c b/decoder/ih264d_sei.c
+index 079f036..041ca8b 100644
+--- a/decoder/ih264d_sei.c
++++ b/decoder/ih264d_sei.c
+@@ -281,7 +281,7 @@ WORD32 ih264d_parse_mdcv(dec_bit_stream_t *ps_bitstrm,
+     UWORD32 u4_count;
+     UNUSED(ui4_payload_size);
+ 
+-    if((ps_dec == NULL) || (ps_sei == NULL))
++    if((ps_dec == NULL) || (ps_sei == NULL) || (ps_bitstrm->u4_ofst + (ui4_payload_size << 3) > ps_bitstrm->u4_max_ofst))
+     {
+         return NOT_OK;
+     }

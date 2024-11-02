@@ -1,0 +1,24 @@
+diff --git a/src/decode.c b/src/decode.c
+index 281df66c..8b8b3b0d 100644
+--- a/src/decode.c
++++ b/src/decode.c
+@@ -1106,10 +1106,15 @@ classes_section:
+             (long)dwg->header.section[SECTION_CLASSES_R13].size)
+   // check sentinel
+   dat->byte = dwg->header.section[SECTION_CLASSES_R13].address;
+-  if (memcmp (dwg_sentinel (DWG_SENTINEL_CLASS_BEGIN), &dat->chain[dat->byte], 16) == 0)
+-    dat->byte += 16;
+-  else
+-    LOG_TRACE ("no class sentinel\n");
++  if (dat->byte + 16 <= dat->size) {
++    if (memcmp (dwg_sentinel (DWG_SENTINEL_CLASS_BEGIN), &dat->chain[dat->byte], 16) == 0)
++      dat->byte += 16;
++    else
++      LOG_TRACE ("no class sentinel\n");
++  } else {
++    LOG_ERROR ("Buffer overflow risk: insufficient data for sentinel comparison");
++    return DWG_ERR_INVALIDDWG;
++  }
+   dat->bit = 0;
+   size = bit_read_RL (dat);
+   LOG_TRACE ("         Size : %lu [RL]\n", size)

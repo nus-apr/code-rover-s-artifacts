@@ -1,0 +1,13 @@
+diff --git a/aom/av1/common/reconintra.c b/aom/av1/common/reconintra.c
+index 0043cff..c530524 100644
+--- a/aom/av1/common/reconintra.c
++++ b/aom/av1/common/reconintra.c
+@@ -1135,7 +1135,7 @@ static void build_intra_predictors_high(
+   uint16_t *dst = CONVERT_TO_SHORTPTR(dst8);
+   uint16_t *ref = CONVERT_TO_SHORTPTR(ref8);
+   DECLARE_ALIGNED(16, uint16_t, left_data[MAX_TX_SIZE * 2 + 32]);
+-  DECLARE_ALIGNED(16, uint16_t, above_data[MAX_TX_SIZE * 2 + 32]);
++  DECLARE_ALIGNED(16, uint16_t, above_data[MAX_TX_SIZE * 2 + 64]);
+   uint16_t *const above_row = above_data + 16;
+   uint16_t *const left_col = left_data + 16;
+   const int txwpx = tx_size_wide[tx_size];

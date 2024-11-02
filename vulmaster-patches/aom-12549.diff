@@ -1,0 +1,15 @@
+diff --git a/av1/av1_dx_iface.c b/av1/av1_dx_iface.c
+index 87a6e3d..a269f90 100644
+--- a/av1/av1_dx_iface.c
++++ b/av1/av1_dx_iface.c
+@@ -87,9 +87,7 @@ static aom_codec_err_t decoder_init(aom_codec_ctx_t *ctx,
+   // structure. More memory may be required at the time the stream
+   // information becomes known.
+   (void)data;
+-
+-  if (!ctx->priv) {
+-    aom_codec_alg_priv_t *const priv =
++ -> free_cpal ) sfnt -> free_cpal ( face ) ; if ( sfnt -> free_colr ) 
+         (aom_codec_alg_priv_t *)aom_calloc(1, sizeof(*priv));
+     if (priv == NULL) return AOM_CODEC_MEM_ERROR;
+ 

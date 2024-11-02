@@ -1,0 +1,45 @@
+diff --git a/src/ua_types.c b/src/ua_types.c
+index 08e32cdbe..d985c8db7 100644
+--- a/src/ua_types.c
++++ b/src/ua_types.c
+@@ -233,13 +233,17 @@ UA_ByteString_allocBuffer(UA_ByteString *bs, size_t length) {
+ /* NodeId */
+ static void
+ NodeId_clear(UA_NodeId *p, const UA_DataType *_) {
++    if (!p) return; // Check for null pointer
+     switch(p->identifierType) {
+     case UA_NODEIDTYPE_STRING:
+     case UA_NODEIDTYPE_BYTESTRING:
+-        String_clear(&p->identifier.string, NULL);
++        if (p->identifier.string.data) {
++            String_clear(&p->identifier.string, NULL);
++        }
+         break;
+     default: break;
+     }
++    memset(p, 0, sizeof(UA_NodeId)); // Reset memory after clearing
+ }
+ 
+ static UA_StatusCode
+@@ -927,7 +931,13 @@ DiagnosticInfo_copy(UA_DiagnosticInfo const *src, UA_DiagnosticInfo *dst,
+ 
+ void *
+ UA_new(const UA_DataType *type) {
++    if (!type || type->memSize == 0) {
++        return NULL; // Handle invalid type or size
++    }
+     void *p = UA_calloc(1, type->memSize);
++    if (!p) {
++        return NULL; // Handle allocation failure
++    }
+     return p;
+ }
+ 
+@@ -1103,6 +1113,7 @@ UA_clearSignature clearJumpTable[UA_DATATYPEKINDS] = {
+ 
+ void
+ UA_clear(void *p, const UA_DataType *type) {
++    if (!p || !type) return; // Check for null pointers
+     clearJumpTable[type->typeKind](p, type);
+     memset(p, 0, type->memSize); /* init */
+ }

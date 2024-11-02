@@ -1,0 +1,15 @@
+diff --git a/lib/onigmo/regcomp.c b/lib/onigmo/regcomp.c
+index 177977ec5..81865e47f 100644
+--- a/lib/onigmo/regcomp.c
++++ b/lib/onigmo/regcomp.c
+@@ -4589,8 +4589,8 @@ alt_merge_opt_exact_info(OptExactInfo* to, OptExactInfo* add, OptEnv* env)
+     if (to->s[i] != add->s[i]) break;
+     len = enclen(env->enc, to->s + i, to->s + to->len);
+ 
+-    for (j = 1; j < len; j++) {
+-      if (to->s[i+j] != add->s[i+j]) break;
++    for (j = 1; j < len && (i + j) < to->len && (i + j) < add->len; j++) {
++        if (to->s[i+j] != add->s[i+j]) break;
+     }
+     if (j < len) break;
+     i += len;

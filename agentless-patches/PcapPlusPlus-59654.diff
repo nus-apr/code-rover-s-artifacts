@@ -1,0 +1,13 @@
+diff --git a/PcapPlusPlus/Packet++/src/GreLayer.cpp b/PcapPlusPlus/Packet++/src/GreLayer.cpp
+index 99a9811..438c8c0 100644
+--- a/PcapPlusPlus/Packet++/src/GreLayer.cpp
++++ b/PcapPlusPlus/Packet++/src/GreLayer.cpp
+@@ -22,7 +22,7 @@ namespace pcpp
+ 
+ ProtocolType GreLayer::getGREVersion(uint8_t* greData, size_t greDataLen)
+ {
+-	if (greDataLen < sizeof(gre_basic_header))
++	if (greDataLen < sizeof(gre_basic_header) || greDataLen < 2)
+ 		return UnknownProtocol;
+ 
+ 	uint8_t version = *(greData+1);

@@ -1,0 +1,27 @@
+diff --git a/lib/curl_fnmatch.c b/lib/curl_fnmatch.c
+index 5a6f137c8..918906f16 100644
+--- a/lib/curl_fnmatch.c
++++ b/lib/curl_fnmatch.c
+@@ -132,6 +132,9 @@ static int setcharset(unsigned char **p, unsigned char *charset)
+   bool something_found = FALSE;
+   unsigned char c;
+   for(;;) {
++    if (**p == '\0') {
++      return SETCHARSET_FAIL;
++    }
+     c = **p;
+     switch(state) {
+     case CURLFNM_SCHS_DEFAULT:
+diff --git a/lib/ftplistparser.c b/lib/ftplistparser.c
+index 262ac0306..76edde99a 100644
+--- a/lib/ftplistparser.c
++++ b/lib/ftplistparser.c
+@@ -294,7 +294,7 @@ static CURLcode ftp_pl_insert_finfo(struct connectdata *conn,
+     compare = Curl_fnmatch;
+ 
+   /* filter pattern-corresponding filenames */
+-  if(compare(conn->data->set.fnmatch_data, wc->pattern,
++  if(wc->pattern && compare(conn->data->set.fnmatch_data, wc->pattern,
+              finfo->filename) == 0) {
+     /* discard symlink which is containing multiple " -> " */
+     if((finfo->filetype == CURLFILETYPE_SYMLINK) && finfo->strings.target &&

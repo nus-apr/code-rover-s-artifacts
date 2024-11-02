@@ -1,0 +1,65 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2277169065
+INFO: Loaded 1 modules   (40821 inline 8-bit counters): 40821 [0xefc750, 0xf066c5), 
+INFO: Loaded 1 PC tables (40821 PCs): 40821 [0xd312b0,0xdd0a00), 
+/out/fuzz_card: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7ee7a3b901b0 at pc 0x0000005e478a bp 0x7ffd64352d50 sp 0x7ffd64352d48
+READ of size 1 at 0x7ee7a3b901b0 thread T0
+SCARINESS: 27 (1-byte-read-stack-buffer-overflow)
+    #0 0x5e4789 in cardos_list_files /src/opensc/src/libopensc/card-cardos.c:544:18
+    #1 0x57a196 in sc_list_files /src/opensc/src/libopensc/card.c:563:6
+    #2 0x55e4ca in LLVMFuzzerTestOneInput /src/opensc/src/tests/fuzzing/fuzz_card.c:86:2
+    #3 0x457d12 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #4 0x443942 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #5 0x44919c in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #6 0x471a72 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #7 0x7ee7a47fb082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #8 0x42209d in _start (/out/fuzz_card+0x42209d)
+
+DEDUP_TOKEN: cardos_list_files--sc_list_files--LLVMFuzzerTestOneInput
+Address 0x7ee7a3b901b0 is located in stack of thread T0 at offset 432 in frame
+    #0 0x5e397f in cardos_list_files /src/opensc/src/libopensc/card-cardos.c:496
+
+DEDUP_TOKEN: cardos_list_files
+  This frame has 4 object(s):
+    [32, 136) 'apdu' (line 497)
+    [176, 432) 'rbuf' (line 498) <== Memory access at offset 432 overflows this variable
+    [496, 504) 'tlen' (line 526)
+    [528, 536) 'ilen' (line 526)
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/opensc/src/libopensc/card-cardos.c:544:18 in cardos_list_files
+Shadow bytes around the buggy address:
+  0x0fdd74769fe0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0fdd74769ff0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0fdd7476a000: f1 f1 f1 f1 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fdd7476a010: 00 f2 f2 f2 f2 f2 00 00 00 00 00 00 00 00 00 00
+  0x0fdd7476a020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0fdd7476a030: 00 00 00 00 00 00[f2]f2 f2 f2 f2 f2 f2 f2 00 f2
+  0x0fdd7476a040: f2 f2 00 f3 f3 f3 f3 f3 00 00 00 00 00 00 00 00
+  0x0fdd7476a050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fdd7476a060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fdd7476a070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fdd7476a080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

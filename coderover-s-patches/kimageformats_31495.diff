@@ -1,0 +1,26 @@
+diff --git a/libheif/heif_colorconversion.cc b/libheif/heif_colorconversion.cc
+index 2097644..dc48226 100644
+--- a/libheif/heif_colorconversion.cc
++++ b/libheif/heif_colorconversion.cc
+@@ -2459,11 +2459,18 @@ Op_to_sdr_planes::convert_colorspace(const std::shared_ptr<const HeifPixelImage>
+       int stride_out;
+       p_out = outimg->get_plane(channel, &stride_out);
+ 
+-      for (int y = 0; y < height; y++)
++      int max_in_index = height * stride_in;
++      int max_out_index = height * stride_out;
++      for (int y = 0; y < height; y++) {
+         for (int x = 0; x < width; x++) {
+-          int in = p_in[y * stride_in + x];
+-          p_out[y * stride_out + x] = (uint8_t) (in >> shift); // TODO: I think no rounding here, but am not sure.
++          int in_index = y * stride_in + x;
++          int out_index = y * stride_out + x;
++          if (in_index < max_in_index && out_index < max_out_index) {
++            int in = p_in[in_index];
++            p_out[out_index] = (uint8_t) (in >> shift); // TODO: I think no rounding here, but am not sure.
++          }
+         }
++      }
+     }
+   }
+ 

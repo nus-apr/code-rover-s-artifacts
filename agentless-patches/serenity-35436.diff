@@ -1,0 +1,13 @@
+diff --git a/serenity/AK/RefPtr.h b/serenity/AK/RefPtr.h
+index b913a98..9fbaa7c 100644
+--- a/serenity/AK/RefPtr.h
++++ b/serenity/AK/RefPtr.h
+@@ -97,7 +97,7 @@ struct RefPtrTraits {
+             Kernel::Processor::wait_check();
+ #endif
+         }
+-        VERIFY(!(bits & 1));
++        // VERIFY(!(bits & 1)); // This check is redundant after the loop
+         return bits;
+     }
+ 

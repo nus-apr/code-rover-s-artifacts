@@ -1,0 +1,18 @@
+diff --git a/graphicsmagick/coders/png.c b/graphicsmagick/coders/png.c
+index 4cf2b39..77c47ca 100644
+--- a/graphicsmagick/coders/png.c
++++ b/graphicsmagick/coders/png.c
+@@ -1021,6 +1021,13 @@ static MngBox mng_minimum_box(MngBox box1,MngBox box2)
+ }
+ 
+ static long mng_get_long(unsigned char *p)
++{
++  assert(p != NULL); // Ensure the pointer is not NULL
++  // Ensure there are at least 4 bytes available
++  if (p == NULL || sizeof(p) < 4) {
++    // Handle error, possibly by returning a default value or logging an error
++    return 0; // or some other appropriate error handling
++  }
+ {
+   return ((long) (((magick_uint32_t) p[0] << 24) |
+                   ((magick_uint32_t) p[1] << 16) |

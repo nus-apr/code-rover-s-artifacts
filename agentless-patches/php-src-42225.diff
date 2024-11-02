@@ -1,0 +1,15 @@
+diff --git a/php-src/ext/opcache/jit/zend_jit_helpers.c b/php-src/ext/opcache/jit/zend_jit_helpers.c
+index 6891b9f..d1645ae 100644
+--- a/php-src/ext/opcache/jit/zend_jit_helpers.c
++++ b/php-src/ext/opcache/jit/zend_jit_helpers.c
+@@ -2021,7 +2021,9 @@ static void ZEND_FASTCALL zend_jit_assign_to_typed_prop(zval *property_val, zend
+ 
+ 	value = zend_assign_to_variable(property_val, &tmp, IS_TMP_VAR, EX_USES_STRICT_TYPES());
+ 	if (result) {
+-		ZVAL_COPY_DEREF(result, value);
++		if (result) {
++			ZVAL_COPY_DEREF(result, value);
++		}
+ 	}
+ }
+ 

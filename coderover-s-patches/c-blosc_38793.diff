@@ -1,0 +1,51 @@
+diff --git a/blosc/blosc.c b/blosc/blosc.c
+index e0d54d4..58ef781 100644
+--- a/blosc/blosc.c
++++ b/blosc/blosc.c
+@@ -1311,6 +1311,12 @@ int blosc_compress(int clevel, int doshuffle, size_t typesize, size_t nbytes,
+ 
+   /* Check if should initialize */
+   if (!g_initlib) blosc_init();
++  if (g_global_context == NULL) {  // Ensure global context is initialized
++    g_global_context = (struct blosc_context*)malloc(sizeof(struct blosc_context));
++    if (g_global_context != NULL) {
++      memset(g_global_context, 0, sizeof(struct blosc_context));  // Initialize to zero
++    }
++  }
+ 
+   /* Check for environment variables */
+   envvar = getenv("BLOSC_CLEVEL");
+@@ -1510,7 +1516,7 @@ static int blosc_run_decompression_with_context(struct blosc_context* context,
+ int blosc_decompress_ctx(const void* src, void* dest, size_t destsize,
+                          int numinternalthreads) {
+   int result;
+-  struct blosc_context context;
++  struct blosc_context context = {0};  // Initialize all fields to zero
+ 
+   context.threads_started = 0;
+   result = blosc_run_decompression_with_context(&context, src, dest, destsize,
+@@ -2102,6 +2108,11 @@ int blosc_get_complib_info(const char *compname, char **complib, char **version)
+ void blosc_cbuffer_sizes(const void *cbuffer, size_t *nbytes,
+                          size_t *cbytes, size_t *blocksize)
+ {
++  if (cbuffer == NULL) {  // Check for NULL buffer
++    *nbytes = *blocksize = *cbytes = 0;
++    return;
++  }
++
+   uint8_t *_src = (uint8_t *)(cbuffer);    /* current pos for source buffer */
+   uint8_t version = _src[0];               /* version of header */
+ 
+@@ -2110,6 +2121,12 @@ void blosc_cbuffer_sizes(const void *cbuffer, size_t *nbytes,
+     return;
+   }
+ 
++  // Ensure the buffer is large enough to contain the expected header
++  if (sizeof(cbuffer) < 16) {
++    *nbytes = *blocksize = *cbytes = 0;
++    return;
++  }
++
+   /* Read the interesting values */
+   *nbytes = (size_t)sw32_(_src + 4);       /* uncompressed buffer size */
+   *blocksize = (size_t)sw32_(_src + 8);    /* block size */

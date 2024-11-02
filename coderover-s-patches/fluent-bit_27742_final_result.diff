@@ -1,0 +1,24 @@
+diff --git a/lib/msgpack-3.2.0/include/msgpack/unpack.h b/lib/msgpack-3.2.0/include/msgpack/unpack.h
+index 036d575eb..8d3348686 100644
+--- a/lib/msgpack-3.2.0/include/msgpack/unpack.h
++++ b/lib/msgpack-3.2.0/include/msgpack/unpack.h
+@@ -261,6 +261,7 @@ static inline void msgpack_unpacked_destroy(msgpack_unpacked* result)
+         result->zone = NULL;
+         memset(&result->data, 0, sizeof(msgpack_object));
+     }
++    result->zone = NULL;  // Ensure the zone pointer is invalidated
+ }
+ 
+ static inline msgpack_zone* msgpack_unpacked_release_zone(msgpack_unpacked* result)
+diff --git a/src/flb_pack.c b/src/flb_pack.c
+index 81c3b44f0..55c2bf049 100644
+--- a/src/flb_pack.c
++++ b/src/flb_pack.c
+@@ -939,6 +939,7 @@ flb_sds_t flb_pack_msgpack_to_json_format(const char *data, uint64_t bytes,
+ 
+     /* Release the unpacker */
+     msgpack_unpacked_destroy(&result);
++    result.zone = NULL;  // Invalidate the zone pointer to prevent accidental use
+ 
+     /* Format to JSON */
+     if (json_format == FLB_PACK_JSON_FORMAT_JSON) {

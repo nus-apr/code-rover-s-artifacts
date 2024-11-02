@@ -1,0 +1,16 @@
+diff --git a/lib/transfer.c b/lib/transfer.c
+index 937477670..04a02b6be 100644
+--- a/lib/transfer.c
++++ b/lib/transfer.c
+@@ -137,6 +137,11 @@ CURLcode Curl_fillreadbuffer(struct connectdata *conn, int bytes, int *nreadp)
+      with picky compilers */
+   nread = (int)data->state.fread_func(data->req.upload_fromhere, 1,
+                                       buffersize, data->state.in);
++  if((size_t)nread > buffersize) {
++    *nreadp = 0;
++    failf(data, "read function returned more data than buffer size");
++    return CURLE_READ_ERROR;
++  }
+ 
+   if(nread == CURL_READFUNC_ABORT) {
+     failf(data, "operation aborted by callback");

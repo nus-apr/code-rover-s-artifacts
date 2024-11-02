@@ -1,0 +1,13 @@
+diff --git a/upx/src/p_lx_elf.cpp b/upx/src/p_lx_elf.cpp
+index 676bb1e..8240747 100644
+--- a/upx/src/p_lx_elf.cpp
++++ b/upx/src/p_lx_elf.cpp
+@@ -7390,7 +7390,7 @@ void PackLinuxElf64::unpack(OutputFile *fo)
+                 ) {
+                     opt->info_mode++;
+                     infoWarning("bad b_info at %#zx", (size_t)pos);
+-                    unsigned const N_PEEK(16 * sizeof(int)), H_PEEK(N_PEEK >> 1);
++                    unsigned const N_PEEK(16), H_PEEK(N_PEEK >> 1);
+                     unsigned char peek_arr[N_PEEK];
+                     fi->seek(pos - H_PEEK, SEEK_SET);
+                     fi->readx(peek_arr, sizeof(peek_arr));

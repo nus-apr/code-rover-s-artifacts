@@ -1,0 +1,15 @@
+diff --git a/libavc/fuzzer/svc_dec_fuzzer.cpp b/libavc/fuzzer/svc_dec_fuzzer.cpp
+index 182d7a1..1774826 100644
+--- a/libavc/fuzzer/svc_dec_fuzzer.cpp
++++ b/libavc/fuzzer/svc_dec_fuzzer.cpp
+@@ -296,8 +296,8 @@ void Codec::allocFrame()
+             [[fallthrough]];
+         default:
+             sizes[0] = mWidth * mHeight;
+-            sizes[1] = mWidth * mHeight >> 2;
+-            sizes[2] = mWidth * mHeight >> 2;
++            sizes[1] = (mWidth >> 1) * (mHeight >> 1);
++            sizes[2] = (mWidth >> 1) * (mHeight >> 1);
+             num_bufs = 3;
+             break;
+     }

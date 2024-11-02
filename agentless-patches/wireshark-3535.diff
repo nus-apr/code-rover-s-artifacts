@@ -1,0 +1,20 @@
+diff --git a/wireshark/epan/dissectors/packet-gtpv2.c b/wireshark/epan/dissectors/packet-gtpv2.c
+index e7c4dcd..3b96767 100644
+--- a/wireshark/epan/dissectors/packet-gtpv2.c
++++ b/wireshark/epan/dissectors/packet-gtpv2.c
+@@ -7011,8 +7011,13 @@ dissect_gtpv2_ie_common(tvbuff_t * tvb, packet_info * pinfo, proto_tree * tree,
+ 
+         type    = tvb_get_guint8(tvb, offset);
+         length  = tvb_get_ntohs(tvb, offset + 1);
+-        ie_tree = proto_tree_add_subtree_format(tree, tvb, offset, 4 + length, ett_gtpv2_ies[type], &ti, "%s : ",
+-                                      val_to_str_ext_const(type, &gtpv2_element_type_vals_ext, "Unknown"));
++        if (type < NUM_GTPV2_IES) {
++            ie_tree = proto_tree_add_subtree_format(tree, tvb, offset, 4 + length, ett_gtpv2_ies[type], &ti, "%s : ",
++                                          val_to_str_ext_const(type, &gtpv2_element_type_vals_ext, "Unknown"));
++        } else {
++            // Handle the error case where type is out of bounds
++            ie_tree = proto_tree_add_subtree_format(tree, tvb, offset, 4 + length, ett_gtpv2_ies[0], &ti, "Unknown : ");
++        }
+ 
+         /* Octet 1 */
+         proto_tree_add_item(ie_tree, hf_gtpv2_ie, tvb, offset, 1, ENC_BIG_ENDIAN);

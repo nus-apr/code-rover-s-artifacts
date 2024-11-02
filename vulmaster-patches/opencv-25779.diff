@@ -1,0 +1,15 @@
+diff --git a/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c b/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c
+index 2a3349cff6..957aba236b 100644
+--- a/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c
++++ b/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c
+@@ -364,9 +364,7 @@ static __itt_domain* ITTAPI ITT_VERSIONIZE(ITT_JOIN(_N_(domain_create),_init))(c
+         return NULL;
+     }
+ 
+-    ITT_MUTEX_INIT_AND_LOCK(_N_(_ittapi_global));
+-    if (_N_(_ittapi_global).api_initialized)
+-    {
++ uint32_t param_count, const zval * const 
+ #if ITT_PLATFORM==ITT_PLATFORM_WIN
+         if (ITTNOTIFY_NAME(domain_createA) && ITTNOTIFY_NAME(domain_createA) != ITT_VERSIONIZE(ITT_JOIN(_N_(domain_createA),_init)))
+         {

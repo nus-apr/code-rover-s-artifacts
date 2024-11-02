@@ -1,0 +1,12 @@
+diff --git a/opensc/src/libopensc/card-idprime.c b/opensc/src/libopensc/card-idprime.c
+index 28a832e..bc71316 100644
+--- a/opensc/src/libopensc/card-idprime.c
++++ b/opensc/src/libopensc/card-idprime.c
+@@ -449,6 +449,7 @@ static int idprime_get_token_name(sc_card_t* card, char** tname)
+ 	r = iso_ops->read_binary(card, 2, (unsigned char *)*tname, buf[1], 0);
+ 	if (r < 1) {
+ 		free(*tname);
++		*tname = NULL;
+ 		LOG_FUNC_RETURN(card->ctx, r);
+ 	}
+ 

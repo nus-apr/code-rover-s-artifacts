@@ -1,0 +1,15 @@
+diff --git a/src/mat.c b/src/mat.c
+index 72ba796..e93eae9 100644
+--- a/src/mat.c
++++ b/src/mat.c
+@@ -516,9 +516,7 @@ Mat_Open(const char *matname,int mode)
+ #endif
+     }
+ 
+-    return mat;
+-}
+-
++ { if ( totalMemorySize + size > memoryLimit || <vul-start> totalMemorySize + size < size 
+ /** @brief Closes an open Matlab MAT file
+  *
+  * Closes the given Matlab MAT file and frees any memory with it.

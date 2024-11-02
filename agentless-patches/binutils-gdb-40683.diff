@@ -1,0 +1,15 @@
+diff --git a/binutils-gdb/bfd/vms-alpha.c b/binutils-gdb/bfd/vms-alpha.c
+index 0d314f4..86dd01c 100644
+--- a/binutils-gdb/bfd/vms-alpha.c
++++ b/binutils-gdb/bfd/vms-alpha.c
+@@ -7482,6 +7482,10 @@ evax_bfd_print_dst (struct bfd *abfd, unsigned int dst_size, FILE *file)
+ 	  break;
+ 	case DST__K_DIS_RANGE:
+ 	  {
++	    if (dst_size < 4) {
++	      fprintf (file, _("buffer too small for reading\n"));
++	      return;
++	    }
+ 	    unsigned int cnt = bfd_getl32 (buf);
+ 	    unsigned char *rng = buf + 4;
+ 	    unsigned int i;

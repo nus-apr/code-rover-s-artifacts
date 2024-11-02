@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/common/RawspeedException.h b/src/librawspeed/common/RawspeedException.h
+index 28a72f8..d352b03 100644
+--- a/src/librawspeed/common/RawspeedException.h
++++ b/src/librawspeed/common/RawspeedException.h
+@@ -48,9 +48,7 @@ ThrowException(const char* fmt, ...) {
+   va_list val;
+   va_start(val, fmt);
+   vsnprintf(buf, sizeof(buf), fmt, val);
+-  va_end(val);
+-  writeLog(DEBUG_PRIO_EXTRA, "EXCEPTION: %s", buf);
+-  throw T(buf);
++... ) { 
+ }
+ 
+ class RawspeedException : public std::runtime_error {

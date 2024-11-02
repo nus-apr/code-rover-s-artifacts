@@ -1,0 +1,29 @@
+diff --git a/av1/common/convolve.c b/av1/common/convolve.c
+index 5a55ece671..8b35e82fdd 100644
+--- a/av1/common/convolve.c
++++ b/av1/common/convolve.c
+@@ -237,6 +237,24 @@ void av1_convolve_2d_copy_sr_c(const uint8_t *src, int src_stride, uint8_t *dst,
+   (void)subpel_y_q4;
+   (void)conv_params;
+ 
++  // Validate input parameters
++  if (src == NULL || dst == NULL || w <= 0 || h <= 0 || src_stride <= 0 || dst_stride <= 0) {
++    // Log error: invalid input parameters
++    fprintf(stderr, "Error: Invalid input parameters in av1_highbd_convolve_2d_copy_sr_c\n");
++    return;
++  }
++
++  // Calculate total buffer sizes
++  size_t total_src_buffer_size = (h - 1) * src_stride + w;
++  size_t total_dst_buffer_size = (h - 1) * dst_stride + w;
++
++  // Validate buffer sizes
++  if (total_src_buffer_size > src_stride * h || total_dst_buffer_size > dst_stride * h) {
++    // Log error: buffer size is insufficient
++    fprintf(stderr, "Error: Buffer size is insufficient in av1_highbd_convolve_2d_copy_sr_c\n");
++    return;
++  }
++
+   for (int y = 0; y < h; ++y) {
+     memmove(dst + y * dst_stride, src + y * src_stride, w * sizeof(src[0]));
+   }

@@ -1,0 +1,52 @@
+diff --git a/encoder/ixheaace_fd_qc_adjthr.c b/encoder/ixheaace_fd_qc_adjthr.c
+index 320c32a..bd23a73 100644
+--- a/encoder/ixheaace_fd_qc_adjthr.c
++++ b/encoder/ixheaace_fd_qc_adjthr.c
+@@ -979,7 +979,13 @@ VOID iusace_quantize_lines(const WORD32 gain, const WORD32 num_lines, FLOAT32 *p
+   FLOAT32 k = 0.4054f;
+   WORD32 line;
+ 
+-  quantizer = ixheaace_fd_quant_table[gain + 128];
++   int index = gain + 128;
++   if (index < 0) {
++       index = 0;
++   } else if (index >= sizeof(ixheaace_fd_quant_table) / sizeof(ixheaace_fd_quant_table[0])) {
++       index = sizeof(ixheaace_fd_quant_table) / sizeof(ixheaace_fd_quant_table[0]) - 1;
++   }
++   quantizer = ixheaace_fd_quant_table[index];
+   for (line = 0; line < num_lines; line++) {
+     FLOAT32 tmp = ptr_mdct_spec[line];
+     if (tmp < 0.0f) {
+diff --git a/encoder/ixheaace_fd_quant.c b/encoder/ixheaace_fd_quant.c
+index 799f832..85806d7 100644
+--- a/encoder/ixheaace_fd_quant.c
++++ b/encoder/ixheaace_fd_quant.c
+@@ -544,14 +544,20 @@ IA_ERRORCODE iusace_quantize_spec(ia_sfb_params_struct *pstr_sfb_prms,
+              sfb_offs += pstr_psy_out[ch].sfb_per_group) {
+           for (sfb = 0; sfb < pstr_psy_out[ch].max_sfb_per_grp; sfb++) {
+             WORD32 scalefactor = pstr_qc_out->str_qc_out_chan[idx].scalefactor[sfb + sfb_offs];
+-            iusace_quantize_lines(
+-                pstr_qc_out->str_qc_out_chan[idx].global_gain - scalefactor,
+-                pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb + 1] -
+-                    pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb],
+-                ptr_exp_spec + pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb],
+-                pstr_qc_out->str_qc_out_chan[idx].quant_spec +
+-                    pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb],
+-                ptr_mdct_spec_float + pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb]);
++             int gain = pstr_qc_out->str_qc_out_chan[idx].global_gain - scalefactor;
++             if (gain < -128) {
++                 gain = -128;
++             } else if (gain > 127) {
++                 gain = 127;
++             }
++             iusace_quantize_lines(
++                 gain,
++                 pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb + 1] -
++                     pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb],
++                 ptr_exp_spec + pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb],
++                 pstr_qc_out->str_qc_out_chan[idx].quant_spec +
++                     pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb],
++                 ptr_mdct_spec_float + pstr_psy_out[ch].sfb_offsets[sfb_offs + sfb]);
+           }
+         }
+       }

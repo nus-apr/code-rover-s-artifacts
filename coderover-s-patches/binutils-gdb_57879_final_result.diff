@@ -1,0 +1,40 @@
+diff --git a/bfd/dwarf2.c b/bfd/dwarf2.c
+index f6b0183720b..0b6fce0fdc6 100644
+--- a/bfd/dwarf2.c
++++ b/bfd/dwarf2.c
+@@ -150,6 +150,7 @@ static struct trie_node *alloc_trie_leaf (bfd *abfd)
+   if (leaf == NULL)
+     return NULL;
+   leaf->head.num_room_in_leaf = TRIE_LEAF_SIZE;
++  leaf->num_stored_in_leaf = 0; // Ensure initialization
+   return &leaf->head;
+ }
+ 
+@@ -1962,6 +1963,8 @@ static struct trie_node *insert_arange_in_trie(bfd *abfd,
+       new_leaf = bfd_zalloc (abfd,
+ 	sizeof (struct trie_leaf) +
+ 	  (new_room_in_leaf - TRIE_LEAF_SIZE) * sizeof (leaf->ranges[0]));
++      if (!new_leaf) // Check for allocation failure
++        return NULL;
+       new_leaf->head.num_room_in_leaf = new_room_in_leaf;
+       new_leaf->num_stored_in_leaf = leaf->num_stored_in_leaf;
+ 
+@@ -1979,11 +1982,13 @@ static struct trie_node *insert_arange_in_trie(bfd *abfd,
+     {
+       struct trie_leaf *leaf = (struct trie_leaf *) trie;
+ 
+-      unsigned int i = leaf->num_stored_in_leaf++;
+-      leaf->ranges[i].unit = unit;
+-      leaf->ranges[i].low_pc = low_pc;
+-      leaf->ranges[i].high_pc = high_pc;
+-      return trie;
++      if (leaf->num_stored_in_leaf < leaf->head.num_room_in_leaf) {
++        unsigned int i = leaf->num_stored_in_leaf++;
++        leaf->ranges[i].unit = unit;
++        leaf->ranges[i].low_pc = low_pc;
++        leaf->ranges[i].high_pc = high_pc;
++        return trie;
++      }
+     }
+ 
+   /* Now we are definitely an interior node, so recurse into all

@@ -1,0 +1,20 @@
+diff --git a/liblouis/lou_translateString.c b/liblouis/lou_translateString.c
+index a2a2da39..43715895 100644
+--- a/liblouis/lou_translateString.c
++++ b/liblouis/lou_translateString.c
+@@ -475,6 +475,7 @@ swapReplace(int start, int end, const TranslationTableHeader *table,
+ 			output->chars[output->length++] = replacements[k];
+ 		} else {
+ 			int l = replacements[k] - 1;
++			if (l < 0) return 0; // Ensure length is non-negative
+ 			int d = output->length + l;
+ 			if (d > output->maxlength) return 0;
+ 			while (--d >= output->length) posMapping[d] = p;
+@@ -974,6 +975,7 @@ passDoAction(const TranslationTableHeader *table, const InString **input,
+ 			passIC += 3;
+ 			break;
+ 		case pass_swap:
++			if (match.startReplace < 0 || match.endReplace < 0 || match.startReplace > match.endReplace) return 0; // Validate indices
+ 			if (!swapReplace(match.startReplace, match.endReplace, table, *input, output,
+ 						posMapping, passInstructions, passIC))
+ 				return 0;

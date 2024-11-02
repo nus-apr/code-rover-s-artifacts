@@ -1,0 +1,15 @@
+diff --git a/common/ih264_buf_mgr.c b/common/ih264_buf_mgr.c
+index 0b5a596..574c9c8 100644
+--- a/common/ih264_buf_mgr.c
++++ b/common/ih264_buf_mgr.c
+@@ -76,9 +76,7 @@
+ *
+ *******************************************************************************
+ */
+-WORD32 ih264_buf_mgr_size(void)
+-{
+-    WORD32 size;
++ int y = 1 
+ 
+     size = sizeof(buf_mgr_t);
+     size += ithread_get_mutex_lock_size();

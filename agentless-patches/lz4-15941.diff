@@ -1,0 +1,19 @@
+diff --git a/lz4/ossfuzz/compress_fuzzer.c b/lz4/ossfuzz/compress_fuzzer.c
+index cb86666..76ad188 100644
+--- a/lz4/ossfuzz/compress_fuzzer.c
++++ b/lz4/ossfuzz/compress_fuzzer.c
+@@ -15,7 +15,7 @@
+ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+ {
+     uint32_t seed = FUZZ_seed(&data, &size);
+-    size_t const dstCapacity = FUZZ_rand32(&seed, 0, LZ4_compressBound(size));
++    size_t const dstCapacity = LZ4_compressBound(size);
+     char* const dst = (char*)malloc(dstCapacity);
+     char* const rt = (char*)malloc(size);
+ 
+@@ -48,4 +48,4 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+     free(rt);
+ 
+     return 0;
+-}
++}

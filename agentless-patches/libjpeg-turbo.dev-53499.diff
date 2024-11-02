@@ -1,0 +1,13 @@
+diff --git a/libjpeg-turbo.dev/jdcolext.c b/libjpeg-turbo.dev/jdcolext.c
+index b317221..8e8311a 100644
+--- a/libjpeg-turbo.dev/jdcolext.c
++++ b/libjpeg-turbo.dev/jdcolext.c
+@@ -118,7 +118,7 @@ rgb_rgb_convert_internal(j_decompress_ptr cinfo, _JSAMPIMAGE input_buf,
+   register _JSAMPROW inptr0, inptr1, inptr2;
+   register _JSAMPROW outptr;
+   register JDIMENSION col;
+-  JDIMENSION num_cols = cinfo->output_width;
++  JDIMENSION num_cols = cinfo->output_width * RGB_PIXELSIZE;
+ 
+   while (--num_rows >= 0) {
+     inptr0 = input_buf[0][input_row];

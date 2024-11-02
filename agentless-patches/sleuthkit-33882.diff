@@ -1,0 +1,14 @@
+diff --git a/sleuthkit/tsk/fs/iso9660.c b/sleuthkit/tsk/fs/iso9660.c
+index 96c8b1e..80f11c5 100644
+--- a/sleuthkit/tsk/fs/iso9660.c
++++ b/sleuthkit/tsk/fs/iso9660.c
+@@ -321,6 +321,9 @@ parse_susp(TSK_FS_INFO * fs, char *buf, int count, FILE * hFile, int recursion_d
+ 
+             // Make sure the name will fit in the buffer
+             len = rr_nm->len - 5;
++            if (len < 0) {
++                len = 0;
++            }
+             if (len >= ISO9660_MAXNAMLEN_RR) {
+                 len = ISO9660_MAXNAMLEN_RR - 1;
+             }

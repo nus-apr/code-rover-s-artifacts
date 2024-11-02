@@ -1,0 +1,17 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2248439164
+INFO: Loaded 1 modules   (3362 inline 8-bit counters): 3362 [0x83b6e8, 0x83c40a), 
+INFO: Loaded 1 PC tables (3362 PCs): 3362 [0x5e1c38,0x5eee58), 
+/out/fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+MemorySanitizer:DEADLYSIGNAL
+==13==ERROR: MemorySanitizer: SEGV on unknown address (pc 0x0000005359d2 bp 0x7fffdc56c140 sp 0x7fffdc56c0d8 T13)
+==13==The signal is caused by a READ memory access.
+==13==Hint: this fault was caused by a dereference of a high value address (see register values below).  Disassemble the provided pc to learn which register was used.
+    #0 0x5359d2 in m3_GetResultsVL /src/wasm3/source/m3_env.c:953:30
+    #1 0x226000000057  (<unknown module>)
+
+DEDUP_TOKEN: m3_GetResultsVL--
+MemorySanitizer can not provide additional info.
+SUMMARY: MemorySanitizer: SEGV /src/wasm3/source/m3_env.c:953:30 in m3_GetResultsVL
+==13==ABORTING

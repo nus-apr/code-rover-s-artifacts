@@ -1,0 +1,35 @@
+======================= INFO =========================
+This binary is built for AFL-fuzz.
+To run the target function on individual input(s) execute this:
+  /out/hb-shape-fuzzer < INPUT_FILE
+or
+  /out/hb-shape-fuzzer INPUT_FILE1 [INPUT_FILE2 ... ]
+To fuzz with afl-fuzz execute this:
+  afl-fuzz [afl-flags] /out/hb-shape-fuzzer [-N]
+afl-fuzz will run N iterations before re-spawning the process (default: 1000)
+======================================================
+Reading 109 bytes from /tmp/poc
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address 0x61740000097c (pc 0x00000061d0bc bp 0x7ffdcd6961d0 sp 0x7ffdcd696180 T0)
+==13==The signal is caused by a READ memory access.
+SCARINESS: 20 (wild-addr-read)
+    #0 0x61d0bb in OT::propagate_attachment_offsets(hb_glyph_position_t*, unsigned int, hb_direction_t) /src/harfbuzz/src/./hb-ot-layout-gpos-table.hh:1665:15
+    #1 0x61d125 in OT::propagate_attachment_offsets(hb_glyph_position_t*, unsigned int, hb_direction_t) /src/harfbuzz/src/./hb-ot-layout-gpos-table.hh:1673:3
+    #2 0x5fe40f in OT::GPOS::position_finish_offsets(hb_font_t*, hb_buffer_t*) /src/harfbuzz/src/./hb-ot-layout-gpos-table.hh:1729:7
+    #3 0x587c37 in hb_ot_position_complex(hb_ot_shape_context_t const*) /src/harfbuzz/src/hb-ot-shape.cc:861:3
+    #4 0x583ec0 in hb_ot_position(hb_ot_shape_context_t const*) /src/harfbuzz/src/hb-ot-shape.cc:878:3
+    #5 0x581d97 in hb_ot_shape_internal(hb_ot_shape_context_t*) /src/harfbuzz/src/hb-ot-shape.cc:959:3
+    #6 0x58187a in _hb_ot_shape /src/harfbuzz/src/hb-ot-shape.cc:986:3
+    #7 0x567c56 in hb_shape_plan_execute /src/harfbuzz/src/./hb-shaper-list.hh:42:1
+    #8 0x566658 in hb_shape_full /src/harfbuzz/src/hb-shape.cc:141:19
+    #9 0x5302a5 in LLVMFuzzerTestOneInput /src/harfbuzz/./test/fuzzing/hb-shape-fuzzer.cc:30:5
+    #10 0x5307ae in ExecuteFilesOnyByOne(int, char**) /src/libfuzzer/afl/afl_driver.cpp:301:5
+    #11 0x530d1e in main /src/libfuzzer/afl/afl_driver.cpp:339:12
+    #12 0x75288bc3683f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #13 0x41cd58 in _start (/out/hb-shape-fuzzer+0x41cd58)
+
+DEDUP_TOKEN: OT::propagate_attachment_offsets(hb_glyph_position_t*, unsigned int, hb_direction_t)--OT::propagate_attachment_offsets(hb_glyph_position_t*, unsigned int, hb_direction_t)--OT::GPOS::position_finish_offsets(hb_font_t*, hb_buffer_t*)
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /src/harfbuzz/src/./hb-ot-layout-gpos-table.hh:1665:15 in OT::propagate_attachment_offsets(hb_glyph_position_t*, unsigned int, hb_direction_t)
+==13==ABORTING

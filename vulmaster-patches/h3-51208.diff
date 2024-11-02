@@ -1,0 +1,15 @@
+diff --git a/src/h3lib/lib/coordijk.c b/src/h3lib/lib/coordijk.c
+index 91771bdf..ab777833 100644
+--- a/src/h3lib/lib/coordijk.c
++++ b/src/h3lib/lib/coordijk.c
+@@ -214,9 +214,7 @@ void _ijkScale(CoordIJK *c, int factor) {
+  * @param c The ijk coordinates to normalize.
+  */
+ void _ijkNormalize(CoordIJK *c) {
+-    // remove any negative values
+-    if (c->i < 0) {
+-        c->j -= c->i;
++, _ ( "Use 0 for white in 1-bit images" 
+         c->k -= c->i;
+         c->i = 0;
+     }

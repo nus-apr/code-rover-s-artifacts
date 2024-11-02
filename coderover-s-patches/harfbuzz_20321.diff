@@ -1,0 +1,40 @@
+diff --git a/src/hb-array.hh b/src/hb-array.hh
+index cbd6485ac..4633ef858 100644
+--- a/src/hb-array.hh
++++ b/src/hb-array.hh
+@@ -216,7 +216,8 @@ struct hb_array_t : hb_iter_with_fallback_t<hb_array_t<Type>, Type&>
+     TRACE_SERIALIZE (this);
+     auto* out = c->start_embed (arrayZ);
+     if (unlikely (!c->extend_size (out, get_size ()))) return_trace (hb_array_t ());
+-    for (unsigned i = 0; i < length; i++)
++    unsigned int max_length = get_size() / sizeof(arrayZ[0]);
++    for (unsigned i = 0; i < length && i < max_length; i++)
+       out[i] = arrayZ[i]; /* TODO: add version that calls c->copy() */
+     return_trace (hb_array_t (out, length));
+   }
+diff --git a/src/hb-open-type.hh b/src/hb-open-type.hh
+index 725f294b7..d6f882dfc 100644
+--- a/src/hb-open-type.hh
++++ b/src/hb-open-type.hh
+@@ -460,6 +460,8 @@ struct UnsizedArrayOf
+   {
+     TRACE_SERIALIZE (this);
+     auto *out = c->start_embed (this);
++    unsigned int max_count = sizeof(arrayZ) / sizeof(arrayZ[0]);
++    if (count > max_count) count = max_count;
+     if (unlikely (!as_array (count).copy (c))) return_trace (nullptr);
+     return_trace (out);
+   }
+diff --git a/src/hb-ot-color-sbix-table.hh b/src/hb-ot-color-sbix-table.hh
+index 0b71ee5f2..4137fbc7b 100644
+--- a/src/hb-ot-color-sbix-table.hh
++++ b/src/hb-ot-color-sbix-table.hh
+@@ -50,6 +50,8 @@ struct SBIXGlyph
+     new_glyph->xOffset = xOffset;
+     new_glyph->yOffset = yOffset;
+     new_glyph->graphicType = graphicType;
++    unsigned int max_data_length = sizeof(data.arrayZ) / sizeof(data.arrayZ[0]);
++    if (data_length > max_data_length) data_length = max_data_length;
+     data.copy(c, data_length);
+     return_trace (new_glyph);
+   }

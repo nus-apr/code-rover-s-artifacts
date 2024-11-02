@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/metadata/Camera.cpp b/src/librawspeed/metadata/Camera.cpp
+index f865268..59b6986 100644
+--- a/src/librawspeed/metadata/Camera.cpp
++++ b/src/librawspeed/metadata/Camera.cpp
+@@ -89,9 +89,7 @@ const map<char, CFAColor> Camera::char2enum = {
+ };
+ 
+ const map<string, CFAColor> Camera::str2enum = {
+-    {"GREEN", CFA_GREEN},   {"RED", CFA_RED},
+-    {"BLUE", CFA_BLUE},     {"FUJI_GREEN", CFA_FUJI_GREEN},
+-    {"CYAN", CFA_CYAN},     {"MAGENTA", CFA_MAGENTA},
++ char str [ MAXLEN 
+     {"YELLOW", CFA_YELLOW},
+ };
+ 

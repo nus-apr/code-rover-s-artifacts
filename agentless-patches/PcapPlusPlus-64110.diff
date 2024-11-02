@@ -1,0 +1,18 @@
+diff --git a/PcapPlusPlus/Packet++/src/GreLayer.cpp b/PcapPlusPlus/Packet++/src/GreLayer.cpp
+index 99a9811..73ea963 100644
+--- a/PcapPlusPlus/Packet++/src/GreLayer.cpp
++++ b/PcapPlusPlus/Packet++/src/GreLayer.cpp
+@@ -539,7 +539,12 @@ void GREv1Layer::computeCalculateFields()
+ {
+ 	computeCalculateFieldsInner();
+ 
+-	getGreHeader()->payloadLength = htobe16(m_DataLen - getHeaderLen());
++	if (m_DataLen >= getHeaderLen() + sizeof(uint16_t)) {
++	    getGreHeader()->payloadLength = htobe16(m_DataLen - getHeaderLen());
++	} else {
++	    // Handle error: not enough space to write payloadLength
++	    PCPP_LOG_ERROR("Not enough space to write payloadLength");
++	}
+ }
+ 
+ std::string GREv1Layer::toString() const

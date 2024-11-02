@@ -1,0 +1,29 @@
+diff --git a/librawspeed/src/librawspeed/decompressors/SamsungV2Decompressor.cpp b/librawspeed/src/librawspeed/decompressors/SamsungV2Decompressor.cpp
+index 3a89c7c..4085fff 100644
+--- a/librawspeed/src/librawspeed/decompressors/SamsungV2Decompressor.cpp
++++ b/librawspeed/src/librawspeed/decompressors/SamsungV2Decompressor.cpp
+@@ -145,12 +145,18 @@ void SamsungV2Decompressor::decompress() {
+                // top right)
+             refpixel = img_up + i + slideOffset + (((i % 2) != 0) ? -1 : 1);
+ 
+-          // In some cases we use as reference interpolation of this pixel and
+-          // the next
+-          if (doAverage)
+-            img[i] = (*refpixel + *(refpixel + 2) + 1) >> 1;
+-          else
+-            img[i] = *refpixel;
++          // Ensure refpixel is within valid bounds
++          if (refpixel >= img_up && refpixel < img_up + width) {
++            // In some cases we use as reference interpolation of this pixel and
++            // the next
++            if (doAverage)
++              img[i] = (*refpixel + *(refpixel + 2) + 1) >> 1;
++            else
++              img[i] = *refpixel;
++          } else {
++            // Handle out-of-bounds access gracefully
++            img[i] = 0; // or some other default value
++          }
+         }
+       }
+ 

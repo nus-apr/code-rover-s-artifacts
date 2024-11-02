@@ -1,0 +1,19 @@
+diff --git a/libavc/decoder/svc/isvcd_mode_mv_resamp.c b/libavc/decoder/svc/isvcd_mode_mv_resamp.c
+index 75bcc59..608d19a 100644
+--- a/libavc/decoder/svc/isvcd_mode_mv_resamp.c
++++ b/libavc/decoder/svc/isvcd_mode_mv_resamp.c
+@@ -2617,8 +2617,12 @@ WORD32 isvcd_interlyr_motion_mode_pred_dyadic(void *pv_comp_mode_mv_ctxt, void *
+         i4_ref_mb_y = (i4_ref_y >> 4);
+ 
+         /* get the appropriate mb params in reference layer */
+-        ps_inter_lyr_mb_prms += i4_ref_mb_x;
+-        ps_inter_lyr_mb_prms += i4_ref_mb_y * i4_inter_lyr_mb_prms_stride;
++        int index = i4_ref_mb_x + i4_ref_mb_y * i4_inter_lyr_mb_prms_stride;
++        if (index < 0 || index >= ps_lyr_mem->s_ref_mb_mode.i4_num_elements) {
++            // Handle error: index out of bounds
++            return -1; // or some appropriate error code
++        }
++        ps_inter_lyr_mb_prms += index;
+         i1_ref_mb_mode = ps_inter_lyr_mb_prms->i1_mb_mode;
+         u1_base_mode_flag = ps_svc_mb_params->u1_base_mode_flag;
+ 

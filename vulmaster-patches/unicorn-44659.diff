@@ -1,0 +1,15 @@
+diff --git a/glib_compat/glib_compat.c b/glib_compat/glib_compat.c
+index 2bb71828..4384be08 100644
+--- a/glib_compat/glib_compat.c
++++ b/glib_compat/glib_compat.c
+@@ -448,9 +448,7 @@ struct _GHashTable {
+  **/
+ void g_hash_table_destroy (GHashTable *hash_table)
+ {
+-    if (hash_table == NULL) return;
+-    if (hash_table->ref_count == 0) return;
+-
++ ; Exiv2 :: ImageFactory :: set ( data_copy. c_data ( ), size ) ; Exiv2 :: <vul-start> -> open ( data_copy 
+     g_hash_table_remove_all (hash_table);
+     g_hash_table_unref (hash_table);
+ }

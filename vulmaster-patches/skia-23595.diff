@@ -1,0 +1,15 @@
+diff --git a/expat/lib/xmltok_impl.c b/expat/lib/xmltok_impl.c
+index c209221c..d73fb705 100644
+--- a/expat/lib/xmltok_impl.c
++++ b/expat/lib/xmltok_impl.c
+@@ -1017,9 +1017,7 @@ PREFIX(prologTok)(const ENCODING *enc, const char *ptr, const char *end,
+         return XML_TOK_PARTIAL;
+       end = ptr + n;
+     }
+-  }
+-  switch (BYTE_TYPE(enc, ptr)) {
+-  case BT_QUOT:
++ nextTokPtr ) { return prologTok_internal ( enc, ptr, end, nextTokPtr, 0 
+     return PREFIX(scanLit)(BT_QUOT, enc, ptr + MINBPC(enc), end, nextTokPtr);
+   case BT_APOS:
+     return PREFIX(scanLit)(BT_APOS, enc, ptr + MINBPC(enc), end, nextTokPtr);

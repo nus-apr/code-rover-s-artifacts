@@ -1,0 +1,16 @@
+diff --git a/libcoap/src/pdu.c b/libcoap/src/pdu.c
+index 84561f6..fafc247 100644
+--- a/libcoap/src/pdu.c
++++ b/libcoap/src/pdu.c
+@@ -1022,9 +1022,9 @@ coap_pdu_parse_opt(coap_pdu_t *pdu) {
+        * Two rows - hex and ascii (if printable)
+        */
+       static char outbuf[COAP_DEBUG_BUF_SIZE];
+-      char *obp;
++      char *obp = outbuf;
+       uint32_t tlen;
+-      size_t outbuflen;
++      size_t outbuflen = sizeof(outbuf);
+       size_t i;
+       int ok;
+ 

@@ -1,0 +1,26 @@
+diff --git a/pdf/pdf_xref.c b/pdf/pdf_xref.c
+index 02ea48054..367cdaeff 100644
+--- a/pdf/pdf_xref.c
++++ b/pdf/pdf_xref.c
+@@ -67,6 +67,8 @@ static int read_xref_stream_entries(pdf_context *ctx, pdf_c_stream *s, uint64_t
+     if (W[2] > field_width)
+         field_width = W[2];
+ 
++    if (field_width > 32)  // Ensure field_width does not exceed a safe limit
++        return_error(gs_error_rangecheck);
+     Buffer = gs_alloc_bytes(ctx->memory, field_width, "read_xref_stream_entry working buffer");
+     for (i=first;i<=last; i++){
+         /* Defaults if W[n] = 0 */
+@@ -741,9 +743,10 @@ static int read_xref_section(pdf_context *ctx, pdf_c_stream *s, uint64_t *sectio
+         gs_offset_t off;
+         unsigned int gen;
+ 
+-        bytes = pdfi_read_bytes(ctx, (byte *)Buffer, 1, 20, s);
+-        if (bytes < 20)
++        bytes = pdfi_read_bytes(ctx, (byte *)Buffer, 1, sizeof(Buffer) - 1, s);
++        if (bytes < 0 || bytes >= sizeof(Buffer) - 1)  // Ensure bytes do not exceed buffer size
+             return_error(gs_error_ioerror);
++        Buffer[bytes] = '\0';  // Null-terminate the buffer to prevent overflow in sscanf
+         j = 19;
+         while (Buffer[j] != 0x0D && Buffer[j] != 0x0A) {
+             pdfi_unread(ctx, s, (byte *)&Buffer[j], 1);

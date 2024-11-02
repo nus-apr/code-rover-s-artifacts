@@ -1,0 +1,12 @@
+diff --git a/mupdf/source/fitz/printf.c b/mupdf/source/fitz/printf.c
+index 867e2a0..14a4e2a 100644
+--- a/mupdf/source/fitz/printf.c
++++ b/mupdf/source/fitz/printf.c
+@@ -131,6 +131,7 @@ static void fmtuint32(struct fmtbuf *out, unsigned int a, int s, int z, int w, i
+ 		buf[i++] = fz_hex_digits[a % base];
+ 		a /= base;
+ 	}
++	buf[i] = '\0'; // Ensure the buffer is null-terminated
+ 	if (s) {
+ 		if (z == '0')
+ 			while (i < w - 1)

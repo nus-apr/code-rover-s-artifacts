@@ -1,0 +1,13 @@
+diff --git a/freeradius-server/src/lib/util/base16.c b/freeradius-server/src/lib/util/base16.c
+index 2cffd8f..8ac3ef3 100644
+--- a/freeradius-server/src/lib/util/base16.c
++++ b/freeradius-server/src/lib/util/base16.c
+@@ -72,7 +72,7 @@ char const fr_base16_alphabet_encode_uc[UINT8_MAX] = {
+ /** Mixed case decode alphabet for base16
+  *
+  */
+-uint8_t const fr_base16_alphabet_decode_mc[UINT8_MAX] = {
++uint8_t const fr_base16_alphabet_decode_mc[UINT8_MAX + 1] = {
+ 	F32(0, UINT8_MAX), F16(32, UINT8_MAX),
+ 	['0'] = 0,
+ 	['1'] = 1,

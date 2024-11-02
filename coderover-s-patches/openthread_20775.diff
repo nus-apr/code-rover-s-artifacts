@@ -1,0 +1,103 @@
+diff --git a/src/core/common/message.cpp b/src/core/common/message.cpp
+index 1990713f5..5eee53db4 100644
+--- a/src/core/common/message.cpp
++++ b/src/core/common/message.cpp
+@@ -262,40 +262,49 @@ exit:
+     return next;
+ }
+ 
+-otError Message::SetLength(uint16_t aLength)
+-{
+-    otError  error              = OT_ERROR_NONE;
+-    uint16_t totalLengthRequest = GetReserved() + aLength;
+-    uint16_t totalLengthCurrent = GetReserved() + GetLength();
+-    int      bufs               = 0;
++    otError Message::SetLength(uint16_t aLength)
++    {
++        otError  error              = OT_ERROR_NONE;
++        uint16_t totalLengthRequest = GetReserved() + aLength;
++        uint16_t totalLengthCurrent = GetReserved() + GetLength();
++        int      bufs               = 0;
+ 
+-    VerifyOrExit(totalLengthRequest >= GetReserved(), error = OT_ERROR_INVALID_ARGS);
++        VerifyOrExit(totalLengthRequest >= GetReserved(), error = OT_ERROR_INVALID_ARGS);
+ 
+-    if (totalLengthRequest > kHeadBufferDataSize)
+-    {
+-        bufs = (((totalLengthRequest - kHeadBufferDataSize) - 1) / kBufferDataSize) + 1;
+-    }
++        if (totalLengthRequest > kHeadBufferDataSize)
++        {
++            bufs = (((totalLengthRequest - kHeadBufferDataSize) - 1) / kBufferDataSize) + 1;
++        }
+ 
+-    if (totalLengthCurrent > kHeadBufferDataSize)
+-    {
+-        bufs -= (((totalLengthCurrent - kHeadBufferDataSize) - 1) / kBufferDataSize) + 1;
+-    }
++        if (totalLengthCurrent > kHeadBufferDataSize)
++        {
++            bufs -= (((totalLengthCurrent - kHeadBufferDataSize) - 1) / kBufferDataSize) + 1;
++        }
++
++        SuccessOrExit(error = GetMessagePool()->ReclaimBuffers(bufs, GetPriority()));
+ 
+-    SuccessOrExit(error = GetMessagePool()->ReclaimBuffers(bufs, GetPriority()));
++        SuccessOrExit(error = ResizeMessage(totalLengthRequest));
++        
++        if (aLength <= 255) // Ensure aLength does not exceed the maximum value for uint8_t
++        {
++            mBuffer.mHead.mInfo.mLength = aLength;
++        }
++        else
++        {
++            error = OT_ERROR_INVALID_ARGS;
++            ExitNow();
++        }
+ 
+-    SuccessOrExit(error = ResizeMessage(totalLengthRequest));
+-    mBuffer.mHead.mInfo.mLength = aLength;
++        // Correct offset in case shorter length is set.
++        if (GetOffset() > aLength)
++        {
++            SetOffset(aLength);
++        }
+ 
+-    // Correct offset in case shorter length is set.
+-    if (GetOffset() > aLength)
+-    {
+-        SetOffset(aLength);
++    exit:
++        return error;
+     }
+ 
+-exit:
+-    return error;
+-}
+-
+ uint8_t Message::GetBufferCount(void) const
+ {
+     uint8_t rval = 1;
+diff --git a/src/core/net/ip6_headers.hpp b/src/core/net/ip6_headers.hpp
+index 5a1f750a5..808c2c749 100644
+--- a/src/core/net/ip6_headers.hpp
++++ b/src/core/net/ip6_headers.hpp
+@@ -379,7 +379,17 @@ public:
+      * @param[in]  aLength  The IPv6 Header Extension Length value.
+      *
+      */
+-    void SetLength(uint8_t aLength) { mLength = aLength; }
++    void SetLength(uint8_t aLength) 
++    { 
++        if (aLength <= 255) // Ensure aLength does not exceed the maximum value for uint8_t
++        {
++            mLength = aLength; 
++        }
++        else
++        {
++            // Handle error: aLength is too large
++        }
++    }
+ 
+ private:
+     uint8_t mNextHeader;

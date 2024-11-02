@@ -1,0 +1,13 @@
+diff --git a/readstat/src/spss/readstat_sav_read.c b/readstat/src/spss/readstat_sav_read.c
+index 4d6be17..4e82f55 100644
+--- a/readstat/src/spss/readstat_sav_read.c
++++ b/readstat/src/spss/readstat_sav_read.c
+@@ -365,7 +365,7 @@ static readstat_error_t sav_read_variable_record(sav_ctx_t *ctx) {
+     ctx->var_offset++;
+     
+ cleanup:
+-    if (retval != READSTAT_OK) {
++    if (retval != READSTAT_OK && info != NULL) {
+         spss_varinfo_free(info);
+     }
+ 

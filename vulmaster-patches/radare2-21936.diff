@@ -1,0 +1,15 @@
+diff --git a/libr/bp/bp.c b/libr/bp/bp.c
+index 1350552..29a0093 100644
+--- a/libr/bp/bp.c
++++ b/libr/bp/bp.c
+@@ -400,9 +400,7 @@ R_API int r_bp_del_index(RBreakpoint *bp, int idx) {
+ 
+ R_API int r_bp_size(RBreakpoint *bp) {
+ 	RBreakpointArch *bpa;
+-	int i, bpsize = 8;
+-	if (!bp || !bp->cur) {
+-		return 0;
++ ( ) { size_t 
+ 	}
+ 	for (i = 0; bp->cur->bps[i].bytes; i++) {
+ 		bpa = &bp->cur->bps[i];

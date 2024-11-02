@@ -1,0 +1,49 @@
+diff --git a/src/H5FL.c b/src/H5FL.c
+index 9cc8dd2d8b..3a310adfef 100644
+--- a/src/H5FL.c
++++ b/src/H5FL.c
+@@ -1182,6 +1182,11 @@ H5FL__blk_gc_list(H5FL_blk_head_t *head)
+ 
+     FUNC_ENTER_PACKAGE_NOERR
+ 
++    /* Ensure the head is valid */
++    if (head == NULL || head->head == NULL) {
++        return SUCCEED;  /* No nodes to free, return success */
++    }
++
+     /* Loop through all the nodes in the block free list queue */
+     blk_head = head->head;
+     while (blk_head != NULL) {
+@@ -1199,8 +1204,10 @@ H5FL__blk_gc_list(H5FL_blk_head_t *head)
+             /* Get the pointer to the next node */
+             next = list->next;
+ 
+-            /* Free the block */
+-            H5MM_free(list);
++    /* Free the block */
++    if (list != NULL) {
++        H5MM_free(list);
++    }
+ 
+             /* Advance to the next node */
+             list = next;
+@@ -1271,9 +1278,19 @@ H5FL__blk_gc(void)
+ 
+     FUNC_ENTER_PACKAGE
+ 
++    /* Ensure the garbage collection head is valid */
++    if (H5FL_blk_gc_head.first == NULL) {
++        return SUCCEED;  /* No garbage collection needed, return success */
++    }
++
+     /* Walk through all the free lists, free()'ing the nodes */
+     gc_node = H5FL_blk_gc_head.first;
+     while (gc_node != NULL) {
++        /* Ensure gc_node->pq is valid */
++        if (gc_node->pq == NULL) {
++            gc_node = gc_node->next;
++            continue;  /* Skip invalid nodes */
++        }
+         /* For each free list being garbage collected, walk through the nodes and free them */
+         if (H5FL__blk_gc_list(gc_node->pq) < 0)
+             HGOTO_ERROR(H5E_RESOURCE, H5E_CANTGC, FAIL, "garbage collection of list failed")

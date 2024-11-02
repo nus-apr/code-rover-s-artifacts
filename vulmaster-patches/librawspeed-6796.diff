@@ -1,0 +1,15 @@
+diff --git a/fuzz/librawspeed/decoders/TiffDecoders/main.cpp b/fuzz/librawspeed/decoders/TiffDecoders/main.cpp
+index 2ca62c8..2a306fd 100644
+--- a/fuzz/librawspeed/decoders/TiffDecoders/main.cpp
++++ b/fuzz/librawspeed/decoders/TiffDecoders/main.cpp
+@@ -48,9 +48,7 @@
+ #include <cstdint>                    // for uint8_t
+ #include <cstdio>                     // for size_t
+ #include <memory>                     // for unique_ptr
+-
+-static const rawspeed::CameraMetaData metadata{};
+-
++ -- ) { 
+ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size);
+ 
+ using rawspeed::DECODER;

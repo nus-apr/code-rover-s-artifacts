@@ -1,0 +1,15 @@
+diff --git a/jcarith.c b/jcarith.c
+index b6d093f7..97106c86 100644
+--- a/jcarith.c
++++ b/jcarith.c
+@@ -257,9 +257,7 @@ arith_encode(j_compress_ptr cinfo, unsigned char *st, int val)
+     if (e->a < qe) {
+       /* If the interval size (qe) for the less probable symbol (LPS)
+        * is larger than the interval size for the MPS, then exchange
+-       * the two symbols for coding efficiency: */
+-      e->c += e->a;
+-      e->a = qe;
++ structsize ) { size_t 
+     }
+     *st = (sv & 0x80) ^ nm;     /* Estimate_after_MPS */
+   }

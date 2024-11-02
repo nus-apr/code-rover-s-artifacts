@@ -1,0 +1,15 @@
+diff --git a/serenity/Libraries/LibJS/Runtime/Object.cpp b/serenity/Libraries/LibJS/Runtime/Object.cpp
+index 4ab7098..ac1f54b 100644
+--- a/serenity/Libraries/LibJS/Runtime/Object.cpp
++++ b/serenity/Libraries/LibJS/Runtime/Object.cpp
+@@ -89,8 +89,8 @@ Object* Object::create_empty(GlobalObject& global_object)
+ 
+ Object::Object(GlobalObjectTag)
+ {
+-    // This is the global object
+-    m_shape = heap().allocate_without_global_object<Shape>(static_cast<GlobalObject&>(*this));
++    // This constructor should only be used for GlobalObject
++    m_shape = nullptr; // Ensure this is set correctly in GlobalObject constructor
+ }
+ 
+ Object::Object(ConstructWithoutPrototypeTag, GlobalObject& global_object)

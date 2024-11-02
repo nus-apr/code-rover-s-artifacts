@@ -1,0 +1,18 @@
+diff --git a/oss-fuzz/fuzzer_reencoder.cc b/oss-fuzz/fuzzer_reencoder.cc
+index 002bdb97..45171766 100644
+--- a/oss-fuzz/fuzzer_reencoder.cc
++++ b/oss-fuzz/fuzzer_reencoder.cc
+@@ -61,8 +61,11 @@ namespace FLAC {
+             int num_metadata_blocks = 0;
+ 
+             void metadata_callback(const ::FLAC__StreamMetadata *metadata) override {
+-                if((metadata_blocks[num_metadata_blocks] = FLAC__metadata_object_clone(metadata)) != NULL)
+-			num_metadata_blocks++;
++                if(num_metadata_blocks < 16) {
++                    if((metadata_blocks[num_metadata_blocks] = FLAC__metadata_object_clone(metadata)) != NULL)
++                        num_metadata_blocks++;
++                }
++                // Optionally, handle the case where the limit is reached, e.g., log a warning
+             }
+ 
+             ::FLAC__StreamDecoderReadStatus read_callback(FLAC__byte buffer[], size_t *bytes)  override {

@@ -1,0 +1,30 @@
+diff --git a/librawspeed/src/librawspeed/decoders/NefDecoder.cpp b/librawspeed/src/librawspeed/decoders/NefDecoder.cpp
+index 79118e4..2aa8957 100644
+--- a/librawspeed/src/librawspeed/decoders/NefDecoder.cpp
++++ b/librawspeed/src/librawspeed/decoders/NefDecoder.cpp
+@@ -495,21 +495,20 @@ void NefDecoder::decodeMetaDataInternal(const CameraMetaData* meta) {
+   } else if (mRootIFD->hasEntryRecursive(static_cast<TiffTag>(0x0014))) {
+     TiffEntry* wb = mRootIFD->getEntryRecursive(static_cast<TiffTag>(0x0014));
+     auto* tmp = wb->getData(wb->count);
+-    if (wb->count == 2560 && wb->type == TIFF_UNDEFINED) {
++    if (wb->count >= 1252 && wb->type == TIFF_UNDEFINED) {
+       mRaw->metadata.wbCoeffs[0] =
+           static_cast<float>(getU16BE(tmp + 1248)) / 256.0F;
+       mRaw->metadata.wbCoeffs[1] = 1.0F;
+       mRaw->metadata.wbCoeffs[2] =
+           static_cast<float>(getU16BE(tmp + 1250)) / 256.0F;
+-    } else if (!strncmp(reinterpret_cast<const char*>(tmp), "NRW ", 4)) {
++    } else if (wb->count >= 4 && !strncmp(reinterpret_cast<const char*>(tmp), "NRW ", 4)) {
+       uint32 offset = 0;
+-      if (strncmp(reinterpret_cast<const char*>(tmp) + 4, "0100", 4) != 0 &&
+-          wb->count > 72)
++      if (wb->count > 72 && strncmp(reinterpret_cast<const char*>(tmp) + 4, "0100", 4) != 0)
+         offset = 56;
+       else if (wb->count > 1572)
+         offset = 1556;
+ 
+-      if (offset) {
++      if (offset && wb->count >= offset + 12) {
+         tmp += offset;
+         mRaw->metadata.wbCoeffs[0] = static_cast<float>(getU32LE(tmp + 0) << 2);
+         mRaw->metadata.wbCoeffs[1] =

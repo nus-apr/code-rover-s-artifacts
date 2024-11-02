@@ -1,0 +1,32 @@
+diff --git a/src/json.hpp b/src/json.hpp
+index 4515ca67..ecfaa645 100644
+--- a/src/json.hpp
++++ b/src/json.hpp
+@@ -7146,6 +7146,9 @@ class basic_json
+     static basic_json from_cbor_internal(const std::vector<uint8_t>& v, size_t& idx)
+     {
+         // store and increment index
++        if (idx >= v.size()) {
++            throw std::out_of_range("index out of range");
++        }
+         const size_t current_idx = idx++;
+ 
+         switch (v[current_idx])
+@@ -7425,7 +7428,7 @@ class basic_json
+             case 0x9f: // array (indefinite length)
+             {
+                 basic_json result = value_t::array;
+-                while (v[idx] != 0xff)
++                while (idx < v.size() && v[idx] != 0xff)
+                 {
+                     result.push_back(from_cbor_internal(v, idx));
+                 }
+@@ -7525,7 +7528,7 @@ class basic_json
+             case 0xbf: // map (indefinite length)
+             {
+                 basic_json result = value_t::object;
+-                while (v[idx] != 0xff)
++                while (idx < v.size() && v[idx] != 0xff)
+                 {
+                     std::string key = from_cbor_internal(v, idx);
+                     result[key] = from_cbor_internal(v, idx);

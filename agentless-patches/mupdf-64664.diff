@@ -1,0 +1,19 @@
+diff --git a/mupdf/source/fitz/load-bmp.c b/mupdf/source/fitz/load-bmp.c
+index a0f136f..a4cbedf 100644
+--- a/mupdf/source/fitz/load-bmp.c
++++ b/mupdf/source/fitz/load-bmp.c
+@@ -812,7 +812,13 @@ bmp_read_color_profile(fz_context *ctx, struct info *info, const unsigned char *
+ 			return NULL;
+ 		}
+ 
+-		profile = fz_new_buffer_from_copied_data(ctx, begin + info->profileoffset, info->profilesize);
++		if (info->profileoffset + info->profilesize <= (uint32_t)(end - begin))
++			profile = fz_new_buffer_from_copied_data(ctx, begin + info->profileoffset, info->profilesize);
++		else
++		{
++			fz_warn(ctx, "invalid color profile offset or size in bmp image");
++			return NULL;
++		}
+ 
+ 		fz_try(ctx)
+ 			cs = fz_new_icc_colorspace(ctx, FZ_COLORSPACE_RGB, 0, "BMPRGB", profile);

@@ -1,0 +1,21 @@
+diff --git a/openssl/crypto/x509/v3_utl.c b/openssl/crypto/x509/v3_utl.c
+index a446074..2a92b0d 100644
+--- a/openssl/crypto/x509/v3_utl.c
++++ b/openssl/crypto/x509/v3_utl.c
+@@ -43,8 +43,14 @@ int X509V3_add_value(const char *name, const char *value,
+ 
+     if (name && (tname = OPENSSL_strdup(name)) == NULL)
+         goto err;
+-    if (value && (tvalue = OPENSSL_strdup(value)) == NULL)
+-        goto err;
++    if (value) {
++        size_t value_len = strlen(value);
++        if (value[value_len] != '\0') {
++            goto err; // Ensure value is null-terminated
++        }
++        if ((tvalue = OPENSSL_strdup(value)) == NULL)
++            goto err;
++    }
+     if ((vtmp = OPENSSL_malloc(sizeof(*vtmp))) == NULL)
+         goto err;
+     if (sk_allocated && (*extlist = sk_CONF_VALUE_new_null()) == NULL)

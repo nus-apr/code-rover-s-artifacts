@@ -1,0 +1,39 @@
+diff --git a/src/lib/ndpi_main.c b/src/lib/ndpi_main.c
+index d14c8086..7d34083d 100644
+--- a/src/lib/ndpi_main.c
++++ b/src/lib/ndpi_main.c
+@@ -7108,6 +7108,9 @@ const char * ndpi_strncasestr(const char *str1, const char *str2, size_t len) {
+   size_t str2_len = strlen(str2);
+   size_t i;
+ 
++  if(str1_len < str2_len) // Check to prevent out-of-bounds access
++    return NULL;
++
+   for(i = 0; i < (str1_len - str2_len + 1); i++){
+     if(str1[0] == '\0')
+       return NULL;
+diff --git a/src/lib/protocols/http.c b/src/lib/protocols/http.c
+index cf1e6282..18b4a17d 100644
+--- a/src/lib/protocols/http.c
++++ b/src/lib/protocols/http.c
+@@ -725,12 +725,14 @@ static void check_content_type_and_change_protocol(struct ndpi_detection_module_
+     NDPI_LOG_DBG2(ndpi_struct, "Authorization line found %.*s\n",
+ 		  packet->authorization_line.len, packet->authorization_line.ptr);
+ 
+-    if(ndpi_strncasestr((const char*)packet->authorization_line.ptr,
+-			"Basic", packet->authorization_line.len)
+-       || ndpi_strncasestr((const char*)packet->authorization_line.ptr,
+-			   "Digest", packet->authorization_line.len)) {
+-      ndpi_set_risk(ndpi_struct, flow, NDPI_CLEAR_TEXT_CREDENTIALS);
+-    }
++  if(packet->authorization_line.len >= 5 && // "Basic" length check
++     (ndpi_strncasestr((const char*)packet->authorization_line.ptr,
++                       "Basic", packet->authorization_line.len)
++      || (packet->authorization_line.len >= 6 && // "Digest" length check
++          ndpi_strncasestr((const char*)packet->authorization_line.ptr,
++                           "Digest", packet->authorization_line.len)))) {
++    ndpi_set_risk(ndpi_struct, flow, NDPI_CLEAR_TEXT_CREDENTIALS);
++  }
+   }
+ 
+   if(packet->content_line.ptr != NULL && packet->content_line.len != 0) {

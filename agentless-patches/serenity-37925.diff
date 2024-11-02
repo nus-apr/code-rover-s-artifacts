@@ -1,0 +1,13 @@
+diff --git a/serenity/AK/Format.h b/serenity/AK/Format.h
+index ea0552d..2018511 100644
+--- a/serenity/AK/Format.h
++++ b/serenity/AK/Format.h
+@@ -261,7 +261,7 @@ public:
+     }
+ 
+ private:
+-    Array<TypeErasedParameter, sizeof...(Parameters)> m_data;
++    Array<TypeErasedParameter, sizeof...(Parameters) == 0 ? 1 : sizeof...(Parameters)> m_data;
+ };
+ 
+ // We use the same format for most types for consistency. This is taken directly from

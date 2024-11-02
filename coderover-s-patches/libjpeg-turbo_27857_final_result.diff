@@ -1,0 +1,30 @@
+diff --git a/libqpdf/Pl_DCT.cc b/libqpdf/Pl_DCT.cc
+index 2ddafecb..389e3772 100644
+--- a/libqpdf/Pl_DCT.cc
++++ b/libqpdf/Pl_DCT.cc
+@@ -348,15 +348,21 @@ Pl_DCT::decompress(void* cinfo_p, Buffer* b)
+ 
+     unsigned int width = cinfo->output_width *
+         QIntC::to_uint(cinfo->output_components);
++    unsigned int buffer_height = cinfo->rec_outbuf_height;
+     JSAMPARRAY buffer = (*cinfo->mem->alloc_sarray)
+-        (reinterpret_cast<j_common_ptr>(cinfo), JPOOL_IMAGE, width, 1);
++        (reinterpret_cast<j_common_ptr>(cinfo), JPOOL_IMAGE, width, buffer_height);
++    if (buffer == nullptr) {
++        throw std::runtime_error("Failed to allocate buffer");
++    }
+ 
+     (void) jpeg_start_decompress(cinfo);
+     while (cinfo->output_scanline < cinfo->output_height)
+     {
+-        (void) jpeg_read_scanlines(cinfo, buffer, 1);
+-        this->getNext()->write(reinterpret_cast<unsigned char*>(buffer[0]),
+-                               width * sizeof(buffer[0][0]));
++        unsigned int lines_read = jpeg_read_scanlines(cinfo, buffer, buffer_height);
++        if (lines_read > 0) {
++            this->getNext()->write(reinterpret_cast<unsigned char*>(buffer[0]),
++                                   width * sizeof(buffer[0][0]) * lines_read);
++        }
+     }
+     (void) jpeg_finish_decompress(cinfo);
+     this->getNext()->finish();

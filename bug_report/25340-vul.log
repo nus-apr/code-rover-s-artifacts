@@ -1,0 +1,30 @@
+INFO: Seed: 2316918816
+INFO: Loaded 1 modules   (33547 inline 8-bit counters): 33547 [0xb2b008, 0xb33313), 
+INFO: Loaded 1 PC tables (33547 PCs): 33547 [0xb33318,0xbb63c8), 
+/out/FuzzTarget: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+UndefinedBehaviorSanitizer:DEADLYSIGNAL
+==13==ERROR: UndefinedBehaviorSanitizer: SEGV on unknown address 0x0000006dc4b0 (pc 0x72196328fc3d bp 0x0000006dc4b0 sp 0x7ffe2ff0b0c8 T13)
+==13==The signal is caused by a WRITE memory access.
+    #0 0x72196328fc3d  (/lib/x86_64-linux-gnu/libc.so.6+0x14dc3d)
+    #1 0x660a6c in std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__assign_external(char const*, unsigned long) (/out/FuzzTarget+0x660a6c)
+    #2 0x4c25dc in std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator=(char const*) /usr/local/bin/../include/c++/v1/string:890:86
+    #3 0x59dfcf in pcpp::IDnsResource::IDnsResource(pcpp::DnsLayer*, unsigned long) /src/PcapPlusPlus/Packet++/src/DnsResource.cpp:18:17
+    #4 0x54e509 in pcpp::DnsResource::DnsResource(pcpp::DnsLayer*, unsigned long, pcpp::DnsResourceType) /src/PcapPlusPlus/Packet++/./header/DnsResource.h:157:89
+    #5 0x54be6c in pcpp::DnsLayer::parseResources() /src/PcapPlusPlus/Packet++/src/DnsLayer.cpp:178:22
+    #6 0x54b87e in pcpp::DnsLayer::DnsLayer(unsigned char*, unsigned long, pcpp::Layer*, pcpp::Packet*) /src/PcapPlusPlus/Packet++/src/DnsLayer.cpp:26:2
+    #7 0x525858 in pcpp::UdpLayer::parseNextLayer() /src/PcapPlusPlus/Packet++/src/UdpLayer.cpp:103:21
+    #8 0x4f805d in pcpp::Packet::setRawPacket(pcpp::RawPacket*, bool, unsigned long, pcpp::OsiModelLayer) /src/PcapPlusPlus/Packet++/src/Packet.cpp:63:13
+    #9 0x4fa88b in pcpp::Packet::Packet(pcpp::RawPacket*, bool, unsigned long, pcpp::OsiModelLayer) /src/PcapPlusPlus/Packet++/src/Packet.cpp:109:2
+    #10 0x4bd5a2 in LLVMFuzzerTestOneInput /src/PcapPlusPlus/Tests/Fuzzers/FuzzTarget.cpp:52:15
+    #11 0x44db21 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:559:15
+    #12 0x4392c2 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:301:6
+    #13 0x43f25d in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:801:9
+    #14 0x466b42 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #15 0x72196316283f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #16 0x413a68 in _start (/out/FuzzTarget+0x413a68)
+
+DEDUP_TOKEN: std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__assign_external(char const*, unsigned long)--std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator=(char const*)
+UndefinedBehaviorSanitizer can not provide additional info.
+SUMMARY: UndefinedBehaviorSanitizer: SEGV (/lib/x86_64-linux-gnu/libc.so.6+0x14dc3d) 
+==13==ABORTING

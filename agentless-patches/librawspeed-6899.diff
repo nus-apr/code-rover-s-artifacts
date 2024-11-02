@@ -1,0 +1,29 @@
+diff --git a/librawspeed/src/librawspeed/decompressors/Cr2Decompressor.cpp b/librawspeed/src/librawspeed/decompressors/Cr2Decompressor.cpp
+index dfb2f97..09cb628 100644
+--- a/librawspeed/src/librawspeed/decompressors/Cr2Decompressor.cpp
++++ b/librawspeed/src/librawspeed/decompressors/Cr2Decompressor.cpp
+@@ -205,12 +205,20 @@ void Cr2Decompressor::decodeN_X_Y()
+           });
+         } else {
+           unroll_loop<Y_S_F>([&](int i) {
+-            dest[0 + i*pixelPitch] = pred[0] += ht[0]->decodeNext(bitStream);
+-            dest[3 + i*pixelPitch] = pred[0] += ht[0]->decodeNext(bitStream);
++            if (0 + i*pixelPitch < frame.w * N_COMP) {
++              dest[0 + i*pixelPitch] = pred[0] += ht[0]->decodeNext(bitStream);
++            }
++            if (3 + i*pixelPitch < frame.w * N_COMP) {
++              dest[3 + i*pixelPitch] = pred[0] += ht[0]->decodeNext(bitStream);
++            }
+           });
+ 
+-          dest[1] = pred[1] += ht[1]->decodeNext(bitStream);
+-          dest[2] = pred[2] += ht[2]->decodeNext(bitStream);
++          if (1 < frame.w * N_COMP) {
++            dest[1] = pred[1] += ht[1]->decodeNext(bitStream);
++          }
++          if (2 < frame.w * N_COMP) {
++            dest[2] = pred[2] += ht[2]->decodeNext(bitStream);
++          }
+         }
+ 
+         dest += xStepSize;

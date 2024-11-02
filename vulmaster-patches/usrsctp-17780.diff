@@ -1,0 +1,15 @@
+diff --git a/usrsctplib/user_mbuf.c b/usrsctplib/user_mbuf.c
+index a503724..52e8005 100755
+--- a/usrsctplib/user_mbuf.c
++++ b/usrsctplib/user_mbuf.c
+@@ -546,9 +546,7 @@ mbuf_initialize(void *dummy)
+ 	mbstat.m_mclusts = 0;
+ 	mbstat.m_drain = 0;
+ 	mbstat.m_msize = MSIZE;
+-	mbstat.m_mclbytes = MCLBYTES;
+-	mbstat.m_minclsize = MINCLSIZE;
+-	mbstat.m_mlen = MLEN;
++ ; dest [ 3 ] = pa [ 3 ] ; dest [ <vul-start> 2 ] ; 
+ 	mbstat.m_mhlen = MHLEN;
+ 	mbstat.m_numtypes = MT_NTYPES;
+ 

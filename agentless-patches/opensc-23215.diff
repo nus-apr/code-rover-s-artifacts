@@ -1,0 +1,33 @@
+diff --git a/opensc/src/libopensc/card-piv.c b/opensc/src/libopensc/card-piv.c
+index 34bd2d1..a41c223 100644
+--- a/opensc/src/libopensc/card-piv.c
++++ b/opensc/src/libopensc/card-piv.c
+@@ -1011,13 +1011,15 @@ piv_get_cached_data(sc_card_t * card, int enumtag, u8 **buf, size_t *buf_len)
+ 		       priv->obj_cache[enumtag].internal_obj_len);
+ 
+ 	} else {
+-		free(rbuf);
+-		if (r == 0 || r == SC_ERROR_FILE_NOT_FOUND) {
+-			r = SC_ERROR_FILE_NOT_FOUND;
+-			priv->obj_cache[enumtag].flags |= PIV_OBJ_CACHE_VALID;
+-			priv->obj_cache[enumtag].obj_len = 0;
+-		} else if ( r < 0) {
+-			goto err;
++		if (r <= 0) {
++			free(rbuf);
++			if (r == 0 || r == SC_ERROR_FILE_NOT_FOUND) {
++				r = SC_ERROR_FILE_NOT_FOUND;
++				priv->obj_cache[enumtag].flags |= PIV_OBJ_CACHE_VALID;
++				priv->obj_cache[enumtag].obj_len = 0;
++			} else if (r < 0) {
++				goto err;
++			}
+ 		}
+ 	}
+ ok:
+@@ -3776,4 +3778,4 @@ struct sc_card_driver * sc_get_piv_driver(void)
+ {
+ 	return sc_get_driver();
+ }
+-#endif
++#endif

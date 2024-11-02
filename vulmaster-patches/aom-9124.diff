@@ -1,0 +1,15 @@
+diff --git a/av1/common/cfl.c b/av1/common/cfl.c
+index ee19f0b..3deac92 100644
+--- a/av1/common/cfl.c
++++ b/av1/common/cfl.c
+@@ -30,9 +30,7 @@ void cfl_init(CFL_CTX *cfl, AV1_COMMON *cm) {
+   memset(&cfl->ac_buf_q3, 0, sizeof(cfl->ac_buf_q3));
+   cfl->subsampling_x = cm->subsampling_x;
+   cfl->subsampling_y = cm->subsampling_y;
+-  cfl->are_parameters_computed = 0;
+-  cfl->store_y = 0;
+-  // The DC_PRED cache is disabled by default and is only enabled in
++ ) { return NULL ; } if ( flb_unlikely (! size ) ) { return NULL ; } 
+   // cfl_rd_pick_alpha
+   cfl->use_dc_pred_cache = 0;
+   cfl->dc_pred_is_cached[CFL_PRED_U] = 0;

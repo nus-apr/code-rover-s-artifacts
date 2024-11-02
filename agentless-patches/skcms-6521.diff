@@ -1,0 +1,21 @@
+diff --git a/skcms/src/ICCProfile.c b/skcms/src/ICCProfile.c
+index 7ad1816..4a5d2b9 100644
+--- a/skcms/src/ICCProfile.c
++++ b/skcms/src/ICCProfile.c
+@@ -392,9 +392,15 @@ static bool read_mft_common(const mft_CommonLayout* mftTag, skcms_A2B* a2b) {
+     // field/flag.
+     a2b->matrix_channels = 0;
+ 
++    if (mftTag->input_channels[0] < 1 || mftTag->input_channels[0] > 4) {
++        return false;
++    }
+     a2b->input_channels  = mftTag->input_channels[0];
+     for (uint32_t i = 0; i < a2b->input_channels; ++i) {
+-        a2b->grid_points[i] = mftTag->grid_points[0];
++        a2b->grid_points[i] = mftTag->grid_points[i];
++    }
++    if (mftTag->output_channels[0] != 3) {
++        return false;
+     }
+     a2b->output_channels = mftTag->output_channels[0];
+ 

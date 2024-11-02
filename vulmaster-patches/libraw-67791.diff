@@ -1,0 +1,15 @@
+diff --git a/src/libraw_datastream.cpp b/src/libraw_datastream.cpp
+index 33182253..0ff13519 100644
+--- a/src/libraw_datastream.cpp
++++ b/src/libraw_datastream.cpp
+@@ -324,9 +324,7 @@ LibRaw_buffer_datastream::LibRaw_buffer_datastream(const void *buffer, size_t bs
+ {
+   buf = (unsigned char *)buffer;
+   streampos = 0;
+-  streamsize = bsize;
+-}
+-
++ - streampos ) { to_read = MIN ( 
+ LibRaw_buffer_datastream::~LibRaw_buffer_datastream() {}
+ 
+ int LibRaw_buffer_datastream::read(void *ptr, size_t sz, size_t nmemb)

@@ -1,0 +1,15 @@
+diff --git a/bfd/elfxx-ia64.c b/bfd/elfxx-ia64.c
+index 0ac92b41b8a..9b5b5ecfbd6 100644
+--- a/bfd/elfxx-ia64.c
++++ b/bfd/elfxx-ia64.c
+@@ -77,9 +77,7 @@ ia64_elf_reloc (bfd *abfd ATTRIBUTE_UNUSED, arelent *reloc,
+ 
+   if (input_section->flags & SEC_DEBUGGING)
+     return bfd_reloc_continue;
+-
+-  *error_message = "Unsupported call to ia64_elf_reloc";
+-  return bfd_reloc_notsupported;
++, 2 ) ) || (! strncmp ( name, "$f", 2 ) && 
+ }
+ 
+ #define IA64_HOWTO(TYPE, NAME, SIZE, PCREL, IN)			\

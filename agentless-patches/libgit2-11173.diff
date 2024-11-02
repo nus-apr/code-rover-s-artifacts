@@ -1,0 +1,47 @@
+diff --git a/libgit2/src/util.c b/libgit2/src/util.c
+index 284f566..7875f7d 100644
+--- a/libgit2/src/util.c
++++ b/libgit2/src/util.c
+@@ -83,33 +83,33 @@ int git__strntol64(int64_t *result, const char *nptr, size_t nptr_len, const cha
+ 	/*
+ 	 * White space
+ 	 */
+-	while (git__isspace(*p))
++	while (nptr_len > 0 && git__isspace(*p))
+ 		p++;
+ 
+ 	/*
+ 	 * Sign
+ 	 */
+-	if (*p == '-' || *p == '+')
++	if (nptr_len > 0 && (*p == '-' || *p == '+'))
+ 		if (*p++ == '-')
+ 			neg = 1;
+ 
+ 	/*
+ 	 * Base
+ 	 */
+-	if (base == 0) {
+-		if (*p != '0')
++	if (nptr_len > 0 && base == 0) {
++		if (nptr_len > 0 && *p != '0')
+ 			base = 10;
+-		else {
++		else if (nptr_len > 1) {
+ 			base = 8;
+-			if (p[1] == 'x' || p[1] == 'X') {
++			if (nptr_len > 2 && (p[1] == 'x' || p[1] == 'X')) {
+ 				p += 2;
+ 				base = 16;
+ 			}
+ 		}
+-	} else if (base == 16 && *p == '0') {
+-		if (p[1] == 'x' || p[1] == 'X')
++	} else if (nptr_len > 0 && base == 16 && *p == '0') {
++		if (nptr_len > 1 && (p[1] == 'x' || p[1] == 'X'))
+ 			p += 2;
+-	} else if (base < 0 || 36 < base)
++	} else if (base < 0 || 36 < base || nptr_len == 0)
+ 		goto Return;
+ 
+ 	/*

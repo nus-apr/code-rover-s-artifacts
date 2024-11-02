@@ -1,0 +1,13 @@
+diff --git a/opensc/src/libopensc/card-authentic.c b/opensc/src/libopensc/card-authentic.c
+index 949c734..6a94a20 100644
+--- a/opensc/src/libopensc/card-authentic.c
++++ b/opensc/src/libopensc/card-authentic.c
+@@ -1491,7 +1491,7 @@ authentic_pin_get_policy (struct sc_card *card, struct sc_pin_cmd_data *data, st
+ {
+ 	struct sc_context *ctx = card->ctx;
+ 	struct sc_apdu apdu;
+-	unsigned char rbuf[0x100];
++	unsigned char rbuf[0x200];
+ 	int ii, rv;
+ 
+ 	LOG_FUNC_CALLED(ctx);

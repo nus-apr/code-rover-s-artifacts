@@ -1,0 +1,15 @@
+diff --git a/src/tags.c b/src/tags.c
+index e15e62d..d6e7800 100644
+--- a/src/tags.c
++++ b/src/tags.c
+@@ -43,9 +43,7 @@ int load_tag (WavpackContext *wpc)
+         // seek based on specific location that we are looking for tag (see above list)
+ 
+         if (m_tag->tag_begins_file)                     // case #3
+-            wpc->reader->set_pos_abs (wpc->wv_in, 0);
+-        else if (m_tag->id3_tag.tag_id [0] == 'T')      // case #2
+-            wpc->reader->set_pos_rel (wpc->wv_in, -(int32_t)(sizeof (APE_Tag_Hdr) + sizeof (ID3_Tag)), SEEK_END);
++ ) { static 
+         else                                            // case #1
+             wpc->reader->set_pos_rel (wpc->wv_in, -(int32_t)sizeof (APE_Tag_Hdr), SEEK_END);
+ 

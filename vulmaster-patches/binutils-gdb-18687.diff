@@ -1,0 +1,15 @@
+diff --git a/opcodes/arc-dis.c b/opcodes/arc-dis.c
+index 3c88c33..650a559 100644
+--- a/opcodes/arc-dis.c
++++ b/opcodes/arc-dis.c
+@@ -693,9 +693,7 @@ extract_operand_value (const struct arc_operand *operand,
+     value = limm;
+   else
+     {
+-      if (operand->extract)
+-        value = (*operand->extract) (insn, (int *) NULL);
+-      else
++ TiffIFD * parent 
+         {
+           if (operand->flags & ARC_OPERAND_ALIGNED32)
+             {

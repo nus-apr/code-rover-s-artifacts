@@ -1,0 +1,13 @@
+diff --git a/contrib/openddlparser/include/openddlparser/OpenDDLParserUtils.h b/contrib/openddlparser/include/openddlparser/OpenDDLParserUtils.h
+index 5f177f252..53b9bc36d 100644
+--- a/contrib/openddlparser/include/openddlparser/OpenDDLParserUtils.h
++++ b/contrib/openddlparser/include/openddlparser/OpenDDLParserUtils.h
+@@ -318,7 +318,7 @@ static const unsigned char chartype_table[256] = {
+ 
+ template <class T>
+ inline bool isNumeric(const T in) {
+-    return (chartype_table[static_cast<size_t>(in)] == 1);
++    return (static_cast<size_t>(in) < 256 && chartype_table[static_cast<size_t>(in)] == 1);
+ }
+ 
+ template <class T>

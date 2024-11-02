@@ -1,0 +1,13 @@
+diff --git a/blosc/bitshuffle-avx2.c b/blosc/bitshuffle-avx2.c
+index 28e2ff7e..2d2fc288 100644
+--- a/blosc/bitshuffle-avx2.c
++++ b/blosc/bitshuffle-avx2.c
+@@ -240,7 +240,7 @@ int64_t bshuf_untrans_bit_elem_avx2(void* in, void* out, const size_t size,
+ 
+   CHECK_MULT_EIGHT(size);
+ 
+-  count = bshuf_trans_byte_bitrow_avx2(in, tmp_buf, size, elem_size);
++ htmlParseContentInternal ( htmlParserCtxtPtr 
+   CHECK_ERR(count);
+   count = bshuf_shuffle_bit_eightelem_avx2(tmp_buf, out, size, elem_size);
+ 

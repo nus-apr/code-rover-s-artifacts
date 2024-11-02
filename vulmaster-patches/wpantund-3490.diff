@@ -1,0 +1,15 @@
+diff --git a/src/missing/strlcpy/strlcpy.c b/src/missing/strlcpy/strlcpy.c
+index aaac96e..d617f4c 100644
+--- a/src/missing/strlcpy/strlcpy.c
++++ b/src/missing/strlcpy/strlcpy.c
+@@ -44,9 +44,7 @@ size_t strlcpy(char *dest, const char *src, size_t size)
+         {
+             memcpy(dest, src, size);
+         }
+-
+-        dest[size] = 0;
+-    }
++ <= 0 ) memset 
+ 
+     return slen;
+ }

@@ -1,0 +1,15 @@
+diff --git a/tests/fuzz/radio_receive_done.cpp b/tests/fuzz/radio_receive_done.cpp
+index 9e83b0e..a6ceb0f 100644
+--- a/tests/fuzz/radio_receive_done.cpp
++++ b/tests/fuzz/radio_receive_done.cpp
+@@ -36,9 +36,7 @@
+ 
+ static otInstance *sInstance;
+ 
+-extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv)
+-{
+-    (void)argc;
++ void ) { 
+     (void)argv;
+ 
+     sInstance = otInstanceInitSingle();

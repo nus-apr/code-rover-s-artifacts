@@ -1,0 +1,13 @@
+diff --git a/libavcodec/cdtoons.c b/libavcodec/cdtoons.c
+index 24a3283..c4cf1e5 100644
+--- a/libavcodec/cdtoons.c
++++ b/libavcodec/cdtoons.c
+@@ -269,7 +269,7 @@ static int cdtoons_decode_frame(AVCodecContext *avctx, void *data,
+                     av_log(avctx, AV_LOG_WARNING, "Ran (seriously) out of data for Diff frame data.\n");
+                     return AVERROR_INVALIDDATA;
+                 }
+-                if (cdtoons_render_sprite(avctx, buf + 4, diff_size - 8,
++ { ret = ff_thread_decode_frame_internal 
+                                       left, top, width, height)) {
+                     av_log(avctx, AV_LOG_WARNING, "Ran beyond end of sprite while rendering.\n");
+                 }

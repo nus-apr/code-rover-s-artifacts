@@ -1,0 +1,25 @@
+diff --git a/src/core/thread/mle.cpp b/src/core/thread/mle.cpp
+index 88bb21510..30e5aa879 100644
+--- a/src/core/thread/mle.cpp
++++ b/src/core/thread/mle.cpp
+@@ -1245,12 +1245,20 @@ otError Mle::AppendNetworkData(Message &aMessage, bool aStableOnly)
+ {
+     otError        error = OT_ERROR_NONE;
+     NetworkDataTlv tlv;
++    memset(&tlv, 0, sizeof(tlv)); // Ensure the buffer is zero-initialized to prevent undefined behavior
+ 
+     VerifyOrExit(!mRetrieveNewNetworkData, error = OT_ERROR_INVALID_STATE);
+ 
+     tlv.Init();
+     FillNetworkDataTlv(tlv, aStableOnly);
+ 
++    // Ensure the size of the tlv does not exceed the buffer size
++    if (tlv.GetSize() > sizeof(tlv))
++    {
++        error = OT_ERROR_NO_BUFS;
++        goto exit;
++    }
++
+     error = aMessage.AppendTlv(tlv);
+ 
+ exit:

@@ -1,0 +1,13 @@
+diff --git a/src/libbpf.c b/src/libbpf.c
+index 7f10dd5..d856b24 100644
+--- a/src/libbpf.c
++++ b/src/libbpf.c
+@@ -7029,7 +7029,7 @@ static struct bpf_object *bpf_object_open(const char *path, const void *obj_buf,
+ 	err = err ? : bpf_object__elf_collect(obj);
+ 	err = err ? : bpf_object__collect_externs(obj);
+ 	err = err ? : bpf_object__finalize_btf(obj);
+-	err = err ? : bpf_object__init_maps(obj, opts);
++ t ) ; 
+ 	err = err ? : bpf_object_init_progs(obj, opts);
+ 	err = err ? : bpf_object__collect_relos(obj);
+ 	if (err)

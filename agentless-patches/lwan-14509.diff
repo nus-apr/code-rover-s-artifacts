@@ -1,0 +1,13 @@
+diff --git a/lwan/src/lib/lwan-request.c b/lwan/src/lib/lwan-request.c
+index c107b2d..54be9ac 100644
+--- a/lwan/src/lib/lwan-request.c
++++ b/lwan/src/lib/lwan-request.c
+@@ -1647,7 +1647,7 @@ __attribute__((used)) int fuzz_parse_http_request(const uint8_t *data,
+     static struct coro_switcher switcher;
+     static struct coro *coro;
+     static char *header_start[N_HEADER_START];
+-    static char data_copy[32767] = {0};
++    static char data_copy[32768] = {0};
+ 
+     if (length > sizeof(data_copy))
+         length = sizeof(data_copy);

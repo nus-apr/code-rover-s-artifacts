@@ -1,0 +1,9 @@
+diff --git a/simdjson/fuzz/fuzz_element.cpp b/simdjson/fuzz/fuzz_element.cpp
+index 0a54702..b62e431 100644
+--- a/simdjson/fuzz/fuzz_element.cpp
++++ b/simdjson/fuzz/fuzz_element.cpp
+@@ -1,3 +1,4 @@
++
+ #include "simdjson.h"
+ #include <cstddef>
+ #include <cstdint>

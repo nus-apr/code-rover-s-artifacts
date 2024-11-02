@@ -1,0 +1,15 @@
+diff --git a/assimp/code/AssetLib/FBX/FBXParser.cpp b/assimp/code/AssetLib/FBX/FBXParser.cpp
+index 16bb55c..dfb8587 100644
+--- a/assimp/code/AssetLib/FBX/FBXParser.cpp
++++ b/assimp/code/AssetLib/FBX/FBXParser.cpp
+@@ -211,7 +211,9 @@ Scope::Scope(Parser& parser,bool topLevel)
+                 elements.insert(ElementMap::value_type(str, element));
+                 return;
+             }
+-            delete element;
++            if (element) {
++                delete element;
++            }
+             ParseError("unexpected end of file",parser.LastToken());
+         } else {
+             elements.insert(ElementMap::value_type(str, element));

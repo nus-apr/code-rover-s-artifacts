@@ -1,0 +1,26 @@
+diff --git a/magick/import.c b/magick/import.c
+index 825115a9..a9db634f 100644
+--- a/magick/import.c
++++ b/magick/import.c
+@@ -2396,12 +2396,21 @@ ImportRGBQuantumType(const unsigned char *source,
+         {
+         case 8:
+           {
++            size_t total_required_size = number_pixels * (quantum_size / 8) * 3; // 3 channels: R, G, B
++            if (total_required_size > import_info->bytes_imported)
++              return MagickFail; // Not enough data to process
+             for (x = number_pixels; x != 0; --x)
+               {
++                if ((p - source) + (quantum_size / 8) > import_info->bytes_imported)
++                  return MagickFail; // Prevent out-of-bounds access
+                 ImportUInt8Quantum(unsigned_value,p);
+                 SetRedSample(q,ScaleCharToQuantum(unsigned_value));
++                if ((p - source) + (quantum_size / 8) > import_info->bytes_imported)
++                  return MagickFail; // Prevent out-of-bounds access
+                 ImportUInt8Quantum(unsigned_value,p);
+                 SetGreenSample(q,ScaleCharToQuantum(unsigned_value));
++                if ((p - source) + (quantum_size / 8) > import_info->bytes_imported)
++                  return MagickFail; // Prevent out-of-bounds access
+                 ImportUInt8Quantum(unsigned_value,p);
+                 SetBlueSample(q,ScaleCharToQuantum(unsigned_value));
+                 SetOpacitySample(q,OpaqueOpacity);

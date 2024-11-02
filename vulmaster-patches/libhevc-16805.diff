@@ -1,0 +1,13 @@
+diff --git a/decoder/ihevcd_parse_slice.c b/decoder/ihevcd_parse_slice.c
+index aedfbe7..e197e9d 100644
+--- a/decoder/ihevcd_parse_slice.c
++++ b/decoder/ihevcd_parse_slice.c
+@@ -2698,7 +2698,7 @@ IHEVCD_ERROR_T ihevcd_parse_slice_data(codec_t *ps_codec)
+                             ps_codec->s_parse.i4_ctb_y * ps_sps->i2_pic_wd_in_ctb;
+ 
+             /* Default values */
+-            ps_sao->b3_y_type_idx = 0;
++ b ) { if ( a == NULL || b == NULL ) return false ; 
+             ps_sao->b3_cb_type_idx = 0;
+             ps_sao->b3_cr_type_idx = 0;
+         }

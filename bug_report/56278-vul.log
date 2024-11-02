@@ -1,0 +1,24 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/fuzz_sudoers
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address 0x7b14d692523f (pc 0x5ea3bd5c0381 bp 0x7ffde1bb2e30 sp 0x7ffde1bb2ca0 T0)
+==13==The signal is caused by a WRITE memory access.
+SCARINESS: 30 (wild-addr-write)
+    #0 0x5ea3bd5c0381 in sudo_lbuf_append_quoted_v1 /src/sudo/lib/util/./lbuf.c:149:23
+    #1 0x5ea3bd55b238 in sudoers_format_member_int /src/sudo/plugins/sudoers/./fmtsudoers.c:128:7
+    #2 0x5ea3bd55aaf3 in sudoers_format_member_int /src/sudo/plugins/sudoers/./fmtsudoers.c:107:4
+    #3 0x5ea3bd55aaf3 in sudoers_format_member_int /src/sudo/plugins/sudoers/./fmtsudoers.c:107:4
+    #4 0x5ea3bd55a7c7 in sudoers_format_member /src/sudo/plugins/sudoers/./fmtsudoers.c:142:12
+    #5 0x5ea3bd5623b7 in display_priv_long /src/sudo/plugins/sudoers/./parse.c:641:4
+    #6 0x5ea3bd5623b7 in sudo_display_userspecs /src/sudo/plugins/sudoers/./parse.c:751:16
+    #7 0x5ea3bd5623b7 in display_privs /src/sudo/plugins/sudoers/./parse.c:957:10
+    #8 0x5ea3bd55a123 in LLVMFuzzerTestOneInput /src/sudo/plugins/sudoers/./regress/fuzz/fuzz_sudoers.c:371:6
+    #9 0x5ea3bd5b308b in main (/out/fuzz_sudoers+0x17a08b)
+    #10 0x7b155a032082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #11 0x5ea3bd4987bd in _start (/out/fuzz_sudoers+0x5f7bd)
+
+DEDUP_TOKEN: sudo_lbuf_append_quoted_v1--sudoers_format_member_int--sudoers_format_member_int
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /src/sudo/lib/util/./lbuf.c:149:23 in sudo_lbuf_append_quoted_v1
+==13==ABORTING

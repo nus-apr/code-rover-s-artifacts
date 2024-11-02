@@ -1,0 +1,21 @@
+diff --git a/radare2/shlr/sdb/src/ns.c b/radare2/shlr/sdb/src/ns.c
+index 21e68d6..e2220f9 100644
+--- a/radare2/shlr/sdb/src/ns.c
++++ b/radare2/shlr/sdb/src/ns.c
+@@ -56,10 +56,14 @@ static void ns_free(Sdb *s, SdbList *list) {
+ 			ls_append (list, ns);
+ 			ls_append (list, ns->sdb);
+ 			ns_free (ns->sdb, list);
+-			sdb_free (ns->sdb);
++			if (sdb_free (ns->sdb)) {
++				ns->sdb = NULL;
++			}
+ 		}
+ 		if (!deleted) {
+-			sdb_free (ns->sdb);
++			if (sdb_free (ns->sdb)) {
++				ns->sdb = NULL;
++			}
+ 			s->ns->free = NULL;
+ 			ls_delete (s->ns, it); // free (it)
+ 		}

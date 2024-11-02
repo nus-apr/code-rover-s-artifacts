@@ -1,0 +1,15 @@
+diff --git a/src/hb-ot-face.cc b/src/hb-ot-face.cc
+index 9188f53..d0dac49 100644
+--- a/src/hb-ot-face.cc
++++ b/src/hb-ot-face.cc
+@@ -46,9 +46,7 @@ void hb_ot_face_t::init0 (hb_face_t *face)
+ {
+   this->face = face;
+ #define HB_OT_TABLE(Namespace, Type) Type.init0 ();
+-#define HB_OT_ACCELERATOR(Namespace, Type) HB_OT_TABLE (Namespace, Type)
+-  HB_OT_TABLES
+-#undef HB_OT_ACCELERATOR
++, Type ) HB_OT_TABLE ( Namespace, Type ) Type.init1 
+ #undef HB_OT_TABLE
+ }
+ void hb_ot_face_t::fini (void)

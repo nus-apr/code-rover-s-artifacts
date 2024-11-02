@@ -1,0 +1,13 @@
+diff --git a/src/ICCProfile.c b/src/ICCProfile.c
+index f02e3de..cb3e4da 100644
+--- a/src/ICCProfile.c
++++ b/src/ICCProfile.c
+@@ -393,7 +393,7 @@ static bool read_mft_common(const mft_CommonLayout* mftTag, skcms_A2B* a2b) {
+     a2b->matrix_channels = 0;
+ 
+     a2b->input_channels  = mftTag->input_channels[0];
+-    for (uint32_t i = 0; i < a2b->input_channels; ++i) {
++    for (uint32_t i = 0; i < a2b->input_channels && i < ARRAY_COUNT(a2b->input_curves); ++i) {
+         a2b->grid_points[i] = mftTag->grid_points[0];
+     }
+     a2b->output_channels = mftTag->output_channels[0];

@@ -1,0 +1,6 @@
+diff --git a/qtbase b/qtbase
+--- a/qtbase
++++ b/qtbase
+@@ -1 +1 @@
+-Subproject commit d74261b59487ed66c1c14f099920bac01fd39d1c
++Subproject commit d74261b59487ed66c1c14f099920bac01fd39d1c-dirty

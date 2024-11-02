@@ -1,0 +1,16 @@
+diff --git a/src/core/SkBlitter_Sprite.cpp b/src/core/SkBlitter_Sprite.cpp
+index 95259c64cc..b4e169ca72 100644
+--- a/src/core/SkBlitter_Sprite.cpp
++++ b/src/core/SkBlitter_Sprite.cpp
+@@ -85,6 +85,11 @@ public:
+         const size_t srcRB = fSource.rowBytes();
+         const size_t bytesToCopy = width << fSource.shiftPerPixel();
+ 
++        // Ensure the source data is initialized
++        if (src != nullptr) {
++            memset((void*)src, 0, bytesToCopy);
++        }
++
+         while (height --> 0) {
+             memcpy(dst, src, bytesToCopy);
+             dst += dstRB;

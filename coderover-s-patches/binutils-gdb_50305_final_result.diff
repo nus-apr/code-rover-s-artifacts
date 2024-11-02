@@ -1,0 +1,45 @@
+diff --git a/bfd/mmo.c b/bfd/mmo.c
+index 2ee386662a4..8ff479ad25d 100644
+--- a/bfd/mmo.c
++++ b/bfd/mmo.c
+@@ -758,13 +758,17 @@ static inline bfd_byte *
+ mmo_xore_32 (asection *sec, bfd_vma vma, unsigned int value)
+ {
+   bfd_byte *loc = mmo_get_loc (sec, vma, 4);
+-  if (loc)
+-    {
+-      unsigned int prev = bfd_get_32 (sec->owner, loc);
++  if (loc == NULL)
++    return NULL;
++
++  // Ensure the memory region is large enough for the operation
++  if (vma + 4 > sec->vma + sec->size)
++    return NULL;
++
++  unsigned int prev = bfd_get_32 (sec->owner, loc);
++  value ^= prev;
++  bfd_put_32 (sec->owner, value, loc);
+ 
+-      value ^= prev;
+-      bfd_put_32 (sec->owner, value, loc);
+-    }
+   return loc;
+ }
+ 
+@@ -1656,11 +1660,11 @@ mmo_scan (bfd *abfd)
+ 	      vma &= ~3;
+ 	      if (sec == NULL)
+ 		sec = bfd_make_section_old_way (abfd, MMO_TEXT_SECTION_NAME);
+-	      if (!mmo_xore_32 (sec, vma, bfd_get_32 (abfd, buf)))
+-		{
+-		  bfd_set_error (bfd_error_bad_value);
+-		  goto error_return;
+-		}
++  if (mmo_xore_32 (sec, vma, bfd_get_32 (abfd, buf)) == NULL)
++    {
++      bfd_set_error (bfd_error_bad_value);
++      goto error_return;
++    }
+ 	      vma += 4;
+ 	      lineno++;
+ 	      break;

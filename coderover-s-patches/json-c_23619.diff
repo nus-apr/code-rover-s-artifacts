@@ -1,0 +1,26 @@
+diff --git a/json_tokener.c b/json_tokener.c
+index 2a73ce2..dc01104 100644
+--- a/json_tokener.c
++++ b/json_tokener.c
+@@ -648,10 +648,10 @@ struct json_object *json_tokener_parse_ex(struct json_tokener *tok, const char *
+ 								/* remove the utf8_replacement_char */
+ 								/* which may generate during */
+ 								/* parsing the high surrogate pair. */
+-								if (!strcmp(
++								if (!strncmp(
+ 								        tok->pb->buf,
+ 								        (char *)
+-								            utf8_replacement_char))
++								            utf8_replacement_char, sizeof(utf8_replacement_char)))
+ 								{
+ 									printbuf_reset(tok->pb);
+ 								}
+@@ -797,7 +797,7 @@ struct json_object *json_tokener_parse_ex(struct json_tokener *tok, const char *
+ 				{
+ 					/* Clean up any pending chars */
+ 					if (tok->got_hi_surrogate &&
+-					    strcmp(tok->pb->buf, (char *)utf8_replacement_char))
++					    strncmp(tok->pb->buf, (char *)utf8_replacement_char, sizeof(utf8_replacement_char)))
+ 						printbuf_memappend_fast(
+ 						    tok->pb, (char *)utf8_replacement_char, 3);
+ 					goto out;

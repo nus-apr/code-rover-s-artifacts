@@ -1,0 +1,14 @@
+diff --git a/mruby/src/string.c b/mruby/src/string.c
+index dbbece3..3178898 100644
+--- a/mruby/src/string.c
++++ b/mruby/src/string.c
+@@ -798,6 +798,9 @@ mrb_locale_from_utf8(const char *utf8, int len)
+ MRB_API void
+ mrb_str_modify_keep_ascii(mrb_state *mrb, struct RString *s)
+ {
++  if (s == NULL) {
++    mrb_raise(mrb, E_RUNTIME_ERROR, "invalid string pointer");
++  }
+   mrb_check_frozen(mrb, s);
+   str_modify_keep_ascii(mrb, s);
+ }

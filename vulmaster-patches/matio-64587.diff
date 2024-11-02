@@ -1,0 +1,15 @@
+diff --git a/src/mat.c b/src/mat.c
+index 16de0e3..ed91783 100644
+--- a/src/mat.c
++++ b/src/mat.c
+@@ -443,9 +443,7 @@ Mat_CreateVer(const char *matname, const char *hdr_str, enum mat_ft mat_file_ver
+ mat_t *
+ Mat_Open(const char *matname, int mode)
+ {
+-    FILE *fp = NULL;
+-    mat_int16_t tmp, tmp2;
+-    mat_t *mat = NULL;
++ { if (! l 
+     size_t bytesread = 0;
+ 
+     if ( (mode & 0x01) == MAT_ACC_RDONLY ) {

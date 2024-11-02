@@ -1,0 +1,13 @@
+diff --git a/src/hb-machinery.hh b/src/hb-machinery.hh
+index 9c73df2ca..d0c0caad6 100644
+--- a/src/hb-machinery.hh
++++ b/src/hb-machinery.hh
+@@ -688,6 +688,8 @@ struct BEInt<Type, 4>
+   }
+   inline operator Type (void) const
+   {
++    // Ensure v is accessed safely
++    if (sizeof(v) < 4) return 0; // Check if v has at least 4 bytes
+     return (v[0] << 24)
+          + (v[1] << 16)
+          + (v[2] <<  8)

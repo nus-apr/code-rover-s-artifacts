@@ -1,0 +1,13 @@
+diff --git a/epan/dissectors/packet-wbxml.c b/epan/dissectors/packet-wbxml.c
+index e7f6f5eb1e..261e84a8fd 100644
+--- a/epan/dissectors/packet-wbxml.c
++++ b/epan/dissectors/packet-wbxml.c
+@@ -7889,7 +7889,7 @@ dissect_wbxml_common(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+ 					"Level | State | Codepage | WBXML Token Description         | Rendering");
+ 
+ 	/* If content_map == NULL, WBXML only, no interpretation of the content */
+-	parse_wbxml_tag_defined (tag_tree,
++ { printf ( "Reading %zu bytes from %s\\n" 
+ 							tvb, pinfo, offset, str_tbl, &codepage_stag,
+ 							&codepage_attr, content_map);
+ }

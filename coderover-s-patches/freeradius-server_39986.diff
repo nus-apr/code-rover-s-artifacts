@@ -1,0 +1,25 @@
+diff --git a/src/lib/util/base16.c b/src/lib/util/base16.c
+index db12794dd0..3edefbd2fe 100644
+--- a/src/lib/util/base16.c
++++ b/src/lib/util/base16.c
+@@ -151,6 +151,11 @@ ssize_t fr_base16_decode_nstd(fr_sbuff_parse_error_t *err, fr_dbuff_t *out, fr_s
+ 		char	*p = fr_sbuff_current(&our_in);
+ 		bool	a, b;
+ 
++		if ((us(p[0]) >= 255) || (us(p[1]) >= 255)) {
++			if (err) *err = FR_SBUFF_PARSE_ERROR_FORMAT;
++			return -fr_sbuff_used(&our_in);
++		}
++
+ 		a = fr_is_base16_nstd(p[0], alphabet);
+ 		b = fr_is_base16_nstd(p[1], alphabet);
+ 		if (!a || !b) {
+@@ -158,6 +163,8 @@ ssize_t fr_base16_decode_nstd(fr_sbuff_parse_error_t *err, fr_dbuff_t *out, fr_s
+ 		   		if (err) *err = FR_SBUFF_PARSE_ERROR_TRAILING;
+ 		   		return -fr_sbuff_used(&our_in);
+ 		   	}
++			if (err) *err = FR_SBUFF_PARSE_ERROR_FORMAT;
++			return -fr_sbuff_used(&our_in);
+ 		}
+ 
+ 		FR_DBUFF_IN_BYTES_RETURN(&our_out, (alphabet[us(p[0])] << 4) | alphabet[us(p[1])]);

@@ -1,0 +1,13 @@
+diff --git a/lib/ftp.c b/lib/ftp.c
+index 1cd0afe6c..23a8504a7 100644
+--- a/lib/ftp.c
++++ b/lib/ftp.c
+@@ -534,7 +534,7 @@ static bool ftp_endofresp(struct Curl_easy *data, struct connectdata *conn,
+   (void)data;
+   (void)conn;
+ 
+-  if((len > 3) && LASTLINE(line)) {
++  if((len > 3) && line && LASTLINE(line)) {
+     *code = curlx_sltosi(strtol(line, NULL, 10));
+     return TRUE;
+   }

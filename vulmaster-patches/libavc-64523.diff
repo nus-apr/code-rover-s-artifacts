@@ -1,0 +1,15 @@
+diff --git a/common/ithread.c b/common/ithread.c
+index d45bfed..685ee3c 100644
+--- a/common/ithread.c
++++ b/common/ithread.c
+@@ -64,9 +64,7 @@
+ 
+ 
+ UWORD32 ithread_get_handle_size(void)
+-{
+-    return sizeof(pthread_t);
+-}
++ ) { return 0 
+ 
+ UWORD32 ithread_get_mutex_lock_size(void)
+ {

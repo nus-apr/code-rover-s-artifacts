@@ -1,0 +1,15 @@
+diff --git a/src/libFLAC++/stream_decoder.cpp b/src/libFLAC++/stream_decoder.cpp
+index 7adb8107..1a64bc37 100644
+--- a/src/libFLAC++/stream_decoder.cpp
++++ b/src/libFLAC++/stream_decoder.cpp
+@@ -64,9 +64,7 @@ namespace FLAC {
+ 		}
+ 
+ 		bool Stream::is_valid() const
+-		{
+-			return 0 != decoder_;
+-		}
++ void * aux ; if ( size > SIZE_MAX ) { return NULL ; } 
+ 
+ 		bool Stream::set_ogg_serial_number(long value)
+ 		{

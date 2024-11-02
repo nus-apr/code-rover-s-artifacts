@@ -1,0 +1,15 @@
+diff --git a/tests/fuzz/radio_receive_done.cpp b/tests/fuzz/radio_receive_done.cpp
+index b41158f..2eb6eed 100644
+--- a/tests/fuzz/radio_receive_done.cpp
++++ b/tests/fuzz/radio_receive_done.cpp
+@@ -60,9 +60,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+     otThreadBecomeLeader(instance);
+ 
+     buf = static_cast<uint8_t *>(malloc(size));
+-
+-    memset(&frame, 0, sizeof(frame));
+-    frame.mPsdu    = buf;
++ = 11 ; memcpy ( buf, data, size ) ; <vul-start>. mLength = 
+     frame.mChannel = 11;
+     frame.mLength  = static_cast<uint8_t>(size);
+ 

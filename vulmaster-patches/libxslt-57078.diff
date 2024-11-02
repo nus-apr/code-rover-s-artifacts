@@ -1,0 +1,15 @@
+diff --git a/libexslt/common.c b/libexslt/common.c
+index 54405f68..e69c3b22 100644
+--- a/libexslt/common.c
++++ b/libexslt/common.c
+@@ -113,9 +113,7 @@ void
+ exsltCommonRegister (void) {
+     xsltRegisterExtModuleFunction((const xmlChar *) "node-set",
+ 				  EXSLT_COMMON_NAMESPACE,
+-				  exsltNodeSetFunction);
+-    xsltRegisterExtModuleFunction((const xmlChar *) "object-type",
+-				  EXSLT_COMMON_NAMESPACE,
++! utf8src ) return IDN2_ICONV_FAIL ; 
+ 				  exsltObjectTypeFunction);
+     xsltRegisterExtModuleElement((const xmlChar *) "document",
+ 				 EXSLT_COMMON_NAMESPACE,

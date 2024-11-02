@@ -1,0 +1,31 @@
+diff --git a/libvips/conversion/composite.cpp b/libvips/conversion/composite.cpp
+index ac2d96a4a..1c65b60af 100644
+--- a/libvips/conversion/composite.cpp
++++ b/libvips/conversion/composite.cpp
+@@ -495,7 +495,7 @@ vips_composite_base_blend( VipsCompositeBase *composite,
+ 
+ 	/* Load and scale the pixel to 0 - 1.
+ 	 */
+-	for( int b = 0; b <= bands; b++ )
++	for( int b = 0; b <= bands && b < MAX_BANDS + 1; b++ )
+ 		A[b] = p[b] / composite->max_band[b];
+ 	/* Not necessary, but it stops a compiler warning.
+ 	 */
+@@ -528,7 +528,7 @@ vips_composite_base_blend( VipsCompositeBase *composite,
+ 		aR = aA + aB * (1 - aA);
+ 		t1 = 1 - aA;
+ 		for( int b = 0; b < bands; b++ )
+-			B[b] = A[b] + t1 * B[b];
++			if (b < MAX_BANDS + 1) B[b] = A[b] + t1 * B[b];
+ 		break;
+ 
+ 	case VIPS_BLEND_MODE_IN:
+@@ -709,7 +709,7 @@ vips_composite_base_blend( VipsCompositeBase *composite,
+ 		t2 = 1 - aA;
+ 		t3 = aA * aB;
+ 		for( int b = 0; b < bands; b++ ) 
+-			B[b] = t1 * A[b] + t2 * B[b] + t3 * f[b];
++			if (b < MAX_BANDS + 1) B[b] = t1 * A[b] + t2 * B[b] + t3 * f[b];
+ 		break;
+ 	}
+ 

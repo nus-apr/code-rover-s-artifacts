@@ -1,0 +1,14 @@
+diff --git a/ndpi/src/lib/ndpi_main.c b/ndpi/src/lib/ndpi_main.c
+index 72cbea8..1d4227a 100644
+--- a/ndpi/src/lib/ndpi_main.c
++++ b/ndpi/src/lib/ndpi_main.c
+@@ -7108,7 +7108,8 @@ const char * ndpi_strncasestr(const char *str1, const char *str2, size_t len) {
+   size_t str2_len = strlen(str2);
+   size_t i;
+ 
+-  for(i = 0; i < (str1_len - str2_len + 1); i++){
++  if (str1_len < str2_len) return NULL;
++  for(i = 0; i < (str1_len - str2_len + 1); i++) {
+     if(str1[0] == '\0')
+       return NULL;
+     else if(strncasecmp(str1, str2, str2_len) == 0)

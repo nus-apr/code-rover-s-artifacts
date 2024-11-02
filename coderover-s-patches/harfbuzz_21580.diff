@@ -1,0 +1,57 @@
+diff --git a/src/hb-ot-layout-common.hh b/src/hb-ot-layout-common.hh
+index fe49afbde..c998dc7e9 100644
+--- a/src/hb-ot-layout-common.hh
++++ b/src/hb-ot-layout-common.hh
+@@ -1651,12 +1651,18 @@ struct ClassDefFormat1
+     unsigned glyph_count = glyph_max - glyph_min + 1;
+ 
+     startGlyph = glyph_min;
+-    classValue.serialize (c, glyph_count);
++if (classValue.serialize(c, glyph_count)) {
+     for (const hb_pair_t<hb_codepoint_t, unsigned>& gid_klass_pair : + it)
+     {
+-      unsigned idx = gid_klass_pair.first - glyph_min;
+-      classValue[idx] = gid_klass_pair.second;
++        unsigned idx = gid_klass_pair.first - glyph_min;
++        if (idx < glyph_count) {
++            classValue[idx] = gid_klass_pair.second;
++        } else {
++            // Handle the error or log it
++            return_trace(false);
++        }
+     }
++}
+     return_trace (true);
+   }
+ 
+diff --git a/src/hb-vector.hh b/src/hb-vector.hh
+index 7b150fba0..50a7b7464 100644
+--- a/src/hb-vector.hh
++++ b/src/hb-vector.hh
+@@ -193,13 +193,19 @@ struct hb_vector_t
+     while (size >= new_allocated)
+       new_allocated += (new_allocated >> 1) + 8;
+ 
+-    Type *new_array = nullptr;
+-    bool overflows =
+-      (int) new_allocated < 0 ||
+-      (new_allocated < (unsigned) allocated) ||
+-      hb_unsigned_mul_overflows (new_allocated, sizeof (Type));
+-    if (likely (!overflows))
+-      new_array = (Type *) realloc (arrayZ, new_allocated * sizeof (Type));
++Type *new_array = nullptr;
++bool overflows =
++  (int) new_allocated < 0 ||
++  (new_allocated < (unsigned) allocated) ||
++  hb_unsigned_mul_overflows (new_allocated, sizeof (Type));
++if (likely (!overflows)) {
++  new_array = (Type *) realloc (arrayZ, new_allocated * sizeof (Type));
++  if (!new_array) {
++    // Handle allocation failure
++    allocated = -1;
++    return false;
++  }
++}
+ 
+     if (unlikely (!new_array))
+     {

@@ -1,0 +1,17 @@
+diff --git a/include/flatbuffers/flexbuffers.h b/include/flatbuffers/flexbuffers.h
+index d0859ff9..a33e3128 100644
+--- a/include/flatbuffers/flexbuffers.h
++++ b/include/flatbuffers/flexbuffers.h
+@@ -589,8 +589,10 @@ class Reference {
+       AppendToString<FixedTypedVector>(s, AsFixedTypedVector(), keys_quoted);
+     } else if (IsBlob()) {
+       auto blob = AsBlob();
+-      flatbuffers::EscapeString(reinterpret_cast<const char *>(blob.data()),
+-                                blob.size(), &s, true, false);
++  if (blob.data() != nullptr && blob.size() > 0) {
++    flatbuffers::EscapeString(reinterpret_cast<const char *>(blob.data()),
++                              blob.size(), &s, true, false);
++  }
+     } else {
+       s += "(?)";
+     }

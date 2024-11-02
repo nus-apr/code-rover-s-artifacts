@@ -1,0 +1,14 @@
+diff --git a/ndpi/src/lib/ndpi_utils.c b/ndpi/src/lib/ndpi_utils.c
+index 7c49a51..b929c2a 100644
+--- a/ndpi/src/lib/ndpi_utils.c
++++ b/ndpi/src/lib/ndpi_utils.c
+@@ -91,7 +91,8 @@ _Static_assert(sizeof(struct ndpi_str_hash) == sizeof(struct ndpi_str_hash_priva
+ int ndpi_check_punycode_string(char * buffer , int len) {
+   int i = 0;
+ 
+-  while(i++ < len - 3) {
++  while(i < len - 3) {
++    i++;
+     if((buffer[i] == 'x')
+        && (buffer[i+1] == 'n')
+        && (buffer[i+2] == '-')

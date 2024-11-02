@@ -1,0 +1,13 @@
+diff --git a/binutils-gdb/bfd/mmo.c b/binutils-gdb/bfd/mmo.c
+index a8b6621..cd6735b 100644
+--- a/binutils-gdb/bfd/mmo.c
++++ b/binutils-gdb/bfd/mmo.c
+@@ -758,7 +758,7 @@ static inline bfd_byte *
+ mmo_xore_32 (asection *sec, bfd_vma vma, unsigned int value)
+ {
+   bfd_byte *loc = mmo_get_loc (sec, vma, 4);
+-  if (loc)
++  if (loc && (loc + 4 <= sec->contents + sec->size))
+     {
+       unsigned int prev = bfd_get_32 (sec->owner, loc);
+ 

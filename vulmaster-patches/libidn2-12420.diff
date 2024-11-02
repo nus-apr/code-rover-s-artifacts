@@ -1,0 +1,15 @@
+diff --git a/lib/lookup.c b/lib/lookup.c
+index 7c5b52b..f5dd5cd 100644
+--- a/lib/lookup.c
++++ b/lib/lookup.c
+@@ -520,9 +520,7 @@ idn2_lookup_ul (const char * src, char ** lookupname, int flags)
+ {
+   uint8_t *utf8src = NULL;
+   int rc;
+-
+-  if (src)
+-    {
++ { printf ( "Error writing pcap file for writing\\n" 
+       const char *encoding = locale_charset ();
+ 
+       utf8src = u8_strconv_from_encoding (src, encoding, iconveh_error);

@@ -1,0 +1,62 @@
+======================= INFO =========================
+This binary is built for AFL-fuzz.
+To run the target function on individual input(s) execute this:
+  /out/FujiDecompressorFuzzer < INPUT_FILE
+or
+  /out/FujiDecompressorFuzzer INPUT_FILE1 [INPUT_FILE2 ... ]
+To fuzz with afl-fuzz execute this:
+  afl-fuzz [afl-flags] /out/FujiDecompressorFuzzer [-N]
+afl-fuzz will run N iterations before re-spawning the process (default: 1000)
+======================================================
+Reading 8283 bytes from /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: unknown-crash on address 0x0000016404d0 at pc 0x0000005603c9 bp 0x7fff920a8510 sp 0x7fff920a8508
+READ of size 8 at 0x0000016404d0 thread T0
+SCARINESS: 13 (8-byte-read-unknown-crash)
+    #0 0x5603c8 in void rawspeed::FujiDecompressor::copy_line<rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const::$_7&>(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int, rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const::$_7&) const /src/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp
+    #1 0x5603c8 in rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const /src/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp:210
+    #2 0x56e845 in rawspeed::FujiDecompressor::fuji_decode_strip(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&) const /src/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp:724:7
+    #3 0x56f1e5 in rawspeed::FujiDecompressor::decompressThreaded(rawspeed::RawDecompressorThread const*) const /src/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp:774:5
+    #4 0x55a5ef in rawspeed::RawDecompressorThread::start_routine(void*) /src/librawspeed/src/librawspeed/decompressors/AbstractParallelizedDecompressor.h:67:22
+    #5 0x55a129 in rawspeed::AbstractParallelizedDecompressor::decompressOne(unsigned int) const /src/librawspeed/src/librawspeed/decompressors/AbstractParallelizedDecompressor.cpp:39:3
+    #6 0x5469f2 in LLVMFuzzerTestOneInput /src/librawspeed/fuzz/librawspeed/decompressors/FujiDecompressor.cpp:47:7
+    #7 0x57e7ef in ExecuteFilesOnyByOne(int, char**) /src/libfuzzer/afl/afl_driver.cpp:271:5
+    #8 0x57ed8f in main /src/libfuzzer/afl/afl_driver.cpp:308:12
+    #9 0x778af000383f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #10 0x447f68 in _start (/out/FujiDecompressorFuzzer+0x447f68)
+
+DEDUP_TOKEN: void rawspeed::FujiDecompressor::copy_line<rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const::$_7&>(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int, rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const::$_7&) const--rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const--rawspeed::FujiDecompressor::fuji_decode_strip(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&) const
+Address 0x0000016404d0 is a wild pointer.
+SUMMARY: AddressSanitizer: unknown-crash /src/librawspeed/src/librawspeed/decompressors/FujiDecompressor.cpp in void rawspeed::FujiDecompressor::copy_line<rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const::$_7&>(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int, rawspeed::FujiDecompressor::copy_line_to_xtrans(rawspeed::FujiDecompressor::fuji_compressed_block*, rawspeed::FujiDecompressor::FujiStrip const&, int) const::$_7&) const
+Shadow bytes around the buggy address:
+  0x0000802c0040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c0050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c0060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c0070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c0080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0000802c0090: 00 00 00 00 00 00 00 00 00 00[00]00 00 00 00 00
+  0x0000802c00a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c00b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c00c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c00d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0000802c00e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

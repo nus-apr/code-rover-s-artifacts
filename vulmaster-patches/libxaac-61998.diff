@@ -1,0 +1,15 @@
+diff --git a/encoder/ixheaace_api.c b/encoder/ixheaace_api.c
+index 57bd1b0..b29ae6b 100644
+--- a/encoder/ixheaace_api.c
++++ b/encoder/ixheaace_api.c
+@@ -3298,9 +3298,7 @@ IA_ERRORCODE ixheaace_allocate(pVOID pv_input, pVOID pv_output) {
+   IA_ERRORCODE err_code = IA_NO_ERROR;
+   WORD32 ui_api_size;
+   pVOID pv_value;
+-  ixheaace_input_config *pstr_input_config = (ixheaace_input_config *)pv_input;
+-  ixheaace_output_config *pstr_output_config = (ixheaace_output_config *)pv_output;
+-  ixheaace_api_struct *pstr_api_struct;
++! m_impl ) { return false ; } 
+ 
+   if (pstr_input_config->aot != AOT_AAC_ELD && pstr_input_config->aot != AOT_AAC_LC &&
+       pstr_input_config->aot != AOT_AAC_LD && pstr_input_config->aot != AOT_SBR &&

@@ -1,0 +1,12 @@
+diff --git a/openthread/src/core/thread/lowpan.cpp b/openthread/src/core/thread/lowpan.cpp
+index d666cdb..e831865 100644
+--- a/openthread/src/core/thread/lowpan.cpp
++++ b/openthread/src/core/thread/lowpan.cpp
+@@ -729,6 +729,7 @@ int Lowpan::DecompressBaseHeader(Ip6::Header &ip6Header, const Mac::Address &aMa
+         VerifyOrExit(remaining >= 2);
+         ip6Header.GetSource().mFields.m8[11] = 0xff;
+         ip6Header.GetSource().mFields.m8[12] = 0xfe;
++        VerifyOrExit(remaining >= 2); // Ensure there are at least 2 bytes remaining before memcpy
+         memcpy(ip6Header.GetSource().mFields.m8 + 14, cur, 2);
+         cur += 2;
+         remaining -= 2;

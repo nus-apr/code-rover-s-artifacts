@@ -1,0 +1,13 @@
+diff --git a/src/filter_core/filter_session.c b/src/filter_core/filter_session.c
+index 01e4bcf92..92baf0d77 100644
+--- a/src/filter_core/filter_session.c
++++ b/src/filter_core/filter_session.c
+@@ -2102,7 +2102,7 @@ static u32 gf_fs_thread_proc(GF_SessionThread *sess_thread)
+ 		task->can_swap = 0;
+ 		task->requeue_request = GF_FALSE;
+ 		task->thid = 1+thid;
+-		task->run_task(task);
++ char str [ 64 
+ 		task->thid = 0;
+ 		requeue = task->requeue_request;
+ 

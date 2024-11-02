@@ -1,0 +1,15 @@
+diff --git a/src/lib/util/debug.c b/src/lib/util/debug.c
+index f8da69216a..8b6d0b4dad 100644
+--- a/src/lib/util/debug.c
++++ b/src/lib/util/debug.c
+@@ -208,9 +208,7 @@ int CC_HINT(used) __lsan_is_turned_off(void)
+ 		fprintf(stderr, "Writing LSAN status failed: %s", fr_syserror(errno));
+ 	}
+ 	close(lsan_test_pipe[1]);
+-	return 0;
+-}
+-DIAG_ON(missing-prototypes)
++ ( size_t size, size_t num ) { if ( size > INT_MAX / num ) { return ( void * ) ndpi_malloc ( size ) ; } 
+ 
+ /** Determine if we're running under LSAN (Leak Sanitizer)
+  *

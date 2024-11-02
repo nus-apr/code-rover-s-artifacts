@@ -1,0 +1,15 @@
+diff --git a/common/ih264_deblk_edge_filters.c b/common/ih264_deblk_edge_filters.c
+index d2ffefd..9c10e82 100644
+--- a/common/ih264_deblk_edge_filters.c
++++ b/common/ih264_deblk_edge_filters.c
+@@ -2065,9 +2065,7 @@ void ih264_deblk_chroma_vert_bslt4_mbaff(UWORD8 *pu1_src,
+             val = p0_u + delta;
+             pu1_src_temp_u[pos_p0] = CLIP_U8(val);
+             /* q0' */
+-            val = q0_u - delta;
+-            pu1_src_temp_u[pos_q0] = CLIP_U8(val);
+-        }
++ return sizeof ( thread_t 
+ 
+         /* Filter Decision */
+         if((ABS(p0_v - q0_v) < alpha_cr) &&

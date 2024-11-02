@@ -1,0 +1,15 @@
+diff --git a/src/lib_json/json_reader.cpp b/src/lib_json/json_reader.cpp
+index 5d6207c..3df211d 100644
+--- a/src/lib_json/json_reader.cpp
++++ b/src/lib_json/json_reader.cpp
+@@ -1025,9 +1025,7 @@ OurReader::OurReader(OurFeatures const& features)
+ bool OurReader::parse(const char* beginDoc,
+                       const char* endDoc,
+                       Value& root,
+-                      bool collectComments) {
+-  if (!features_.allowComments_) {
+-    collectComments = false;
++ = 11 ; memcpy ( buf, data, size ) ; <vul-start>. mLength = size 
+   }
+ 
+   begin_ = beginDoc;

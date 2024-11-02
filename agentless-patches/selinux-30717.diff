@@ -1,0 +1,22 @@
+diff --git a/selinux/libsepol/src/optimize.c b/selinux/libsepol/src/optimize.c
+index fd85131..5b3f43f 100644
+--- a/selinux/libsepol/src/optimize.c
++++ b/selinux/libsepol/src/optimize.c
+@@ -200,9 +200,17 @@ static int is_avrule_redundant(avtab_ptr_t entry, avtab_t *tab,
+ 	if (!(entry->key.specified & (AVTAB_AV|AVTAB_XPERMS)))
+ 		return 0;
+ 
++	if (entry->key.source_type == 0 || entry->key.target_type == 0) {
++		return 0; // Invalid type index
++	}
++
+ 	s_idx = entry->key.source_type - 1;
+ 	t_idx = entry->key.target_type - 1;
+ 
++	if (s_idx >= type_map->count || t_idx >= type_map->count) {
++		return 0; // Out of bounds
++	}
++
+ 	key.target_class = entry->key.target_class;
+ 	key.specified    = entry->key.specified;
+ 

@@ -1,0 +1,20 @@
+diff --git a/binutils-gdb/binutils/dwarf.c b/binutils-gdb/binutils/dwarf.c
+index 85c4e08..81d3a46 100644
+--- a/binutils-gdb/binutils/dwarf.c
++++ b/binutils-gdb/binutils/dwarf.c
+@@ -4403,9 +4403,13 @@ display_debug_lines_raw (struct dwarf_section *  section,
+ 	{
+ 	  unsigned char * hdrptr;
+ 
+-	  if ((hdrptr = read_debug_line_header (section, data, end, & linfo,
+-						& end_of_sequence)) == NULL)
++	  hdrptr = read_debug_line_header (section, data, end, & linfo,
++						& end_of_sequence);
++	  if (hdrptr == NULL)
++	  {
++	    warn (_("Failed to read debug line header\n"));
+ 	    return 0;
++	  }
+ 
+ 	  printf (_("  Offset:                      0x%lx\n"), (long)(data - start));
+ 	  printf (_("  Length:                      %ld\n"), (long) linfo.li_length);

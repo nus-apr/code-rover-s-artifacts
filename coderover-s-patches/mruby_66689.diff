@@ -1,0 +1,22 @@
+diff --git a/src/string.c b/src/string.c
+index e214ad4c2..9b9db01ff 100644
+--- a/src/string.c
++++ b/src/string.c
+@@ -624,7 +624,7 @@ memsearch_swar(const char *xs, long m, const char *ys, long n)
+       if (zeros & MASK4) {
+         const mrb_int idx = i + j;
+         const char* p = s0 + idx + 1;
+-        if (memcmp(p, xs + 1, m - 2) == 0) {
++        if (m > 1 && (s0 + idx + m - 1 <= ys + n) && memcmp(p, xs + 1, m - 2) == 0) {
+           return idx;
+         }
+       }
+@@ -644,7 +644,7 @@ memsearch_swar(const char *xs, long m, const char *ys, long n)
+       size_t len = e-p;
+       p = (const char*)memchr(p, *xs, len);
+       if (p == NULL || len < m) break;
+-      if (memcmp(p+1, xs+1, m-1) == 0) return (mrb_int)(p - ys);
++      if (m > 1 && (p + m <= e) && memcmp(p+1, xs+1, m-1) == 0) return (mrb_int)(p - ys);
+       p++;
+     }
+   }

@@ -1,0 +1,13 @@
+diff --git a/code/AssetLib/Obj/ObjFileMtlImporter.cpp b/code/AssetLib/Obj/ObjFileMtlImporter.cpp
+index 6464a55e0..307c8960c 100644
+--- a/code/AssetLib/Obj/ObjFileMtlImporter.cpp
++++ b/code/AssetLib/Obj/ObjFileMtlImporter.cpp
+@@ -98,7 +98,7 @@ ObjFileMtlImporter::ObjFileMtlImporter(std::vector<char> &buffer,
+         m_pModel->m_pDefaultMaterial = new ObjFile::Material;
+         m_pModel->m_pDefaultMaterial->MaterialName.Set("default");
+     }
+-    load();
++ == "mg" ) { if (! m_pModel -> m_Group ) { m_pModel -> m_Group = ( Group * ) m_GetMem ( ) ; if (! m_pModel -> m_Group ) { m_DataIt = skipLine ( m_DataIt, m_DataItEnd, m_uiLine ) ; } else { GroupNumberAndResolution ( ) ; } } 
+ }
+ 
+ // -------------------------------------------------------------------

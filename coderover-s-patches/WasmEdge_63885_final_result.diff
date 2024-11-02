@@ -1,0 +1,86 @@
+diff --git a/lib/aot/compiler.cpp b/lib/aot/compiler.cpp
+index 49cfb462..826d9cca 100644
+--- a/lib/aot/compiler.cpp
++++ b/lib/aot/compiler.cpp
+@@ -3483,24 +3483,34 @@ public:
+     }
+   }
+ 
+-  void compileReturn() noexcept {
+-    updateInstrCount();
+-    updateGas();
+-    auto Ty = F.Ty.getReturnType();
+-    if (Ty.isVoidTy()) {
+-      Builder.createRetVoid();
+-    } else if (Ty.isStructTy()) {
+-      const auto Count = Ty.getStructNumElements();
+-      std::vector<LLVM::Value> Ret(Count);
+-      for (unsigned I = 0; I < Count; ++I) {
+-        const unsigned J = Count - 1 - I;
+-        Ret[J] = stackPop();
+-      }
+-      Builder.createAggregateRet(Ret);
+-    } else {
+-      Builder.createRet(stackPop());
++    void compileReturn() noexcept {
++        updateInstrCount();
++        updateGas();
++        auto Ty = F.Ty.getReturnType();
++        if (Ty.isVoidTy()) {
++            Builder.createRetVoid();
++        } else if (Ty.isStructTy()) {
++            const auto Count = Ty.getStructNumElements();
++            if (Stack.size() < Count) {
++                // Log an error message
++                spdlog::error("Insufficient values on stack for struct return.");
++                return;
++            }
++            std::vector<LLVM::Value> Ret(Count);
++            for (unsigned I = 0; I < Count; ++I) {
++                const unsigned J = Count - 1 - I;
++                Ret[J] = stackPop();
++            }
++            Builder.createAggregateRet(Ret);
++        } else {
++            if (Stack.empty()) {
++                // Log an error message
++                spdlog::error("Insufficient values on stack for return.");
++                return;
++            }
++            Builder.createRet(stackPop());
++        }
+     }
+-  }
+ 
+   void updateInstrCount() noexcept {
+     if (LocalInstrCount) {
+@@ -4778,14 +4788,21 @@ private:
+   }
+ 
+   void stackPush(LLVM::Value Value) noexcept { Stack.push_back(Value); }
+-  LLVM::Value stackPop() noexcept {
+-    assuming(!ControlStack.empty() || !Stack.empty());
+-    assuming(ControlStack.empty() ||
+-             Stack.size() > ControlStack.back().StackSize);
+-    auto Value = Stack.back();
+-    Stack.pop_back();
+-    return Value;
+-  }
++    LLVM::Value stackPop() noexcept {
++        if (Stack.empty()) {
++            // Log an error message
++            spdlog::error("Attempted to pop from an empty stack.");
++            // Return an error or handle the error appropriately
++            // Here, we return a nullptr to indicate failure
++            return nullptr;
++        }
++        assuming(!ControlStack.empty() || !Stack.empty());
++        assuming(ControlStack.empty() ||
++                 Stack.size() > ControlStack.back().StackSize);
++        auto Value = Stack.back();
++        Stack.pop_back();
++        return Value;
++    }
+ 
+   AOT::Compiler::CompileContext &Context;
+   LLVM::Context &LLContext;

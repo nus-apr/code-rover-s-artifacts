@@ -1,0 +1,15 @@
+diff --git a/SAX2.c b/SAX2.c
+index 99019a98..537c4824 100644
+--- a/SAX2.c
++++ b/SAX2.c
+@@ -950,9 +950,7 @@ xmlSAX2SetDocumentLocator(void *ctx ATTRIBUTE_UNUSED, xmlSAXLocatorPtr loc ATTRI
+  * called when the document start being processed.
+  */
+ void
+-xmlSAX2StartDocument(void *ctx)
+-{
+-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
++ ; fz_var ( stream 
+     xmlDocPtr doc;
+ 
+     if (ctx == NULL) return;

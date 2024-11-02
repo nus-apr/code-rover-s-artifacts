@@ -1,0 +1,15 @@
+diff --git a/openthread/src/core/thread/network_data_tlvs.hpp b/openthread/src/core/thread/network_data_tlvs.hpp
+index 4466e88..ab7bf27 100644
+--- a/openthread/src/core/thread/network_data_tlvs.hpp
++++ b/openthread/src/core/thread/network_data_tlvs.hpp
+@@ -718,6 +718,10 @@ public:
+      * @returns length of the Service Data field in bytes.
+      */
+     uint8_t GetServiceDataLength(void) {
++        // Ensure we do not read beyond the allocated memory
++        if (GetServiceDataLengthLocation() >= GetEnterpriseNumberLocation() + GetLength()) {
++            return 0; // Return 0 if the location is out of bounds
++        }
+         return *GetServiceDataLengthLocation();
+     }
+ 

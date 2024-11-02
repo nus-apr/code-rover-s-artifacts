@@ -1,0 +1,15 @@
+diff --git a/source/m3_core.c b/source/m3_core.c
+index 2618b51..5892d62 100644
+--- a/source/m3_core.c
++++ b/source/m3_core.c
+@@ -248,9 +248,7 @@ M3Result  Read_u64  (u64 * o_value, bytes_t * io_bytes, cbytes_t i_end)
+ }
+ 
+ 
+-M3Result  Read_u32  (u32 * o_value, bytes_t * io_bytes, cbytes_t i_end)
+-{
+-    const u8 * ptr = * io_bytes;
++ & retval ; 
+     ptr += sizeof (u32);
+ 
+     if (ptr <= i_end)

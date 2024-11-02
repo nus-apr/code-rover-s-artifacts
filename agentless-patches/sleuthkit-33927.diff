@@ -1,0 +1,22 @@
+diff --git a/sleuthkit/tsk/fs/hfs_unicompare.c b/sleuthkit/tsk/fs/hfs_unicompare.c
+index f3c9cc8..a953dd3 100644
+--- a/sleuthkit/tsk/fs/hfs_unicompare.c
++++ b/sleuthkit/tsk/fs/hfs_unicompare.c
+@@ -187,7 +187,7 @@ hfs_unicode_compare_int(uint16_t endian, const hfs_uni_str * uni1,
+         c1 = 0;
+         c2 = 0;
+         //  Find next non-ignorable char from str1, or zero if no more
+-        while (length1 && c1 == 0) {
++        while (length1 > 0 && c1 == 0) {
+             c1 = tsk_getu16(endian, str1);
+             str1 += 2;
+             --length1;
+@@ -196,7 +196,7 @@ hfs_unicode_compare_int(uint16_t endian, const hfs_uni_str * uni1,
+                 c1 = lowerCaseTable[temp + (c1 & 0x00FF)];      //  yes, so fold the char
+         }
+         //  Find next non-ignorable char from str2, or zero if no more
+-        while (length2 && c2 == 0) {
++        while (length2 > 0 && c2 == 0) {
+             c2 = tsk_getu16(endian, str2);
+             str2 += 2;
+             --length2;

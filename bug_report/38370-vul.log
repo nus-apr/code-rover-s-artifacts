@@ -1,0 +1,78 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/encoder_ai_fuzzer
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7c5509126a58 at pc 0x000000d85d17 bp 0x7ffc75d190f0 sp 0x7ffc75d190e8
+READ of size 1 at 0x7c5509126a58 thread T0
+SCARINESS: 27 (1-byte-read-stack-buffer-overflow)
+    #0 0xd85d16 in PeekMagickByteBuffer /src/imagemagick/./coders/bytebuffer-private.h:51:16
+    #1 0xd85d16 in ReadMagickByteBuffer /src/imagemagick/./coders/bytebuffer-private.h:59:10
+    #2 0xd85d16 in ReadPDFInfo /src/imagemagick/coders/pdf.c:236:53
+    #3 0xd85d16 in ReadPDFImage /src/imagemagick/coders/pdf.c:486:3
+    #4 0x8d7993 in ReadImage /src/imagemagick/MagickCore/constitute.c:563:15
+    #5 0x858be2 in BlobToImage /src/imagemagick/MagickCore/blob.c:497:9
+    #6 0x768811 in Magick::Image::read(Magick::Blob const&) /src/imagemagick/Magick++/lib/Image.cpp:4041:12
+    #7 0x74fa4a in LLVMFuzzerTestOneInput /src/imagemagick/Magick++/fuzz/encoder_fuzzer.cc:50:11
+    #8 0x7505bb in main (/out/encoder_ai_fuzzer+0x7505bb)
+    #9 0x7c5509177082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #10 0x697e2d in _start (/out/encoder_ai_fuzzer+0x697e2d)
+
+DEDUP_TOKEN: PeekMagickByteBuffer--ReadMagickByteBuffer--ReadPDFInfo
+Address 0x7c5509126a58 is located in stack of thread T0 at offset 21080 in frame
+    #0 0xd7ee5f in ReadPDFImage /src/imagemagick/coders/pdf.c:377
+
+DEDUP_TOKEN: ReadPDFImage
+  This frame has 19 object(s):
+    [32, 176) 'attributes.i766'
+    [240, 384) 'attributes.i'
+    [448, 4544) 'version.i' (line 202)
+    [4672, 21080) 'buffer.i' (line 208) <== Memory access at offset 21080 overflows this variable
+    [21344, 21376) 'bounds.i' (line 217)
+    [21408, 25504) 'name.i' (line 286)
+    [25632, 29728) 'property.i' (line 286)
+    [29856, 29864) 'value.i' (line 286)
+    [29888, 33984) 'command' (line 378)
+    [34112, 38208) 'filename' (line 378)
+    [38336, 42432) 'input_filename' (line 378)
+    [42560, 46656) 'message' (line 378)
+    [46784, 50880) 'postscript_filename' (line 378)
+    [51008, 51048) 'geometry_info' (line 393)
+    [51088, 51096) 'pdf_image' (line 396)
+    [51120, 51184) 'pdf_info' (line 414)
+    [51216, 51248) 'page' (line 420)
+    [51280, 55376) 'passphrase' (line 608)
+    [55504, 59600) 'pages' (line 627)
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/imagemagick/./coders/bytebuffer-private.h:51:16 in PeekMagickByteBuffer
+Shadow bytes around the buggy address:
+  0x0f8b2121ccf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f8b2121cd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f8b2121cd10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f8b2121cd20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f8b2121cd30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0f8b2121cd40: 00 00 00 00 00 00 00 00 00 00 00[f2]f2 f2 f2 f2
+  0x0f8b2121cd50: f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2
+  0x0f8b2121cd60: f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 00 00 00 00
+  0x0f8b2121cd70: f2 f2 f2 f2 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+  0x0f8b2121cd80: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+  0x0f8b2121cd90: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

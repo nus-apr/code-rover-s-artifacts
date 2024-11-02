@@ -1,0 +1,13 @@
+diff --git a/serenity/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp b/serenity/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp
+index afb8c95..f2da94a 100644
+--- a/serenity/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp
++++ b/serenity/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp
+@@ -69,7 +69,7 @@ Optional<Cmap::Subtable> Cmap::subtable(u32 index) const
+     u16 platform_id = be_u16(m_slice.offset_pointer(record_offset));
+     u16 encoding_id = be_u16(m_slice.offset_pointer(record_offset + (u32)Offsets::EncodingRecord_EncodingID));
+     u32 subtable_offset = be_u32(m_slice.offset_pointer(record_offset + (u32)Offsets::EncodingRecord_Offset));
+-    if (subtable_offset >= m_slice.size())
++    if (subtable_offset + 4 > m_slice.size())
+         return {};
+     auto subtable_slice = ReadonlyBytes(m_slice.offset_pointer(subtable_offset), m_slice.size() - subtable_offset);
+     return Subtable(subtable_slice, platform_id, encoding_id);

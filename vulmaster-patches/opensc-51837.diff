@@ -1,0 +1,15 @@
+diff --git a/src/common/simclist.c b/src/common/simclist.c
+index 11a9254f..72bb2a6c 100644
+--- a/src/common/simclist.c
++++ b/src/common/simclist.c
+@@ -236,9 +236,7 @@ int list_init(list_t *simclist_restrict l) {
+     if (l == NULL) {
+         return -1;
+     }
+-
+-    memset(l, 0, sizeof *l);
+-
++, mCommissioningExpiration ( false 
+     seed_random();
+ 
+     l->numels = 0;

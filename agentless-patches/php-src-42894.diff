@@ -1,0 +1,15 @@
+diff --git a/php-src/Zend/zend_hash.c b/php-src/Zend/zend_hash.c
+index 64e1a36..35022e3 100644
+--- a/php-src/Zend/zend_hash.c
++++ b/php-src/Zend/zend_hash.c
+@@ -2154,6 +2154,10 @@ ZEND_API void ZEND_FASTCALL zend_hash_reverse_apply(HashTable *ht, apply_func_t
+ 			if (result & ZEND_HASH_APPLY_REMOVE) {
+ 				HT_ASSERT_RC1(ht);
+ 				_zend_hash_del_el(ht, HT_IDX_TO_HASH(idx), p);
++				// Adjust idx to account for the removed element
++				if (idx >= ht->nNumUsed) {
++					idx = ht->nNumUsed;
++				}
+ 			}
+ 			if (result & ZEND_HASH_APPLY_STOP) {
+ 				break;

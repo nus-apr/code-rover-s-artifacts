@@ -1,0 +1,14 @@
+diff --git a/src/libopensc/card-tcos.c b/src/libopensc/card-tcos.c
+index 490ae31..362cdcd 100644
+--- a/src/libopensc/card-tcos.c
++++ b/src/libopensc/card-tcos.c
+@@ -725,8 +725,6 @@ struct sc_card_driver * sc_get_tcos_driver(void)
+ 	tcos_ops.set_security_env     = tcos_set_security_env;
+ 	tcos_ops.compute_signature    = tcos_compute_signature;
+ 	tcos_ops.decipher             = tcos_decipher;
+-	tcos_ops.restore_security_env = tcos_restore_security_env;
+-	tcos_ops.card_ctl             = tcos_card_ctl;
+-	
++ warn ) { atomic_set ( & env -> warn_unused, warn ) 
+ 	return &tcos_drv;
+ }

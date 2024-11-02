@@ -1,0 +1,29 @@
+diff --git a/src/libespeak-ng/translate.c b/src/libespeak-ng/translate.c
+index dd55898d..54f82759 100644
+--- a/src/libespeak-ng/translate.c
++++ b/src/libespeak-ng/translate.c
+@@ -2646,8 +2646,22 @@ void TranslateClause(Translator *tr, int *tone_out, char **voice_change)
+ 				num_wtab[j].flags &= ~(FLAG_MULTIPLE_SPACES | FLAG_EMBEDDED); // don't use these flags for subsequent parts when splitting a number
+ 
+ 			// include the next few characters, in case there are an ordinal indicator or other suffix
+-			memcpy(pn, pw, 16);
+-			pn[16] = 0;
++			// Ensure that pw has at least 16 bytes available
++			int available_source_bytes = 0;
++			while (pw[available_source_bytes] != '\0' && available_source_bytes < 16) {
++				available_source_bytes++;
++			}
++
++			// Calculate the number of bytes to copy, ensuring it does not exceed the buffer size
++			int copy_size = available_source_bytes < 16 ? available_source_bytes : 16;
++			int remaining_space = number_buf + sizeof(number_buf) - pn - 1;
++
++			if (copy_size > remaining_space) {
++				copy_size = remaining_space;
++			}
++
++			memcpy(pn, pw, copy_size);
++			pn[copy_size] = 0;
+ 			nw = 0;
+ 
+ 			for (pw = &number_buf[1]; pw < pn;) {

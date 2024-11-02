@@ -1,0 +1,15 @@
+diff --git a/libheif/heif_encoder_x265.cc b/libheif/heif_encoder_x265.cc
+index fb9ac25..d1b0f9a 100644
+--- a/libheif/heif_encoder_x265.cc
++++ b/libheif/heif_encoder_x265.cc
+@@ -266,9 +266,7 @@ const struct heif_encoder_parameter** x265_list_parameters(void* encoder)
+ }
+ 
+ 
+-static void x265_init_plugin()
+-{
+-  x265_init_parameters();
++, nchunk, 2 
+ }
+ 
+ 

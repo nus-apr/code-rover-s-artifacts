@@ -1,0 +1,15 @@
+diff --git a/libxml2/HTMLparser.c b/libxml2/HTMLparser.c
+index e25b333..f1f7955 100644
+--- a/libxml2/HTMLparser.c
++++ b/libxml2/HTMLparser.c
+@@ -468,6 +468,10 @@ htmlCurrentChar(xmlParserCtxtPtr ctxt, int *len) {
+      * Check for the 0x110000 limit too
+      */
+     cur = ctxt->input->cur;
++    if (cur == NULL || *cur == 0) {
++        // Handle the end of the buffer or null pointer
++        return 0;
++    }
+     c = *cur;
+     if (c & 0x80) {
+         if ((c & 0x40) == 0)

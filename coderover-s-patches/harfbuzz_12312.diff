@@ -1,0 +1,49 @@
+diff --git a/src/hb-machinery.hh b/src/hb-machinery.hh
+index 1732d2975..194f9c1fe 100644
+--- a/src/hb-machinery.hh
++++ b/src/hb-machinery.hh
+@@ -725,7 +725,11 @@ struct BEInt<Type, 2>
+     /* Spoon-feed the compiler a big-endian integer with alignment 1.
+      * https://github.com/harfbuzz/harfbuzz/pull/1398 */
+     struct __attribute__((packed)) packed_uint16_t { uint16_t v; };
+-    return __builtin_bswap16 (((packed_uint16_t *) this)->v);
++    // Ensure the buffer is accessed safely
++    if (sizeof(*this) >= sizeof(packed_uint16_t)) {
++        return __builtin_bswap16 (((packed_uint16_t *) this)->v);
++    }
++    return 0; // Return a default value if buffer size is not valid
+ #endif
+     return (v[0] <<  8)
+          + (v[1]      );
+diff --git a/src/hb-open-type.hh b/src/hb-open-type.hh
+index 69cc5ccf3..87e6f7584 100644
+--- a/src/hb-open-type.hh
++++ b/src/hb-open-type.hh
+@@ -64,7 +64,13 @@ struct IntType
+   typedef typename hb_signedness_int<hb_is_signed<Type>::value>::value wide_type;
+ 
+   inline void set (wide_type i) { v.set (i); }
+-  inline operator wide_type (void) const { return v; }
++    inline operator wide_type (void) const {
++        // Ensure the buffer is accessed safely
++        if (sizeof(v) == Size) {
++            return v;
++        }
++        return 0; // Return a default value if buffer size is not valid
++    }
+   inline bool operator == (const IntType<Type,Size> &o) const { return (Type) v == (Type) o.v; }
+   inline bool operator != (const IntType<Type,Size> &o) const { return !(*this == o); }
+   static inline int cmp (const IntType<Type,Size> *a, const IntType<Type,Size> *b) { return b->cmp (*a); }
+@@ -258,7 +264,11 @@ struct OffsetTo : Offset<OffsetType, has_null>
+   inline const Type& operator () (const void *base) const
+   {
+     if (unlikely (this->is_null ())) return *_hb_has_null<Type, has_null>::get_null ();
+-    return StructAtOffset<const Type> (base, *this);
++    // Ensure the offset is valid and within bounds
++    if (!this->is_null() && base != nullptr && sizeof(*this) >= sizeof(Type)) {
++        return StructAtOffset<const Type> (base, *this);
++    }
++    return *_hb_has_null<Type, has_null>::get_null(); // Return a default value if offset is invalid
+   }
+   inline Type& operator () (void *base) const
+   {

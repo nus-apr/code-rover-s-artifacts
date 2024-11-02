@@ -1,0 +1,46 @@
+diff --git a/coders/png.c b/coders/png.c
+index c0d2e0ec..7710b61e 100644
+--- a/coders/png.c
++++ b/coders/png.c
+@@ -5703,6 +5703,7 @@ static Image *ReadMNGImage(const ImageInfo *image_info,
+           CloseBlob(previous);
+           DestroyImageList(previous);
+           MngInfoFreeStruct(mng_info,&have_mng_structure);
++          previous = (Image *) NULL; // Set to NULL immediately after freeing
+           return((Image *) NULL);
+         }
+       if (image->columns == 0 || image->rows == 0)
+@@ -5710,6 +5711,7 @@ static Image *ReadMNGImage(const ImageInfo *image_info,
+           CloseBlob(image);
+           DestroyImageList(image);
+           MngInfoFreeStruct(mng_info,&have_mng_structure);
++          image = (Image *) NULL; // Set to NULL immediately after freeing
+           return((Image *) NULL);
+         }
+       mng_info->image=image;
+diff --git a/magick/image.c b/magick/image.c
+index 8644edd1..16a9a0f5 100644
+--- a/magick/image.c
++++ b/magick/image.c
+@@ -1496,11 +1496,19 @@ MagickExport void DestroyImage(Image *image)
+     }
+   DestroyImageAttributes(image);
+   DestroyExceptionInfo(&image->exception);
+-  MagickFreeMemory(image->ascii85);
++  if (image->ascii85 != (char *) NULL) // Check if ascii85 is valid
++    {
++      MagickFreeMemory(image->ascii85);
++      image->ascii85 = (char *) NULL; // Set to NULL immediately after freeing
++    }
+   DestroyBlob(image);
+   DestroySemaphoreInfo((SemaphoreInfo **) &image->semaphore);
+   image->signature=0;
+-  MagickFreeMemory(image);
++  if (image != (Image *) NULL) // Check if image is valid
++    {
++      MagickFreeMemory(image);
++      image = (Image *) NULL; // Set to NULL immediately after freeing
++    }
+ }
+ 
+ /*

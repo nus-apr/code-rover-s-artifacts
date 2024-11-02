@@ -1,0 +1,17 @@
+diff --git a/c-blosc2/blosc/blosc2.c b/c-blosc2/blosc/blosc2.c
+index c35c08d..c21fdb8 100644
+--- a/c-blosc2/blosc/blosc2.c
++++ b/c-blosc2/blosc/blosc2.c
+@@ -1557,6 +1557,12 @@ static void init_thread_context(struct thread_context* thread_context, blosc2_co
+ 
+   ebsize = context->blocksize + context->typesize * (signed)sizeof(int32_t);
+   thread_context->tmp_nbytes = (size_t)4 * ebsize;
++  // Check for reasonable allocation size to prevent out-of-memory errors
++  size_t max_allowed_size = 512 * 1024 * 1024; // 512 MB limit for example
++  if (thread_context->tmp_nbytes > max_allowed_size) {
++    BLOSC_TRACE_ERROR("Requested memory size exceeds the maximum allowed limit!");
++    return;
++  }
+   thread_context->tmp = my_malloc(thread_context->tmp_nbytes);
+   thread_context->tmp2 = thread_context->tmp + ebsize;
+   thread_context->tmp3 = thread_context->tmp2 + ebsize;

@@ -1,0 +1,48 @@
+diff --git a/src/flb_parser_json.c b/src/flb_parser_json.c
+index 972197708..1a05e47a0 100644
+--- a/src/flb_parser_json.c
++++ b/src/flb_parser_json.c
+@@ -109,7 +109,7 @@ int flb_parser_json_do(struct flb_parser *parser,
+     /* Set the possible outgoing buffer */
+     *out_buf = tmp_out_buf;
+     *out_size = tmp_out_size;
+-    if (mp_buf != tmp_out_buf) {
++    if (mp_buf && mp_buf != tmp_out_buf) {
+         flb_free(mp_buf);
+         mp_buf = NULL;
+     }
+@@ -141,11 +141,17 @@ int flb_parser_json_do(struct flb_parser *parser,
+ 
+         /* Ensure the pointer we are about to read is not NULL */
+         if (k->via.str.ptr == NULL) {
+-            flb_free(mp_buf);
+-            flb_free(tmp_out_buf);
+-            *out_buf = NULL;
+-            msgpack_unpacked_destroy(&result);
+-            return -1;
++         if (mp_buf) {
++             flb_free(mp_buf);
++             mp_buf = NULL;
++         }
++         if (tmp_out_buf) {
++             flb_free(tmp_out_buf);
++             tmp_out_buf = NULL;
++         }
++         *out_buf = NULL;
++         msgpack_unpacked_destroy(&result);
++         return -1;
+         }
+ 
+         if (strncmp(k->via.str.ptr, time_key, k->via.str.size) == 0) {
+@@ -214,7 +220,10 @@ int flb_parser_json_do(struct flb_parser *parser,
+     }
+ 
+     /* Export the proper buffer */
+-    flb_free(tmp_out_buf);
++    if (tmp_out_buf) {
++        flb_free(tmp_out_buf);
++        tmp_out_buf = NULL;
++    }
+     *out_buf = mp_sbuf.data;
+     *out_size = mp_sbuf.size;
+ 

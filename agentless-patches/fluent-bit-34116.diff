@@ -1,0 +1,13 @@
+diff --git a/fluent-bit/src/flb_parser_json.c b/fluent-bit/src/flb_parser_json.c
+index e8952f7..8753820 100644
+--- a/fluent-bit/src/flb_parser_json.c
++++ b/fluent-bit/src/flb_parser_json.c
+@@ -143,6 +143,8 @@ int flb_parser_json_do(struct flb_parser *parser,
+         if (k->via.str.ptr == NULL) {
+             flb_free(mp_buf);
+             flb_free(tmp_out_buf);
++            mp_buf = NULL;
++            tmp_out_buf = NULL;
+             *out_buf = NULL;
+             msgpack_unpacked_destroy(&result);
+             return -1;

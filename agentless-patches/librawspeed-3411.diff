@@ -1,0 +1,14 @@
+diff --git a/librawspeed/src/librawspeed/common/RawImage.cpp b/librawspeed/src/librawspeed/common/RawImage.cpp
+index 1dbf54a..24eb417 100644
+--- a/librawspeed/src/librawspeed/common/RawImage.cpp
++++ b/librawspeed/src/librawspeed/common/RawImage.cpp
+@@ -96,6 +96,9 @@ void RawImageData::createData() {
+   if (!data)
+     ThrowRDE("Memory Allocation failed.");
+ 
++  // Initialize the allocated memory to zero
++  memset(data, 0, dim.y * pitch);
++
+   uncropped_dim = dim;
+ 
+ #ifndef NDEBUG

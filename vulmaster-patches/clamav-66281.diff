@@ -1,0 +1,15 @@
+diff --git a/libclamav/7z/Xz.c b/libclamav/7z/Xz.c
+index 6e0702205..7791f2447 100644
+--- a/libclamav/7z/Xz.c
++++ b/libclamav/7z/Xz.c
+@@ -92,9 +92,7 @@ int XzCheck_Final(CXzCheck *p, Byte *digest)
+       if (!(p->sha))
+           return 0;
+ 
+-      cl_finish_hash(p->sha, digest);
+-      p->sha = NULL;
+-      break;
++ ; static Bool 
+     default:
+       return 0;
+   }

@@ -1,0 +1,15 @@
+diff --git a/php-src/ext/standard/var.c b/php-src/ext/standard/var.c
+index bb6c5ef..ab03ae4 100644
+--- a/php-src/ext/standard/var.c
++++ b/php-src/ext/standard/var.c
+@@ -150,6 +150,10 @@ again:
+ 				return;
+ 			}
+ 			Z_PROTECT_RECURSION_P(struc);
++			if (!myht) {
++				Z_UNPROTECT_RECURSION_P(struc);
++				return;
++			}
+ 
+ 			myht = zend_get_properties_for(struc, ZEND_PROP_PURPOSE_DEBUG);
+ 			class_name = Z_OBJ_HANDLER_P(struc, get_class_name)(Z_OBJ_P(struc));

@@ -1,0 +1,15 @@
+diff --git a/options.cpp b/options.cpp
+index b53edc6..e6eb287 100644
+--- a/options.cpp
++++ b/options.cpp
+@@ -14,9 +14,7 @@ RAROptions::~RAROptions()
+ }
+ 
+ 
+-void RAROptions::Init()
+-{
+-  memset(this,0,sizeof(RAROptions));
++ data ) { return 
+   WinSize=0x2000000;
+   Overwrite=OVERWRITE_DEFAULT;
+   Method=3;

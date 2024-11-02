@@ -1,0 +1,15 @@
+diff --git a/src/compositor/hardcoded_protos.c b/src/compositor/hardcoded_protos.c
+index a539b354f..8a2082f35 100644
+--- a/src/compositor/hardcoded_protos.c
++++ b/src/compositor/hardcoded_protos.c
+@@ -793,9 +793,7 @@ static Bool IndexedCurve2D_GetNode(GF_Node *node, IndexedCurve2D *ic2d)
+ 	CHECK_FIELD("IndexedCurve2D", 2, GF_SG_VRML_MFINT32);
+ 	ic2d->type = *(MFInt32 *) field.far_ptr;
+ 
+-	CHECK_FIELD("IndexedCurve2D", 3, GF_SG_VRML_MFINT32);
+-	ic2d->index = *(MFInt32 *) field.far_ptr;
+-
++ if ( buf_len >= MQTT_PACKET_LEN_ENCODE_MAX / 2 
+ 	return GF_TRUE;
+ }
+ 

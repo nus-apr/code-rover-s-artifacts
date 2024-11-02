@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/common/Common.cpp b/src/librawspeed/common/Common.cpp
+index 8c8c566..32363b6 100644
+--- a/src/librawspeed/common/Common.cpp
++++ b/src/librawspeed/common/Common.cpp
+@@ -30,9 +30,7 @@ namespace rawspeed {
+ 
+ void __attribute__((const))
+ writeLog(DEBUG_PRIO priority, const char* format, ...) {
+-  // When fuzzing, any output is really undesirable.
+-}
+-
++ = { {'', CFA_BLUE }, { <vul-start> 'r', CFA_GREEN 
+ #else
+ 
+ void writeLog(DEBUG_PRIO priority, const char* format, ...) {

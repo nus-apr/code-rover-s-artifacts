@@ -1,0 +1,20 @@
+diff --git a/libxml2/xmlschemas.c b/libxml2/xmlschemas.c
+index 951743e..dcc5330 100644
+--- a/libxml2/xmlschemas.c
++++ b/libxml2/xmlschemas.c
+@@ -10662,8 +10662,13 @@ doc_load:
+ 		NULL, SCHEMAS_PARSE_OPTIONS);
+ 	} else if (schemaBuffer != NULL) {
+ 	    /* Parse from memory buffer. */
+-	    doc = xmlCtxtReadMemory(parserCtxt, schemaBuffer, schemaBufferLen,
+-		NULL, NULL, SCHEMAS_PARSE_OPTIONS);
++	    if (schemaBufferLen > 0) {
++	        doc = xmlCtxtReadMemory(parserCtxt, schemaBuffer, schemaBufferLen,
++		    NULL, NULL, SCHEMAS_PARSE_OPTIONS);
++	    } else {
++	        // Handle error: schemaBufferLen should not be zero or negative
++	        doc = NULL;
++	    }
+ 	    schemaLocation = BAD_CAST "in_memory_buffer";
+ 	    if (doc != NULL)
+ 		doc->URL = xmlStrdup(schemaLocation);

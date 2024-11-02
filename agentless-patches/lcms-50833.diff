@@ -1,0 +1,17 @@
+diff --git a/lcms/src/cmsxform.c b/lcms/src/cmsxform.c
+index f8f8c06..74d9ef5 100644
+--- a/lcms/src/cmsxform.c
++++ b/lcms/src/cmsxform.c
+@@ -203,7 +203,11 @@ void CMSEXPORT cmsDoTransform(cmsHTRANSFORM  Transform,
+     stride.BytesPerPlaneIn = Size * PixelSize(p->InputFormat);
+     stride.BytesPerPlaneOut = Size * PixelSize(p->OutputFormat);
+            
+-    p -> xform(p, InputBuffer, OutputBuffer, Size, 1, &stride);
++    if (p != NULL && p->xform != NULL) {
++        p->xform(p, InputBuffer, OutputBuffer, Size, 1, &stride);
++    } else {
++        // Handle the error, possibly by logging or returning an error code
++    }
+ }
+ 
+ 

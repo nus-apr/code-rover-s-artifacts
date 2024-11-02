@@ -1,0 +1,103 @@
+diff --git a/Code/GraphMol/SmilesParse/SmilesParse.cpp b/Code/GraphMol/SmilesParse/SmilesParse.cpp
+index aff916f02..73044f8b2 100644
+--- a/Code/GraphMol/SmilesParse/SmilesParse.cpp
++++ b/Code/GraphMol/SmilesParse/SmilesParse.cpp
+@@ -410,49 +410,55 @@ RWMol *SmilesToMol(const std::string &smiles,
+   preprocessSmiles(smiles, params, lsmiles, name, cxPart);
+   // strip any leading/trailing whitespace:
+   // boost::trim_if(smi,boost::is_any_of(" \t\r\n"));
+-  RWMol *res = nullptr;
+-  res = toMol(lsmiles, smiles_parse, lsmiles);
+-  handleCXPartAndName(res, params, cxPart, name);
+-  if (res && (params.sanitize || params.removeHs)) {
+-    if (res->hasProp(SmilesParseOps::detail::_needsDetectAtomStereo)) {
+-      // we encountered a wedged bond in the CXSMILES,
+-      // these need to be handled the same way they were in mol files
+-      res->clearProp(SmilesParseOps::detail::_needsDetectAtomStereo);
+-      if (res->getNumConformers()) {
+-        const auto &conf = res->getConformer();
+-        if (!conf.is3D()) {
+-          MolOps::assignChiralTypesFromBondDirs(*res, conf.getId());
+-        }
+-      }
+-    }
+-    // if we read a 3D conformer, set the stereo:
+-    if (res->getNumConformers() && res->getConformer().is3D()) {
+-      res->updatePropertyCache(false);
+-      MolOps::assignChiralTypesFrom3D(*res, res->getConformer().getId(), true);
+-    }
+-    try {
+-      if (params.removeHs) {
+-        bool implicitOnly = false, updateExplicitCount = true;
+-        MolOps::removeHs(*res, implicitOnly, updateExplicitCount,
+-                         params.sanitize);
+-      } else if (params.sanitize) {
+-        MolOps::sanitizeMol(*res);
+-      }
+-    } catch (...) {
+-      delete res;
+-      throw;
+-    }
+-    if (res->hasProp(SmilesParseOps::detail::_needsDetectBondStereo)) {
+-      // we encountered either wiggly bond in the CXSMILES,
+-      // these need to be handled the same way they were in mol files
+-      res->clearProp(SmilesParseOps::detail::_needsDetectBondStereo);
+-      MolOps::clearSingleBondDirFlags(*res);
+-      MolOps::detectBondStereochemistry(*res);
+-    }
+-    // figure out stereochemistry:
+-    bool cleanIt = true, force = true, flagPossible = true;
+-    MolOps::assignStereochemistry(*res, cleanIt, force, flagPossible);
+-  }
++   RWMol *res = nullptr;
++   try {
++     res = toMol(lsmiles, smiles_parse, lsmiles);
++     if (!res) {
++       throw std::runtime_error("Failed to create molecule from SMILES");
++     }
++     handleCXPartAndName(res, params, cxPart, name);
++     if (params.sanitize || params.removeHs) {
++       if (res->hasProp(SmilesParseOps::detail::_needsDetectAtomStereo)) {
++         // we encountered a wedged bond in the CXSMILES,
++         // these need to be handled the same way they were in mol files
++         res->clearProp(SmilesParseOps::detail::_needsDetectAtomStereo);
++         if (res->getNumConformers()) {
++           const auto &conf = res->getConformer();
++           if (!conf.is3D()) {
++             MolOps::assignChiralTypesFromBondDirs(*res, conf.getId());
++           }
++         }
++       }
++       // if we read a 3D conformer, set the stereo:
++       if (res->getNumConformers() && res->getConformer().is3D()) {
++         res->updatePropertyCache(false);
++         MolOps::assignChiralTypesFrom3D(*res, res->getConformer().getId(), true);
++       }
++       if (params.removeHs) {
++         bool implicitOnly = false, updateExplicitCount = true;
++         MolOps::removeHs(*res, implicitOnly, updateExplicitCount,
++                          params.sanitize);
++       } else if (params.sanitize) {
++         MolOps::sanitizeMol(*res);
++       }
++       if (res->hasProp(SmilesParseOps::detail::_needsDetectBondStereo)) {
++         // we encountered either wiggly bond in the CXSMILES,
++         // these need to be handled the same way they were in mol files
++         res->clearProp(SmilesParseOps::detail::_needsDetectBondStereo);
++         MolOps::clearSingleBondDirFlags(*res);
++         MolOps::detectBondStereochemistry(*res);
++       }
++       // figure out stereochemistry:
++       bool cleanIt = true, force = true, flagPossible = true;
++       MolOps::assignStereochemistry(*res, cleanIt, force, flagPossible);
++     }
++   } catch (const std::exception &e) {
++     delete res;
++     throw;
++   } catch (...) {
++     delete res;
++     throw;
++   }
+   if (res && res->hasProp(common_properties::_NeedsQueryScan)) {
+     res->clearProp(common_properties::_NeedsQueryScan);
+     if (!params.sanitize) {

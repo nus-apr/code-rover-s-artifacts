@@ -1,0 +1,19 @@
+diff --git a/epan/dissectors/packet-wassp.c b/epan/dissectors/packet-wassp.c
+index 73e063625b..8eedddedbc 100644
+--- a/epan/dissectors/packet-wassp.c
++++ b/epan/dissectors/packet-wassp.c
+@@ -4376,10 +4376,10 @@ static const char* wassp_match_strval(WASSP_SUBTLV_DECODER_INFO_t *in_ptr, int i
+ 	{
+ 		return NULL;
+ 	}
+-	if (in_ptr->max_entry < in_type)
+-	{
+-		return NULL;
+-	}
++    if (in_ptr->max_entry < in_type || in_type < 0 || in_type >= sizeof(in_ptr->entry) / sizeof(in_ptr->entry[0]))
++    {
++        return NULL;
++    }
+ 
+ 	return in_ptr->entry[in_type].name;
+ }

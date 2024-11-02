@@ -1,0 +1,28 @@
+diff --git a/src/bmpio.c b/src/bmpio.c
+index 11afbea..757e238 100644
+--- a/src/bmpio.c
++++ b/src/bmpio.c
+@@ -234,7 +234,7 @@ PIXCMAP   *cmap;
+         return (PIX *)ERROR_PTR("invalid: cmap size < 0 or 1", procName, NULL);
+     if (cmapEntries > L_MAX_ALLOWED_NUM_COLORS)
+         return (PIX *)ERROR_PTR("invalid cmap: too large", procName,NULL);
+-    if (size != 1LL * offset + 1LL * fdatabpl * height)
++    if (size < 1LL * offset + 1LL * fdatabpl * height)
+         return (PIX *)ERROR_PTR("size incommensurate with image data",
+                                 procName,NULL);
+ 
+@@ -247,8 +247,12 @@ PIXCMAP   *cmap;
+ 
+             /* Read the colormap entry data from bmp. The RGBA_QUAD colormap
+              * entries are used for both bmp and leptonica colormaps. */
+-        memcpy(cmapBuf, cdata + BMP_FHBYTES + ihbytes,
+-               sizeof(RGBA_QUAD) * cmapEntries);
++    if (size < BMP_FHBYTES + ihbytes + sizeof(RGBA_QUAD) * cmapEntries) {
++        LEPT_FREE(cmapBuf);
++        return (PIX *)ERROR_PTR("insufficient data for colormap", procName, NULL);
++    }
++    memcpy(cmapBuf, cdata + BMP_FHBYTES + ihbytes,
++           sizeof(RGBA_QUAD) * cmapEntries);
+     }
+ 
+         /* Make a 32 bpp pix if depth is 24 bpp */

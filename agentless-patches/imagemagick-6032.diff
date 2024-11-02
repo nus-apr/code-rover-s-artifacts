@@ -1,0 +1,13 @@
+diff --git a/imagemagick/coders/hdr.c b/imagemagick/coders/hdr.c
+index 04a7f4a..693729c 100644
+--- a/imagemagick/coders/hdr.c
++++ b/imagemagick/coders/hdr.c
+@@ -666,7 +666,7 @@ static MagickBooleanType WriteHDRImage(const ImageInfo *image_info,Image *image,
+   ExceptionInfo *exception)
+ {
+   char
+-    header[MagickPathExtent];
++    header[MagickPathExtent * 2];
+ 
+   const char
+     *property;

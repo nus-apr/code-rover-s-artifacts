@@ -1,0 +1,15 @@
+diff --git a/fuzz/fuzz-read-print-write.cpp b/fuzz/fuzz-read-print-write.cpp
+index 53c52095a..a1b6e79ba 100644
+--- a/fuzz/fuzz-read-print-write.cpp
++++ b/fuzz/fuzz-read-print-write.cpp
+@@ -14,9 +14,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+   Exiv2::enableBMFF();
+ #endif
+ 
+-  try {
+-    Exiv2::DataBuf data_copy(data, size);
+-    Exiv2::Image::UniquePtr image = Exiv2::ImageFactory::open(data_copy.c_data(), size);
++ resolver ) { 
+     assert(image.get() != 0);
+ 
+     image->readMetadata();

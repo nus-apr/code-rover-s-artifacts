@@ -1,0 +1,43 @@
+diff --git a/src/lib/libdwarf/dwarf_frame.c b/src/lib/libdwarf/dwarf_frame.c
+index 63b900cb..9b300858 100644
+--- a/src/lib/libdwarf/dwarf_frame.c
++++ b/src/lib/libdwarf/dwarf_frame.c
+@@ -1858,12 +1858,19 @@ dwarf_get_fde_for_die(Dwarf_Debug dbg,
+     /* DW_DLV_OK */
+ 
+     /* now read the cie corresponding to the fde */
+-    cie_ptr = new_fde->fd_section_ptr + cie_id;
+-    res = _dwarf_read_cie_fde_prefix(dbg, cie_ptr,
+-        dbg->de_debug_frame.dss_data,
+-        dbg->de_debug_frame.dss_index,
+-        dbg->de_debug_frame.dss_size,
+-        &prefix_c, error);
++    if (cie_id < dbg->de_debug_frame.dss_size) {
++        cie_ptr = new_fde->fd_section_ptr + cie_id;
++        res = _dwarf_read_cie_fde_prefix(dbg, cie_ptr,
++            dbg->de_debug_frame.dss_data,
++            dbg->de_debug_frame.dss_index,
++            dbg->de_debug_frame.dss_size,
++            &prefix_c, error);
++    } else {
++        dwarf_dealloc(dbg, new_fde, DW_DLA_FDE);
++        new_fde = 0;
++        _dwarf_error(dbg, error, DW_DLE_DEBUG_FRAME_LENGTH_BAD);
++        return DW_DLV_ERROR;
++    }
+     if (res == DW_DLV_ERROR) {
+         dwarf_dealloc(dbg,new_fde,DW_DLA_FDE);
+         new_fde = 0;
+diff --git a/src/lib/libdwarf/dwarf_frame2.c b/src/lib/libdwarf/dwarf_frame2.c
+index f94dc161..f667f4c8 100644
+--- a/src/lib/libdwarf/dwarf_frame2.c
++++ b/src/lib/libdwarf/dwarf_frame2.c
+@@ -1337,7 +1337,7 @@ _dwarf_read_cie_fde_prefix(Dwarf_Debug dbg,
+         _dwarf_error(dbg,error,DW_DLE_DEBUG_FRAME_LENGTH_BAD);
+         return DW_DLV_ERROR;
+     }
+-    if (cie_ptr_addr+length > section_end) {
++    if (cie_ptr_addr + length > section_end || cie_ptr_addr + length < cie_ptr_addr) {
+         _dwarf_error(dbg,error,DW_DLE_DEBUG_FRAME_LENGTH_BAD);
+         return DW_DLV_ERROR;
+     }

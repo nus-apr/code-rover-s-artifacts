@@ -1,0 +1,20 @@
+diff --git a/llvm/lib/Transforms/Utils/BasicBlockUtils.cpp b/llvm/lib/Transforms/Utils/BasicBlockUtils.cpp
+index c9eb4abfa21a..8059b5618b91 100644
+--- a/llvm/lib/Transforms/Utils/BasicBlockUtils.cpp
++++ b/llvm/lib/Transforms/Utils/BasicBlockUtils.cpp
+@@ -308,7 +308,14 @@ bool llvm::MergeBlockIntoPredecessor(BasicBlock *BB, DomTreeUpdater *DTU,
+     DTU->applyUpdatesPermissive(Updates);
+     DTU->deleteBB(BB);
+   } else {
+-    BB->eraseFromParent(); // Nuke BB if DTU is nullptr.
++   // Ensure no operations are performed on BB after it is erased
++   if (BB) {
++       // Invalidate all references to BB
++       for (auto &Inst : *BB) {
++           Inst.dropAllReferences(); // Drop references held by instructions
++       }
++       BB->eraseFromParent(); // Nuke BB if DTU is nullptr.
++   }
+   }
+ 
+   return true;

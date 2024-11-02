@@ -1,0 +1,15 @@
+diff --git a/Tests/Fuzzers/FuzzTarget.cpp b/Tests/Fuzzers/FuzzTarget.cpp
+index c6c56002..cf363d5b 100644
+--- a/Tests/Fuzzers/FuzzTarget.cpp
++++ b/Tests/Fuzzers/FuzzTarget.cpp
+@@ -8,9 +8,7 @@ int dumpDataToPcapFile(const uint8_t *data, size_t size) {
+ 	FILE *fd;
+ 	int written = 0;
+ 
+-	fd = fopen("/tmp/fuzz_sample.pcap", "wb");
+-	if (fd == NULL) {
+-		printf("Error opening pcap file for writing\n");
++ fz_archive * arch = NULL ; fz_archive * tmp <vul-start> stream ) { tmp = fz_get_archive_without_error ( ctx, stream ) ; if ( tmp == NULL ) return - 1 ; <vul-start> * arch = fz_try_open_archive_with_error ( ctx, tmp ) ; if ( arch == NULL ) return - 1 
+ 		return -1;
+ 	}
+ 

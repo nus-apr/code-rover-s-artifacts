@@ -1,0 +1,16 @@
+diff --git a/freetype2/src/truetype/ttgxvar.c b/freetype2/src/truetype/ttgxvar.c
+index f3b3749..2d758f4 100644
+--- a/freetype2/src/truetype/ttgxvar.c
++++ b/freetype2/src/truetype/ttgxvar.c
+@@ -2139,7 +2139,10 @@
+         ns->strid       =    FT_GET_USHORT();
+         (void) /* flags = */ FT_GET_USHORT();
+ 
+-        c = ns->coords;
++        c = (FT_Fixed*)malloc(fvar_head.axisCount * sizeof(FT_Fixed));
++        if (!c)
++          goto Exit;
++        ns->coords = c;
+         for ( j = 0; j < fvar_head.axisCount; j++, c++ )
+           *c = FT_GET_LONG();
+ 

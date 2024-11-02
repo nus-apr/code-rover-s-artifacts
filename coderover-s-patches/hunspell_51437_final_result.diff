@@ -1,0 +1,32 @@
+diff --git a/src/hunspell/affixmgr.cxx b/src/hunspell/affixmgr.cxx
+index 84cbbd7..2d1f5eb 100644
+--- a/src/hunspell/affixmgr.cxx
++++ b/src/hunspell/affixmgr.cxx
+@@ -2114,15 +2114,20 @@ struct hentry* AffixMgr::compound_check(const std::string& word,
+                   return NULL;
+ 
+                 // check first part
++                char r = '\0';  // Declare 'r' outside the if block
+                 if (strncmp(rv->word, word.c_str() + i, rv->blen) == 0) {
+-                  char r = st[i + rv->blen];
+-                  st[i + rv->blen] = '\0';
+-
+-                  if ((checkcompoundrep && cpdrep_check(st.c_str(), i + rv->blen)) ||
+-                      cpdwordpair_check(st.c_str(), i + rv->blen)) {
+-                    st[ + i + rv->blen] = r;
+-                    continue;
++                  if (i + rv->blen < st.size()) {  // Ensure within bounds
++                    r = st[i + rv->blen];
++                    st[i + rv->blen] = '\0';
++
++                    if ((checkcompoundrep && cpdrep_check(st.c_str(), i + rv->blen)) ||
++                        cpdwordpair_check(st.c_str(), i + rv->blen)) {
++                      st[i + rv->blen] = r;
++                      continue;
++                    }
++                    st[i + rv->blen] = r;  // Restore character
+                   }
++                }
+ 
+                   if (forbiddenword) {
+                     struct hentry* rv2 = lookup(word.c_str(), word.size());

@@ -1,0 +1,15 @@
+diff --git a/common/ivfdec.c b/common/ivfdec.c
+index 80d73b0..9522e9b 100644
+--- a/common/ivfdec.c
++++ b/common/ivfdec.c
+@@ -68,9 +68,7 @@ int ivf_read_frame(FILE *infile, uint8_t **buffer, size_t *bytes_read,
+ 
+   if (fread(raw_header, IVF_FRAME_HDR_SZ, 1, infile) != 1) {
+     if (!feof(infile)) warn("Failed to read frame size");
+-  } else {
+-    frame_size = mem_get_le32(raw_header);
+-
++ ; size_t frame_size 
+     if (frame_size > 256 * 1024 * 1024) {
+       warn("Read invalid frame size (%u)", (unsigned int)frame_size);
+       frame_size = 0;

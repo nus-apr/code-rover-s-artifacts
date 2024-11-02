@@ -1,0 +1,31 @@
+diff --git a/src/ua_types_encoding_json.c b/src/ua_types_encoding_json.c
+index 9cac58462..b3a41c21b 100644
+--- a/src/ua_types_encoding_json.c
++++ b/src/ua_types_encoding_json.c
+@@ -2626,7 +2626,7 @@ DECODE_JSON(Variant) {
+     /* First search for the variant type in the json object. */
+     size_t searchResultType = 0;
+     status ret = lookAheadForKey(UA_JSONKEY_TYPE, ctx, parseCtx, &searchResultType);
+-    if(ret != UA_STATUSCODE_GOOD)
++    if(ret != UA_STATUSCODE_GOOD || searchResultType >= (size_t)parseCtx->tokenCount)
+         return UA_STATUSCODE_BADDECODINGERROR;
+ 
+     size_t size = (size_t)(parseCtx->tokenArray[searchResultType].end - parseCtx->tokenArray[searchResultType].start);
+@@ -2664,7 +2664,7 @@ DECODE_JSON(Variant) {
+     /* Search for body */
+     size_t searchResultBody = 0;
+     ret = lookAheadForKey(UA_JSONKEY_BODY, ctx, parseCtx, &searchResultBody);
+-    if(ret == UA_STATUSCODE_GOOD) { /* body found */
++    if(ret == UA_STATUSCODE_GOOD && searchResultBody < (size_t)parseCtx->tokenCount) { /* body found */
+         /* get body token */
+         jsmntok_t bodyToken = parseCtx->tokenArray[searchResultBody];
+         
+@@ -2692,7 +2692,7 @@ DECODE_JSON(Variant) {
+     /* Has the variant dimension? */
+     size_t searchResultDim = 0;
+     ret = lookAheadForKey(UA_JSONKEY_DIMENSION, ctx, parseCtx, &searchResultDim);
+-    if(ret == UA_STATUSCODE_GOOD) {
++    if(ret == UA_STATUSCODE_GOOD && searchResultDim < (size_t)parseCtx->tokenCount) {
+         hasDimension = true;
+         size_t dimensionSize = 0;
+         dimensionSize = (size_t)parseCtx->tokenArray[searchResultDim].size;

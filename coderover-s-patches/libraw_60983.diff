@@ -1,0 +1,35 @@
+diff --git a/src/decoders/decoders_libraw.cpp b/src/decoders/decoders_libraw.cpp
+index 7d1af3f9..e43b8837 100644
+--- a/src/decoders/decoders_libraw.cpp
++++ b/src/decoders/decoders_libraw.cpp
+@@ -17,8 +17,14 @@
+ void LibRaw::sony_arq_load_raw()
+ {
+   int row, col;
+-  read_shorts(imgdata.rawdata.raw_image,
+-              imgdata.sizes.raw_width * imgdata.sizes.raw_height * 4);
++  unsigned int total_pixels = imgdata.sizes.raw_width * imgdata.sizes.raw_height * 4;
++  size_t required_size = total_pixels * sizeof(ushort);
++  if (imgdata.rawdata.raw_image == nullptr || required_size > (imgdata.params.max_raw_memory_mb * 1024 * 1024))
++    throw LIBRAW_EXCEPTION_TOOBIG;
++  imgdata.rawdata.raw_image = (ushort *)malloc(required_size);
++  if (!imgdata.rawdata.raw_image)
++    throw LIBRAW_EXCEPTION_ALLOC;
++  read_shorts(imgdata.rawdata.raw_image, total_pixels);
+   libraw_internal_data.internal_data.input->seek(
+       -2, SEEK_CUR); // avoid wrong eof error
+ 
+diff --git a/src/libraw_datastream.cpp b/src/libraw_datastream.cpp
+index 606e5de7..1e6f8c58 100644
+--- a/src/libraw_datastream.cpp
++++ b/src/libraw_datastream.cpp
+@@ -364,6 +364,9 @@ int LibRaw_buffer_datastream::read(void *ptr, size_t sz, size_t nmemb)
+     to_read = streamsize - streampos;
+   if (to_read < 1)
+     return 0;
++  // Ensure ptr is allocated with sufficient size
++  if (ptr == nullptr || to_read > sz * nmemb)
++    return 0;
+   memmove(ptr, buf + streampos, to_read);
+   streampos += to_read;
+   return int((to_read + sz - 1) / (sz > 0 ? sz : 1));

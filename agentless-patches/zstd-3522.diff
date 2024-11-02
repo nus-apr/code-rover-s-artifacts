@@ -1,0 +1,16 @@
+diff --git a/zstd/lib/compress/zstd_compress.c b/zstd/lib/compress/zstd_compress.c
+index 0b1b553..28d70af 100644
+--- a/zstd/lib/compress/zstd_compress.c
++++ b/zstd/lib/compress/zstd_compress.c
+@@ -1567,6 +1567,11 @@ ZSTD_blockCompressor ZSTD_selectBlockCompressor(ZSTD_strategy strat, int extDict
+ static void ZSTD_storeLastLiterals(seqStore_t* seqStorePtr,
+                                    const BYTE* anchor, size_t lastLLSize)
+ {
++    if (seqStorePtr->litCapacity < lastLLSize) {
++        // Reallocate the buffer to accommodate the new size
++        seqStorePtr->lit = (BYTE*)realloc(seqStorePtr->lit, lastLLSize);
++        seqStorePtr->litCapacity = lastLLSize;
++    }
+     memcpy(seqStorePtr->lit, anchor, lastLLSize);
+     seqStorePtr->lit += lastLLSize;
+ }

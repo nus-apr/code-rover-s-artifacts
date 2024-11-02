@@ -1,0 +1,28 @@
+diff --git a/src/libmdb/write.c b/src/libmdb/write.c
+index 3b8397f..3223bce 100644
+--- a/src/libmdb/write.c
++++ b/src/libmdb/write.c
+@@ -146,7 +146,11 @@ mdb_crack_row3(MdbHandle *mdb, unsigned int row_start, unsigned int row_end,
+ 		 && (i == mdb->pg_buf[row_end-bitmask_sz-jumps_used-1])) {
+ 			jumps_used++;
+ 		}
+-		var_col_offsets[i] = mdb->pg_buf[col_ptr-i]+(jumps_used*256);
++        if (col_ptr >= i && col_ptr - i < row_len) {
++            var_col_offsets[i] = mdb->pg_buf[col_ptr-i]+(jumps_used*256);
++        } else {
++            return 0; // Return failure if out-of-bounds
++        }
+ 	}
+ 
+     return 1;
+@@ -214,6 +218,10 @@ mdb_crack_row(MdbTableDef *table, int row_start, size_t row_size, MdbField *fiel
+ 			mdb_get_byte(pg_buf, row_end - bitmask_sz) :
+ 			mdb_get_int16(pg_buf, row_end - bitmask_sz - 1);
+ 		var_col_offsets = (unsigned int *)g_malloc((row_var_cols+1)*sizeof(int));
++        if (!var_col_offsets) {
++            fprintf(stderr, "error: Memory allocation failed for var_col_offsets.\n");
++            return -1;
++        }
+         int success = 0;
+ 		if (IS_JET3(mdb)) {
+ 			success = mdb_crack_row3(mdb, row_start, row_end, bitmask_sz,

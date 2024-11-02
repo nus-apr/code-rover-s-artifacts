@@ -1,0 +1,21 @@
+diff --git a/arrow/cpp/src/arrow/util/bitmap_ops.cc b/arrow/cpp/src/arrow/util/bitmap_ops.cc
+index 7437b6a..fd39f3c 100644
+--- a/arrow/cpp/src/arrow/util/bitmap_ops.cc
++++ b/arrow/cpp/src/arrow/util/bitmap_ops.cc
+@@ -293,13 +293,13 @@ void TransferBitmap(const uint8_t* data, int64_t offset, int64_t length,
+     auto writer = internal::BitmapWordWriter<uint64_t>(dest, dest_offset, length);
+ 
+     auto nwords = reader.words();
+-    while (nwords--) {
++    for (int64_t i = 0; i < nwords; ++i) {
+       auto word = reader.NextWord();
+       writer.PutNextWord(mode == TransferMode::Invert ? ~word : word);
+     }
++    int valid_bits;
+     auto nbytes = reader.trailing_bytes();
+-    while (nbytes--) {
+-      int valid_bits;
++    for (int64_t i = 0; i < nbytes; ++i) {
+       auto byte = reader.NextTrailingByte(valid_bits);
+       writer.PutNextTrailingByte(mode == TransferMode::Invert ? ~byte : byte, valid_bits);
+     }

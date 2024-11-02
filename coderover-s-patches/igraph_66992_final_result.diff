@@ -1,0 +1,20 @@
+diff --git a/src/io/dl.c b/src/io/dl.c
+index 103033fbf..bee2986fe 100644
+--- a/src/io/dl.c
++++ b/src/io/dl.c
+@@ -90,9 +90,14 @@ igraph_error_t igraph_read_graph_dl(igraph_t *graph, FILE *instream,
+     IGRAPH_FINALLY(igraph_strvector_destroy, &context.labels);
+     IGRAPH_TRIE_INIT_FINALLY(&context.trie, /*names=*/ 1);
+ 
+-    igraph_dl_yylex_init_extra(&context, &context.scanner);
++    if (igraph_dl_yylex_init_extra(&context, &context.scanner) != 0) {
++        IGRAPH_ERROR("Failed to initialize lexer", IGRAPH_PARSEERROR);
++    }
+     IGRAPH_FINALLY(igraph_dl_yylex_destroy_wrapper, context.scanner);
+ 
++    if (instream == NULL) {
++        IGRAPH_ERROR("Input stream is NULL", IGRAPH_PARSEERROR);
++    }
+     igraph_dl_yyset_in(instream, context.scanner);
+ 
+     /* Use ENTER/EXIT to avoid destroying context.scanner before this function returns */

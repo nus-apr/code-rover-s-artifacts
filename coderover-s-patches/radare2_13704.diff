@@ -1,0 +1,32 @@
+diff --git a/shlr/sdb/src/ns.c b/shlr/sdb/src/ns.c
+index a7bf4d2088..4680bbebdf 100644
+--- a/shlr/sdb/src/ns.c
++++ b/shlr/sdb/src/ns.c
+@@ -49,14 +49,11 @@ static void ns_free(Sdb *s, SdbList *list) {
+ 			if (ns->sdb) {
+ 				if (sdb_free (ns->sdb)) {
+ 					ns->sdb = NULL;
+-					free (ns->name);
+-					ns->name = NULL;
+ 				}
+ 			}
+ 			ls_append (list, ns);
+ 			ls_append (list, ns->sdb);
+ 			ns_free (ns->sdb, list);
+-			sdb_free (ns->sdb);
+ 		}
+ 		if (!deleted) {
+ 			sdb_free (ns->sdb);
+diff --git a/shlr/sdb/src/sdb.c b/shlr/sdb/src/sdb.c
+index d243183ac3..00e208285d 100644
+--- a/shlr/sdb/src/sdb.c
++++ b/shlr/sdb/src/sdb.c
+@@ -220,6 +220,8 @@ SDB_API bool sdb_free(Sdb* s) {
+ 			s->refs = 0;
+ 			sdb_fini (s, 0);
+ 			s->ht = NULL;
++			s->ns = NULL;
++			s->hooks = NULL;
+ 			free (s);
+ 			return true;
+ 		}

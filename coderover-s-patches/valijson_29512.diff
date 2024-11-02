@@ -1,0 +1,41 @@
+diff --git a/include/valijson/adapters/rapidjson_adapter.hpp b/include/valijson/adapters/rapidjson_adapter.hpp
+index aa91f7c..322d186 100644
+--- a/include/valijson/adapters/rapidjson_adapter.hpp
++++ b/include/valijson/adapters/rapidjson_adapter.hpp
+@@ -377,11 +377,21 @@ class GenericRapidJsonValue
+ public:
+     /// Construct a wrapper for the empty object singleton
+     GenericRapidJsonValue()
+-      : m_value(emptyObject()) { }
++      : m_value(emptyObject()) 
++    {
++        if (!m_value.IsObject()) {
++            throw std::runtime_error("Initialization failed: m_value is not a valid object.");
++        }
++    }
+ 
+     /// Construct a wrapper for a specific RapidJson value
+     GenericRapidJsonValue(const ValueType &value)
+-      : m_value(value) { }
++      : m_value(value) 
++    {
++        if (!m_value.IsObject()) {
++            throw std::runtime_error("Initialization failed: m_value is not a valid object.");
++        }
++    }
+ 
+     /**
+      * @brief   Create a new GenericRapidJsonFrozenValue instance that contains
+diff --git a/include/valijson/schema_parser.hpp b/include/valijson/schema_parser.hpp
+index b840335..85b4b00 100644
+--- a/include/valijson/schema_parser.hpp
++++ b/include/valijson/schema_parser.hpp
+@@ -234,7 +234,7 @@ private:
+     template<typename AdapterType>
+     bool extractJsonReference(const AdapterType &node, std::string &result)
+     {
+-        if (!node.isObject()) {
++        if (!node.isObject()) { // Ensure node is a valid object
+             return false;
+         }
+ 

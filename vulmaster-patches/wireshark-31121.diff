@@ -1,0 +1,15 @@
+diff --git a/epan/addr_resolv.c b/epan/addr_resolv.c
+index e3f203ac32..4a686eed76 100644
+--- a/epan/addr_resolv.c
++++ b/epan/addr_resolv.c
+@@ -505,9 +505,7 @@ sync_lookup_ip6(const ws_in6_addr *addr)
+ {
+     gboolean completed = FALSE;
+     sync_dns_data_t *sdd;
+-
+-    if (!async_dns_initialized) {
+-        /*
++ int ret = 1 
+          * c-ares not initialized.  Bail out.
+          */
+         return;

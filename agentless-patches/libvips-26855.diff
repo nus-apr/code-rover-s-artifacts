@@ -1,0 +1,16 @@
+diff --git a/libvips/libvips/foreign/tiff2vips.c b/libvips/libvips/foreign/tiff2vips.c
+index d09b06e..d85af03 100644
+--- a/libvips/libvips/foreign/tiff2vips.c
++++ b/libvips/libvips/foreign/tiff2vips.c
+@@ -1332,6 +1332,11 @@ rtiff_parse_palette( Rtiff *rtiff, VipsImage *out )
+ 		return( -1 ); 
+ 	len = 1 << bits_per_sample;
+ 
++	if (len > 256) {
++		vips_error("tiff2vips", "%s", _("palette size too large"));
++		return(-1);
++	}
++
+ 	if( !(read = VIPS_NEW( out, PaletteRead )) ||
+ 		!(read->red8 = VIPS_ARRAY( out, len, VipsPel )) ||
+ 		!(read->green8 = VIPS_ARRAY( out, len, VipsPel )) ||

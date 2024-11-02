@@ -1,0 +1,12 @@
+diff --git a/assimp/code/Common/SceneCombiner.cpp b/assimp/code/Common/SceneCombiner.cpp
+index 8782d61..b6bb13b 100644
+--- a/assimp/code/Common/SceneCombiner.cpp
++++ b/assimp/code/Common/SceneCombiner.cpp
+@@ -659,6 +659,7 @@ void SceneCombiner::MergeScenes(aiScene **_dest, aiScene *master, std::vector<At
+ 
+         // Now we can safely delete the scene
+         delete deleteMe;
++        deleteMe = nullptr;
+     }
+ 
+     // Check flags

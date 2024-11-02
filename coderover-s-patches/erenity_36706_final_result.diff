@@ -1,0 +1,21 @@
+diff --git a/AK/RefPtr.h b/AK/RefPtr.h
+index 1d194a38b3..8cbff1f4ac 100644
+--- a/AK/RefPtr.h
++++ b/AK/RefPtr.h
+@@ -412,8 +412,15 @@ private:
+         // 3. Thread A finishes step #1 by attempting to add a reference to
+         //    the object that was already deleted in step #2
+         FlatPtr bits = PtrTraits::lock(m_bits);
+-        if (T* ptr = PtrTraits::as_ptr(bits))
++        if (T* ptr = PtrTraits::as_ptr(bits)) {
++            // Ensure the reference count is incremented only if the pointer is valid
+             ptr->ref();
++        } else {
++            // If the pointer is null, it indicates the object has been deallocated
++            // Handle this case appropriately, possibly by logging or asserting
++            // For now, we will just return the bits without incrementing the ref count
++            return bits;
++        }
+         PtrTraits::unlock(m_bits, bits);
+         return bits;
+     }

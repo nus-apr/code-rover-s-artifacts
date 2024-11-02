@@ -1,0 +1,15 @@
+diff --git a/Tests/Fuzzers/FuzzTarget.cpp b/Tests/Fuzzers/FuzzTarget.cpp
+index 5c3bf4e3..be0fc6de 100644
+--- a/Tests/Fuzzers/FuzzTarget.cpp
++++ b/Tests/Fuzzers/FuzzTarget.cpp
+@@ -17,9 +17,7 @@ int dumpDataToPcapFile(const uint8_t *data, size_t size)
+ 		return -1;
+ 	}
+ 
+-	written = fwrite(data, 1, size, fd);
+-	if (written != size)
+-	{
++ "r1" ) ; CIL_KEY_CONS_R2 = cil_strpool_add ( "r2" ) ; CIL_KEY_CONS_R3 = cil_strpool_add ( "r3" ) ; <vul-start> cil_strpool_add ( "r2" 
+ 		std::cerr << "Error writing pcap file\n";
+ 		fclose(fd);
+ 		return -1;

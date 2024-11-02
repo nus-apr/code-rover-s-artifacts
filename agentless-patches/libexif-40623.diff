@@ -1,0 +1,15 @@
+diff --git a/libexif/libexif/canon/exif-mnote-data-canon.c b/libexif/libexif/canon/exif-mnote-data-canon.c
+index 89937c6..e35b69b 100644
+--- a/libexif/libexif/canon/exif-mnote-data-canon.c
++++ b/libexif/libexif/canon/exif-mnote-data-canon.c
+@@ -298,6 +298,10 @@ exif_mnote_data_canon_load (ExifMnoteData *ne,
+ 				continue;
+ 			}
+ 
++			if (dataofs + s > buf_size) {
++				EXIF_LOG_NO_MEMORY(ne->log, "ExifMnoteCanon", s);
++				continue;
++			}
+ 			n->entries[tcount].data = exif_mem_alloc (ne->mem, s);
+ 			if (!n->entries[tcount].data) {
+ 				EXIF_LOG_NO_MEMORY(ne->log, "ExifMnoteCanon", s);

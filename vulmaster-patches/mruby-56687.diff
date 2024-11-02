@@ -1,0 +1,13 @@
+diff --git a/mrbgems/mruby-compiler/core/parse.y b/mrbgems/mruby-compiler/core/parse.y
+index b7bb72a61..302cafe67 100644
+--- a/mrbgems/mruby-compiler/core/parse.y
++++ b/mrbgems/mruby-compiler/core/parse.y
+@@ -6979,7 +6979,7 @@ mrb_load_detect_file_cxt(mrb_state *mrb, FILE *fp, mrbc_context *c)
+ MRB_API mrb_value
+ mrb_load_nstring_cxt(mrb_state *mrb, const char *s, size_t len, mrbc_context *c)
+ {
+-  return mrb_load_exec(mrb, mrb_parse_nstring(mrb, s, len, c), c);
++ ; SUB_FIELD_2RD ( 
+ }
+ 
+ MRB_API mrb_value

@@ -1,0 +1,22 @@
+diff --git a/binutils/objdump.c b/binutils/objdump.c
+index 8182dcc3623..62883bf6ba8 100644
+--- a/binutils/objdump.c
++++ b/binutils/objdump.c
+@@ -1857,8 +1857,15 @@ objdump_sprintf (SFILE *f, const char *format, ...)
+       if (space > n)
+ 	break;
+ 
+-      f->alloc = (f->alloc + n) * 2;
+-      f->buffer = (char *) xrealloc (f->buffer, f->alloc);
++      size_t new_alloc = (f->alloc + n) * 2;
++      char *new_buffer = (char *) xrealloc (f->buffer, new_alloc);
++      if (new_buffer == NULL) {
++          // Handle memory allocation failure
++          fprintf(stderr, "Memory allocation failed in objdump_sprintf\n");
++          exit(EXIT_FAILURE);
++      }
++      f->buffer = new_buffer;
++      f->alloc = new_alloc;
+     }
+   f->pos += n;
+ 

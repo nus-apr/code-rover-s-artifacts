@@ -1,0 +1,15 @@
+diff --git a/fuzz/fuzz_dump.cpp b/fuzz/fuzz_dump.cpp
+index 2c5b1517..8e3f06cf 100644
+--- a/fuzz/fuzz_dump.cpp
++++ b/fuzz/fuzz_dump.cpp
+@@ -60,9 +60,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+   simdjson::dom::parser parser;
+   simdjson::dom::element elem;
+   auto error = parser.parse(Data, Size).get(elem);
+-
+-  if (error) { return 0; }
+-  NulOStream os;
++ ) { static atomic_t 
+   //std::ostream& os(std::cout);
+   print_json(os,elem);
+   return 0;

@@ -1,0 +1,34 @@
+diff --git a/decoder/ih264d_format_conv.c b/decoder/ih264d_format_conv.c
+index 631bc23..b8b60f1 100644
+--- a/decoder/ih264d_format_conv.c
++++ b/decoder/ih264d_format_conv.c
+@@ -749,16 +749,19 @@ void ih264d_format_convert(dec_struct_t *ps_dec,
+ 
+         if(pv_disp_op->e_output_format == IV_YUV_420SP_UV)
+         {
+-            ih264d_fmt_conv_420sp_to_420sp(pu1_y_src,
+-                                           pu1_uv_src,
+-                                           pu1_y_dst,
+-                                           pu1_uv_dst,
+-                                           ps_op_frm->u4_y_wd,
+-                                           u4_num_rows_y,
+-                                           ps_op_frm->u4_y_strd,
+-                                           ps_op_frm->u4_u_strd,
+-                                           pv_disp_op->s_disp_frm_buf.u4_y_strd,
+-                                           pv_disp_op->s_disp_frm_buf.u4_u_strd);
++            if (ps_op_frm->u4_y_wd <= pv_disp_op->s_disp_frm_buf.u4_y_strd &&
++                ps_op_frm->u4_u_strd <= pv_disp_op->s_disp_frm_buf.u4_u_strd) {
++                ih264d_fmt_conv_420sp_to_420sp(pu1_y_src,
++                                               pu1_uv_src,
++                                               pu1_y_dst,
++                                               pu1_uv_dst,
++                                               ps_op_frm->u4_y_wd,
++                                               u4_num_rows_y,
++                                               ps_op_frm->u4_y_strd,
++                                               ps_op_frm->u4_u_strd,
++                                               pv_disp_op->s_disp_frm_buf.u4_y_strd,
++                                               pv_disp_op->s_disp_frm_buf.u4_u_strd);
++            }
+         }
+         else
+         {

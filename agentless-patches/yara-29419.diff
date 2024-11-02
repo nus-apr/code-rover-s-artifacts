@@ -1,0 +1,15 @@
+diff --git a/yara/libyara/modules/dotnet.c b/yara/libyara/modules/dotnet.c
+index 64f81db..e667dbc 100644
+--- a/yara/libyara/modules/dotnet.c
++++ b/yara/libyara/modules/dotnet.c
+@@ -438,6 +438,10 @@ void dotnet_parse_tilde_2(
+ 
+     num_rows = *(row_offset + matched_bits);
+ 
++    // Ensure that table_offset does not exceed the allocated memory
++    if (!fits_in_pe(pe, table_offset, row_size * num_rows))
++      return;
++
+     // Those tables which exist, but that we don't care about must be
+     // skipped.
+     //

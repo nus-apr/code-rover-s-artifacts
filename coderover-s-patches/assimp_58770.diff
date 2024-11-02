@@ -1,0 +1,17 @@
+diff --git a/code/AssetLib/NDO/NDOLoader.cpp b/code/AssetLib/NDO/NDOLoader.cpp
+index bf2fa113d..ad778facc 100644
+--- a/code/AssetLib/NDO/NDOLoader.cpp
++++ b/code/AssetLib/NDO/NDOLoader.cpp
+@@ -160,6 +160,12 @@ void NDOImporter::InternReadFile( const std::string& pFile,
+ 
+         temp = file_format >= 12 ? reader.GetU4() : reader.GetU2();
+         head = (const char*)reader.GetPtr();
++
++        // Validate that head is not null and temp is within bounds
++        if (head == nullptr || temp > reader.GetRemainingSize()) {
++            throw DeadlyImportError("Invalid object name data");
++        }
++
+         reader.IncPtr(temp + 76); /* skip unknown stuff */
+ 
+         obj.name = std::string(head, temp);

@@ -1,0 +1,10 @@
+diff --git a/src/lib/lwan-cache.c b/src/lib/lwan-cache.c
+index 94424a1..16080ca 100644
+--- a/src/lib/lwan-cache.c
++++ b/src/lib/lwan-cache.c
+@@ -386,4 +386,4 @@ struct cache_entry *cache_coro_get_and_ref_entry(struct cache *cache,
+     }
+ 
+     return NULL;
+-}
++ ret = g_nthreads 

@@ -1,0 +1,30 @@
+diff --git a/src/hb-machinery.hh b/src/hb-machinery.hh
+index 56914beae..43ebcc1ed 100644
+--- a/src/hb-machinery.hh
++++ b/src/hb-machinery.hh
+@@ -708,6 +708,11 @@ struct BEInt<Type, 4>
+   }
+   inline operator Type (void) const
+   {
++    // Ensure v is initialized by checking if it contains valid data
++    if (v == nullptr) {
++      // Handle uninitialized case, possibly return a default value or throw an error
++      return 0; // Default value or handle error appropriately
++    }
+     return (v[0] << 24)
+          + (v[1] << 16)
+          + (v[2] <<  8)
+diff --git a/src/hb-ot-kern-table.hh b/src/hb-ot-kern-table.hh
+index dab7a805f..d7096f5b5 100644
+--- a/src/hb-ot-kern-table.hh
++++ b/src/hb-ot-kern-table.hh
+@@ -51,6 +51,9 @@ struct hb_kern_machine_t
+     unsigned int count = buffer->len;
+     hb_glyph_info_t *info = buffer->info;
+     hb_glyph_position_t *pos = buffer->pos;
++    if (info == nullptr || count == 0) {
++      return; // Handle invalid info or empty buffer
++    }
+     for (unsigned int idx = 0; idx < count;)
+     {
+       if (!(info[idx].mask & kern_mask))

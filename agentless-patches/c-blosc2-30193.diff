@@ -1,0 +1,23 @@
+diff --git a/c-blosc2/blosc/blosc2.c b/c-blosc2/blosc/blosc2.c
+index 45dd282..658c82e 100644
+--- a/c-blosc2/blosc/blosc2.c
++++ b/c-blosc2/blosc/blosc2.c
+@@ -2287,12 +2287,18 @@ int set_values(uint8_t* src, int32_t nitems, uint8_t* dest, int32_t destsize) {
+ 
+ // Return > 0 if runlen.  0 if not a runlen.
+ int handle_runlen(blosc2_context* context, uint8_t* src, uint32_t nbytes, uint8_t* dest, int32_t destsize) {
++  if (nbytes < BLOSC2_CHUNK_FLAGS + 1) {
++    return 0;  // Not enough data to read flags
++  }
+   bool doshuffle_flag = src[BLOSC2_CHUNK_FLAGS] & BLOSC_DOSHUFFLE;
+   bool dobitshuffle_flag = src[BLOSC2_CHUNK_FLAGS] & BLOSC_DOBITSHUFFLE;
+   if (!(doshuffle_flag & dobitshuffle_flag)) {
+     // Not a Blosc2 chunk.  It cannot have a runlen.
+     return 0;
+   }
++  if (nbytes < BLOSC2_CHUNK_CBYTES + 1 || nbytes < BLOSC2_CHUNK_TYPESIZE + 1 || nbytes < BLOSC2_CHUNK_BLOSC2_FLAGS + 1) {
++    return 0;  // Not enough data to read cbytes, typesize, or flags
++  }
+   context->header_overhead = BLOSC_EXTENDED_HEADER_LENGTH;  // a Blosc2 chunk
+   int32_t cbytes_chunk = src[BLOSC2_CHUNK_CBYTES];
+   int32_t typesize = src[BLOSC2_CHUNK_TYPESIZE];

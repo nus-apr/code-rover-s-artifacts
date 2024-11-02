@@ -1,0 +1,46 @@
+diff --git a/decoder/svc/isvcd_mode_mv_resamp.c b/decoder/svc/isvcd_mode_mv_resamp.c
+index 49adebc..7c0c789 100644
+--- a/decoder/svc/isvcd_mode_mv_resamp.c
++++ b/decoder/svc/isvcd_mode_mv_resamp.c
+@@ -2616,10 +2616,20 @@ WORD32 isvcd_interlyr_motion_mode_pred_dyadic(void *pv_comp_mode_mv_ctxt, void *
+         i4_ref_mb_x = (i4_ref_x >> 4);
+         i4_ref_mb_y = (i4_ref_y >> 4);
+ 
+-        /* get the appropriate mb params in reference layer */
+-        ps_inter_lyr_mb_prms += i4_ref_mb_x;
+-        ps_inter_lyr_mb_prms += i4_ref_mb_y * i4_inter_lyr_mb_prms_stride;
+-        i1_ref_mb_mode = ps_inter_lyr_mb_prms->i1_mb_mode;
++        /* Check boundaries before accessing */
++        if (i4_ref_mb_x >= 0 && i4_ref_mb_x < ps_lyr_mem->i4_ref_width &&
++            i4_ref_mb_y >= 0 && i4_ref_mb_y < ps_lyr_mem->i4_ref_height)
++        {
++            /* get the appropriate mb params in reference layer */
++            ps_inter_lyr_mb_prms += i4_ref_mb_x;
++            ps_inter_lyr_mb_prms += i4_ref_mb_y * i4_inter_lyr_mb_prms_stride;
++            i1_ref_mb_mode = ps_inter_lyr_mb_prms->i1_mb_mode;
++        }
++        else
++        {
++            /* Handle out-of-bounds access */
++            return -1; // or appropriate error handling
++        }
+         u1_base_mode_flag = ps_svc_mb_params->u1_base_mode_flag;
+ 
+         /* check if the MB mode of the refernce MB is Intra*/
+diff --git a/decoder/svc/isvcd_utils.c b/decoder/svc/isvcd_utils.c
+index 3220685..b900770 100644
+--- a/decoder/svc/isvcd_utils.c
++++ b/decoder/svc/isvcd_utils.c
+@@ -183,6 +183,12 @@ WORD16 isvcd_allocate_dynamic_bufs(svc_dec_lyr_struct_t *ps_svc_lyr_dec)
+     ps_svc_lyr_dec->ps_inter_lyr_mb_prms_frm_start =
+         ps_svc_lyr_dec->ps_inter_lyr_mb_prms_base + 1 + ps_svc_lyr_dec->u2_inter_lyr_mb_prms_stride;
+ 
++    /* Verify allocation size is sufficient */
++    if (size < (ps_dec->u2_frm_wd_in_mbs * ps_dec->u2_frm_ht_in_mbs * sizeof(inter_lyr_mb_prms_t)))
++    {
++        return IV_FAIL; // or appropriate error handling
++    }
++
+     ps_svc_lyr_dec->u4_inter_lyr_mb_prms_size = (ps_dec->u2_frm_wd_in_mbs + 2) *
+                                                 (ps_dec->u2_frm_ht_in_mbs + 2) *
+                                                 sizeof(inter_lyr_mb_prms_t);

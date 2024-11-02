@@ -1,0 +1,15 @@
+diff --git a/libheif/libheif/region.cc b/libheif/libheif/region.cc
+index 7efe77c..7e12ef2 100644
+--- a/libheif/libheif/region.cc
++++ b/libheif/libheif/region.cc
+@@ -124,6 +124,10 @@ int32_t RegionGeometry::parse_signed(const std::vector<uint8_t>& data,
+                                      unsigned int* dataOffset)
+ {
+   // TODO: fix this for negative values
++  if (*dataOffset + field_size / 8 > data.size()) {
++    // Not enough data to read
++    throw std::out_of_range("Not enough data to read signed integer");
++  }
+   int32_t x;
+   if (field_size == 32) {
+     x = ((data[*dataOffset] << 24) | (data[*dataOffset + 1] << 16) |

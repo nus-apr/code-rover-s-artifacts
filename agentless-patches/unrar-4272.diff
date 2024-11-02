@@ -1,0 +1,12 @@
+diff --git a/unrar/extract.cpp b/unrar/extract.cpp
+index d9eb2a3..fe73c84 100644
+--- a/unrar/extract.cpp
++++ b/unrar/extract.cpp
+@@ -99,6 +99,7 @@ void CmdExtract::ExtractArchiveInit(Archive &Arc)
+ EXTRACT_ARC_CODE CmdExtract::ExtractArchive()
+ {
+   Archive Arc(Cmd);
++  Arc.FileHead.FileAttr = 0; // Initialize FileAttr to a default value
+   if (!Arc.WOpen(ArcName))
+     return EXTRACT_ARC_NEXT;
+ 

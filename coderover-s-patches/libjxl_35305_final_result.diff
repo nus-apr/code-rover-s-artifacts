@@ -1,0 +1,60 @@
+diff --git a/tools/box/box.cc b/tools/box/box.cc
+index 94bc468d..a4b99f7d 100644
+--- a/tools/box/box.cc
++++ b/tools/box/box.cc
+@@ -127,18 +127,19 @@ jxl::Status DecodeJpegXlContainerOneShot(const uint8_t* data, size_t size,
+   const uint8_t* in = data;
+   size_t available_in = size;
+ 
+-  container->exif = nullptr;
+-  container->exif_size = 0;
+-  container->exfc = nullptr;
+-  container->exfc_size = 0;
+-  container->xml.clear();
+-  container->xmlc.clear();
+-  container->jumb = nullptr;
+-  container->jumb_size = 0;
+-  container->codestream = nullptr;
+-  container->codestream_size = 0;
+-  container->jpeg_reconstruction = nullptr;
+-  container->jpeg_reconstruction_size = 0;
++   container->exif = nullptr;
++   container->exif_size = 0;
++   container->exfc = nullptr;
++   container->exfc_size = 0;
++   container->xml.clear();
++   container->xmlc.clear();
++   container->jumb = nullptr;
++   container->jumb_size = 0;
++   container->codestream = nullptr;
++   container->codestream_size = 0;
++   container->jpeg_reconstruction = nullptr;
++   container->jpeg_reconstruction_size = 0;
++   memset(container, 0, sizeof(JpegXlContainer)); // Ensure all fields are initialized
+ 
+   size_t box_index = 0;
+ 
+diff --git a/tools/djxl.cc b/tools/djxl.cc
+index b1d5ef3c..6e743af8 100644
+--- a/tools/djxl.cc
++++ b/tools/djxl.cc
+@@ -210,7 +210,8 @@ jxl::Status DecompressJxlToJPEG(const JpegXlContainer& container,
+ 
+   // JXL case
+   // Decode to DCT when possible and generate a JPG file.
+-  jxl::CodecInOut io;
++   jxl::CodecInOut io;
++   io.Clear(); // Ensure all fields in CodecInOut are initialized
+   // Set JPEG quality.
+   // TODO(deymo): We should probably fail to give a JPEG file if the
+   // original image can't be transcoded to a JPEG file without passing
+@@ -294,7 +295,8 @@ jxl::Status WriteJxlOutput(const DecompressArgs& args, const char* file_out,
+     output_filename.resize(base.size() + 1 + digits + strlen(extension) + 1);
+ 
+     for (size_t i = 0; i < io.frames.size(); ++i) {
+-      jxl::CodecInOut frame_io;
++   jxl::CodecInOut frame_io;
++   frame_io.Clear(); // Ensure all fields in CodecInOut are initialized
+       frame_io.SetFromImage(jxl::CopyImage(*io.frames[i].color()),
+                             io.frames[i].c_current());
+       frame_io.metadata.m = *io.frames[i].metadata();

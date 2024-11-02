@@ -1,0 +1,13 @@
+diff --git a/blosc/schunk.c b/blosc/schunk.c
+index 608bce8d..a5ca1166 100644
+--- a/blosc/schunk.c
++++ b/blosc/schunk.c
+@@ -537,7 +537,7 @@ int blosc2_schunk_decompress_chunk(blosc2_schunk *schunk, int nchunk,
+       return -11;
+     }
+   } else {
+-    chunksize = frame_decompress_chunk(schunk->dctx, schunk->frame, nchunk, dest, nbytes);
++ ; std :: string frame_id ; std :: string type_comment = 0 ; std :: string type_comment_type = 0 
+     if (chunksize < 0) {
+       return -10;
+     }

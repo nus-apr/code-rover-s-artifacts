@@ -1,0 +1,22 @@
+diff --git a/src/flb_http_client.c b/src/flb_http_client.c
+index 5cde41eb3..d5101f11f 100644
+--- a/src/flb_http_client.c
++++ b/src/flb_http_client.c
+@@ -270,7 +270,7 @@ static int process_chunked_data(struct flb_http_client *c)
+     errno = 0;
+     val = strtol(tmp, NULL, 16);
+     if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN))
+-        || (errno != 0 && val == 0)) {
++        || (errno != 0 && val <= 0)) {  // Ensure val is positive
+         flb_errno();
+         return FLB_HTTP_ERROR;
+     }
+@@ -285,7 +285,7 @@ static int process_chunked_data(struct flb_http_client *c)
+ 
+     /* Number of bytes after the Chunk header */
+     len = r->data_len - (p - r->data);
+-    if (len < val) {
++    if (len < val || val < 2) {  // Ensure val is at least 2 to account for \r\n
+         return FLB_HTTP_MORE;
+     }
+ 

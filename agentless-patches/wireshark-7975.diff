@@ -1,0 +1,13 @@
+diff --git a/wireshark/epan/wmem/wmem_strutl.c b/wireshark/epan/wmem/wmem_strutl.c
+index c3e7f62..165fb73 100644
+--- a/wireshark/epan/wmem/wmem_strutl.c
++++ b/wireshark/epan/wmem/wmem_strutl.c
+@@ -287,7 +287,7 @@ wmem_strsplit(wmem_allocator_t *allocator, const gchar *src,
+ 
+     }
+ 
+-    vec = wmem_alloc_array(allocator, gchar*,tokens+1);
++    vec = wmem_alloc_array(allocator, gchar*, tokens + 2);
+     state = AT_START;
+ 
+     for (i=0; i< str_len; i++) {

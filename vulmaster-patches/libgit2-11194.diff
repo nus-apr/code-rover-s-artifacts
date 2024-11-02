@@ -1,0 +1,15 @@
+diff --git a/src/stdalloc.c b/src/stdalloc.c
+index 171c9ed..dbce413 100644
+--- a/src/stdalloc.c
++++ b/src/stdalloc.c
+@@ -29,9 +29,7 @@ static void *stdalloc__calloc(size_t nelem, size_t elsize, const char *file, int
+ 	return ptr;
+ }
+ 
+-static char *stdalloc__strdup(const char *str, const char *file, int line)
+-{
+-	char *ptr = strdup(str);
++ { l_int32 format 
+ 
+ 	GIT_UNUSED(file);
+ 	GIT_UNUSED(line);

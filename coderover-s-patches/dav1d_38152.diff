@@ -1,0 +1,29 @@
+diff --git a/src/lr_apply_tmpl.c b/src/lr_apply_tmpl.c
+index 4da8596..0425977 100644
+--- a/src/lr_apply_tmpl.c
++++ b/src/lr_apply_tmpl.c
+@@ -92,16 +92,17 @@ static void backup_lpf(const Dav1dFrameContext *const f,
+     } else {
+         while (row + stripe_h <= row_h) {
+             const int n_lines = 4 - (row + stripe_h + 1 == h);
+-            for (int i = 0; i < 4; i++) {
++            const int max_lines = (dst_w - (dst - dst)) / PXSTRIDE(dst_stride);
++            for (int i = 0; i < 4 && i < max_lines; i++) {
+                 pixel_copy(dst, i == n_lines ? &dst[-PXSTRIDE(dst_stride)] :
+                                                src, src_w);
+                 dst += PXSTRIDE(dst_stride);
+-                src += PXSTRIDE(src_stride);
+-            }
+-            row += stripe_h; // unmodified stripe_h for the 1st stripe
+-            stripe_h = 64 >> ss_ver;
+-            src += (stripe_h - 4) * PXSTRIDE(src_stride);
+-        }
++               src += PXSTRIDE(src_stride);
++           }
++           row += stripe_h; // unmodified stripe_h for the 1st stripe
++           stripe_h = 64 >> ss_ver;
++           src += (stripe_h - 4) * PXSTRIDE(src_stride);
++       }
+     }
+ }
+ 

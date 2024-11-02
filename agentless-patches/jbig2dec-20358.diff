@@ -1,0 +1,18 @@
+diff --git a/jbig2dec/jbig2_image.h b/jbig2dec/jbig2_image.h
+index 6be9f7b..57134a4 100644
+--- a/jbig2dec/jbig2_image.h
++++ b/jbig2dec/jbig2_image.h
+@@ -57,7 +57,12 @@ jbig2_image_get_pixels_fast(Jbig2Image *image, int x, int y, int bits)
+ {
+     const int byte = (x >> 3) + y * image->stride;
+     const int bit = 7 - (x & 7);
+-    int v = ((image->data[byte]<<8) | (image->data[byte+1]))>>(bit+9-bits);
++    int v = 0;
++    if (byte + 1 < image->stride * image->height) {
++        v = ((image->data[byte]<<8) | (image->data[byte+1]))>>(bit+9-bits);
++    } else {
++        v = (image->data[byte] << 8) >> (bit+9-bits);
++    }
+ 
+     return v & ((1<<bits)-1);
+ }

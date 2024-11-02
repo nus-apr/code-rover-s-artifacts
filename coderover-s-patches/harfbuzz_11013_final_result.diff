@@ -1,0 +1,14 @@
+diff --git a/src/hb-ot-layout-gpos-table.hh b/src/hb-ot-layout-gpos-table.hh
+index 8b20c150c..db31acaa0 100644
+--- a/src/hb-ot-layout-gpos-table.hh
++++ b/src/hb-ot-layout-gpos-table.hh
+@@ -1668,6 +1668,9 @@ propagate_attachment_offsets (hb_glyph_position_t *pos, unsigned int i, hb_direc
+ 
+   unsigned int j = (int) i + chain;
+ 
++  if (j >= len) // Ensure j is within bounds
++    return;
++
+   pos[i].attach_chain() = 0;
+ 
+   propagate_attachment_offsets (pos, j, direction);

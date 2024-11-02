@@ -1,0 +1,16 @@
+diff --git a/decoder/ih264d_utils.c b/decoder/ih264d_utils.c
+index 9d616d3..f032b90 100644
+--- a/decoder/ih264d_utils.c
++++ b/decoder/ih264d_utils.c
+@@ -1008,7 +1008,10 @@ WORD32 ih264d_get_next_display_field(dec_struct_t * ps_dec,
+         ps_op_frm->u4_y_ht = pic_buf->u2_disp_height << 1;
+         ps_op_frm->u4_u_ht = ps_op_frm->u4_v_ht = ps_op_frm->u4_y_ht >> 1;
+         ps_op_frm->u4_y_wd = pic_buf->u2_disp_width;
+-
++        if (ps_op_frm->u4_y_wd > ps_op_frm->u4_y_strd) // Ensure width does not exceed stride
++        {
++            ps_op_frm->u4_y_wd = ps_op_frm->u4_y_strd; // Adjust width to prevent overflow
++        }
+         ps_op_frm->u4_u_wd = ps_op_frm->u4_v_wd = ps_op_frm->u4_y_wd >> 1;
+ 
+         ps_op_frm->u4_y_strd = pic_buf->u2_frm_wd_y;

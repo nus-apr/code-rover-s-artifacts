@@ -1,0 +1,23 @@
+diff --git a/graphicsmagick/magick/import.c b/graphicsmagick/magick/import.c
+index 5040206..423820d 100644
+--- a/graphicsmagick/magick/import.c
++++ b/graphicsmagick/magick/import.c
+@@ -3651,10 +3651,14 @@ ImportViewPixelArea(ViewInfo *view,
+       }
+     case GrayQuantum:
+       {
+-        status=ImportGrayQuantumType(source,q,indexes,number_pixels,quantum_size,
+-                                     sample_type,unsigned_scale,unsigned_maxvalue,
+-                                     grayscale_miniswhite,double_minvalue,
+-                                     double_scale,endian,image,import_info);
++        if (image->cache != (void *) NULL) {
++          status=ImportGrayQuantumType(source,q,indexes,number_pixels,quantum_size,
++                                       sample_type,unsigned_scale,unsigned_maxvalue,
++                                       grayscale_miniswhite,double_minvalue,
++                                       double_scale,endian,image,import_info);
++        } else {
++          status=MagickFail;
++        }
+         break;
+       }
+     case GrayAlphaQuantum:

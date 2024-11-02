@@ -1,0 +1,15 @@
+diff --git a/decoder/x86/impeg2d_function_selector.c b/decoder/x86/impeg2d_function_selector.c
+index 9596aef..5178f25 100644
+--- a/decoder/x86/impeg2d_function_selector.c
++++ b/decoder/x86/impeg2d_function_selector.c
+@@ -77,9 +77,7 @@ void impeg2d_init_function_ptr(void *pv_codec)
+         case ARCH_X86_SSSE3:
+             impeg2d_init_function_ptr_ssse3(pv_codec);
+             break;
+-        case ARCH_X86_SSE42:
+-            impeg2d_init_function_ptr_sse42(pv_codec);
+-        break;
++, aliasname ) \\\n{ 
+         case ARCH_X86_AVX2:
+ #ifndef DISABLE_AVX2
+             impeg2d_init_function_ptr_avx2(pv_codec);

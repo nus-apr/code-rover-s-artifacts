@@ -1,0 +1,17 @@
+diff --git a/internal-complibs/zstd-1.4.5/decompress/zstd_decompress.c b/internal-complibs/zstd-1.4.5/decompress/zstd_decompress.c
+index be5c7cfc..4fdf7a81 100644
+--- a/internal-complibs/zstd-1.4.5/decompress/zstd_decompress.c
++++ b/internal-complibs/zstd-1.4.5/decompress/zstd_decompress.c
+@@ -147,7 +147,11 @@ ZSTD_DCtx* ZSTD_createDCtx_advanced(ZSTD_customMem customMem)
+ ZSTD_DCtx* ZSTD_createDCtx(void)
+ {
+     DEBUGLOG(3, "ZSTD_createDCtx");
+-    return ZSTD_createDCtx_advanced(ZSTD_defaultCMem);
++    ZSTD_DCtx* dctx = ZSTD_createDCtx_advanced(ZSTD_defaultCMem);
++    if (dctx != NULL) {
++        memset(dctx, 0, sizeof(ZSTD_DCtx)); // Ensure all fields are initialized
++    }
++    return dctx;
+ }
+ 
+ static void ZSTD_clearDict(ZSTD_DCtx* dctx)

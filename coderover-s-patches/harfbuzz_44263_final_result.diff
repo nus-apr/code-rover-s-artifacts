@@ -1,0 +1,12 @@
+diff --git a/nyx_mode/QEMU-Nyx b/nyx_mode/QEMU-Nyx
+--- a/nyx_mode/QEMU-Nyx
++++ b/nyx_mode/QEMU-Nyx
+@@ -1 +1 @@
+-Subproject commit d5a7011ad20ba5ba91f1371f9d40154035d5d768
++Subproject commit d5a7011ad20ba5ba91f1371f9d40154035d5d768-dirty
+diff --git a/qemu_mode/qemuafl b/qemu_mode/qemuafl
+--- a/qemu_mode/qemuafl
++++ b/qemu_mode/qemuafl
+@@ -1 +1 @@
+-Subproject commit ce65a7349e7156e052b37a660422cad8346764d0
++Subproject commit ce65a7349e7156e052b37a660422cad8346764d0-dirty

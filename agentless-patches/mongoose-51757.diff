@@ -1,0 +1,18 @@
+diff --git a/mongoose/mip/mip.c b/mongoose/mip/mip.c
+index 4eb46a2..e95ac53 100644
+--- a/mongoose/mip/mip.c
++++ b/mongoose/mip/mip.c
+@@ -450,7 +450,12 @@ static void rx_icmp(struct mip_if *ifp, struct pkt *pkt) {
+                           sizeof(struct icmp) + pkt->pay.len);
+     struct icmp *icmp = (struct icmp *) (ip + 1);
+     memset(icmp, 0, sizeof(*icmp));  // Important - set csum to 0
+-    memcpy(icmp + 1, pkt->pay.buf, pkt->pay.len);
++    if (pkt->pay.len <= ifp->tx.len - sizeof(struct icmp)) {
++      memcpy(icmp + 1, pkt->pay.buf, pkt->pay.len);
++    } else {
++      // Handle error: payload too large
++      return;
++    }
+     icmp->csum = ipcsum(icmp, sizeof(*icmp) + pkt->pay.len);
+     ifp->driver->tx(ifp->tx.buf, PDIFF(ifp->tx.buf, icmp + 1) + pkt->pay.len,
+                     ifp->driver_data);

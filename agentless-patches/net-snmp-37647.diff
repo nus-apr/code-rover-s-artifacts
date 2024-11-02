@@ -1,0 +1,19 @@
+diff --git a/net-snmp/snmplib/snmp_api.c b/net-snmp/snmplib/snmp_api.c
+index 14285d3..7a1184d 100644
+--- a/net-snmp/snmplib/snmp_api.c
++++ b/net-snmp/snmplib/snmp_api.c
+@@ -7596,9 +7596,11 @@ snmp_add_var(netsnmp_pdu *pdu,
+             if (ix >= (int) tint) {
+                 tint = ix + 1;
+             }
+-            if (ix >= (int)buf_len && !snmp_realloc(&buf, &buf_len)) {
+-                result = SNMPERR_MALLOC;
+-                break;
++            while (ix >= (int)buf_len) {
++                if (!snmp_realloc(&buf, &buf_len)) {
++                    result = SNMPERR_MALLOC;
++                    break;
++                }
+             }
+             bit = 0x80 >> ltmp % 8;
+             buf[ix] |= bit;

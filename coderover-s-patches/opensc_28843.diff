@@ -1,0 +1,32 @@
+diff --git a/src/libopensc/pkcs15-oberthur.c b/src/libopensc/pkcs15-oberthur.c
+index a873aaa0..e2cee206 100644
+--- a/src/libopensc/pkcs15-oberthur.c
++++ b/src/libopensc/pkcs15-oberthur.c
+@@ -252,7 +252,11 @@ sc_oberthur_read_file(struct sc_pkcs15_card *p15card, const char *in_path,
+ 	sc_format_path(in_path, &path);
+ 	rv = sc_select_file(card, &path, &file);
+ 	if (rv != SC_SUCCESS) {
++	if (file != NULL) {  // Ensure file is not already freed
+ 		sc_file_free(file);
++		file = NULL;  // Prevent further use of the freed file
++	}
++		file = NULL;  // Prevent further use of the freed file
+ 		LOG_TEST_RET(ctx, rv, "Cannot select oberthur file to read");
+ 	}
+ 
+@@ -264,6 +268,7 @@ sc_oberthur_read_file(struct sc_pkcs15_card *p15card, const char *in_path,
+ 	*out = calloc(sz, 1);
+ 	if (*out == NULL) {
+ 		sc_file_free(file);
++		file = NULL;  // Prevent further use of the freed file
+ 		LOG_TEST_RET(ctx, SC_ERROR_OUT_OF_MEMORY, "Cannot read oberthur file");
+ 	}
+ 
+@@ -305,6 +310,7 @@ sc_oberthur_read_file(struct sc_pkcs15_card *p15card, const char *in_path,
+ 		rv = sc_pkcs15_get_objects(p15card, SC_PKCS15_TYPE_AUTH_PIN, objs, 0x10);
+ 		if (rv != SC_SUCCESS) {
+ 			sc_file_free(file);
++			file = NULL;  // Prevent further use of the freed file
+ 			LOG_TEST_RET(ctx, rv, "Cannot read oberthur file: get AUTH objects error");
+ 		}
+ 

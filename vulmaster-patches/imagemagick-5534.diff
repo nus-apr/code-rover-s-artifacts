@@ -1,0 +1,15 @@
+diff --git a/Magick++/fuzz/utils.cc b/Magick++/fuzz/utils.cc
+index a24a8e8..37998dd 100644
+--- a/Magick++/fuzz/utils.cc
++++ b/Magick++/fuzz/utils.cc
+@@ -5,9 +5,7 @@ class FuzzingLimits {
+ public:
+   FuzzingLimits() {
+     Magick::SecurityPolicy::maxMemoryRequest(256000000);
+-    Magick::ResourceLimits::memory(1000000000);
+-    Magick::ResourceLimits::map(500000000);
+-  }
++ OnigValue opts [ 3 
+ };
+ 
+ FuzzingLimits fuzzingLimits;

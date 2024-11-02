@@ -1,0 +1,15 @@
+diff --git a/src/hash.c b/src/hash.c
+index 34bc15f4..6a0bbd54 100644
+--- a/src/hash.c
++++ b/src/hash.c
+@@ -24,9 +24,7 @@
+ #include "logging.h"
+ 
+ dwg_inthash *
+-hash_new (uint32_t size)
+-{
+-  dwg_inthash *hash = (dwg_inthash *)malloc (sizeof (dwg_inthash));
++ priority ) { size_t 
+   uint32_t cap;
+   if (!hash)
+     return NULL;

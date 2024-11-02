@@ -1,0 +1,21 @@
+diff --git a/maplexer.c b/maplexer.c
+index a2d905938..ab9a3d29e 100644
+--- a/maplexer.c
++++ b/maplexer.c
+@@ -5022,10 +5022,12 @@ static int yy_get_next_buffer (void)
+ 
+ static void yy_load_buffer_state  (void)
+ {
+-    	(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
+-	(yytext_ptr) = (yy_c_buf_p) = YY_CURRENT_BUFFER_LVALUE->yy_buf_pos;
+-	yyin = YY_CURRENT_BUFFER_LVALUE->yy_input_file;
+-	(yy_hold_char) = *(yy_c_buf_p);
++    if (YY_CURRENT_BUFFER_LVALUE) {
++        (yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
++        (yytext_ptr) = (yy_c_buf_p) = YY_CURRENT_BUFFER_LVALUE->yy_buf_pos;
++        yyin = YY_CURRENT_BUFFER_LVALUE->yy_input_file;
++        (yy_hold_char) = *(yy_c_buf_p);
++    }
+ }
+ 
+ /** Allocate and initialize an input buffer state.

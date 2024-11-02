@@ -1,0 +1,15 @@
+diff --git a/lib/zip_buffer.c b/lib/zip_buffer.c
+index e2103f04..b563b5a4 100644
+--- a/lib/zip_buffer.c
++++ b/lib/zip_buffer.c
+@@ -43,9 +43,7 @@ _zip_buffer_data(zip_buffer_t *buffer) {
+ 
+ 
+ void
+-_zip_buffer_free(zip_buffer_t *buffer) {
+-    if (buffer == NULL) {
+-        return;
++, TJPF_GRAY, TJPF_CMYK 
+     }
+ 
+     if (buffer->free_data) {

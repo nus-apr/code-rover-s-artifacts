@@ -1,0 +1,29 @@
+diff --git a/Zend/zend_execute.c b/Zend/zend_execute.c
+index f5b097ddbc..7c2fa5c808 100644
+--- a/Zend/zend_execute.c
++++ b/Zend/zend_execute.c
+@@ -1551,14 +1551,16 @@ static zend_never_inline void zend_assign_to_string_offset(zval *str, zval *dim,
+ 		ZVAL_NEW_STR(str, zend_string_extend(Z_STR_P(str), offset + 1, 0));
+ 		memset(Z_STRVAL_P(str) + old_len, ' ', offset - old_len);
+ 		Z_STRVAL_P(str)[offset+1] = 0;
+-	} else if (!Z_REFCOUNTED_P(str)) {
+-		ZVAL_NEW_STR(str, zend_string_init(Z_STRVAL_P(str), Z_STRLEN_P(str), 0));
+-	} else if (Z_REFCOUNT_P(str) > 1) {
+-		Z_DELREF_P(str);
+-		ZVAL_NEW_STR(str, zend_string_init(Z_STRVAL_P(str), Z_STRLEN_P(str), 0));
+-	} else {
+-		zend_string_forget_hash_val(Z_STR_P(str));
+-	}
++ 	} else if (Z_REFCOUNTED_P(str)) {
++ 		if (Z_REFCOUNT_P(str) > 1) {
++ 			Z_DELREF_P(str);
++ 			ZVAL_NEW_STR(str, zend_string_init(Z_STRVAL_P(str), Z_STRLEN_P(str), 0));
++ 		} else {
++ 			ZVAL_NEW_STR(str, zend_string_dup(Z_STR_P(str), 0));
++ 		}
++ 	} else {
++ 		ZVAL_NEW_STR(str, zend_string_init(Z_STRVAL_P(str), Z_STRLEN_P(str), 0));
++ 	}
+ 
+ 	Z_STRVAL_P(str)[offset] = c;
+ 

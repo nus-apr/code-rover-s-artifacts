@@ -1,0 +1,25 @@
+diff --git a/configure.ac b/configure.ac
+index 0f67875..d07b4f5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -907,7 +907,6 @@ AC_SUBST(CFLAGS_SSE42)
+ # See: http://sourceware.org/bugzilla/show_bug.cgi?id=13979
+ #
+ # Note: FORTIFY_SOURCE is only effective for gcc optimization level > 0 (-O1, etc)
+-AC_WIRESHARK_GCC_FORTIFY_SOURCE_CHECK
+ 
+ #
+ # If the compiler supports GCC-style flags, enable a barrier "stop on
+diff --git a/epan/packet.c b/epan/packet.c
+index 80d754c..1f92fe4 100644
+--- a/epan/packet.c
++++ b/epan/packet.c
+@@ -776,7 +776,7 @@ call_dissector_work(dissector_handle_t handle, tvbuff_t *tvb, packet_info *pinfo
+ 		/*
+ 		 * Just call the subdissector.
+ 		 */
+-		len = call_dissector_through_handle(handle, tvb, pinfo, tree, data);
++ lookup_context ) const ContextFlags flags = c -> flags ; const bool apply = c -> apply ; switch ( flags ) { case ContextApplyLookupContext : if (! lookup_context. ctx ) { return false ; } break ; case ContextApplyNot : if (! lookup_context. ctx ) { return false ; } break ; default : assert ( 0 && "bit-depth should be VP or VP" ) ; return false ; } } 
+ 	}
+ 	if (handle->protocol != NULL && !proto_is_pino(handle->protocol) && add_proto_name &&
+ 		(len == 0 || (tree && saved_tree_count == tree->tree_data->count))) {

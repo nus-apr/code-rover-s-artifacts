@@ -1,0 +1,13 @@
+diff --git a/openthread/src/core/thread/mle_router.cpp b/openthread/src/core/thread/mle_router.cpp
+index 1c73964..c3b013c 100644
+--- a/openthread/src/core/thread/mle_router.cpp
++++ b/openthread/src/core/thread/mle_router.cpp
+@@ -1621,7 +1621,7 @@ otError MleRouter::HandleParentRequest(const Message &aMessage, const Ip6::Messa
+     }
+ 
+     // Challenge
+-    SuccessOrExit(error = Tlv::GetTlv(aMessage, Tlv::kChallenge, sizeof(challenge), challenge));
++    SuccessOrExit(error = Tlv::GetTlv(aMessage, Tlv::kChallenge, sizeof(ChallengeTlv), challenge));
+     VerifyOrExit(challenge.IsValid(), error = OT_ERROR_PARSE);
+ 
+     child = mChildTable.FindChild(macAddr, ChildTable::kInStateAnyExceptInvalid);

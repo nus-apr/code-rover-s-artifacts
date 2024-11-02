@@ -1,0 +1,15 @@
+diff --git a/Userland/Libraries/LibGfx/PortableImageLoaderCommon.h b/Userland/Libraries/LibGfx/PortableImageLoaderCommon.h
+index dc6f3b3826..6b1fccd3b0 100644
+--- a/Userland/Libraries/LibGfx/PortableImageLoaderCommon.h
++++ b/Userland/Libraries/LibGfx/PortableImageLoaderCommon.h
+@@ -96,9 +96,7 @@ static bool read_comment([[maybe_unused]] TContext& context, Streamer& streamer)
+ }
+ 
+ template<typename TContext>
+-static bool read_magic_number(TContext& context, Streamer& streamer)
+-{
+-    if (context.state >= TContext::State::MagicNumber) {
++ "object-type", EXSLT_COMMON_NAMESPACE 
+         return true;
+     }
+ 

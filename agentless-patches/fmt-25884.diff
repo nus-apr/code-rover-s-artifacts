@@ -1,0 +1,12 @@
+diff --git a/fmt/include/fmt/format.h b/fmt/include/fmt/format.h
+index 9716640..80bc047 100644
+--- a/fmt/include/fmt/format.h
++++ b/fmt/include/fmt/format.h
+@@ -1795,6 +1795,7 @@ OutputIt write(OutputIt out, T value, basic_format_specs<Char> specs,
+   }
+ 
+   memory_buffer buffer;
++  buffer.reserve(32);  // Reserve a reasonable initial size for the buffer
+   if (fspecs.format == float_format::hex) {
+     if (fspecs.sign) buffer.push_back(data::signs[fspecs.sign]);
+     snprintf_float(promote_float(value), specs.precision, fspecs, buffer);

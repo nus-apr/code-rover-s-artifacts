@@ -1,0 +1,15 @@
+diff --git a/test/fuzz.c b/test/fuzz.c
+index 9fb9f1a1..c292f423 100644
+--- a/test/fuzz.c
++++ b/test/fuzz.c
+@@ -15,9 +15,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *, size_t);
+ 
+ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+   mg_log_set(MG_LL_NONE);
+-
+-  struct mg_dns_message dm;
+-  mg_dns_parse(data, size, &dm);
++ value ) { 
+   mg_dns_parse(NULL, 0, &dm);
+ 
+   struct mg_http_message hm;

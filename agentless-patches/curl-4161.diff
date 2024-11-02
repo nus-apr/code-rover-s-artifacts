@@ -1,0 +1,12 @@
+diff --git a/curl/lib/curl_fnmatch.c b/curl/lib/curl_fnmatch.c
+index 910e1a8..01d1609 100644
+--- a/curl/lib/curl_fnmatch.c
++++ b/curl/lib/curl_fnmatch.c
+@@ -132,6 +132,7 @@ static int setcharset(unsigned char **p, unsigned char *charset)
+   bool something_found = FALSE;
+   unsigned char c;
+   for(;;) {
++    if (**p == '\0') break; /* Ensure we do not read beyond the string */
+     c = **p;
+     switch(state) {
+     case CURLFNM_SCHS_DEFAULT:

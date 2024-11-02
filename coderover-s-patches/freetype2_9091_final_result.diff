@@ -1,0 +1,47 @@
+diff --git a/src/base/ftgloadr.c b/src/base/ftgloadr.c
+index 475d5ccba..df1cd66b1 100644
+--- a/src/base/ftgloadr.c
++++ b/src/base/ftgloadr.c
+@@ -127,14 +127,13 @@
+   FT_BASE_DEF( void )
+   FT_GlyphLoader_Done( FT_GlyphLoader  loader )
+   {
+-    if ( loader )
+-    {
+-      FT_Memory  memory = loader->memory;
++    if ( loader == NULL ) return;  // Check if loader is NULL
+ 
++    FT_Memory  memory = loader->memory;
+ 
+-      FT_GlyphLoader_Reset( loader );
+-      FT_FREE( loader );
+-    }
++    FT_GlyphLoader_Reset( loader );
++    FT_FREE( loader );
++    loader = NULL;  // Nullify the pointer after freeing
+   }
+ 
+ 
+diff --git a/src/truetype/ttinterp.c b/src/truetype/ttinterp.c
+index da45c373a..7c00c5e89 100644
+--- a/src/truetype/ttinterp.c
++++ b/src/truetype/ttinterp.c
+@@ -241,8 +241,9 @@
+   FT_LOCAL_DEF( void )
+   TT_Done_Context( TT_ExecContext  exec )
+   {
+-    FT_Memory  memory = exec->memory;
++    if (exec == NULL) return;  // Check if exec is NULL
+ 
++    FT_Memory  memory = exec->memory;
+ 
+     /* points zone */
+     exec->maxPoints   = 0;
+@@ -265,6 +266,7 @@
+     exec->face = NULL;
+ 
+     FT_FREE( exec );
++    exec = NULL;  // Nullify the pointer after freeing
+   }
+ 
+ 

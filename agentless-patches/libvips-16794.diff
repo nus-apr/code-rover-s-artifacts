@@ -1,0 +1,41 @@
+diff --git a/libvips/libvips/colour/rad2float.c b/libvips/libvips/colour/rad2float.c
+index 2d9f8f7..d8fcb0b 100644
+--- a/libvips/libvips/colour/rad2float.c
++++ b/libvips/libvips/colour/rad2float.c
+@@ -161,20 +161,22 @@ G_DEFINE_TYPE( VipsRad2float, vips_rad2float, VIPS_TYPE_COLOUR_CODE );
+ static void
+ vips_rad2float_line( VipsColour *colour, VipsPel *out, VipsPel **in, int width )
+ {
+-	COLR *inp = (COLR *) in[0];
+-	COLOR *outbuf = (COLOR *) out;
+-
+-	colr_color(outbuf[0], inp[0]);
+-	while (--width > 0) {
+-		outbuf++; inp++;
+-		if (inp[0][RED] == inp[-1][RED] &&
+-			    inp[0][GRN] == inp[-1][GRN] &&
+-			    inp[0][BLU] == inp[-1][BLU] &&
+-			    inp[0][EXP] == inp[-1][EXP])
+-			copycolor(outbuf[0], outbuf[-1]);
+-		else
+-			colr_color(outbuf[0], inp[0]);
+-	}
++    COLR *inp = (COLR *) in[0];
++    COLOR *outbuf = (COLOR *) out;
++
++    if (width > 0) {
++        colr_color(outbuf[0], inp[0]);
++    }
++    while (--width > 0) {
++        outbuf++; inp++;
++        if (inp[0][RED] == inp[-1][RED] &&
++                inp[0][GRN] == inp[-1][GRN] &&
++                inp[0][BLU] == inp[-1][BLU] &&
++                inp[0][EXP] == inp[-1][EXP])
++            copycolor(outbuf[0], outbuf[-1]);
++        else
++            colr_color(outbuf[0], inp[0]);
++    }
+ }
+ 
+ static void

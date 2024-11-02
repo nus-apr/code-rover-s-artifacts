@@ -1,0 +1,37 @@
+diff --git a/leptonica/src/pix2.c b/leptonica/src/pix2.c
+index ea7279c..0b9666f 100644
+--- a/leptonica/src/pix2.c
++++ b/leptonica/src/pix2.c
+@@ -2632,20 +2632,26 @@ RGBA_QUAD  *cta;
+         if (comp == COLOR_RED) {
+             for (j = 0; j < w; j++) {
+                 index = GET_DATA_BYTE(linec, j);
+-                val = cta[index].red;
+-                SET_DATA_BYTE(lined, j, val);
++                if (index < cmap->n) {
++                    val = cta[index].red;
++                    SET_DATA_BYTE(lined, j, val);
++                }
+             }
+         } else if (comp == COLOR_GREEN) {
+             for (j = 0; j < w; j++) {
+                 index = GET_DATA_BYTE(linec, j);
+-                val = cta[index].green;
+-                SET_DATA_BYTE(lined, j, val);
++                if (index < cmap->n) {
++                    val = cta[index].green;
++                    SET_DATA_BYTE(lined, j, val);
++                }
+             }
+         } else if (comp == COLOR_BLUE) {
+             for (j = 0; j < w; j++) {
+                 index = GET_DATA_BYTE(linec, j);
+-                val = cta[index].blue;
+-                SET_DATA_BYTE(lined, j, val);
++                if (index < cmap->n) {
++                    val = cta[index].blue;
++                    SET_DATA_BYTE(lined, j, val);
++                }
+             }
+         }
+     }

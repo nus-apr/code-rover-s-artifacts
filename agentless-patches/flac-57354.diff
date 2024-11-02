@@ -1,0 +1,19 @@
+diff --git a/flac/src/libFLAC/stream_decoder.c b/flac/src/libFLAC/stream_decoder.c
+index 0cb64f0..2718a54 100644
+--- a/flac/src/libFLAC/stream_decoder.c
++++ b/flac/src/libFLAC/stream_decoder.c
+@@ -1245,11 +1245,12 @@ FLAC__bool allocate_output_(FLAC__StreamDecoder *decoder, uint32_t size, uint32_
+ 	for(i = 0; i < FLAC__MAX_CHANNELS; i++) {
+ 		if(0 != decoder->private_->output[i]) {
+ 			free(decoder->private_->output[i]-4);
+-			decoder->private_->output[i] = 0;
++			decoder->private_->output[i] = NULL;
+ 		}
+ 		if(0 != decoder->private_->residual_unaligned[i]) {
+ 			free(decoder->private_->residual_unaligned[i]);
+-			decoder->private_->residual_unaligned[i] = decoder->private_->residual[i] = 0;
++			decoder->private_->residual_unaligned[i] = NULL;
++			decoder->private_->residual[i] = NULL;
+ 		}
+ 	}
+ 

@@ -1,0 +1,4 @@
+fatal: Not a git repository (or any of the parent directories): .git
+Not a git repository
+To compare two paths outside a working tree:
+usage: git diff [--no-index] <path> <path>

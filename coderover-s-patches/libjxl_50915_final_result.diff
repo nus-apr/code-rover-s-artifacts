@@ -1,0 +1,30 @@
+diff --git a/tools/cmdline.cc b/tools/cmdline.cc
+index f777c946..cb4c1428 100644
+--- a/tools/cmdline.cc
++++ b/tools/cmdline.cc
+@@ -50,6 +50,10 @@ bool CommandLineParser::Parse(int argc, const char* argv[]) {
+   // if false, stop matching options and take only positional arguments
+   bool parse_options = true;
+   while (i < argc) {
++    if (argv[i] == nullptr || argv[i][0] == '\0') {
++      fprintf(stderr, "Invalid or empty argument at position %d\n", i);
++      return false;
++    }
+     if (!strcmp("-h", argv[i]) || !strcmp("--help", argv[i])) {
+       help_ = true;
+       i++;
+diff --git a/tools/djxl_main.cc b/tools/djxl_main.cc
+index b4b0a4b4..5f843585 100644
+--- a/tools/djxl_main.cc
++++ b/tools/djxl_main.cc
+@@ -157,6 +157,10 @@ struct DecompressArgs {
+       fprintf(stderr, "Missing INPUT filename.\n");
+       return false;
+     }
++    if (file_out == nullptr) {
++      fprintf(stderr, "Missing OUTPUT filename.\n");
++      return false;
++    }
+     return true;
+   }
+ 

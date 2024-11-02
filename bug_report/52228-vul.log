@@ -1,0 +1,29 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/fuzz_objdump_safe
+BFD: /tmp/libfuzzer.13 (.dwline): section flag STYP_COPY (0x10) ignored
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address (pc 0x0000004e250b bp 0x7ffd44170c70 sp 0x7ffd44170c40 T0)
+==13==The signal is caused by a READ memory access.
+==13==Hint: this fault was caused by a dereference of a high value address (see register values below).  Disassemble the provided pc to learn which register was used.
+SCARINESS: 20 (wild-addr-read)
+    #0 0x4e250b in reloc_at /src/binutils-gdb/binutils/./fuzz_objdump.h:3702:13
+    #1 0x55258d in read_debug_line_header /src/binutils-gdb/binutils/dwarf.c:4091:11
+    #2 0x545893 in display_debug_lines_raw /src/binutils-gdb/binutils/dwarf.c:4406:18
+    #3 0x5169b1 in display_debug_lines /src/binutils-gdb/binutils/dwarf.c:5563:17
+    #4 0x4ebcea in dump_dwarf_section /src/binutils-gdb/binutils/./fuzz_objdump.h:3839:6
+    #5 0x957313 in bfd_map_over_sections /src/binutils-gdb/bfd/section.c:1383:5
+    #6 0x4ea5f6 in dump_dwarf /src/binutils-gdb/binutils/./fuzz_objdump.h:3877:3
+    #7 0x4e7371 in dump_bfd /src/binutils-gdb/binutils/./fuzz_objdump.h:4979:5
+    #8 0x4e5bee in display_object_bfd /src/binutils-gdb/binutils/./fuzz_objdump.h
+    #9 0x4e5bee in display_any_bfd /src/binutils-gdb/binutils/./fuzz_objdump.h:5143:5
+    #10 0x4e59a4 in display_file /src/binutils-gdb/binutils/./fuzz_objdump.h:5164:3
+    #11 0x4e59a4 in LLVMFuzzerTestOneInput /src/binutils-gdb/binutils/fuzz_objdump.c:62:3
+    #12 0x4d873b in main (/out/fuzz_objdump_safe+0x4d873b)
+    #13 0x78ed5de28082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #14 0x41e71d in _start (/out/fuzz_objdump_safe+0x41e71d)
+
+DEDUP_TOKEN: reloc_at--read_debug_line_header--display_debug_lines_raw
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /src/binutils-gdb/binutils/./fuzz_objdump.h:3702:13 in reloc_at
+==13==ABORTING

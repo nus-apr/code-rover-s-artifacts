@@ -1,0 +1,13 @@
+diff --git a/pcre2/src/pcre2_fuzzsupport.c b/pcre2/src/pcre2_fuzzsupport.c
+index 0c6074b..30d69fe 100644
+--- a/pcre2/src/pcre2_fuzzsupport.c
++++ b/pcre2/src/pcre2_fuzzsupport.c
+@@ -295,7 +295,7 @@ Start the scan at the second character so there can be a lookbehind for a
+ backslash, and end it before the end so that the next character can be checked
+ for an opening brace. */
+ 
+-for (size_t i = 1; i < size - 2; i++)
++for (size_t i = 1; i < size - 1; i++)
+   {
+   size_t j;
+ 

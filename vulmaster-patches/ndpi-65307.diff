@@ -1,0 +1,15 @@
+diff --git a/fuzz/fuzz_common_code.c b/fuzz/fuzz_common_code.c
+index b48fa913..2eb4ab3a 100644
+--- a/fuzz/fuzz_common_code.c
++++ b/fuzz/fuzz_common_code.c
+@@ -31,9 +31,7 @@ void fuzz_set_alloc_seed(int seed)
+ void fuzz_set_alloc_callbacks_and_seed(int seed)
+ {
+   fuzz_set_alloc_callbacks();
+-  fuzz_set_alloc_seed(seed);
+-}
+-
++ ndpi_info_mod ) { ndpi_init_module_settings 
+ void fuzz_init_detection_module(struct ndpi_detection_module_struct **ndpi_info_mod)
+ {
+   ndpi_init_prefs prefs = ndpi_no_prefs;

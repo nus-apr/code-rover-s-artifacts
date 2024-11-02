@@ -1,0 +1,16 @@
+diff --git a/mupdf/thirdparty/lcms2/src/cmsio0.c b/mupdf/thirdparty/lcms2/src/cmsio0.c
+index 06851bc..9ff1603 100644
+--- a/mupdf/thirdparty/lcms2/src/cmsio0.c
++++ b/mupdf/thirdparty/lcms2/src/cmsio0.c
+@@ -1276,6 +1276,11 @@ cmsHPROFILE CMSEXPORT cmsOpenProfileFromMem(cmsContext ContextID, const void* Me
+     NewIcc ->IOhandler = cmsOpenIOhandlerFromMem(ContextID, (void*) MemPtr, dwSize, "r");
+     if (NewIcc ->IOhandler == NULL) goto Error;
+ 
++    if (NewIcc->IOhandler == NULL || NewIcc->IOhandler->stream == NULL || NewIcc->IOhandler->ReportedSize < sizeof(cmsICCHeader)) {
++        cmsSignalError(ContextID, cmsERROR_READ, "Invalid memory block for ICC profile header");
++        goto Error;
++    }
++
+     if (!_cmsReadHeader(ContextID, NewIcc)) goto Error;
+ 
+     return hEmpty;

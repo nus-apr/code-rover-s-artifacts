@@ -1,0 +1,16 @@
+diff --git a/ghostpdl/pdf/ghostpdf.c b/ghostpdl/pdf/ghostpdf.c
+index eb0323d..29bb1b0 100644
+--- a/ghostpdl/pdf/ghostpdf.c
++++ b/ghostpdl/pdf/ghostpdf.c
+@@ -1965,8 +1965,10 @@ int pdfi_free_context(pdf_context *ctx)
+ 
+     ctx->pgs = NULL;
+ 
+-    if (ctx->font_dir)
++    if (ctx->font_dir) {
+         gs_free_object(ctx->memory, ctx->font_dir, "pdfi_free_context");
++        ctx->font_dir = NULL; // Prevent double free
++    }
+ 
+     /* Currently this should never happen, but in future it might if we choose
+      * not to keep freeing and reallocating the array.

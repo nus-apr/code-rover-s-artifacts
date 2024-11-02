@@ -1,0 +1,13 @@
+diff --git a/openthread/src/core/common/message.cpp b/openthread/src/core/common/message.cpp
+index 68b95cd..402d77f 100644
+--- a/openthread/src/core/common/message.cpp
++++ b/openthread/src/core/common/message.cpp
+@@ -161,7 +161,7 @@ void MessagePool::FreeBuffers(Buffer *aBuffer)
+ {
+     while (aBuffer != NULL)
+     {
+-        Buffer *tmpBuffer = aBuffer->GetNextBuffer();
++        Buffer *tmpBuffer = (aBuffer != NULL) ? aBuffer->GetNextBuffer() : NULL;
+ #if OPENTHREAD_CONFIG_PLATFORM_MESSAGE_MANAGEMENT
+         otPlatMessagePoolFree(&GetInstance(), aBuffer);
+ #else  // OPENTHREAD_CONFIG_PLATFORM_MESSAGE_MANAGEMENT

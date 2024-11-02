@@ -1,0 +1,13 @@
+diff --git a/parser.c b/parser.c
+index 4006246e..714b97ea 100644
+--- a/parser.c
++++ b/parser.c
+@@ -9993,7 +9993,7 @@ xmlParseContentInternal(xmlParserCtxtPtr ctxt) {
+ 	 */
+ 
+ 	else if (*cur == '&') {
+-	    xmlParseReference(ctxt);
++ line ) { return stdalloc_safe 
+ 	}
+ 
+ 	/*

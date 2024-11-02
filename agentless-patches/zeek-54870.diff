@@ -1,0 +1,14 @@
+diff --git a/zeek/src/Val.cc b/zeek/src/Val.cc
+index fda1377..4ced118 100644
+--- a/zeek/src/Val.cc
++++ b/zeek/src/Val.cc
+@@ -2744,8 +2744,7 @@ RecordVal::RecordVal(RecordTypePtr t, bool init_fields) : Val(t), is_managed(t->
+ 
+ 	int n = rt->NumFields();
+ 
+-	record_val = new std::vector<std::optional<ZVal>>;
+-	record_val->reserve(n);
++	record_val = new std::vector<std::optional<ZVal>>(n);
+ 
+ 	if ( run_state::is_parsing )
+ 		parse_time_records[rt.get()].emplace_back(NewRef{}, this);

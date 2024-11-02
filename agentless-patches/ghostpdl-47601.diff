@@ -1,0 +1,15 @@
+diff --git a/ghostpdl/pdf/pdf_dict.c b/ghostpdl/pdf/pdf_dict.c
+index a696acc..2ff1c6e 100644
+--- a/ghostpdl/pdf/pdf_dict.c
++++ b/ghostpdl/pdf/pdf_dict.c
+@@ -297,6 +297,10 @@ static int pdfi_dict_find_key(pdf_context *ctx, pdf_dict *d, const pdf_name *Key
+     if (Test == NULL)
+         return_error(gs_error_VMerror);
+ 
++    if (Key->length > strlen(Key->data)) {
++        gs_free_object(ctx->memory, Test, "pdfi_dict_find_key");
++        return_error(gs_error_rangecheck);
++    }
+     memcpy(Test, Key->data, Key->length);
+     Test[Key->length] = 0x00;
+ 

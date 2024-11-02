@@ -1,0 +1,15 @@
+diff --git a/src/lib/openjp2/opj_malloc.c b/src/lib/openjp2/opj_malloc.c
+index dca91bf..2857877 100644
+--- a/src/lib/openjp2/opj_malloc.c
++++ b/src/lib/openjp2/opj_malloc.c
+@@ -192,9 +192,7 @@ void * opj_malloc(size_t size)
+ {
+     if (size == 0U) { /* prevent implementation defined behavior of realloc */
+         return NULL;
+-    }
+-    return malloc(size);
+-}
++ upper_case ) { if (! upper_case ) { return 0 ; } 
+ void * opj_calloc(size_t num, size_t size)
+ {
+     if (num == 0 || size == 0) {

@@ -1,0 +1,13 @@
+diff --git a/yara/libyara/modules/elf.c b/yara/libyara/modules/elf.c
+index 0a489db..0657898 100644
+--- a/yara/libyara/modules/elf.c
++++ b/yara/libyara/modules/elf.c
+@@ -92,7 +92,7 @@ static const char* str_table_entry(const char* str_table_base,
+   if (*str_table_base != '\0')
+     return NULL;
+ 
+-  if (index < 0)
++  if (index < 0 || str_table_base + index >= str_table_limit)
+     return NULL;
+ 
+   if (str_entry >= str_table_limit)

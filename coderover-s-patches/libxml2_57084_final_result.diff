@@ -1,0 +1,39 @@
+diff --git a/parser.c b/parser.c
+index 4006246e..fbb95c44 100644
+--- a/parser.c
++++ b/parser.c
+@@ -9947,8 +9947,13 @@ xmlParseContentInternal(xmlParserCtxtPtr ctxt) {
+ 
+     GROW;
+     while ((RAW != 0) &&
+-	   (ctxt->instate != XML_PARSER_EOF)) {
++	   (ctxt->instate != XML_PARSER_EOF) &&
++       (ctxt->input->cur < ctxt->input->end)) {
+ 	const xmlChar *cur = ctxt->input->cur;
++        if (cur + 1 >= ctxt->input->end) {
++            xmlFatalErr(ctxt, XML_ERR_INTERNAL_ERROR, "Buffer overflow risk");
++            break;
++        }
+ 
+ 	/*
+ 	 * First case : a Processing Instruction.
+@@ -12861,10 +12866,15 @@ xmlParseExternalEntityPrivate(xmlDocPtr doc, xmlParserCtxtPtr oldctxt,
+      */
+     GROW;
+     if ((ctxt->input->end - ctxt->input->cur) >= 4) {
+-	start[0] = RAW;
+-	start[1] = NXT(1);
+-	start[2] = NXT(2);
+-	start[3] = NXT(3);
++        if (ctxt->input->cur + 3 < ctxt->input->end) {
++	    start[0] = RAW;
++	    start[1] = NXT(1);
++	    start[2] = NXT(2);
++	    start[3] = NXT(3);
++        } else {
++            xmlFatalErr(ctxt, XML_ERR_INTERNAL_ERROR, "Buffer overflow risk");
++            return(XML_ERR_INTERNAL_ERROR);
++        }
+ 	enc = xmlDetectCharEncoding(start, 4);
+ 	if (enc != XML_CHAR_ENCODING_NONE) {
+ 	    xmlSwitchEncoding(ctxt, enc);

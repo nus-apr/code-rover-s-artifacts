@@ -1,0 +1,67 @@
+diff --git a/src/pj_init.c b/src/pj_init.c
+index 951f1cfb..61d2a40d 100644
+--- a/src/pj_init.c
++++ b/src/pj_init.c
+@@ -712,9 +712,14 @@ pj_init_ctx(projCtx ctx, int argc, char **argv) {
+     geod_init(PIN->geod, PIN->a,  (1 - sqrt (1 - PIN->es)));
+ 
+     /* projection specific initialization */
+-    PIN = proj(PIN);
+-    if ((0==PIN) || ctx->last_errno)
+-        return 0;
++    if (PIN) {
++        PIN = proj(PIN);
++        if ((0==PIN) || ctx->last_errno) {
++            pj_default_destructor(PIN, ctx->last_errno);
++            PIN = NULL;
++            return 0;
++        }
++    }
+     return PIN;
+ }
+ 
+diff --git a/src/pj_malloc.c b/src/pj_malloc.c
+index 75d05378..fb4396a4 100644
+--- a/src/pj_malloc.c
++++ b/src/pj_malloc.c
+@@ -145,7 +145,9 @@ void *pj_dealloc_params (projCtx ctx, paralist *start, int errlev) {
+     for (t = start; t; t = n) {
+         n = t->next;
+         pj_dealloc(t);
++        t = NULL;
+     }
++    start = NULL;
+     pj_ctx_set_errno (ctx, errlev);
+     return (void *) 0;
+ }
+@@ -160,6 +162,30 @@ void *pj_default_destructor (PJ *P, int errlev) {   /* Destructor */
+ ******************************************************************************/
+     if (0==P)
+         return 0;
++    if (P->gridlist) {
++        pj_dealloc( P->gridlist );
++        P->gridlist = NULL;
++    }
++    if (P->vgridlist_geoid) {
++        pj_dealloc( P->vgridlist_geoid );
++        P->vgridlist_geoid = NULL;
++    }
++    if (P->catalog_name) {
++        pj_dealloc( P->catalog_name );
++        P->catalog_name = NULL;
++    }
++    if (P->geod) {
++        pj_dealloc( P->geod );
++        P->geod = NULL;
++    }
++    pj_dealloc_params(pj_get_ctx(P), P->params, errlev);
++    P->params = NULL;
++    pj_dealloc (P->opaque);
++    P->opaque = NULL;
++    if (0!=errlev)
++        pj_ctx_set_errno (pj_get_ctx(P), errlev);
++    P = NULL;
++    return pj_dealloc(P);
+     
+     /* free grid lists */
+     pj_dealloc( P->gridlist );

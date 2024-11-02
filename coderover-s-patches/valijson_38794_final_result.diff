@@ -1,0 +1,38 @@
+diff --git a/include/valijson/utils/file_utils.hpp b/include/valijson/utils/file_utils.hpp
+index 92757cf..fb10307 100644
+--- a/include/valijson/utils/file_utils.hpp
++++ b/include/valijson/utils/file_utils.hpp
+@@ -19,6 +19,7 @@ inline bool loadFile(const std::string &path, std::string &dest)
+     // Open file for reading
+     std::ifstream file(path.c_str());
+     if (!file.is_open()) {
++        dest.clear(); // Ensure dest is cleared on failure
+         return false;
+     }
+ 
+@@ -26,10 +27,11 @@ inline bool loadFile(const std::string &path, std::string &dest)
+     file.seekg(0, std::ios::end);
+     const std::streamoff offset = file.tellg();
+     if (offset < 0 || offset > std::numeric_limits<unsigned int>::max()) {
++        dest.clear(); // Ensure dest is cleared on failure
+         return false;
+     }
+ 
+-    dest.clear();
++    dest.clear(); // Explicitly clear dest before use
+     dest.reserve(static_cast<unsigned int>(offset));
+ 
+     // Assign file contents to destination string
+@@ -37,6 +39,12 @@ inline bool loadFile(const std::string &path, std::string &dest)
+     dest.assign(std::istreambuf_iterator<char>(file),
+                 std::istreambuf_iterator<char>());
+ 
++    // Final check to ensure reading was successful
++    if (file.fail()) {
++        dest.clear(); // Clear dest if reading failed
++        return false;
++    }
++
+     return true;
+ }
+ 

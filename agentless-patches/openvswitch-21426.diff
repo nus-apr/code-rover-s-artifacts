@@ -1,0 +1,15 @@
+diff --git a/openvswitch/lib/odp-util.c b/openvswitch/lib/odp-util.c
+index 5760e32..6b626ab 100644
+--- a/openvswitch/lib/odp-util.c
++++ b/openvswitch/lib/odp-util.c
+@@ -5173,8 +5173,8 @@ scan_gtpu_metadata(const char *s,
+                    struct gtpu_metadata *mask)
+ {
+     const char *s_base = s;
+-    uint8_t flags, flags_ma;
+-    uint8_t msgtype, msgtype_ma;
++    uint8_t flags = 0, flags_ma = 0;
++    uint8_t msgtype = 0, msgtype_ma = 0;
+     int len;
+ 
+     if (!strncmp(s, "flags=", 6)) {

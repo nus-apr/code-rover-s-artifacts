@@ -1,0 +1,32 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index b30e9f05..912610e8 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -1360,8 +1360,12 @@ static int blosc_d(
+     /* Uncompress */
+     if (cbytes == 0) {
+       // A run of 0's
+-      memset(_dest, 0, (unsigned int)neblock);
+-      nbytes = neblock;
++      if (neblock > 0 && neblock <= srcsize) {
++        memset(_dest, 0, (unsigned int)neblock);
++        nbytes = neblock;
++      } else {
++        return BLOSC2_ERROR_DATA;  // Return an error if neblock is invalid
++      }
+     }
+     else if (cbytes < 0) {
+       // A negative number means some encoding depending on the token that comes next
+@@ -2610,7 +2614,11 @@ int blosc2_getitem_ctx(blosc2_context* context, const void* src, int32_t srcsize
+   }
+ 
+   /* Call the actual getitem function */
+-  result = _blosc_getitem(context, &header, src, srcsize, start, nitems, dest, destsize);
++  if (start >= 0 && nitems > 0 && (start + nitems) * header.typesize <= destsize) {
++    result = _blosc_getitem(context, &header, src, srcsize, start, nitems, dest, destsize);
++  } else {
++    return BLOSC2_ERROR_INVALID_PARAM;  // Return an error if parameters are invalid
++  }
+ 
+   return result;
+ }

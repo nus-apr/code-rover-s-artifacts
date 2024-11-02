@@ -1,0 +1,18 @@
+diff --git a/libvips/libvips/foreign/magick.c b/libvips/libvips/foreign/magick.c
+index ca6172c..a1146b6 100644
+--- a/libvips/libvips/foreign/magick.c
++++ b/libvips/libvips/foreign/magick.c
+@@ -241,8 +241,11 @@ magick_ismagick( const unsigned char *bytes, size_t length )
+ 
+ 	/* Try with our custom sniffers first.
+ 	 */
+-	return( magick_sniff( bytes, length ) ||
+-		GetImageMagick( bytes, length, format ) );
++	gboolean result = magick_sniff( bytes, length ) ||
++		GetImageMagick( bytes, length, format );
++
++	format[MagickPathExtent - 1] = '\0'; // Ensure null-termination
++	return result;
+ }
+ 
+ #endif /*HAVE_MAGICK7*/

@@ -1,0 +1,42 @@
+diff --git a/pdf/pdf_font1C.c b/pdf/pdf_font1C.c
+index 495bf8cfa..e152c43bd 100644
+--- a/pdf/pdf_font1C.c
++++ b/pdf/pdf_font1C.c
+@@ -1923,15 +1923,19 @@ pdfi_read_cff(pdf_context *ctx, pdfi_gs_cff_font_priv *ptpriv)
+                 }
+             }
+             else {
+-                switch ((int)font->cffdata[offsets.fdselect_off]) {
+-                    case 0:
+-                        fdselect_proc = format0_fdselect_proc;
+-                        break;
+-                    case 3:
+-                        fdselect_proc = format3_fdselect_proc;
+-                        break;
+-                    default:
+-                        return_error(gs_error_rangecheck);
++                if (offsets.fdselect_off < 0 || font->cffdata + offsets.fdselect_off >= font->cffend) {
++                    return_error(gs_error_rangecheck);
++                } else {
++                    switch ((int)font->cffdata[offsets.fdselect_off]) {
++                        case 0:
++                            fdselect_proc = format0_fdselect_proc;
++                            break;
++                        case 3:
++                            fdselect_proc = format3_fdselect_proc;
++                            break;
++                        default:
++                            return_error(gs_error_rangecheck);
++                    }
+                 }
+ 
+                 if (font->ncharstrings > 0) {
+@@ -2265,7 +2269,7 @@ pdfi_read_cff_font(pdf_context *ctx, pdf_dict *font_dict, pdf_dict *stream_dict,
+     /* Vestigial magic number check - we can't check the third byte, as we have out of
+        spec fonts that have a head size > 4
+      */
+-    if (fbuf[0] == 1 && fbuf[1] == 0 && code >= 0) {
++    if (fbuflen > 0 && fbuf[0] == 1 && fbuf[1] == 0 && code >= 0) {
+         pdfi_gs_cff_font_priv cffpriv;
+ 
+         pdfi_init_cff_font_priv(ctx, &cffpriv, fbuf, fbuflen, false);

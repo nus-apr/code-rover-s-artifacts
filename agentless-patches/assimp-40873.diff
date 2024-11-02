@@ -1,0 +1,12 @@
+diff --git a/assimp/code/AssetLib/MDL/MDLMaterialLoader.cpp b/assimp/code/AssetLib/MDL/MDLMaterialLoader.cpp
+index 1d11173..5dec112 100644
+--- a/assimp/code/AssetLib/MDL/MDLMaterialLoader.cpp
++++ b/assimp/code/AssetLib/MDL/MDLMaterialLoader.cpp
+@@ -482,6 +482,7 @@ void MDLImporter::ParseSkinLump_3DGS_MDL7(
+         if (1 != iHeight) {
+             ASSIMP_LOG_WARN("Found a reference to an external texture, "
+                             "but texture height is not equal to 1, which is not supported by MED");
++            return; // Exit the function if the texture height is not supported
+         }
+ 
+         aiString szFile;

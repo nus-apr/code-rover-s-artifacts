@@ -1,0 +1,24 @@
+diff --git a/src/utils/SkDashPath.cpp b/src/utils/SkDashPath.cpp
+index fc73c9f5a7..05b4fd4e72 100644
+--- a/src/utils/SkDashPath.cpp
++++ b/src/utils/SkDashPath.cpp
+@@ -419,6 +419,10 @@ bool SkDashPath::InternalFilter(SkPath* dst, const SkPath& src, SkStrokeRec* rec
+     bool specialLine = (StrokeRecApplication::kAllow == strokeRecApplication) &&
+                        lineRec.init(*srcPtr, dst, rec, count >> 1, intervalLength);
+ 
++    if (srcPtr->isEmpty()) {
++        dst->reset();
++        return false;
++    }
+     SkPathMeasure   meas(*srcPtr, false, rec->getResScale());
+ 
+     do {
+@@ -480,7 +484,7 @@ bool SkDashPath::InternalFilter(SkPath* dst, const SkPath& src, SkStrokeRec* rec
+         }
+ 
+         // extend if we ended on a segment and we need to join up with the (skipped) initial segment
+-        if (meas.isClosed() && is_even(initialDashIndex) &&
++        if (meas.getLength() > 0 && meas.isClosed() && is_even(initialDashIndex) &&
+             initialDashLength >= 0) {
+             meas.getSegment(0, initialDashLength, dst, !addedSegment);
+             ++segCount;

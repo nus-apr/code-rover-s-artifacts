@@ -1,0 +1,19 @@
+diff --git a/libavc/decoder/svc/isvcd_intra_resamp.c b/libavc/decoder/svc/isvcd_intra_resamp.c
+index 34e3779..385c410 100644
+--- a/libavc/decoder/svc/isvcd_intra_resamp.c
++++ b/libavc/decoder/svc/isvcd_intra_resamp.c
+@@ -4795,12 +4795,12 @@ WORD32 isvcd_populate_res_prms(void *pv_svc_dec)
+         }
+ 
+         /* Set the left and right border pixels of each row to 0 */
+-        ps_tmp_prms = ps_ref_mb_prms - 1;
++        ps_tmp_prms = ps_ref_mb_prms;
+ 
+         for(i4_i = 0; i4_i < i4_ht_in_mbs; i4_i++)
+         {
+             ps_tmp_prms->i1_mb_mode = (WORD8) 0xFF;
+-            ps_tmp_prms_2 = ps_tmp_prms + (i4_wd_in_mbs + 1);
++            ps_tmp_prms_2 = ps_tmp_prms + i4_wd_in_mbs;
+             ps_tmp_prms_2->i1_mb_mode = (WORD8) 0xFF;
+             ps_tmp_prms += i4_stride;
+         }

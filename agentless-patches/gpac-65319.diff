@@ -1,0 +1,13 @@
+diff --git a/gpac/src/media_tools/av_parsers.c b/gpac/src/media_tools/av_parsers.c
+index ff45a1b..ce89d50 100644
+--- a/gpac/src/media_tools/av_parsers.c
++++ b/gpac/src/media_tools/av_parsers.c
+@@ -7082,7 +7082,7 @@ static Bool hevc_parse_short_term_ref_pic_set(GF_BitStream *bs, HEVC_SPS *sps, u
+ 			}
+ 			if ((ref_idc == 1) || (ref_idc == 2)) {
+ 				s32 deltaPOC = deltaRPS;
+-				if (i < nb_ref_pics)
++				if (i < nb_ref_pics && i < 16)
+ 					deltaPOC += ref_ps->delta_poc[i];
+ 
+ 				rps->delta_poc[k] = deltaPOC;

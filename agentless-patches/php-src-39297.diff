@@ -1,0 +1,15 @@
+diff --git a/php-src/Zend/zend_variables.c b/php-src/Zend/zend_variables.c
+index b62e046..ae1db39 100644
+--- a/php-src/Zend/zend_variables.c
++++ b/php-src/Zend/zend_variables.c
+@@ -62,7 +62,9 @@ static void ZEND_FASTCALL zend_string_destroy(zend_string *str)
+ {
+ 	CHECK_ZVAL_STRING(str);
+ 	ZEND_ASSERT(!ZSTR_IS_INTERNED(str));
+-	ZEND_ASSERT(GC_REFCOUNT(str) == 0);
++	if (GC_REFCOUNT(str) != 0) {
++		return;
++	}
+ 	ZEND_ASSERT(!(GC_FLAGS(str) & IS_STR_PERSISTENT));
+ 	efree(str);
+ }

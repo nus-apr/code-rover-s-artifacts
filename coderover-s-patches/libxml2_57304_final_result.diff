@@ -1,0 +1,44 @@
+diff --git a/HTMLparser.c b/HTMLparser.c
+index e9084950..940de251 100644
+--- a/HTMLparser.c
++++ b/HTMLparser.c
+@@ -3407,7 +3407,7 @@ htmlParsePI(htmlParserCtxtPtr ctxt) {
+ 		htmlParseErr(ctxt, XML_ERR_SPACE_REQUIRED,
+ 			  "ParsePI: PI %s space expected\n", target, NULL);
+ 	    }
+-            SKIP_BLANKS;
++	    SKIP_BLANKS;
+ 	    cur = CUR_CHAR(l);
+ 	    while ((cur != 0) && (cur != '>')) {
+ 		if (len + 5 >= size) {
+@@ -3429,7 +3429,15 @@ htmlParsePI(htmlParserCtxtPtr ctxt) {
+ 		    count = 0;
+ 		}
+                 if (IS_CHAR(cur)) {
+-		    COPY_BUF(l,buf,len,cur);
++		    if (len < size - 1) {  // Ensure there is space in the buffer
++		        COPY_BUF(l,buf,len,cur);
++		    } else {
++		        htmlParseErr(ctxt, XML_ERR_PI_NOT_FINISHED,
++		                     "PI %s too long", target, NULL);
++		        xmlFree(buf);
++		        ctxt->instate = state;
++		        return;
++		    }
+                 } else {
+                     htmlParseErrInt(ctxt, XML_ERR_INVALID_CHAR,
+                                     "Invalid char in processing instruction "
+@@ -3450,6 +3458,13 @@ htmlParsePI(htmlParserCtxtPtr ctxt) {
+ 		    cur = CUR_CHAR(l);
+ 		}
+ 	    }
++	    buf[len] = 0;  // Null-terminate the buffer
++	    if (cur == '>') {
++	        SKIP(1);
++	    } else {
++	        htmlParseErr(ctxt, XML_ERR_PI_NOT_FINISHED,
++	                     "ParsePI: PI %s never end ...\n", target, NULL);
++	    }
+ 	    buf[len] = 0;
+ 	    if (cur != '>') {
+ 		htmlParseErr(ctxt, XML_ERR_PI_NOT_FINISHED,

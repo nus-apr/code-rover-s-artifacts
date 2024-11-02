@@ -1,0 +1,12 @@
+diff --git a/mruby/mrbgems/mruby-bigint/core/bigint.c b/mruby/mrbgems/mruby-bigint/core/bigint.c
+index 5b95ad2..1bf5d40 100644
+--- a/mruby/mrbgems/mruby-bigint/core/bigint.c
++++ b/mruby/mrbgems/mruby-bigint/core/bigint.c
+@@ -184,6 +184,7 @@ usub(mrb_state *mrb, mpz_t *z, mpz_t *y, mpz_t *x)
+ static int
+ ucmp(mpz_t *y, mpz_t *x)
+ {
++  if (x->sz == 0 || y->sz == 0) return 0; // Handle zero size case
+   if (y->sz < x->sz) return -1;
+   if (y->sz > x->sz) return 1;
+   for (size_t i=x->sz-1;;i--) {

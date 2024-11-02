@@ -1,0 +1,15 @@
+diff --git a/Userland/Libraries/LibAudio/WavLoader.cpp b/Userland/Libraries/LibAudio/WavLoader.cpp
+index 3f25ab2ed1..4925e06a28 100644
+--- a/Userland/Libraries/LibAudio/WavLoader.cpp
++++ b/Userland/Libraries/LibAudio/WavLoader.cpp
+@@ -300,7 +300,9 @@ MaybeLoaderError WavLoaderPlugin::load_wav_info_block(Vector<RIFF::OwnedChunk> i
+     for (auto const& chunk : info_chunks) {
+         auto metadata_name = chunk.id().as_ascii_string();
+         // Chunk contents are zero-terminated strings "ZSTR", so we just drop the null terminator.
+-        StringView metadata_text { chunk.data().trim(chunk.size() - 1) };
++    auto trimmed_data = chunk.data().trim(chunk.size() - 1);
++    auto metadata_buffer = TRY(ByteBuffer::copy(trimmed_data));
++    StringView metadata_text { metadata_buffer.bytes() };
+         // Note that we assume chunks to be unique, since that seems to almost always be the case.
+         // Worst case we just drop some metadata.
+         if (metadata_name == "IART"sv) {

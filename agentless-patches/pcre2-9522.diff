@@ -1,0 +1,18 @@
+diff --git a/pcre2/src/pcre2_auto_possess.c b/pcre2/src/pcre2_auto_possess.c
+index 254a074..ddd9948 100644
+--- a/pcre2/src/pcre2_auto_possess.c
++++ b/pcre2/src/pcre2_auto_possess.c
+@@ -386,7 +386,12 @@ switch(c)
+   case OP_NOT:
+   GETCHARINCTEST(chr, code);
+   list[2] = chr;
+-  list[3] = NOTACHAR;
++  if (sizeof(list) / sizeof(list[0]) > 3) {
++    list[3] = NOTACHAR;
++  } else {
++    // Handle error: insufficient space in list
++    return NULL; // or appropriate error handling
++  }
+   return code;
+ 
+   case OP_CHARI:

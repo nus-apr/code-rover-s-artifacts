@@ -1,0 +1,52 @@
+diff --git a/code/AssetLib/Obj/ObjFileMtlImporter.cpp b/code/AssetLib/Obj/ObjFileMtlImporter.cpp
+index 6464a55e0..cbe464b61 100644
+--- a/code/AssetLib/Obj/ObjFileMtlImporter.cpp
++++ b/code/AssetLib/Obj/ObjFileMtlImporter.cpp
+@@ -225,8 +225,18 @@ void ObjFileMtlImporter::getIlluminationModel(int &illum_model) {
+ // -------------------------------------------------------------------
+ //  Loads a single float value.
+ void ObjFileMtlImporter::getFloatValue(ai_real &value) {
+-    m_DataIt = CopyNextWord<DataArrayIt>(m_DataIt, m_DataItEnd, &m_buffer[0], BUFFERSIZE);
+-    value = (ai_real)fast_atof(&m_buffer[0]);
++    if (m_DataIt != m_DataItEnd) {
++        m_DataIt = CopyNextWord<DataArrayIt>(m_DataIt, m_DataItEnd, &m_buffer[0], BUFFERSIZE);
++        if (m_DataIt != m_DataItEnd && m_buffer[0] != '\0') {
++            value = (ai_real)fast_atof(&m_buffer[0]);
++        } else {
++            // Handle error: unable to read a valid float value
++            value = 0.0f; // or some default value
++        }
++    } else {
++        // Handle error: iterator is at the end
++        value = 0.0f; // or some default value
++    }
+ }
+ 
+ // -------------------------------------------------------------------
+diff --git a/code/AssetLib/Obj/ObjTools.h b/code/AssetLib/Obj/ObjTools.h
+index 16bcee5c4..a92dc643e 100644
+--- a/code/AssetLib/Obj/ObjTools.h
++++ b/code/AssetLib/Obj/ObjTools.h
+@@ -207,13 +207,18 @@ template <class char_t>
+ inline char_t CopyNextWord(char_t it, char_t end, char *pBuffer, size_t length) {
+     size_t index = 0;
+     it = getNextWord<char_t>(it, end);
+-    while (!IsSpaceOrNewLine(*it) && !isEndOfBuffer(it, end)) {
+-        pBuffer[index] = *it;
+-        index++;
+-        if (index == length - 1)
++    while (it != end && !IsSpaceOrNewLine(*it) && !isEndOfBuffer(it, end)) {
++        if (index < length - 1) {
++            pBuffer[index] = *it;
++            index++;
++        } else {
++            // Buffer is full, stop copying
+             break;
++        }
+         ++it;
+     }
++    pBuffer[index] = '\0'; // Ensure null-termination
++    return it;
+     pBuffer[index] = '\0';
+     return it;
+ }

@@ -1,0 +1,175 @@
+diff --git a/src/lib/OpenEXRCore/unpack.c b/src/lib/OpenEXRCore/unpack.c
+index 606d7c3e..d5f551c6 100644
+--- a/src/lib/OpenEXRCore/unpack.c
++++ b/src/lib/OpenEXRCore/unpack.c
+@@ -1010,33 +1010,42 @@ unpack_32bit (exr_decode_pipeline_t* decode)
+             {                                                                  \
+                 case EXR_PIXEL_HALF: {                                         \
+                     const uint16_t* src = (const uint16_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint16_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        *((uint16_t*) cdata) = unaligned_load16 (src);         \
+-                        ++src;                                                 \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            *((uint16_t*) cdata) = unaligned_load16 (src);     \
++                            ++src;                                             \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+                 case EXR_PIXEL_FLOAT: {                                        \
+                     const uint16_t* src = (const uint16_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint16_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        uint16_t cval = unaligned_load16 (src);                \
+-                        ++src;                                                 \
+-                        *((float*) cdata) = half_to_float (cval);              \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            uint16_t cval = unaligned_load16 (src);            \
++                            ++src;                                             \
++                            *((float*) cdata) = half_to_float (cval);          \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+                 case EXR_PIXEL_UINT: {                                         \
+                     const uint16_t* src = (const uint16_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint16_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        uint16_t cval = unaligned_load16 (src);                \
+-                        ++src;                                                 \
+-                        *((uint32_t*) cdata) = half_to_uint (cval);            \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            uint16_t cval = unaligned_load16 (src);            \
++                            ++src;                                             \
++                            *((uint32_t*) cdata) = half_to_uint (cval);        \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+@@ -1048,33 +1057,42 @@ unpack_32bit (exr_decode_pipeline_t* decode)
+             {                                                                  \
+                 case EXR_PIXEL_HALF: {                                         \
+                     const uint32_t* src = (const uint32_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint32_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        uint32_t fint = unaligned_load32 (src);                \
+-                        ++src;                                                 \
+-                        *((uint16_t*) cdata) = float_to_half_int (fint);       \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            uint32_t fint = unaligned_load32 (src);            \
++                            ++src;                                             \
++                            *((uint16_t*) cdata) = float_to_half_int (fint);   \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+                 case EXR_PIXEL_FLOAT: {                                        \
+                     const uint32_t* src = (const uint32_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint32_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        *((uint32_t*) cdata) = unaligned_load32 (src);         \
+-                        ++src;                                                 \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            *((uint32_t*) cdata) = unaligned_load32 (src);     \
++                            ++src;                                             \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+                 case EXR_PIXEL_UINT: {                                         \
+                     const uint32_t* src = (const uint32_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint32_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        uint32_t fint = unaligned_load32 (src);                \
+-                        ++src;                                                 \
+-                        *((uint32_t*) cdata) = float_to_uint_int (fint);       \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            uint32_t fint = unaligned_load32 (src);            \
++                            ++src;                                             \
++                            *((uint32_t*) cdata) = float_to_uint_int (fint);   \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+@@ -1086,33 +1104,42 @@ unpack_32bit (exr_decode_pipeline_t* decode)
+             {                                                                  \
+                 case EXR_PIXEL_HALF: {                                         \
+                     const uint32_t* src = (const uint32_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint32_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        uint32_t fint = unaligned_load32 (src);                \
+-                        ++src;                                                 \
+-                        *((uint16_t*) cdata) = uint_to_half (fint);            \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            uint32_t fint = unaligned_load32 (src);            \
++                            ++src;                                             \
++                            *((uint16_t*) cdata) = uint_to_half (fint);        \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+                 case EXR_PIXEL_FLOAT: {                                        \
+                     const uint32_t* src = (const uint32_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint32_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        uint32_t fint = unaligned_load32 (src);                \
+-                        ++src;                                                 \
+-                        *((float*) cdata) = uint_to_float (fint);              \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            uint32_t fint = unaligned_load32 (src);            \
++                            ++src;                                             \
++                            *((float*) cdata) = uint_to_float (fint);          \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \
+                 case EXR_PIXEL_UINT: {                                         \
+                     const uint32_t* src = (const uint32_t*) srcbuffer;         \
+-                    for (int s = 0; s < samps; ++s)                            \
++                    if ((srcbuffer + samps * sizeof(uint32_t)) <= ((uint8_t*)decode->unpacked_buffer + decode->unpacked_alloc_size)) \
+                     {                                                          \
+-                        *((uint32_t*) cdata) = unaligned_load32 (src);         \
+-                        ++src;                                                 \
+-                        cdata += ubpc;                                         \
++                        for (int s = 0; s < samps; ++s)                        \
++                        {                                                      \
++                            *((uint32_t*) cdata) = unaligned_load32 (src);     \
++                            ++src;                                             \
++                            cdata += ubpc;                                     \
++                        }                                                      \
+                     }                                                          \
+                     break;                                                     \
+                 }                                                              \

@@ -1,0 +1,13 @@
+diff --git a/sapi/fuzzer/fuzzer-execute.c b/sapi/fuzzer/fuzzer-execute.c
+index f9faf90dea..d208d7e498 100644
+--- a/sapi/fuzzer/fuzzer-execute.c
++++ b/sapi/fuzzer/fuzzer-execute.c
+@@ -36,7 +36,7 @@ void fuzzer_execute_ex(zend_execute_data *execute_data) {
+ 			zend_bailout();
+ 		}
+ 
+-		if ((ret = ((opcode_handler_t) EX(opline)->handler)(execute_data)) != 0) {
++, sizeof ( DTOutRegister 
+ 			if (ret > 0) {
+ 				execute_data = EG(current_execute_data);
+ 			} else {

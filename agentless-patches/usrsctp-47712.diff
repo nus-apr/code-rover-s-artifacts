@@ -1,0 +1,12 @@
+diff --git a/usrsctp/usrsctplib/netinet/sctp_output.c b/usrsctp/usrsctplib/netinet/sctp_output.c
+index 916c2d6..7a065a8 100644
+--- a/usrsctp/usrsctplib/netinet/sctp_output.c
++++ b/usrsctp/usrsctplib/netinet/sctp_output.c
+@@ -13750,6 +13750,7 @@ sctp_lower_sosend(struct socket *so,
+ 	free_cnt_applied = true;
+ 	if (srcv == NULL) {
+ 		/* Use a local copy to have a consistent view. */
++		memset(&sndrcvninfo, 0, sizeof(sndrcvninfo));
+ 		sndrcvninfo = asoc->def_send;
+ 		srcv = (struct sctp_sndrcvinfo *)&sndrcvninfo;
+ 		sinfo_flags = srcv->sinfo_flags;

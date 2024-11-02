@@ -1,0 +1,30 @@
+diff --git a/src/core/SkContourMeasure.cpp b/src/core/SkContourMeasure.cpp
+index 79b0ca887c..c7a588fff1 100644
+--- a/src/core/SkContourMeasure.cpp
++++ b/src/core/SkContourMeasure.cpp
+@@ -584,8 +584,8 @@ bool SkContourMeasure::getSegment(SkScalar startD, SkScalar stopD, SkPath* dst,
+         return false;
+     }
+ 
+-    SkPoint  p;
+-    SkScalar startT, stopT;
++    SkPoint  p = {0, 0}; // Initialize SkPoint with default values
++    SkScalar startT = 0, stopT = 0; // Initialize SkScalar with default values
+     const Segment* seg = this->distanceToSegment(startD, &startT);
+     if (!SkScalarIsFinite(startT)) {
+         return false;
+diff --git a/src/effects/SkDiscretePathEffect.cpp b/src/effects/SkDiscretePathEffect.cpp
+index 2c913d8d9e..75d00f9f15 100644
+--- a/src/effects/SkDiscretePathEffect.cpp
++++ b/src/effects/SkDiscretePathEffect.cpp
+@@ -92,8 +92,8 @@ bool SkDiscretePathEffect::onFilterPath(SkPath* dst, const SkPath& src,
+ 
+     LCGRandom   rand(seed ^ ((seed << 16) | (seed >> 16)));
+     SkScalar    scale = fPerterb;
+-    SkPoint     p;
+-    SkVector    v;
++    SkPoint     p = {0, 0}; // Initialize SkPoint with default values
++    SkVector    v = {0, 0}; // Initialize SkVector with default values
+ 
+     do {
+         SkScalar    length = meas.getLength();

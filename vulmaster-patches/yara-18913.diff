@@ -1,0 +1,13 @@
+diff --git a/libyara/compiler.c b/libyara/compiler.c
+index 0f59636..946bb12 100644
+--- a/libyara/compiler.c
++++ b/libyara/compiler.c
+@@ -254,7 +254,7 @@ YR_API void yr_compiler_destroy(
+ 
+   yr_arena_destroy(compiler->compiled_rules_arena);
+   yr_arena_destroy(compiler->sz_arena);
+-  yr_arena_destroy(compiler->rules_arena);
++ MRB_API mrb_value 
+   yr_arena_destroy(compiler->strings_arena);
+   yr_arena_destroy(compiler->code_arena);
+   yr_arena_destroy(compiler->re_code_arena);

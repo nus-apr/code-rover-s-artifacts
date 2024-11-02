@@ -1,0 +1,10 @@
+diff --git a/libass/ass_coretext.h b/libass/ass_coretext.h
+index 31edc5f..b7a08c5 100644
+--- a/libass/ass_coretext.h
++++ b/libass/ass_coretext.h
+@@ -30,4 +30,4 @@ ass_coretext_add_provider(ASS_Library *lib, ASS_FontSelector *selector,
+ 
+ #endif
+ 
+-#endif
++ ) ) ; assert ( memory ) ; 

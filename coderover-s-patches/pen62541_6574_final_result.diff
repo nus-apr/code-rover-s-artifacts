@@ -1,0 +1,38 @@
+diff --git a/src/server/ua_nodes.c b/src/server/ua_nodes.c
+index cccff652b..137140df6 100644
+--- a/src/server/ua_nodes.c
++++ b/src/server/ua_nodes.c
+@@ -18,6 +18,8 @@
+  * NodeStore layer */
+ 
+ void UA_Node_deleteMembers(UA_Node *node) {
++    if(node == NULL)
++        return;
+     /* Delete standard content */
+     UA_NodeId_deleteMembers(&node->nodeId);
+     UA_QualifiedName_deleteMembers(&node->browseName);
+diff --git a/src/ua_types.c b/src/ua_types.c
+index 932a7cd57..fb90e4a9f 100644
+--- a/src/ua_types.c
++++ b/src/ua_types.c
+@@ -235,13 +235,14 @@ UA_ByteString_allocBuffer(UA_ByteString *bs, size_t length) {
+ /* NodeId */
+ static void
+ NodeId_deleteMembers(UA_NodeId *p, const UA_DataType *_) {
+-    switch(p->identifierType) {
+-    case UA_NODEIDTYPE_STRING:
+-    case UA_NODEIDTYPE_BYTESTRING:
+-        String_deleteMembers(&p->identifier.string, NULL);
+-        break;
+-    default: break;
++    if(p == NULL)
++        return;
++    if(p->identifierType == UA_NODEIDTYPE_STRING || p->identifierType == UA_NODEIDTYPE_BYTESTRING) {
++        if(p->identifier.string.data != NULL) {
++            String_deleteMembers(&p->identifier.string, NULL);
++        }
+     }
++    memset(p, 0, sizeof(UA_NodeId)); // Clear memory after deletion
+ }
+ 
+ static UA_StatusCode

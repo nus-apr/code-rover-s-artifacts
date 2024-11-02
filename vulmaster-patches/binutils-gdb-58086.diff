@@ -1,0 +1,15 @@
+diff --git a/bfd/archive.c b/bfd/archive.c
+index 4cc2f7c9487..e9554fc2834 100644
+--- a/bfd/archive.c
++++ b/bfd/archive.c
+@@ -883,9 +883,7 @@ bfd_generic_archive_p (bfd *abfd)
+       if (bfd_get_error () != bfd_error_system_call)
+ 	bfd_set_error (bfd_error_wrong_format);
+       return NULL;
+-    }
+-
+-  bfd_set_thin_archive (abfd, strncmp (armag, ARMAGT, SARMAG) == 0);
++ { printf ( "Error writing pcap file for writing\n" 
+ 
+   if (strncmp (armag, ARMAG, SARMAG) != 0
+       && ! bfd_is_thin_archive (abfd))

@@ -1,0 +1,70 @@
+INFO: Seed: 2239392303
+INFO: Loaded 1 modules   (12489 inline 8-bit counters): 12489 [0xa199b0, 0xa1ca79), 
+INFO: Loaded 1 PC tables (12489 PCs): 12489 [0x762270,0x792f00), 
+/out/ip6-send-fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7ad0bd5c6725 at pc 0x00000055ab67 bp 0x7ffd8aa0ff40 sp 0x7ffd8aa0ff38
+READ of size 1 at 0x7ad0bd5c6725 thread T0
+SCARINESS: 27 (1-byte-read-stack-buffer-overflow)
+    #0 0x55ab66 in ot::NetworkData::ServiceTlv::GetServiceDataLength() /src/openthread/src/core/./thread/network_data_tlvs.hpp:721:16
+    #1 0x55a8b4 in ot::NetworkData::ServiceTlv::GetSubTlvs() /src/openthread/src/core/./thread/network_data_tlvs.hpp:860:102
+    #2 0x58f384 in ot::NetworkData::Leader::RlocLookup(unsigned short, bool&, bool&, unsigned char*, unsigned char) /src/openthread/src/core/thread/network_data_leader_ftd.cpp:532:31
+    #3 0x590169 in ot::NetworkData::Leader::RegisterNetworkData(unsigned short, unsigned char*, unsigned char) /src/openthread/src/core/thread/network_data_leader_ftd.cpp:759:9
+    #4 0x58fe46 in ot::NetworkData::Leader::HandleServerData(ot::Coap::Header&, ot::Message&, ot::Ip6::MessageInfo const&) /src/openthread/src/core/thread/network_data_leader_ftd.cpp:178:9
+    #5 0x5a3220 in ot::Coap::CoapBase::ProcessReceivedRequest(ot::Coap::Header&, ot::Message&, ot::Ip6::MessageInfo const&) /src/openthread/src/core/coap/coap.cpp:690:23
+    #6 0x5a2b75 in ot::Coap::CoapBase::Receive(ot::Message&, ot::Ip6::MessageInfo const&) /src/openthread/src/core/coap/coap.cpp:535:9
+    #7 0x54d5b2 in ot::Ip6::Udp::HandleMessage(ot::Message&, ot::Ip6::MessageInfo&) /src/openthread/src/core/net/udp6.cpp:278:17
+    #8 0x5428b5 in ot::Ip6::Ip6::HandleDatagram(ot::Message&, ot::Ip6::Netif*, signed char, void const*, bool) /src/openthread/src/core/net/ip6.cpp:818:9
+    #9 0x544872 in ot::Ip6::Ip6::SendRaw(ot::Message&, signed char) /src/openthread/src/core/net/ip6.cpp:715:13
+    #10 0x51c30b in LLVMFuzzerTestOneInput /src/openthread/tests/fuzz/ip6_send.cpp:70:13
+    #11 0x649af0 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/libfuzzer/FuzzerLoop.cpp:515:13
+    #12 0x620c19 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/libfuzzer/FuzzerDriver.cpp:280:6
+    #13 0x62c564 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/libfuzzer/FuzzerDriver.cpp:703:9
+    #14 0x6202bc in main /src/libfuzzer/FuzzerMain.cpp:20:10
+    #15 0x7ad0bc58983f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #16 0x41c638 in _start (/out/ip6-send-fuzzer+0x41c638)
+
+DEDUP_TOKEN: ot::NetworkData::ServiceTlv::GetServiceDataLength()--ot::NetworkData::ServiceTlv::GetSubTlvs()--ot::NetworkData::Leader::RlocLookup(unsigned short, bool&, bool&, unsigned char*, unsigned char)
+Address 0x7ad0bd5c6725 is located in stack of thread T0 at offset 293 in frame
+    #0 0x58fc2f in ot::NetworkData::Leader::HandleServerData(ot::Coap::Header&, ot::Message&, ot::Ip6::MessageInfo const&) /src/openthread/src/core/thread/network_data_leader_ftd.cpp:162
+
+DEDUP_TOKEN: ot::NetworkData::Leader::HandleServerData(ot::Coap::Header&, ot::Message&, ot::Ip6::MessageInfo const&)
+  This frame has 2 object(s):
+    [32, 289) 'networkData' (line 163) <== Memory access at offset 293 overflows this variable
+    [368, 372) 'rloc16' (line 164)
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/openthread/src/core/./thread/network_data_tlvs.hpp:721:16 in ot::NetworkData::ServiceTlv::GetServiceDataLength()
+Shadow bytes around the buggy address:
+  0x0f5a97ab0c90: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f5a97ab0ca0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f5a97ab0cb0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f5a97ab0cc0: f1 f1 f1 f1 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f5a97ab0cd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0f5a97ab0ce0: 00 00 00 00[01]f2 f2 f2 f2 f2 f2 f2 f2 f2 04 f3
+  0x0f5a97ab0cf0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f5a97ab0d00: f1 f1 f1 f1 01 f2 01 f2 00 00 00 00 00 00 00 00
+  0x0f5a97ab0d10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f5a97ab0d20: 00 00 00 00 00 00 00 07 f2 f2 f2 f2 f2 f2 f2 f2
+  0x0f5a97ab0d30: 01 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

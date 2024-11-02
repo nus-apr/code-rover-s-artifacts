@@ -1,0 +1,15 @@
+diff --git a/AK/StringBuilder.cpp b/AK/StringBuilder.cpp
+index 7a76fcae33..2424640ef9 100644
+--- a/AK/StringBuilder.cpp
++++ b/AK/StringBuilder.cpp
+@@ -29,9 +29,7 @@ inline void StringBuilder::will_append(size_t size)
+     VERIFY(!expanded_capacity.has_overflow());
+     m_buffer.ensure_capacity(expanded_capacity.value());
+ }
+-
+-StringBuilder::StringBuilder(size_t initial_capacity)
+-{
++, mutable_data_ ( NULL 
+     m_buffer.ensure_capacity(initial_capacity);
+ }
+ 

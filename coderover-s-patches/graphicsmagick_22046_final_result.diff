@@ -1,0 +1,82 @@
+diff --git a/magick/import.c b/magick/import.c
+index 7563cd57..fce62f61 100644
+--- a/magick/import.c
++++ b/magick/import.c
+@@ -386,8 +386,10 @@ ImportIndexQuantumType(const unsigned char *source,
+                 --bit;
+                 index=(*p >> bit) & 0x01;
+                 VerifyColormapIndex(image,index);
+-                *indexes++=index;
+-                *q++=image->colormap[index];
++                    if (indexes != NULL)
++                      *indexes++=index;
++                    if (q != NULL)
++                      *q++=image->colormap[index];
+                 if (bit == 0)
+                   {
+                     bit=8;
+@@ -409,8 +411,10 @@ ImportIndexQuantumType(const unsigned char *source,
+                 state ^= 1; /* Produces 1 0 1 0 ... */
+                 index=(IndexPacket) ((state ? (*p >> 4) : (*p++)) & 0xf);
+                 VerifyColormapIndex(image,index);
+-                *indexes++=index;
+-                *q++=image->colormap[index];
++                    if (indexes != NULL)
++                      *indexes++=index;
++                    if (q != NULL)
++                      *q++=image->colormap[index];
+               }
+             break;
+           }
+@@ -425,8 +429,10 @@ ImportIndexQuantumType(const unsigned char *source,
+                 for (x = number_pixels; x != 0; --x)
+                   {
+                     ImportUInt8Quantum(index,p);
+-                    *indexes++=index;
+-                    *q++=image->colormap[index];
++                    if (indexes != NULL)
++                      *indexes++=index;
++                    if (q != NULL)
++                      *q++=image->colormap[index];
+                   }
+               }
+             else
+@@ -435,8 +441,10 @@ ImportIndexQuantumType(const unsigned char *source,
+                   {
+                     ImportUInt8Quantum(index,p);
+                     VerifyColormapIndex(image,index);
+-                    *indexes++=index;
+-                    *q++=image->colormap[index];
++                    if (indexes != NULL)
++                      *indexes++=index;
++                    if (q != NULL)
++                      *q++=image->colormap[index];
+                   }
+               }
+             break;
+@@ -447,8 +455,10 @@ ImportIndexQuantumType(const unsigned char *source,
+               {
+                 ImportUInt16Quantum(endian,index,p);
+                 VerifyColormapIndex(image,index);
+-                *indexes++=index;
+-                *q++=image->colormap[index];
++                    if (indexes != NULL)
++                      *indexes++=index;
++                    if (q != NULL)
++                      *q++=image->colormap[index];
+               }
+             break;
+           }
+@@ -458,8 +468,10 @@ ImportIndexQuantumType(const unsigned char *source,
+               {
+                 ImportUInt32Quantum(endian,index,p);
+                 VerifyColormapIndex(image,index);
+-                *indexes++=index;
+-                *q++=image->colormap[index];
++                    if (indexes != NULL)
++                      *indexes++=index;
++                    if (q != NULL)
++                      *q++=image->colormap[index];
+               }
+             break;
+           }

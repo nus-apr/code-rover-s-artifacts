@@ -1,0 +1,37 @@
+diff --git a/base/gsmchunk.c b/base/gsmchunk.c
+index f221ac307..c7880ebaa 100644
+--- a/base/gsmchunk.c
++++ b/base/gsmchunk.c
+@@ -1089,10 +1089,14 @@ chunk_free_object(gs_memory_t *mem, void *ptr, client_name_t cname)
+ #endif
+ #endif
+ 
+-    if (obj->type) {
++    if (obj != NULL && obj->type != NULL && obj->size > 0) { // Validate object and size
+         finalize = obj->type->finalize;
+-        if (finalize != NULL)
++        if (finalize != NULL) {
+             finalize(mem, ptr);
++        }
++        // Clear the type and size to prevent further access
++        obj->type = NULL;
++        obj->size = 0;
+     }
+     /* finalize may change the head_**_chunk doing free of stuff */
+ 
+diff --git a/pdf/ghostpdf.c b/pdf/ghostpdf.c
+index dbe8b37cc..8907a0c05 100644
+--- a/pdf/ghostpdf.c
++++ b/pdf/ghostpdf.c
+@@ -1965,8 +1965,10 @@ int pdfi_free_context(pdf_context *ctx)
+ 
+     ctx->pgs = NULL;
+ 
+-    if (ctx->font_dir)
++    if (ctx != NULL && ctx->font_dir != NULL) { // Validate context and font_dir
+         gs_free_object(ctx->memory, ctx->font_dir, "pdfi_free_context");
++        ctx->font_dir = NULL; // Clear the reference after freeing
++    }
+ 
+     /* Currently this should never happen, but in future it might if we choose
+      * not to keep freeing and reallocating the array.

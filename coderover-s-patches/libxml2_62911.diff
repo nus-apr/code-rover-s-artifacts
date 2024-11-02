@@ -1,0 +1,35 @@
+diff --git a/dict.c b/dict.c
+index 8bfc9f15..a89581ab 100644
+--- a/dict.c
++++ b/dict.c
+@@ -538,11 +538,13 @@ xmlDictFindEntry(const xmlDict *dict, const xmlChar *prefix,
+                     /*
+                      * name is not necessarily null-terminated.
+                      */
+-                    if ((memcmp(entry->name, name, len) == 0) &&
+-                        (entry->name[len] == 0)) {
+-                        found = 1;
+-                        break;
+-                    }
++    /* Ensure len does not exceed the entry name buffer size */
++    if ((entry->name != NULL) && (len <= strlen((const char *)entry->name)) &&
++        (memcmp(entry->name, name, len) == 0) &&
++        (entry->name[len] == 0)) {
++        found = 1;
++        break;
++    }
+                 } else {
+                     if (xmlStrQEqual(prefix, name, entry->name)) {
+                         found = 1;
+@@ -671,6 +673,11 @@ xmlDictLookupInternal(xmlDictPtr dict, const xmlChar *prefix,
+     if ((dict->limit > 0) && (klen >= dict->limit))
+         return(NULL);
+ 
++    /* Ensure klen does not exceed the buffer size */
++    if (klen > (size_t)(dict->size)) {
++        return(NULL);
++    }
++
+     /*
+      * Check for an existing entry
+      */

@@ -1,0 +1,27 @@
+diff --git a/aom/av1/common/x86/convolve_2d_avx2.c b/aom/av1/common/x86/convolve_2d_avx2.c
+index 8d433eb..3b94ddd 100644
+--- a/aom/av1/common/x86/convolve_2d_avx2.c
++++ b/aom/av1/common/x86/convolve_2d_avx2.c
+@@ -241,6 +241,7 @@ void av1_convolve_2d_copy_sr_avx2(const uint8_t *src, int src_stride,
+     } while (h);
+   } else if (w == 32) {
+     do {
++      if (h < 2) break;  // Ensure there are at least 2 rows to read
+       __m256i s[2];
+       s[0] = _mm256_loadu_si256((__m256i *)src);
+       src += src_stride;
+@@ -251,7 +252,7 @@ void av1_convolve_2d_copy_sr_avx2(const uint8_t *src, int src_stride,
+       _mm256_storeu_si256((__m256i *)dst, s[1]);
+       dst += dst_stride;
+       h -= 2;
+-    } while (h);
++    } while (h >= 2);
+   } else if (w == 64) {
+     do {
+       __m256i s[4];
+@@ -280,4 +281,4 @@ void av1_convolve_2d_copy_sr_avx2(const uint8_t *src, int src_stride,
+       h -= 2;
+     } while (h);
+   }
+-}
++}

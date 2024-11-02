@@ -1,0 +1,36 @@
+diff --git a/src/cmsgamma.c b/src/cmsgamma.c
+index dd97dd4..1f864d2 100644
+--- a/src/cmsgamma.c
++++ b/src/cmsgamma.c
+@@ -253,8 +253,9 @@ cmsToneCurve* AllocateToneCurveStruct(cmsContext ContextID, cmsUInt32Number nEnt
+         p ->Table16 = NULL;
+     }
+     else {
+-       p ->Table16 = (cmsUInt16Number*)  _cmsCalloc(ContextID, nEntries, sizeof(cmsUInt16Number));
+-       if (p ->Table16 == NULL) goto Error;
++        p ->Table16 = (cmsUInt16Number*)  _cmsCalloc(ContextID, nEntries, sizeof(cmsUInt16Number));
++        if (p ->Table16 == NULL) goto Error;
++        p ->nEntries = nEntries; // Ensure nEntries is set correctly
+     }
+ 
+     p -> nEntries  = nEntries;
+diff --git a/src/cmstypes.c b/src/cmstypes.c
+index 47bc7a2..86a2628 100644
+--- a/src/cmstypes.c
++++ b/src/cmstypes.c
+@@ -2076,11 +2076,11 @@ cmsBool Write16bitTables(cmsContext ContextID, cmsIOHANDLER* io, _cmsStageToneCu
+ 
+     for (i=0; i < Tables ->nCurves; i++) {
+ 
+-        for (j=0; j < nEntries; j++) {
++    for (j=0; j < Tables->TheCurves[i]->nEntries; j++) {
+ 
+-            val = Tables->TheCurves[i]->Table16[j];        
+-            if (!_cmsWriteUInt16Number(io, val)) return FALSE;
+-        }
++        val = Tables->TheCurves[i]->Table16[j];        
++        if (!_cmsWriteUInt16Number(io, val)) return FALSE;
++    }
+     }
+     return TRUE;
+ 

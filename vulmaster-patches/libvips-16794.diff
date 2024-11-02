@@ -1,0 +1,15 @@
+diff --git a/libvips/conversion/extract.c b/libvips/conversion/extract.c
+index 7a60f87..b35398e 100644
+--- a/libvips/conversion/extract.c
++++ b/libvips/conversion/extract.c
+@@ -286,9 +286,7 @@ vips_crop_get_type( void )
+ 		type = g_type_register_static( VIPS_TYPE_CONVERSION, 
+ 			"crop", &info, 0 );
+ 	}
+-
+-	return( type );
+-}
++ h ) { return exr_get_default_maximum_image_size_impl ( w, h ) 
+ 
+ /**
+  * vips_crop: (method)

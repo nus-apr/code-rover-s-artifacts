@@ -1,0 +1,81 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2267235851
+INFO: Loaded 1 modules   (137610 inline 8-bit counters): 137610 [0xa5c75e0, 0xa5e8f6a), 
+INFO: Loaded 1 PC tables (137610 PCs): 137610 [0xa5e8f6c,0xa6f5bbc), 
+/out/file-fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==14==ERROR: AddressSanitizer: heap-buffer-overflow on address 0xe3503e80 at pc 0x08431111 bp 0xffbcb248 sp 0xffbcb240
+READ of size 1 at 0xe3503e80 thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x8431110 in parse_signed /src/libheif/libheif/region.cc:130:11
+    #1 0x8431110 in RegionGeometry_Polygon::parse(std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, int, unsigned int*) /src/libheif/libheif/region.cc:209:11
+    #2 0x842c458 in RegionItem::parse(std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&) /src/libheif/libheif/region.cc:95:27
+    #3 0x8384ce1 in heif::HeifContext::interpret_heif_file() /src/libheif/libheif/heif_context.cc:959:20
+    #4 0x838aaa4 in heif::HeifContext::read_from_memory(void const*, unsigned int, bool) /src/libheif/libheif/heif_context.cc:447:10
+    #5 0x83331ee in heif_context_read_from_memory /src/libheif/libheif/heif.cc:447:29
+    #6 0x844e131 in LLVMFuzzerTestOneInput /src/libheif/libheif/file_fuzzer.cc:95:9
+    #7 0x811509e in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #8 0x80ffffe in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #9 0x8105c00 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #10 0x812f7e7 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #11 0xe88a4ed4 in __libc_start_main (/lib32/libc.so.6+0x1aed4) (BuildId: d56935956a210bf85f6592f3178b979ad4f7b35f)
+    #12 0x80f7145 in _start (/out/file-fuzzer+0x80f7145)
+
+DEDUP_TOKEN: parse_signed--RegionGeometry_Polygon::parse(std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&, int, unsigned int*)--RegionItem::parse(std::__1::vector<unsigned char, std::__1::allocator<unsigned char> > const&)
+0xe3503e80 is located 0 bytes to the right of 256-byte region [0xe3503d80,0xe3503e80)
+allocated by thread T0 here:
+    #0 0x8251a99 in operator new(unsigned int) /src/llvm-project/compiler-rt/lib/asan/asan_new_delete.cpp:95:3
+    #1 0x825d63b in __libcpp_operator_new<unsigned int> /usr/local/bin/../include/c++/v1/new:245:10
+    #2 0x825d63b in __libcpp_allocate /usr/local/bin/../include/c++/v1/new:271:10
+    #3 0x825d63b in allocate /usr/local/bin/../include/c++/v1/__memory/allocator.h:105:38
+    #4 0x825d63b in allocate /usr/local/bin/../include/c++/v1/__memory/allocator_traits.h:262:20
+    #5 0x825d63b in __split_buffer /usr/local/bin/../include/c++/v1/__split_buffer:306:29
+    #6 0x825d63b in std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >::__append(unsigned int) /usr/local/bin/../include/c++/v1/vector:1031:53
+    #7 0x8285f0c in resize /usr/local/bin/../include/c++/v1/vector:1902:15
+    #8 0x8285f0c in heif::Box_iloc::read_data(heif::Box_iloc::Item const&, std::__1::shared_ptr<heif::StreamReader> const&, std::__1::shared_ptr<heif::Box_idat> const&, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >*) const /src/libheif/libheif/box.cc:1170:13
+    #9 0x8300d98 in heif::HeifFile::get_compressed_image_data(unsigned int, std::__1::vector<unsigned char, std::__1::allocator<unsigned char> >*) const /src/libheif/libheif/heif_file.cc:722:27
+    #10 0x8384c02 in heif::HeifContext::interpret_heif_file() /src/libheif/libheif/heif_context.cc:955:32
+    #11 0x838aaa4 in heif::HeifContext::read_from_memory(void const*, unsigned int, bool) /src/libheif/libheif/heif_context.cc:447:10
+    #12 0x83331ee in heif_context_read_from_memory /src/libheif/libheif/heif.cc:447:29
+    #13 0x844e131 in LLVMFuzzerTestOneInput /src/libheif/libheif/file_fuzzer.cc:95:9
+    #14 0x811509e in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #15 0x80ffffe in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #16 0x8105c00 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #17 0x812f7e7 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #18 0xe88a4ed4 in __libc_start_main (/lib32/libc.so.6+0x1aed4) (BuildId: d56935956a210bf85f6592f3178b979ad4f7b35f)
+
+DEDUP_TOKEN: operator new(unsigned int)--__libcpp_operator_new<unsigned int>--__libcpp_allocate
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/libheif/libheif/region.cc:130:11 in parse_signed
+Shadow bytes around the buggy address:
+  0x3c6a0780: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3c6a0790: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3c6a07a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3c6a07b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3c6a07c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x3c6a07d0:[fa]fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x3c6a07e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3c6a07f0: 00 00 00 00 00 00 fa fa fa fa fa fa fa fa fa fa
+  0x3c6a0800: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3c6a0810: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3c6a0820: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==14==ABORTING

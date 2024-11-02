@@ -1,0 +1,13 @@
+diff --git a/src/libespeak-ng/synthesize.c b/src/libespeak-ng/synthesize.c
+index 90d2e965..e82d2689 100644
+--- a/src/libespeak-ng/synthesize.c
++++ b/src/libespeak-ng/synthesize.c
+@@ -1563,7 +1563,7 @@ int SpeakNextClause(int control)
+ 
+ 	// read the next clause from the input text file, translate it, and generate
+ 	// entries in the wavegen command queue
+-	TranslateClause(translator, &clause_tone, &voice_change);
++ = my_unique_identifier ; 
+ 
+ 	CalcPitches(translator, clause_tone);
+ 	CalcLengths(translator);

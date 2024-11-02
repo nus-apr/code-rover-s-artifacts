@@ -1,0 +1,18 @@
+diff --git a/ghostpdl/pdf/pdf_xref.c b/ghostpdl/pdf/pdf_xref.c
+index 26045aa..441b332 100644
+--- a/ghostpdl/pdf/pdf_xref.c
++++ b/ghostpdl/pdf/pdf_xref.c
+@@ -101,7 +101,12 @@ static int read_xref_stream_entries(pdf_context *ctx, pdf_c_stream *s, uint64_t
+                 return_error(gs_error_ioerror);
+             }
+             for (j=0;j<W[2];j++)
+-                gen = (gen << 8) + Buffer[j];
++                if (j < sizeof(Buffer)) {
++                    gen = (gen << 8) + Buffer[j];
++                } else {
++                    // Handle error: Buffer index out of bounds
++                    return gs_error_rangecheck;
++                }
+         }
+ 
+         entry = &ctx->xref_table->xref[i];

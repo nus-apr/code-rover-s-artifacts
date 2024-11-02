@@ -1,0 +1,48 @@
+diff --git a/src/tag_utils.c b/src/tag_utils.c
+index 2040e1c..53682c2 100644
+--- a/src/tag_utils.c
++++ b/src/tag_utils.c
+@@ -192,8 +192,8 @@ int WavpackDeleteTagItem (WavpackContext *wpc, const char *item)
+             vsize = p[0] + (p[1] << 8) + (p[2] << 16) + (p[3] << 24); p += 8;   // skip flags because we don't need them
+             for (isize = 0; p[isize] && p + isize < q; ++isize);
+ 
+-            if (vsize < 0 || vsize > m_tag->ape_tag_hdr.length || p + isize + vsize + 1 > q)
+-                break;
++        if (vsize < 0 || vsize > m_tag->ape_tag_hdr.length || p + isize + vsize + 1 > q)
++            break;
+ 
+             if (isize && vsize && !stricmp (item, (char *) p)) {
+                 unsigned char *d = p - 8;
+@@ -253,22 +253,27 @@ static int get_ape_tag_item (M_Tag *m_tag, const char *item, char *value, int si
+                 return vsize;
+ 
+             if (type == APE_TAG_TYPE_BINARY) {
+-                if (vsize <= size) {
++                if (vsize < size) {
+                     memcpy (value, p + isize + 1, vsize);
++                    value[vsize] = 0;
+                     return vsize;
+                 }
++                else if (size > 0) {
++                    memcpy (value, p + isize + 1, size - 1);
++                    value[size - 1] = 0;
++                    return size - 1;
++                }
+                 else
+                     return 0;
+             }
+             else if (vsize < size) {
+                 memcpy (value, p + isize + 1, vsize);
+-                value [vsize] = 0;
++                value[vsize] = 0;
+                 return vsize;
+             }
+-            else if (size >= 4) {
++            else if (size > 0) {
+                 memcpy (value, p + isize + 1, size - 1);
+-                value [size - 4] = value [size - 3] = value [size - 2] = '.';
+-                value [size - 1] = 0;
++                value[size - 1] = 0;
+                 return size - 1;
+             }
+             else

@@ -1,0 +1,24 @@
+diff --git a/libxml2/HTMLparser.c b/libxml2/HTMLparser.c
+index 36ebadd..21cbdc7 100644
+--- a/libxml2/HTMLparser.c
++++ b/libxml2/HTMLparser.c
+@@ -445,7 +445,6 @@ htmlCurrentChar(xmlParserCtxtPtr ctxt, int *len) {
+             xmlSwitchEncoding(ctxt, XML_CHAR_ENCODING_8859_1);
+         } else {
+             handler = xmlFindCharEncodingHandler((const char *) guess);
+-            xmlFree(guess);
+             if (handler != NULL) {
+                 /*
+                  * Don't use UTF-8 encoder which isn't required and
+@@ -453,9 +452,11 @@ htmlCurrentChar(xmlParserCtxtPtr ctxt, int *len) {
+                  */
+                 if (!xmlStrEqual(BAD_CAST handler->name, BAD_CAST "UTF-8"))
+                     xmlSwitchToEncoding(ctxt, handler);
++                xmlFree(guess);
+             } else {
+                 htmlParseErr(ctxt, XML_ERR_INVALID_ENCODING,
+                              "Unsupported encoding %s", guess, NULL);
++                xmlFree(guess);
+             }
+         }
+         ctxt->input->flags |= XML_INPUT_HAS_ENCODING;

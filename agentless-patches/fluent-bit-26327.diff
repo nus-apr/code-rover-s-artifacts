@@ -1,0 +1,15 @@
+diff --git a/fluent-bit/src/flb_parser.c b/fluent-bit/src/flb_parser.c
+index 00573c7..480c39c 100644
+--- a/fluent-bit/src/flb_parser.c
++++ b/fluent-bit/src/flb_parser.c
+@@ -754,8 +754,8 @@ int flb_parser_time_lookup(const char *time_str, size_t tsize,
+         *fmt++ = ' ';
+ 
+         memcpy(fmt, time_ptr, time_len);
+-        fmt += time_len;
+-        *fmt++ = '\0';
++        fmt[time_len] = '\0';  // Ensure null-termination
++        fmt += time_len + 1;   // Move past the null terminator
+ 
+         time_ptr = tmp;
+         time_len = strlen(tmp);

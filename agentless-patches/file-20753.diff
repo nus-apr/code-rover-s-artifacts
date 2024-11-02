@@ -1,0 +1,13 @@
+diff --git a/file/src/der.c b/file/src/der.c
+index 0c4b74c..4e30541 100644
+--- a/file/src/der.c
++++ b/file/src/der.c
+@@ -224,7 +224,7 @@ getlength(const uint8_t *c, size_t *p, size_t l)
+ static const char *
+ der_tag(char *buf, size_t len, uint32_t tag)
+ {
+-	if (tag < DER_TAG_LAST)
++	if (tag < DER_TAG_LAST - 1)
+ 		strlcpy(buf, der__tag[tag], len);
+ 	else
+ 		snprintf(buf, len, "%#x", tag);

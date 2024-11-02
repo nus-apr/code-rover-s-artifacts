@@ -1,0 +1,21 @@
+diff --git a/ffmpeg/libavcodec/hevc_refs.c b/ffmpeg/libavcodec/hevc_refs.c
+index 56e25ab..a91c930 100644
+--- a/ffmpeg/libavcodec/hevc_refs.c
++++ b/ffmpeg/libavcodec/hevc_refs.c
+@@ -448,9 +448,13 @@ static int add_candidate_ref(HEVCContext *s, RefPicList *list,
+             return AVERROR(ENOMEM);
+     }
+ 
+-    list->list[list->nb_refs] = ref->poc;
+-    list->ref[list->nb_refs]  = ref;
+-    list->nb_refs++;
++    if (list->nb_refs < 16) {
++        list->list[list->nb_refs] = ref->poc;
++        list->ref[list->nb_refs]  = ref;
++        list->nb_refs++;
++    } else {
++        return AVERROR_INVALIDDATA; // or another appropriate error code
++    }
+ 
+     mark_ref(ref, ref_flag);
+     return 0;

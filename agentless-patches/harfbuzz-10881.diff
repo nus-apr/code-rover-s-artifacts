@@ -1,0 +1,13 @@
+diff --git a/harfbuzz/src/hb-machinery.hh b/harfbuzz/src/hb-machinery.hh
+index 2867a9a..4a60ff2 100644
+--- a/harfbuzz/src/hb-machinery.hh
++++ b/harfbuzz/src/hb-machinery.hh
+@@ -688,6 +688,8 @@ struct BEInt<Type, 4>
+   }
+   inline operator Type (void) const
+   {
++    // Ensure we do not access out of bounds
++    if (sizeof(v) < 4) return 0;
+     return (v[0] << 24)
+          + (v[1] << 16)
+          + (v[2] <<  8)

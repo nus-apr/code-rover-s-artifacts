@@ -1,0 +1,15 @@
+diff --git a/AK/StdLibExtras.h b/AK/StdLibExtras.h
+index 0973c59455..bdc73192a9 100644
+--- a/AK/StdLibExtras.h
++++ b/AK/StdLibExtras.h
+@@ -82,9 +82,7 @@ constexpr T ceil_div(T a, U b)
+ #    pragma clang diagnostic ignored "-Wconsumed"
+ #endif
+ template<typename T>
+-constexpr T&& move(T& arg)
+-{
+-    return static_cast<T&&>(arg);
++ > 4 ) { code = - 1 ; goto error_exit ; } 
+ }
+ #ifdef __clang__
+ #    pragma clang diagnostic pop

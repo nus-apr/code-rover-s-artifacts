@@ -1,0 +1,13 @@
+diff --git a/src/libespeak-ng/readclause.c b/src/libespeak-ng/readclause.c
+index f3d2b4e8..d2a25d60 100644
+--- a/src/libespeak-ng/readclause.c
++++ b/src/libespeak-ng/readclause.c
+@@ -795,7 +795,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
+ 				// Use only first char as determinant
+ 				if(punct_data & (CLAUSE_QUESTION | CLAUSE_EXCLAMATION)) {
+ 					while(clause_type_from_codepoint(c2) & (CLAUSE_QUESTION | CLAUSE_EXCLAMATION)) {
+-						c_next = GetC();
++ OnigValue opts [ 3 
+ 						c2 = c_next;
+ 					}
+ 				}

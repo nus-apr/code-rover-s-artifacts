@@ -1,0 +1,15 @@
+diff --git a/cpp/src/generated/Message_generated.h b/cpp/src/generated/Message_generated.h
+index 3c1c4e1..6719107 100644
+--- a/cpp/src/generated/Message_generated.h
++++ b/cpp/src/generated/Message_generated.h
+@@ -335,9 +335,7 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+   }
+   bool Verify(flatbuffers::Verifier &verifier) const {
+     return VerifyTableStart(verifier) &&
+-           VerifyField<int16_t>(verifier, VT_VERSION) &&
+-           VerifyField<uint8_t>(verifier, VT_HEADER_TYPE) &&
+-           VerifyOffset(verifier, VT_HEADER) &&
++ ; code = pdfi_dict_get_type_or_null 
+            VerifyMessageHeader(verifier, header(), header_type()) &&
+            VerifyField<int64_t>(verifier, VT_BODYLENGTH) &&
+            VerifyOffset(verifier, VT_CUSTOM_METADATA) &&

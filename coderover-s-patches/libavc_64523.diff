@@ -1,0 +1,21 @@
+diff --git a/decoder/ih264d_bitstrm.h b/decoder/ih264d_bitstrm.h
+index 8bb06fb..2e0d7d8 100644
+--- a/decoder/ih264d_bitstrm.h
++++ b/decoder/ih264d_bitstrm.h
+@@ -153,9 +153,13 @@ UWORD8 ih264d_check_byte_aligned(dec_bit_stream_t * ps_bitstrm);
+     UWORD32 u4_word_off = ((u4_offset) >> 5);                               \
+     UWORD32 u4_bit_off = (u4_offset) & 0x1F;                                \
+                                                                             \
+-    u4_word = pu4_buf[u4_word_off++] << u4_bit_off;                         \
+-    if(u4_bit_off)                                                          \
+-    u4_word |= (pu4_buf[u4_word_off] >> (INT_IN_BITS - u4_bit_off));        \
++    if (u4_word_off < sizeof(pu4_bitstream) / sizeof(UWORD32)) {            \
++        u4_word = pu4_buf[u4_word_off++] << u4_bit_off;                     \
++        if(u4_bit_off && u4_word_off < sizeof(pu4_bitstream) / sizeof(UWORD32)) \
++            u4_word |= (pu4_buf[u4_word_off] >> (INT_IN_BITS - u4_bit_off));\
++    } else {                                                                \
++        u4_word = 0; /* Handle out of bounds safely */                      \
++    }                                                                       \
+ }
+ 
+ 

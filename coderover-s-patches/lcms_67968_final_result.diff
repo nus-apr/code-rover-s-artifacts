@@ -1,0 +1,14 @@
+diff --git a/afl/afl_driver.cpp b/afl/afl_driver.cpp
+index 15bceb8..d1bc684 100644
+--- a/afl/afl_driver.cpp
++++ b/afl/afl_driver.cpp
+@@ -310,7 +310,8 @@ int main(int argc, char **argv) {
+       // Copy AflInputBuf into a separate buffer to let asan find buffer
+       // overflows. Don't use unique_ptr/etc to avoid extra dependencies.
+       uint8_t *copy = new uint8_t[n_read];
+-      memcpy(copy, AflInputBuf, n_read);
++      if (copy) {
++        memcpy(copy, AflInputBuf, n_read);
+ 
+       struct timeval unit_start_time;
+       CHECK_ERROR(gettimeofday(&unit_start_time, NULL) == 0,

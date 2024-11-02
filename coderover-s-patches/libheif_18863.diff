@@ -1,0 +1,22 @@
+diff --git a/libde265/sao.cc b/libde265/sao.cc
+index f93fc02a..0d60faa0 100644
+--- a/libde265/sao.cc
++++ b/libde265/sao.cc
+@@ -220,7 +220,7 @@ void apply_sao_internal(de265_image* img, int xCtb,int yCtb,
+             bandIdx = bandTable[ in_img[xC+i+(yC+j)*in_stride]>>bandShift ];
+           }
+ 
+-          if (bandIdx>0) {
++          if (bandIdx > 0 && bandIdx <= 4) {
+             int offset = saoinfo->saoOffsetVal[cIdx][bandIdx-1];
+ 
+             logtrace(LogSAO,"%d %d (%d) offset %d  %x -> %x\n",xC+i,yC+j,bandIdx,
+@@ -248,7 +248,7 @@ void apply_sao_internal(de265_image* img, int xCtb,int yCtb,
+               bandIdx = bandTable[ in_img[xC+i+(yC+j)*in_stride]>>bandShift ];
+             }
+ 
+-            if (bandIdx>0) {
++            if (bandIdx > 0 && bandIdx <= 4) {
+               int offset = saoinfo->saoOffsetVal[cIdx][bandIdx-1];
+ 
+               out_img[xC+i+(yC+j)*out_stride] = Clip3(0,maxPixelValue,

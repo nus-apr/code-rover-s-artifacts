@@ -1,0 +1,15 @@
+diff --git a/catalog.c b/catalog.c
+index 24a49f3d..957651f4 100644
+--- a/catalog.c
++++ b/catalog.c
+@@ -268,9 +268,7 @@ xmlNewCatalogEntry(xmlCatalogEntryType type, const xmlChar *name,
+ 	   xmlCatalogEntryPtr group) {
+     xmlCatalogEntryPtr ret;
+     xmlChar *normid = NULL;
+-
+-    ret = (xmlCatalogEntryPtr) xmlMalloc(sizeof(xmlCatalogEntry));
+-    if (ret == NULL) {
++ ; if ( 
+         xmlCatalogErrMemory("allocating catalog entry");
+ 	return(NULL);
+     }

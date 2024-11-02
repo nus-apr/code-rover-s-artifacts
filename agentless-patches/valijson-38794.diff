@@ -1,0 +1,23 @@
+diff --git a/valijson/include/valijson/utils/file_utils.hpp b/valijson/include/valijson/utils/file_utils.hpp
+index 7e06fa5..67cfbc8 100644
+--- a/valijson/include/valijson/utils/file_utils.hpp
++++ b/valijson/include/valijson/utils/file_utils.hpp
+@@ -34,11 +34,15 @@ inline bool loadFile(const std::string &path, std::string &dest)
+ 
+     // Assign file contents to destination string
+     file.seekg(0, std::ios::beg);
+-    dest.assign(std::istreambuf_iterator<char>(file),
+-                std::istreambuf_iterator<char>());
++    if (file.good()) {
++        dest.assign(std::istreambuf_iterator<char>(file),
++                    std::istreambuf_iterator<char>());
++    } else {
++        return false;
++    }
+ 
+     return true;
+ }
+ 
+ }  // namespace utils
+-}  // namespace valijson
++}  // namespace valijson

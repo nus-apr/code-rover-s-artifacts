@@ -1,0 +1,13 @@
+diff --git a/c-blosc2/plugins/codecs/ndlz/ndlz8x8.c b/c-blosc2/plugins/codecs/ndlz/ndlz8x8.c
+index f0141e2..16cefa1 100644
+--- a/c-blosc2/plugins/codecs/ndlz/ndlz8x8.c
++++ b/c-blosc2/plugins/codecs/ndlz/ndlz8x8.c
+@@ -460,7 +460,7 @@ int ndlz8_decompress(const uint8_t *input, int32_t input_len, uint8_t *output, i
+   eshape[0] = ((blockshape[0] + 7) / cell_shape) * cell_shape;
+   eshape[1] = ((blockshape[1] + 7) / cell_shape) * cell_shape;
+ 
+-  memset(op, 0, blockshape[0] * blockshape[1]);
++  memset(op, 0, eshape[0] * eshape[1]);
+ 
+   uint32_t i_stop[2];
+   for (int i = 0; i < 2; ++i) {

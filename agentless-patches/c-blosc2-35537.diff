@@ -1,0 +1,14 @@
+diff --git a/c-blosc2/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c b/c-blosc2/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c
+index 2576a05..676b38c 100644
+--- a/c-blosc2/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c
++++ b/c-blosc2/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c
+@@ -862,6 +862,9 @@ static size_t ZSTD_decompressFrame(ZSTD_DCtx* dctx,
+             decodedSize = ZSTD_decompressBlock_internal(dctx, op, (size_t)(oend-op), ip, cBlockSize, /* frame */ 1);
+             break;
+         case bt_raw :
++            if (cBlockSize > (size_t)(oend-op)) {
++                RETURN_ERROR(dstSize_tooSmall, "Destination buffer is too small for raw block");
++            }
+             decodedSize = ZSTD_copyRawBlock(op, (size_t)(oend-op), ip, cBlockSize);
+             break;
+         case bt_rle :

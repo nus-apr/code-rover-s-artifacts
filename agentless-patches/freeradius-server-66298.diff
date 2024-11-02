@@ -1,0 +1,16 @@
+diff --git a/freeradius-server/src/protocols/radius/decode.c b/freeradius-server/src/protocols/radius/decode.c
+index da2ceff..cdf6e53 100644
+--- a/freeradius-server/src/protocols/radius/decode.c
++++ b/freeradius-server/src/protocols/radius/decode.c
+@@ -618,8 +618,9 @@ redo:
+ 	/*
+ 	 *	Decode consecutive ones into the same parent.
+ 	 */
+-	p += p[1];
+-	if (((p + 2) < end) && ((p[0] == FR_DIGEST_ATTRIBUTES) && (p[1] > 2))) {
++	if ((p + p[1]) < end) {
++		p += p[1];
++		if (((p + 2) < end) && ((p[0] == FR_DIGEST_ATTRIBUTES) && (p[1] > 2))) {
+ 		goto redo;
+ 	}
+ 

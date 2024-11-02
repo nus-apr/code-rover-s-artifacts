@@ -1,0 +1,12 @@
+diff --git a/librawspeed/src/librawspeed/io/Buffer.cpp b/librawspeed/src/librawspeed/io/Buffer.cpp
+index bca7b06..b3726d0 100644
+--- a/librawspeed/src/librawspeed/io/Buffer.cpp
++++ b/librawspeed/src/librawspeed/io/Buffer.cpp
+@@ -41,6 +41,7 @@ unique_ptr<uchar8, decltype(&alignedFree)> Buffer::Create(size_type size) {
+   if (!data.get())
+     ThrowIOE("Failed to allocate %uz bytes memory buffer.", size);
+ 
++  std::memset(data.get(), 0, size);
+   assert(!ASAN_REGION_IS_POISONED(data.get(), size));
+ 
+   return data;

@@ -1,0 +1,33 @@
+diff --git a/Libraries/LibCore/puff.cpp b/Libraries/LibCore/puff.cpp
+index c6c90d7142..8490d84533 100644
+--- a/Libraries/LibCore/puff.cpp
++++ b/Libraries/LibCore/puff.cpp
+@@ -297,7 +297,10 @@ local int decode(struct state *s, const struct huffman *h)
+             break;
+         if (s->incnt == s->inlen)
+             longjmp(s->env, 1);         /* out of input */
+-        bitbuf = s->in[s->incnt++];
++        if (s->incnt < s->inlen)        /* ensure within bounds */
++            bitbuf = s->in[s->incnt++];
++        else
++            return -10;                 /* ran out of codes */
+         if (left > 8)
+             left = 8;
+     }
+@@ -457,9 +460,13 @@ local int codes(struct state *s,
+ 
+     /* decode literals and length/distance pairs */
+     do {
+-        symbol = decode(s, lencode);
+-        if (symbol < 0)
+-            return symbol;              /* invalid symbol */
++        if (s->incnt < s->inlen) {      /* ensure within bounds before decode */
++            symbol = decode(s, lencode);
++            if (symbol < 0)
++                return symbol;          /* invalid symbol */
++        } else {
++            return -10;                 /* ran out of input */
++        }
+         if (symbol < 256) {             /* literal: symbol is the byte */
+             /* write out the literal */
+             if (s->out != NIL) {

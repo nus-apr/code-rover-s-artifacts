@@ -1,0 +1,15 @@
+diff --git a/njs/src/njs_object_prop.c b/njs/src/njs_object_prop.c
+index 7e192f1..c0dc913 100644
+--- a/njs/src/njs_object_prop.c
++++ b/njs/src/njs_object_prop.c
+@@ -18,6 +18,10 @@ njs_object_prop_alloc(njs_vm_t *vm, const njs_value_t *name,
+ {
+     njs_object_prop_t  *prop;
+ 
++    if (name == NULL || value == NULL) {
++        return NULL;
++    }
++
+     prop = njs_mp_align(vm->mem_pool, sizeof(njs_value_t),
+                         sizeof(njs_object_prop_t));
+ 

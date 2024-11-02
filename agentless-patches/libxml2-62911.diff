@@ -1,0 +1,19 @@
+diff --git a/libxml2/dict.c b/libxml2/dict.c
+index a27bda3..7aada71 100644
+--- a/libxml2/dict.c
++++ b/libxml2/dict.c
+@@ -538,7 +538,7 @@ xmlDictFindEntry(const xmlDict *dict, const xmlChar *prefix,
+                     /*
+                      * name is not necessarily null-terminated.
+                      */
+-                    if ((memcmp(entry->name, name, len) == 0) &&
++                    if ((memcmp(entry->name, name, MIN(len, entry->len)) == 0) &&
+                         (entry->name[len] == 0)) {
+                         found = 1;
+                         break;
+@@ -936,4 +936,4 @@ xmlRandom(void) {
+ 
+     return(ret);
+ #endif
+-}
++}

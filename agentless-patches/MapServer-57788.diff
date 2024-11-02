@@ -1,0 +1,18 @@
+diff --git a/MapServer/maplexer.c b/MapServer/maplexer.c
+index aa4bc26..015e491 100644
+--- a/MapServer/maplexer.c
++++ b/MapServer/maplexer.c
+@@ -5075,6 +5075,7 @@ static void yy_load_buffer_state  (void)
+ 		yyfree( (void *) b->yy_ch_buf  );
+ 
+ 	yyfree( (void *) b  );
++	b = NULL; // Set the buffer pointer to NULL after freeing
+ }
+ 
+ /* Initializes or reinitializes a buffer.
+@@ -5547,4 +5548,4 @@ void msyycleanup_includes() {
+     msyy_delete_buffer( YY_CURRENT_BUFFER );
+     msyy_switch_to_buffer(include_stack[include_stack_ptr]);
+   }
+-}
++}

@@ -1,0 +1,28 @@
+diff --git a/base/stream.c b/base/stream.c
+index 6f68d7c24..8c244ad76 100644
+--- a/base/stream.c
++++ b/base/stream.c
+@@ -996,7 +996,9 @@ stream_move(stream_cursor_read * pr, stream_cursor_write * pw)
+         count = rcount, status = 0;
+     else
+         count = wcount, status = 1;
+-    memmove(pw->ptr + 1, pr->ptr + 1, count);
++    if (count > 0) {
++        memmove(pw->ptr + 1, pr->ptr + 1, count);
++    }
+     pr->ptr += count;
+     pw->ptr += count;
+     return status;
+diff --git a/pdf/pdf_file.c b/pdf/pdf_file.c
+index 2ed6a2430..6fd6d46d9 100644
+--- a/pdf/pdf_file.c
++++ b/pdf/pdf_file.c
+@@ -1480,7 +1480,7 @@ int pdfi_read_bytes(pdf_context *ctx, byte *Buffer, uint32_t size, uint32_t coun
+                 return i;
+         }
+     }
+-    if (total) {
++    if (total && total <= sizeof(Buffer)) {
+         /* TODO the Ghostscript code uses sbufptr(s) to avoid a memcpy
+          * at some point we should modify this code to do so as well.
+          */

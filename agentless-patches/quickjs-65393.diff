@@ -1,0 +1,19 @@
+diff --git a/quickjs/quickjs.c b/quickjs/quickjs.c
+index 421d686..79bf638 100644
+--- a/quickjs/quickjs.c
++++ b/quickjs/quickjs.c
+@@ -5571,9 +5571,11 @@ void __JS_FreeValue(JSContext *ctx, JSValue v)
+ static void add_gc_object(JSRuntime *rt, JSGCObjectHeader *h,
+                           JSGCObjectTypeEnum type)
+ {
+-    h->mark = 0;
+-    h->gc_obj_type = type;
+-    list_add_tail(&h->link, &rt->gc_obj_list);
++    if (!h->link.prev && !h->link.next) { // Ensure the object is not already in the list
++        h->mark = 0;
++        h->gc_obj_type = type;
++        list_add_tail(&h->link, &rt->gc_obj_list);
++    }
+ }
+ 
+ static void remove_gc_object(JSGCObjectHeader *h)

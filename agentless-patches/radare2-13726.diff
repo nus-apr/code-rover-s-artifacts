@@ -1,0 +1,14 @@
+diff --git a/radare2/libr/bin/p/bin_dex.c b/radare2/libr/bin/p/bin_dex.c
+index dc4c7f4..9322fff 100644
+--- a/radare2/libr/bin/p/bin_dex.c
++++ b/radare2/libr/bin/p/bin_dex.c
+@@ -65,7 +65,8 @@ static char *getstr(RBinDexObj *bin, int idx) {
+ 		return NULL;
+ 	}
+ 
+-	if (len != r_utf8_strlen ((const ut8*)ptr)) {
++	size_t max_len = bin->header.strings_size - (bin->strings[idx] + uleblen);
++	if (len != r_utf8_strlen ((const ut8*)ptr) && len <= max_len) {
+ 		// eprintf ("WARNING: Invalid string for index %d\n", idx);
+ 		return NULL;
+ 	}

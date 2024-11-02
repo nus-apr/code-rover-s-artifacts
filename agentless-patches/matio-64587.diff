@@ -1,0 +1,23 @@
+diff --git a/matio/src/mat73.c b/matio/src/mat73.c
+index c5465de..e19cb79 100644
+--- a/matio/src/mat73.c
++++ b/matio/src/mat73.c
+@@ -2879,9 +2879,15 @@ Mat_VarRead73(mat_t *mat, matvar_t *matvar)
+                     }
+                     sparse_data->jc = (mat_uint32_t *)malloc(nbytes);
+                     if ( sparse_data->jc != NULL ) {
+-                        herr_t herr = H5Dread(sparse_dset_id, H5T_NATIVE_UINT, H5S_ALL, H5S_ALL,
+-                                              H5P_DEFAULT, sparse_data->jc);
+-                        if ( herr < 0 ) {
++                        hid_t mem_space = H5Screate_simple(1, &sparse_data->njc, NULL);
++                        if (mem_space >= 0) {
++                            herr_t herr = H5Dread(sparse_dset_id, H5T_NATIVE_UINT, mem_space, H5S_ALL,
++                                                  H5P_DEFAULT, sparse_data->jc);
++                            H5Sclose(mem_space);
++                            if ( herr < 0 ) {
++                                err = MATIO_E_GENERIC_READ_ERROR;
++                            }
++                        } else {
+                             err = MATIO_E_GENERIC_READ_ERROR;
+                         }
+                     } else {

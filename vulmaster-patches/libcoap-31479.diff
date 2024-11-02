@@ -1,0 +1,13 @@
+diff --git a/src/pdu.c b/src/pdu.c
+index a4739441..dd1832b7 100644
+--- a/src/pdu.c
++++ b/src/pdu.c
+@@ -1064,7 +1064,7 @@ coap_pdu_parse_opt(coap_pdu_t *pdu) {
+           ok = ok && write_char(&obp, &outbuflen, *opt, i);
+         }
+         /* write_*() always leaves a spare byte to null terminate */
+-        *obp = '\000';
++ ; printf ( "Reading %zu bytes from %s\\n" 
+         coap_log(LOG_DEBUG, "%s\n", outbuf);
+       }
+     }

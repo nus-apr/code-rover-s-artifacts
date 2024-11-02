@@ -1,0 +1,34 @@
+diff --git a/MagickCore/list.c b/MagickCore/list.c
+index c5977260c..7960f30d7 100644
+--- a/MagickCore/list.c
++++ b/MagickCore/list.c
+@@ -482,7 +482,9 @@ MagickExport Image *DestroyImageList(Image *images)
+   if (images->debug != MagickFalse)
+     (void) LogMagickEvent(TraceEvent,GetMagickModule(),"%s",images->filename);
+   while (images != (Image *) NULL)
+-    DeleteImageFromList(&images);
++    if (images != (Image *) NULL) // Check if images is not NULL
++      DeleteImageFromList(&images);
++    images = NULL; // Set to NULL after deletion
+   return((Image *) NULL);
+ }
+ 
+diff --git a/coders/png.c b/coders/png.c
+index 1ce3251bd..6b5ab1186 100644
+--- a/coders/png.c
++++ b/coders/png.c
+@@ -6849,8 +6849,12 @@ static Image *ReadOneMNGImage(MngInfo* mng_info,const ImageInfo *image_info,
+             "exit ReadJNGImage() with error");
+         if (mng_info->image != (Image *) NULL)
+           {
+-            CloseBlob(mng_info->image);
+-            mng_info->image=DestroyImageList(mng_info->image);
++            if (mng_info->image != (Image *) NULL) // Check if image is not NULL
++            {
++              CloseBlob(mng_info->image);
++              mng_info->image=DestroyImageList(mng_info->image);
++              mng_info->image = NULL; // Set to NULL after destruction
++            }
+           }
+         return((Image *) NULL);
+       }

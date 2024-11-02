@@ -1,0 +1,23 @@
+diff --git a/cpp/src/arrow/array.cc b/cpp/src/arrow/array.cc
+index 539e75599..9f2db5a3f 100644
+--- a/cpp/src/arrow/array.cc
++++ b/cpp/src/arrow/array.cc
+@@ -108,9 +108,15 @@ ArrayData ArrayData::Slice(int64_t off, int64_t len) const {
+ int64_t ArrayData::GetNullCount() const {
+   int64_t precomputed = this->null_count.load();
+   if (ARROW_PREDICT_FALSE(precomputed == kUnknownNullCount)) {
+-    if (this->buffers[0]) {
+-      precomputed = this->length -
+-                    CountSetBits(this->buffers[0]->data(), this->offset, this->length);
++    if (this->buffers[0] && this->buffers[0]->data()) {
++      int64_t buffer_size = this->buffers[0]->size(); // Assuming size() gives the buffer size
++      if (this->offset >= 0 && this->length >= 0 && this->offset + this->length <= buffer_size * 8) {
++        precomputed = this->length -
++                      CountSetBits(this->buffers[0]->data(), this->offset, this->length);
++      } else {
++        // Invalid offset/length, handle error or set precomputed to a safe value
++        precomputed = 0; // Or handle error appropriately
++      }
+     } else {
+       precomputed = 0;
+     }

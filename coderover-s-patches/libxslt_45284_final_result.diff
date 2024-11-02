@@ -1,0 +1,15 @@
+diff --git a/tree.c b/tree.c
+index e4425f10..9582bcd7 100644
+--- a/tree.c
++++ b/tree.c
+@@ -2114,7 +2114,9 @@ xmlFreeProp(xmlAttrPtr cur) {
+ 	    xmlRemoveID(cur->doc, cur);
+     }
+     if (cur->children != NULL) xmlFreeNodeList(cur->children);
+-    DICT_FREE(cur->name)
++    if (cur->name && (!dict || xmlDictOwns(dict, cur->name) == 0)) {
++        xmlFree((char *)cur->name);
++    }
+     xmlFree(cur);
+ }
+ 

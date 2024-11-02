@@ -1,0 +1,19 @@
+diff --git a/assimp/code/AssetLib/Obj/ObjTools.h b/assimp/code/AssetLib/Obj/ObjTools.h
+index 498a5ce..1ecd0d2 100644
+--- a/assimp/code/AssetLib/Obj/ObjTools.h
++++ b/assimp/code/AssetLib/Obj/ObjTools.h
+@@ -187,11 +187,9 @@ inline char_t getNameNoSpace(char_t it, char_t end, std::string &name) {
+     while (&(*it) < pStart) {
+         ++it;
+     }
+-    std::string strName(pStart, &(*it));
+-    if (strName.empty())
+-        return it;
+-    else
+-        name = strName;
++    if (pStart != &(*it)) {
++        name.assign(pStart, &(*it));
++    }
+ 
+     return it;
+ }

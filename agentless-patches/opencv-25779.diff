@@ -1,0 +1,13 @@
+diff --git a/opencv/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp b/opencv/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp
+index 57117c5..1ba0c99 100644
+--- a/opencv/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp
++++ b/opencv/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp
+@@ -227,7 +227,7 @@ void copyToMatImpl(std::vector<InT*>&& in, Mat& out, uint8_t shift)
+             for (std::size_t c = 0; c < channelsCount; ++c)
+             {
+                 const auto first = in[c];
+-                const auto last = first + size.width;
++                const auto last = first + std::min(size.width, static_cast<int>(in[c] + size.width - first));
+                 auto dOut = ChannelsIt(rowPtr, c, channelsCount);
+                 std::transform(first, last, dOut, [](InT val) -> OutT { return static_cast<OutT>(val); });
+                 in[c] += size.width;

@@ -1,0 +1,15 @@
+diff --git a/include/fluent-bit/flb_log.h b/include/fluent-bit/flb_log.h
+index 5aa00fc27..5d30c6ae1 100644
+--- a/include/fluent-bit/flb_log.h
++++ b/include/fluent-bit/flb_log.h
+@@ -85,9 +85,7 @@ static inline int flb_log_check_level(int level_set, int msg_level)
+ 
+ static inline int flb_log_check(int l) {
+     struct flb_worker *w;
+-    w = (struct flb_worker *) FLB_TLS_GET(flb_worker_ctx);
+-    if (!w && l <= 3) {
+-        return FLB_TRUE;
++ void * aux ; if ( size > SIZE_MAX ) { return NULL ; } 
+     }
+ 
+     if (w == NULL || flb_worker_log_level(w) < l) {

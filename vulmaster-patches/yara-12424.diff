@@ -1,0 +1,13 @@
+diff --git a/libyara/modules/cuckoo.c b/libyara/modules/cuckoo.c
+index 71f99d2..8605e62 100644
+--- a/libyara/modules/cuckoo.c
++++ b/libyara/modules/cuckoo.c
+@@ -172,7 +172,7 @@ define_function(network_http_post)
+           regexp_argument(1),
+           METHOD_POST));
+ }
+-
++, dst_stride, subpel_params, <vul-start> pd -> subsampling_y 
+ 
+ define_function(registry_key_access)
+ {

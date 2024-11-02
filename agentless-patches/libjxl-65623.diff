@@ -1,0 +1,13 @@
+diff --git a/libjxl/lib/jxl/enc_icc_codec.cc b/libjxl/lib/jxl/enc_icc_codec.cc
+index e66c036..d6cd3ea 100644
+--- a/libjxl/lib/jxl/enc_icc_codec.cc
++++ b/libjxl/lib/jxl/enc_icc_codec.cc
+@@ -261,7 +261,7 @@ Status PredictICC(const uint8_t* icc, size_t size, PaddedBytes* result) {
+         commands_add.push_back(kCommandShuffle2);
+         EncodeVarInt(num, &commands_add);
+         size_t start = data_add.size();
+-        for (size_t i = 0; i < num; i++) {
++        for (size_t i = 0; i < num && pos < size; i++) {
+           data_add.push_back(icc[pos]);
+           pos++;
+         }

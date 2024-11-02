@@ -1,0 +1,19 @@
+diff --git a/htslib/htscodecs/htscodecs/arith_dynamic.c b/htslib/htscodecs/htscodecs/arith_dynamic.c
+index 98b7887..9ba40a7 100644
+--- a/htslib/htscodecs/htscodecs/arith_dynamic.c
++++ b/htslib/htscodecs/htscodecs/arith_dynamic.c
+@@ -938,7 +938,7 @@ unsigned char *arith_uncompress_to(unsigned char *in,  unsigned int in_size,
+ 	    }
+ 	    *out_size = ulen;
+ 	}
+-	if (ulen != *out_size) {
++	if (ulen > *out_size) {
+ 	    free(out_free);
+ 	    return NULL;
+ 	}
+@@ -1159,4 +1159,4 @@ unsigned char *arith_uncompress_to(unsigned char *in,  unsigned int in_size,
+ unsigned char *arith_uncompress(unsigned char *in, unsigned int in_size,
+ 				unsigned int *out_size) {
+     return arith_uncompress_to(in, in_size, NULL, out_size);
+-}
++}

@@ -1,0 +1,16 @@
+diff --git a/htslib/cram/cram_codecs.c b/htslib/cram/cram_codecs.c
+index db1b3de..c750467 100644
+--- a/htslib/cram/cram_codecs.c
++++ b/htslib/cram/cram_codecs.c
+@@ -1408,6 +1408,11 @@ cram_codec *cram_xpack_decode_init(cram_block_compression_hdr *hdr,
+ 
+     c->u.xpack.nbits = vv->varint_get32(&cp, endp, NULL);
+     c->u.xpack.nval  = vv->varint_get32(&cp, endp, NULL);
++    if (c->u.xpack.nval > 256) {
++        fprintf(stderr, "nval exceeds rmap capacity\n");
++        free(c);
++        return NULL;
++    }
+     int i;
+     for (i = 0; i < c->u.xpack.nval; i++) {
+         uint32_t v = vv->varint_get32(&cp, endp, NULL);

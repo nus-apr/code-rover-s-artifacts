@@ -1,0 +1,95 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2224724931
+INFO: Loaded 3 modules   (221765 inline 8-bit counters): 13672 [0x7b6c3b7e19e0, 0x7b6c3b7e4f48), 959 [0x7b6c3b842a40, 0x7b6c3b842dff), 207134 [0x37ea690, 0x381cfae), 
+INFO: Loaded 3 PC tables (221765 PCs): 13672 [0x7b6c3b7e4f48,0x7b6c3b81a5c8), 959 [0x7b6c3b842e00,0x7b6c3b8469f0), 207134 [0x2a5b9b0,0x2d84b90), 
+/out/gs_device_pdfwrite_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7b6c3aba1520 at pc 0x0000009746a4 bp 0x7ffc4ba70300 sp 0x7ffc4ba702f8
+READ of size 1 at 0x7b6c3aba1520 thread T0
+SCARINESS: 27 (1-byte-read-stack-buffer-overflow)
+    #0 0x9746a3 in pput_hex /src/ghostpdl/./devices/vector/gdevpsfm.c:60:9
+    #1 0x9746a3 in cmap_put_ranges /src/ghostpdl/./devices/vector/gdevpsfm.c:74:9
+    #2 0x973e3b in psf_write_cmap /src/ghostpdl/./devices/vector/gdevpsfm.c:303:13
+    #3 0x95c51f in pdf_write_cmap /src/ghostpdl/./devices/vector/gdevpdtw.c:816:12
+    #4 0x92dabf in pdf_cmap_alloc /src/ghostpdl/./devices/vector/gdevpdtf.c:1256:12
+    #5 0x14dd019 in attach_cmap_resource /src/ghostpdl/./devices/vector/gdevpdtc.c:310:20
+    #6 0x14db0c5 in scan_cmap_text /src/ghostpdl/./devices/vector/gdevpdtc.c:823:28
+    #7 0x14db0c5 in process_cmap_text /src/ghostpdl/./devices/vector/gdevpdtc.c:965:12
+    #8 0x952b2b in pdf_text_process /src/ghostpdl/./devices/vector/gdevpdtt.c:3758:16
+    #9 0xaf5ece in gs_text_process /src/ghostpdl/./base/gstext.c:670:12
+    #10 0x115af92 in pdfi_show_simple /src/ghostpdl/./pdf/pdf_text.c:445:16
+    #11 0x115af92 in pdfi_show_Tr_preserve /src/ghostpdl/./pdf/pdf_text.c:780:12
+    #12 0x115af92 in pdfi_show /src/ghostpdl/./pdf/pdf_text.c:830:16
+    #13 0x115c3b7 in pdfi_Tj /src/ghostpdl/./pdf/pdf_text.c:1076:12
+    #14 0x1059a0a in pdfi_interpret_stream_operator /src/ghostpdl/./pdf/pdf_int.c:1666:24
+    #15 0x1057962 in pdfi_interpret_content_stream /src/ghostpdl/./pdf/pdf_int.c:2156:24
+    #16 0x10bcd8e in pdfi_process_page_contents /src/ghostpdl/./pdf/pdf_page.c:127:20
+    #17 0x10bcd8e in pdfi_process_one_page /src/ghostpdl/./pdf/pdf_page.c:152:12
+    #18 0x10bcd8e in pdfi_page_render /src/ghostpdl/./pdf/pdf_page.c:1003:12
+    #19 0x1014bbf in zPDFdrawpage /src/ghostpdl/./psi/zpdfops.c:1157:24
+    #20 0xe85ba9 in interp /src/ghostpdl/./psi/interp.c:1725:40
+    #21 0xe85ba9 in gs_call_interp /src/ghostpdl/./psi/interp.c:522:12
+    #22 0xe85ba9 in gs_interpret /src/ghostpdl/./psi/interp.c:479:12
+    #23 0x577123 in gs_main_interpret /src/ghostpdl/./psi/imain.c:257:12
+    #24 0x577123 in gs_main_run_string_end /src/ghostpdl/./psi/imain.c:945:12
+    #25 0x577123 in gs_main_run_string_with_length /src/ghostpdl/./psi/imain.c:889:12
+    #26 0x5726b1 in gs_main_run_string /src/ghostpdl/./psi/imain.c:870:12
+    #27 0x11bdfbc in run_string /src/ghostpdl/./psi/imainarg.c:1169:12
+    #28 0x11ba0e2 in swproc /src/ghostpdl/./psi/imainarg.c:367:20
+    #29 0x11b702e in gs_main_init_with_args01 /src/ghostpdl/./psi/imainarg.c:224:24
+    #30 0x11bdd48 in gs_main_init_with_args /src/ghostpdl/./psi/imainarg.c:289:16
+    #31 0xe6e6b2 in psapi_init_with_args /src/ghostpdl/./psi/psapi.c:281:12
+    #32 0x56ebda in gsapi_init_with_args /src/ghostpdl/./psi/iapi.c:253:12
+    #33 0x56dcd1 in fuzz_gs_device(unsigned char const*, unsigned long, int, char const*, char const*) /src/gs_fuzzlib.h:130:8
+    #34 0x56e0cf in LLVMFuzzerTestOneInput /src/gs_device_pdfwrite_fuzzer.cc:18:2
+    #35 0x43f1c3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #36 0x42a922 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #37 0x4301cc in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #38 0x459702 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #39 0x7b6c3b1e2082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #40 0x420aed in _start (/out/gs_device_pdfwrite_fuzzer+0x420aed)
+
+DEDUP_TOKEN: pput_hex--cmap_put_ranges--psf_write_cmap
+Address 0x7b6c3aba1520 is located in stack of thread T0 at offset 1312 in frame
+    #0 0x97359f in psf_write_cmap /src/ghostpdl/./devices/vector/gdevpsfm.c:219
+
+DEDUP_TOKEN: psf_write_cmap
+  This frame has 2 object(s):
+    [32, 72) 'renum' (line 287)
+    [112, 1312) 'ranges' (line 289) <== Memory access at offset 1312 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/ghostpdl/./devices/vector/gdevpsfm.c:60:9 in pput_hex
+Shadow bytes around the buggy address:
+  0x0f6e0756c250: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c260: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c270: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c290: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0f6e0756c2a0: 00 00 00 00[f3]f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3
+  0x0f6e0756c2b0: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c2c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c2d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c2e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0f6e0756c2f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

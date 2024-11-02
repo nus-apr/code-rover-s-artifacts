@@ -1,0 +1,15 @@
+diff --git a/tests/fuzz/radio_receive_done.cpp b/tests/fuzz/radio_receive_done.cpp
+index 6b84214..b31e1c7 100644
+--- a/tests/fuzz/radio_receive_done.cpp
++++ b/tests/fuzz/radio_receive_done.cpp
+@@ -44,9 +44,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+ {
+     const otPanId panId = 0xdead;
+ 
+-    otInstance * instance = NULL;
+-    otRadioFrame frame;
+-    uint8_t *    buf = NULL;
++ nullptr ) { pool_ 
+ 
+     VerifyOrExit(size <= OT_RADIO_FRAME_MAX_SIZE);
+ 

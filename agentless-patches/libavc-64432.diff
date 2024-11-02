@@ -1,0 +1,22 @@
+diff --git a/libavc/decoder/ih264d_format_conv.c b/libavc/decoder/ih264d_format_conv.c
+index 7b0b769..740f23d 100644
+--- a/libavc/decoder/ih264d_format_conv.c
++++ b/libavc/decoder/ih264d_format_conv.c
+@@ -390,7 +390,7 @@ void ih264d_fmt_conv_420sp_to_420sp(UWORD8 *pu1_y_src,
+     pu1_dst = (UWORD8 *)pu1_y_dst;
+ 
+     num_rows = ht;
+-    num_cols = wd;
++    num_cols = (wd < dst_strd) ? wd : dst_strd;
+ 
+     src_strd = src_y_strd;
+     dst_strd = dst_y_strd;
+@@ -407,7 +407,7 @@ void ih264d_fmt_conv_420sp_to_420sp(UWORD8 *pu1_y_src,
+     pu1_dst = (UWORD8 *)pu1_uv_dst;
+ 
+     num_rows = ht >> 1;
+-    num_cols = wd;
++    num_cols = (wd < dst_strd) ? wd : dst_strd;
+ 
+     src_strd = src_uv_strd;
+     dst_strd = dst_uv_strd;

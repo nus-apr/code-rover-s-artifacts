@@ -1,0 +1,13 @@
+diff --git a/src/muParser.cpp b/src/muParser.cpp
+index b536556..b7203c6 100644
+--- a/src/muParser.cpp
++++ b/src/muParser.cpp
+@@ -149,7 +149,7 @@ namespace mu
+       throw exception_type(_T("too few arguments for function sum."));
+ 
+     value_type fRes=0;
+-    for (int i=0; i<a_iArgc; ++i) fRes += a_afArg[i];
++ value_type ParserBase :: ParseCmdCodeNoArg ( void ) { return ParseCmdCode ( 
+     return fRes;
+   }
+ 

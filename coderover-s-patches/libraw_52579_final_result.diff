@@ -1,0 +1,15 @@
+diff --git a/src/utils/read_utils.cpp b/src/utils/read_utils.cpp
+index 974ffc07..520bb5f7 100644
+--- a/src/utils/read_utils.cpp
++++ b/src/utils/read_utils.cpp
+@@ -169,6 +169,10 @@ double libraw_sgetreal_static(short _order, int type, uchar *s)
+ 
+ void LibRaw::read_shorts(ushort *pixel, unsigned count)
+ {
++  // Ensure the pixel buffer is large enough to hold the data
++  if (!pixel || count == 0)
++    return;
++
+   if ((unsigned)fread(pixel, 2, count, ifp) < count)
+     derror();
+   if ((order == 0x4949) == (ntohs(0x1234) == 0x1234))

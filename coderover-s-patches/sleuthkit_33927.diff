@@ -1,0 +1,50 @@
+diff --git a/tsk/fs/hfs_unicompare.c b/tsk/fs/hfs_unicompare.c
+index 752486af0..38b445a59 100644
+--- a/tsk/fs/hfs_unicompare.c
++++ b/tsk/fs/hfs_unicompare.c
+@@ -187,23 +187,37 @@ hfs_unicode_compare_int(uint16_t endian, const hfs_uni_str * uni1,
+         c1 = 0;
+         c2 = 0;
+         //  Find next non-ignorable char from str1, or zero if no more
+-        while (length1 && c1 == 0) {
++    while (length1 > 0 && c1 == 0) {
++        if (length1 >= 2) {
+             c1 = tsk_getu16(endian, str1);
+             str1 += 2;
+-            --length1;
+-            if ((temp = lowerCaseTable[c1 >> 8]) != 0)  //  is there a subtable
++            length1 -= 2;
++            if ((c1 >> 8) < 256 && (temp = lowerCaseTable[c1 >> 8]) != 0) {  //  is there a subtable
+                 //  for this upper byte?
+-                c1 = lowerCaseTable[temp + (c1 & 0x00FF)];      //  yes, so fold the char
++                if ((temp + (c1 & 0x00FF)) < 65536) {
++                    c1 = lowerCaseTable[temp + (c1 & 0x00FF)];  //  yes, so fold the char
++                }
++            }
++        } else {
++            break;  // Prevent accessing beyond the buffer
+         }
++    }
+         //  Find next non-ignorable char from str2, or zero if no more
+-        while (length2 && c2 == 0) {
++    while (length2 > 0 && c2 == 0) {
++        if (length2 >= 2) {
+             c2 = tsk_getu16(endian, str2);
+             str2 += 2;
+-            --length2;
+-            if ((temp = lowerCaseTable[c2 >> 8]) != 0)  //  is there a subtable
++            length2 -= 2;
++            if ((c2 >> 8) < 256 && (temp = lowerCaseTable[c2 >> 8]) != 0) {  //  is there a subtable
+                 //  for this upper byte?
+-                c2 = lowerCaseTable[temp + (c2 & 0x00FF)];      //  yes, so fold the char
++                if ((temp + (c2 & 0x00FF)) < 65536) {
++                    c2 = lowerCaseTable[temp + (c2 & 0x00FF)];  //  yes, so fold the char
++                }
++            }
++        } else {
++            break;  // Prevent accessing beyond the buffer
+         }
++    }
+         if (c1 != c2)           //  found a difference, so stop looping
+             break;
+         if (c1 == 0)            //  did we reach the end of both strings at the same time?

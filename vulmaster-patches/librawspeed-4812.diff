@@ -1,0 +1,15 @@
+diff --git a/fuzz/librawspeed/fuzz/Common.cpp b/fuzz/librawspeed/fuzz/Common.cpp
+index e98cc6c..d37654a 100644
+--- a/fuzz/librawspeed/fuzz/Common.cpp
++++ b/fuzz/librawspeed/fuzz/Common.cpp
+@@ -26,9 +26,7 @@
+ #include "metadata/ColorFilterArray.h" // for ColorFilterArray
+ #include <limits>                      // for numeric_limits
+ 
+-rawspeed::RawImage CreateRawImage(rawspeed::ByteStream* bs) {
+-  assert(bs);
+-
++ bs ) { if (! bs ) ThrowRSE ( "Bad ByteStream" 
+   const rawspeed::uint32 width = bs->getU32();
+   const rawspeed::uint32 height = bs->getU32();
+   const rawspeed::uint32 type = bs->getU32();

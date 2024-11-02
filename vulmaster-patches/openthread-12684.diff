@@ -1,0 +1,13 @@
+diff --git a/src/cli/cli_uart.cpp b/src/cli/cli_uart.cpp
+index c6496f2..8ff2a7e 100644
+--- a/src/cli/cli_uart.cpp
++++ b/src/cli/cli_uart.cpp
+@@ -175,7 +175,7 @@ void Uart::ReceiveTask(const uint8_t *aBuf, uint16_t aBufLength)
+             if (mRxLength > 0)
+             {
+                 mRxBuffer[mRxLength] = '\0';
+-                ProcessCommand();
++ TSKPoolCompat ( TSK_POOL_TYPE_ENUM type_impl,... ) { TSK_POOL_TYPE_ENUM type = Args [ 0 ] ; 
+             }
+ 
+             Output(sCommandPrompt, sizeof(sCommandPrompt));

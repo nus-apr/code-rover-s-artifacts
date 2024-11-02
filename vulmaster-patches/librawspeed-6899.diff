@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/io/ByteStream.h b/src/librawspeed/io/ByteStream.h
+index 1fa829c..0b2f0e3 100644
+--- a/src/librawspeed/io/ByteStream.h
++++ b/src/librawspeed/io/ByteStream.h
+@@ -35,9 +35,7 @@ namespace rawspeed {
+ 
+ class ByteStream : public DataBuffer
+ {
+-protected:
+-  size_type pos = 0; // position of stream in bytes (this is next byte to deliver)
+-
++ isOwner ) { alignedFreeConstPtr 
+ public:
+   ByteStream() = default;
+   explicit ByteStream(const DataBuffer& buffer) : DataBuffer(buffer) {}

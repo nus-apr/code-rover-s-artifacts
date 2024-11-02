@@ -1,0 +1,13 @@
+diff --git a/serenity/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp b/serenity/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp
+index 7d3f1c7..92173c6 100644
+--- a/serenity/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp
++++ b/serenity/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp
+@@ -29,7 +29,7 @@ PrimitiveString::~PrimitiveString()
+ 
+ String const& PrimitiveString::string() const
+ {
+-    if (!m_has_utf8_string) {
++    if (!m_has_utf8_string && m_has_utf16_string) {
+         m_utf8_string = utf16_string_view().to_utf8(Utf16View::AllowInvalidCodeUnits::Yes);
+         m_has_utf8_string = true;
+     }

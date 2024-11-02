@@ -1,0 +1,19 @@
+diff --git a/libxml2/parser.c b/libxml2/parser.c
+index 93638a9..64e5c70 100644
+--- a/libxml2/parser.c
++++ b/libxml2/parser.c
+@@ -2119,7 +2119,7 @@ xmlSkipBlankChars(xmlParserCtxtPtr ctxt) {
+ 	 * if we are in the document content, go really fast
+ 	 */
+ 	cur = ctxt->input->cur;
+-	while (IS_BLANK_CH(*cur)) {
++	while ((cur < ctxt->input->end) && IS_BLANK_CH(*cur)) {
+ 	    if (*cur == '\n') {
+ 		ctxt->input->line++; ctxt->input->col = 1;
+ 	    } else {
+@@ -15342,4 +15342,4 @@ xmlCtxtReadIO(xmlParserCtxtPtr ctxt, xmlInputReadCallback ioread,
+     }
+     inputPush(ctxt, stream);
+     return (xmlDoRead(ctxt, URL, encoding, options, 1));
+-}
++}

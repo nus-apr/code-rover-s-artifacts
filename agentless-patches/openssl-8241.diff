@@ -1,0 +1,12 @@
+diff --git a/openssl/ssl/t1_lib.c b/openssl/ssl/t1_lib.c
+index 1f69fba..76a5db7 100644
+--- a/openssl/ssl/t1_lib.c
++++ b/openssl/ssl/t1_lib.c
+@@ -1384,6 +1384,7 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL *s, const unsigned char *etick,
+         /* Some additional consistency checks */
+         if (slen != 0) {
+             SSL_SESSION_free(sess);
++            sess = NULL;
+             ret = SSL_TICKET_NO_DECRYPT;
+             goto end;
+         }

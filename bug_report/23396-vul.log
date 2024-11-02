@@ -1,0 +1,66 @@
+INFO: Seed: 2228316821
+INFO: Loaded 1 modules   (12058 inline 8-bit counters): 12058 [0xaaae40, 0xaadd5a), 
+INFO: Loaded 1 PC tables (12058 PCs): 12058 [0xaadd60,0xadcf00), 
+/out/fuzz_process_packet: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x6100000001f9 at pc 0x000000570c2f bp 0x7ffd98b7d210 sp 0x7ffd98b7d208
+READ of size 2 at 0x6100000001f9 thread T0
+SCARINESS: 14 (2-byte-read-heap-buffer-overflow)
+    #0 0x570c2e in ndpi_parse_packet_line_info /src/ndpi/src/lib/ndpi_main.c:4804:10
+    #1 0x5a83da in ndpi_int_search_bittorrent_tcp_zero /src/ndpi/src/lib/protocols/bittorrent.c:140:5
+    #2 0x565b8e in check_ndpi_tcp_flow_func /src/ndpi/src/lib/ndpi_main.c:3856:2
+    #3 0x56c250 in ndpi_detection_process_packet /src/ndpi/src/lib/ndpi_main.c:4526:3
+    #4 0x55453a in LLVMFuzzerTestOneInput /src/ndpi/fuzz/fuzz_process_packet.c:24:3
+    #5 0x45a011 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:556:15
+    #6 0x444b31 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #7 0x44a7ee in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:774:9
+    #8 0x474712 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #9 0x7658e9dfb83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #10 0x41dfa8 in _start (/out/fuzz_process_packet+0x41dfa8)
+
+DEDUP_TOKEN: ndpi_parse_packet_line_info--ndpi_int_search_bittorrent_tcp_zero--check_ndpi_tcp_flow_func
+0x6100000001fa is located 0 bytes to the right of 186-byte region [0x610000000140,0x6100000001fa)
+allocated by thread T0 here:
+    #0 0x521bad in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:145:3
+    #1 0x432e17 in operator new(unsigned long) (/out/fuzz_process_packet+0x432e17)
+    #2 0x444b31 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #3 0x44a7ee in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:774:9
+    #4 0x474712 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #5 0x7658e9dfb83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: malloc--operator new(unsigned long)--fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/ndpi/src/lib/ndpi_main.c:4804:10 in ndpi_parse_packet_line_info
+Shadow bytes around the buggy address:
+  0x0c207fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c207fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c207fff8000: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x0c207fff8010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02
+  0x0c207fff8020: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+=>0x0c207fff8030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00[02]
+  0x0c207fff8040: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x0c207fff8050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c207fff8060: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x0c207fff8070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c207fff8080: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

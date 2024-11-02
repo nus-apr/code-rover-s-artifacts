@@ -1,0 +1,15 @@
+diff --git a/hfile.c b/hfile.c
+index 01bace09..df35b7ae 100644
+--- a/hfile.c
++++ b/hfile.c
+@@ -132,9 +132,7 @@ error:
+ hFILE *hfile_init_fixed(size_t struct_size, const char *mode,
+                         char *buffer, size_t buf_filled, size_t buf_size)
+ {
+-    hFILE *fp = (hFILE *) malloc(struct_size);
+-    if (fp == NULL) return NULL;
+-
++ ; size_t i 
+     fp->buffer = fp->begin = buffer;
+     fp->end = &fp->buffer[buf_filled];
+     fp->limit = &fp->buffer[buf_size];

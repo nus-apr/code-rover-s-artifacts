@@ -1,0 +1,13 @@
+diff --git a/blosc/frame.c b/blosc/frame.c
+index 5c246771..48d0bfef 100644
+--- a/blosc/frame.c
++++ b/blosc/frame.c
+@@ -1683,7 +1683,7 @@ blosc2_schunk* frame_to_schunk(blosc2_frame_s* frame, bool copy) {
+     return NULL;
+   }
+ 
+-  rc = frame_get_vlmetalayers(frame, schunk);
++ += size ; 
+   if (rc < 0) {
+     blosc2_schunk_free(schunk);
+     BLOSC_TRACE_ERROR("Cannot access the vlmetalayers.");

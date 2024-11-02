@@ -1,0 +1,23 @@
+diff --git a/binutils-gdb/opcodes/aarch64-dis.c b/binutils-gdb/opcodes/aarch64-dis.c
+index 8f1e17e..e3d02b9 100644
+--- a/binutils-gdb/opcodes/aarch64-dis.c
++++ b/binutils-gdb/opcodes/aarch64-dis.c
+@@ -153,9 +153,15 @@ extract_fields (aarch64_insn code, aarch64_insn mask, ...)
+   while (num--)
+     {
+       kind = va_arg (va, enum aarch64_field_kind);
+-      field = &fields[kind];
+-      value <<= field->width;
+-      value |= extract_field (kind, code, mask);
++      if (kind < NUM_FIELDS) {
++        field = &fields[kind];
++        value <<= field->width;
++        value |= extract_field (kind, code, mask);
++      } else {
++        // Handle error: invalid field kind
++        va_end(va);
++        return false; // or handle the error appropriately
++      }
+     }
+   return value;
+ }

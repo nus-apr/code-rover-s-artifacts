@@ -1,0 +1,15 @@
+diff --git a/src/core/common/message.cpp b/src/core/common/message.cpp
+index 6eafd3228..5321ad1f9 100644
+--- a/src/core/common/message.cpp
++++ b/src/core/common/message.cpp
+@@ -161,6 +161,10 @@ void MessagePool::FreeBuffers(Buffer *aBuffer)
+ {
+     while (aBuffer != NULL)
+     {
++        // Verify the integrity of the buffer
++        assert(aBuffer != nullptr && "Buffer is null");
++        assert(aBuffer->GetNextBuffer() != aBuffer && "Buffer points to itself");
++
+         Buffer *tmpBuffer = aBuffer->GetNextBuffer();
+ #if OPENTHREAD_CONFIG_PLATFORM_MESSAGE_MANAGEMENT
+         otPlatMessagePoolFree(&GetInstance(), aBuffer);

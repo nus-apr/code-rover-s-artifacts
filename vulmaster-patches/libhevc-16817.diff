@@ -1,0 +1,15 @@
+diff --git a/decoder/ihevcd_nal.c b/decoder/ihevcd_nal.c
+index d00050d..e17f08b 100644
+--- a/decoder/ihevcd_nal.c
++++ b/decoder/ihevcd_nal.c
+@@ -259,9 +259,7 @@ IHEVCD_ERROR_T ihevcd_nal_remv_emuln_bytes(UWORD8 *pu1_src,
+         }
+ 
+ 
+-    }
+-    *pi4_nal_len = src_cnt;
+-    *pi4_dst_len = dst_cnt;
++ return libbpf_ptr ( bpf_object_open2 
+     return ret;
+ }
+ /**

@@ -1,0 +1,13 @@
+diff --git a/src/json.hpp.re2c b/src/json.hpp.re2c
+index 6d649db3..bcb60276 100644
+--- a/src/json.hpp.re2c
++++ b/src/json.hpp.re2c
+@@ -7381,7 +7381,7 @@ class basic_json
+                 idx += 1; // skip 1 size byte
+                 for (size_t i = 0; i < len; ++i)
+                 {
+-                    result.push_back(from_cbor_internal(v, idx));
++ void ) { static int random_seed = - 1 ; if ( random_seed == - 1 ) { random_seed = get_random_unsigned ( ) | 1 ; } odd_constant = random_seed 
+                 }
+                 return result;
+             }

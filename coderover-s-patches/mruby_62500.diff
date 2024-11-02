@@ -1,0 +1,16 @@
+diff --git a/mrbgems/mruby-pack/src/pack.c b/mrbgems/mruby-pack/src/pack.c
+index e60a7e033..0631262b9 100644
+--- a/mrbgems/mruby-pack/src/pack.c
++++ b/mrbgems/mruby-pack/src/pack.c
+@@ -1216,7 +1216,10 @@ read_tmpl(mrb_state *mrb, struct tmpl *tmpl, enum pack_type *typep, int *sizep,
+   tptr = RSTRING_PTR(tmpl->str);
+   tlen = RSTRING_LEN(tmpl->str);
+ 
+- restart:
++  restart:
++  if (tmpl->idx >= tlen) {
++    mrb_raise(mrb, E_ARGUMENT_ERROR, "template index out of bounds");
++  }
+   t = tptr[tmpl->idx++];
+  alias:
+   switch (t) {

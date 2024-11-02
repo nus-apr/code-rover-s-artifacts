@@ -1,0 +1,70 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2294889014
+INFO: Loaded 1 modules   (14667 inline 8-bit counters): 14667 [0x83cc460, 0x83cfdab), 
+INFO: Loaded 1 PC tables (14667 PCs): 14667 [0x834653c,0x8362f94), 
+/out/wolfmqtt-fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==12==ERROR: AddressSanitizer: heap-buffer-overflow on address 0xf3c00ec4 at pc 0x081cb266 bp 0xffa70528 sp 0xffa70520
+WRITE of size 1 at 0xf3c00ec4 thread T0
+SCARINESS: 31 (1-byte-write-heap-buffer-overflow)
+    #0 0x81cb265 in MqttClient_DecodePacket /src/wolfmqtt/src/mqtt_client.c:401:45
+    #1 0x81cba41 in MqttClient_HandlePacket /src/wolfmqtt/src/mqtt_client.c
+    #2 0x81c7ee2 in MqttClient_WaitType /src/wolfmqtt/src/mqtt_client.c:938:18
+    #3 0x81c7417 in MqttClient_Connect /src/wolfmqtt/src/mqtt_client.c:1240:10
+    #4 0x81bd488 in wolfMQTTFuzzer::Initialize() /src/wolfmqtt-fuzzers/fuzzer.cpp:456:9
+    #5 0x81be498 in LLVMFuzzerTestOneInput /src/wolfmqtt-fuzzers/fuzzer.cpp:539:5
+    #6 0x80b01de in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #7 0x809b3ae in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #8 0x80a1205 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #9 0x80caf37 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #10 0xf5c1e646 in __libc_start_main (/lib32/libc.so.6+0x18646)
+    #11 0x8075918 in _start (/out/wolfmqtt-fuzzer+0x8075918)
+
+DEDUP_TOKEN: MqttClient_DecodePacket--MqttClient_HandlePacket--MqttClient_WaitType
+0xf3c00ec4 is located 4 bytes to the right of 48-byte region [0xf3c00e90,0xf3c00ec0)
+allocated by thread T0 here:
+    #0 0x81b66c9 in operator new(unsigned int) /src/llvm-project/compiler-rt/lib/asan/asan_new_delete.cpp:99:3
+    #1 0x81bc87f in wolfMQTTFuzzer::wolfMQTTFuzzer(fuzzing::datasource::Datasource&) /src/wolfmqtt-fuzzers/fuzzer.cpp:370:19
+    #2 0x81be489 in LLVMFuzzerTestOneInput /src/wolfmqtt-fuzzers/fuzzer.cpp:537:20
+    #3 0x80b01de in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #4 0x809b3ae in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #5 0x80a1205 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #6 0x80caf37 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #7 0xf5c1e646 in __libc_start_main (/lib32/libc.so.6+0x18646)
+
+DEDUP_TOKEN: operator new(unsigned int)--wolfMQTTFuzzer::wolfMQTTFuzzer(fuzzing::datasource::Datasource&)--LLVMFuzzerTestOneInput
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/wolfmqtt/src/mqtt_client.c:401:45 in MqttClient_DecodePacket
+Shadow bytes around the buggy address:
+  0x3e780180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e780190: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e7801a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e7801b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e7801c0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+=>0x3e7801d0: fa fa 00 00 00 00 00 00[fa]fa 00 00 00 00 00 05
+  0x3e7801e0: fa fa 00 00 00 00 00 05 fa fa 00 00 00 00 00 00
+  0x3e7801f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e780200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e780210: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e780220: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==12==ABORTING

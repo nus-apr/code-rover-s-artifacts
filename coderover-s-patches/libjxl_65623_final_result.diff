@@ -1,0 +1,27 @@
+diff --git a/lib/jxl/enc_icc_codec.cc b/lib/jxl/enc_icc_codec.cc
+index 9c4b025a..89c422ec 100644
+--- a/lib/jxl/enc_icc_codec.cc
++++ b/lib/jxl/enc_icc_codec.cc
+@@ -131,16 +131,18 @@ Status PredictICC(const uint8_t* icc, size_t size, PaddedBytes* result) {
+   if (pos + 4 <= size) {
+     uint64_t numtags = DecodeUint32(icc, size, pos);
+     pos += 4;
++    if (pos > size) return false;  // Ensure pos does not exceed size
+     EncodeVarInt(numtags + 1, &commands);
+     uint64_t prevtagstart = kICCHeaderSize + numtags * 12;
+     uint32_t prevtagsize = 0;
+     for (size_t i = 0; i < numtags; i++) {
+       if (pos + 12 > size) break;
+ 
+-      Tag tag = DecodeKeyword(icc, size, pos + 0);
+-      uint32_t tagstart = DecodeUint32(icc, size, pos + 4);
+-      uint32_t tagsize = DecodeUint32(icc, size, pos + 8);
+-      pos += 12;
++    Tag tag = DecodeKeyword(icc, size, pos + 0);
++    uint32_t tagstart = DecodeUint32(icc, size, pos + 4);
++    uint32_t tagsize = DecodeUint32(icc, size, pos + 8);
++    pos += 12;
++    if (pos > size) return false;  // Ensure pos does not exceed size
+ 
+       tags.push_back(tag);
+       tagstarts.push_back(tagstart);

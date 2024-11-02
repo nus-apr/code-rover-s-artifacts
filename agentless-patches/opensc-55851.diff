@@ -1,0 +1,13 @@
+diff --git a/opensc/src/pkcs15init/profile.c b/opensc/src/pkcs15init/profile.c
+index 10ccd48..bfe4ddd 100644
+--- a/opensc/src/pkcs15init/profile.c
++++ b/opensc/src/pkcs15init/profile.c
+@@ -1565,7 +1565,7 @@ static int
+ do_acl(struct state *cur, int argc, char **argv)
+ {
+ 	struct sc_file	*file = NULL;
+-	char		oper[64], *what = NULL;
++	char		oper[128], *what = NULL;
+ 	memset(oper, 0, sizeof(oper));
+ 
+ 	if (!cur->file)

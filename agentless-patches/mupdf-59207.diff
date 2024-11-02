@@ -1,0 +1,13 @@
+diff --git a/mupdf/source/pdf/pdf-xref.c b/mupdf/source/pdf/pdf-xref.c
+index 3affb06..de8ec34 100644
+--- a/mupdf/source/pdf/pdf-xref.c
++++ b/mupdf/source/pdf/pdf-xref.c
+@@ -236,6 +236,8 @@ ensure_solid_xref(fz_context *ctx, pdf_document *doc, int num, int which)
+ 	/* Move objects over to the new subsection and destroy the old
+ 	 * ones */
+ 	sub = xref->subsec;
++	new_sub = fz_malloc_struct(ctx, pdf_xref_subsec);
++	new_sub->table = fz_calloc(ctx, num, sizeof(pdf_xref_entry));
+ 	while (sub != NULL)
+ 	{
+ 		pdf_xref_subsec *next = sub->next;

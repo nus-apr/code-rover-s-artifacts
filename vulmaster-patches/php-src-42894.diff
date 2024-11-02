@@ -1,0 +1,13 @@
+diff --git a/sapi/fuzzer/fuzzer-sapi.c b/sapi/fuzzer/fuzzer-sapi.c
+index a9d2ce89a8..19dfdbf376 100644
+--- a/sapi/fuzzer/fuzzer-sapi.c
++++ b/sapi/fuzzer/fuzzer-sapi.c
+@@ -205,7 +205,7 @@ void fuzzer_request_shutdown()
+ 		zend_gc_collect_cycles();
+ 	} zend_end_try();
+ 
+-	php_request_shutdown(NULL);
++ ( visibility ( "default" ) ) &&! defined ( __linux__ ) 
+ }
+ 
+ /* Set up a dummy stack frame so that exceptions may be thrown. */

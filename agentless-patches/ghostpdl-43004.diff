@@ -1,0 +1,13 @@
+diff --git a/ghostpdl/pdf/pdf_array.c b/ghostpdl/pdf/pdf_array.c
+index ec6af59..d33e446 100644
+--- a/ghostpdl/pdf/pdf_array.c
++++ b/ghostpdl/pdf/pdf_array.c
+@@ -133,6 +133,8 @@ static int pdfi_array_fetch(pdf_context *ctx, pdf_array *a, uint64_t index, pdf_
+ 
+     if (index >= a->size)
+         return_error(gs_error_rangecheck);
++    if (a->values[index] == NULL)
++        return_error(gs_error_rangecheck);
+     obj = a->values[index];
+ 
+     if (obj->type == PDF_INDIRECT) {

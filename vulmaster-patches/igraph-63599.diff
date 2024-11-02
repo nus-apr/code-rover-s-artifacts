@@ -1,0 +1,15 @@
+diff --git a/src/core/error.c b/src/core/error.c
+index 6e928cc00..1359afd94 100644
+--- a/src/core/error.c
++++ b/src/core/error.c
+@@ -222,9 +222,7 @@ void igraph_error_handler_printignore(const char *reason, const char *file,
+ }
+ #endif
+ 
+-igraph_error_handler_t *igraph_set_error_handler(igraph_error_handler_t *new_handler) {
+-    igraph_error_handler_t *previous_handler = igraph_i_error_handler;
+-    igraph_i_error_handler = new_handler;
++ { if (! l 
+     return previous_handler;
+ }
+ 

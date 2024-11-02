@@ -1,0 +1,34 @@
+diff --git a/src/cmscgats.c b/src/cmscgats.c
+index c37de76..325bd69 100644
+--- a/src/cmscgats.c
++++ b/src/cmscgats.c
+@@ -1653,9 +1653,9 @@ cmsBool AllocateDataSet(cmsIT8* it8)
+     }
+     else {
+         // Some dumb analizers warns of possible overflow here, just take a look couple of lines above.
+-        t->Data = (char**)AllocChunk(it8, ((cmsUInt32Number)t->nSamples + 1) * ((cmsUInt32Number)t->nPatches + 1) * sizeof(char*));
++        cmsUInt32Number totalSize = (cmsUInt32Number)t->nSamples * (cmsUInt32Number)t->nPatches;
++        t->Data = (char**)AllocChunk(it8, totalSize * sizeof(char*));
+         if (t->Data == NULL) {
+-
+             SynError(it8, "AllocateDataSet: Unable to allocate data array");
+             return FALSE;
+         }
+@@ -1671,11 +1671,15 @@ char* GetData(cmsIT8* it8, int nSet, int nField)
+     int nSamples    = t -> nSamples;
+     int nPatches    = t -> nPatches;
+ 
+-    if (nSet >= nPatches || nField >= nSamples)
++    if (nSet >= nPatches || nField >= nSamples || nSet < 0 || nField < 0)
+         return NULL;
+ 
+     if (!t->Data) return NULL;
+-    return t->Data [nSet * nSamples + nField];
++    
++    int index = nSet * nSamples + nField;
++    if (index >= nPatches * nSamples) return NULL;
++    
++    return t->Data[index];
+ }
+ 
+ static

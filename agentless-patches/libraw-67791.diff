@@ -1,0 +1,19 @@
+diff --git a/libraw/src/utils/utils_libraw.cpp b/libraw/src/utils/utils_libraw.cpp
+index b685734..9b8fc62 100644
+--- a/libraw/src/utils/utils_libraw.cpp
++++ b/libraw/src/utils/utils_libraw.cpp
+@@ -700,7 +700,7 @@ unsigned char checked_buffer_t::operator[](int idx)
+ }
+ unsigned checked_buffer_t::sget4(int offset)
+ {
+-  checkoffset(offset + 4);
++  checkoffset(offset + 3);
+   return libraw_sget4_static(_order, _data + offset);
+ }
+ 
+@@ -738,4 +738,4 @@ int checked_buffer_t::tiff_sget(unsigned save, INT64 *tag_offset, unsigned *tag_
+     *tag_dataoffset = *tag_offset + 8;
+   *tag_offset += 12;
+   return 0;
+-}
++}

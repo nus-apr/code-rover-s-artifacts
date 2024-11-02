@@ -1,0 +1,15 @@
+diff --git a/wolfmqtt/src/mqtt_client.c b/wolfmqtt/src/mqtt_client.c
+index a2c8aee..287aa65 100644
+--- a/wolfmqtt/src/mqtt_client.c
++++ b/wolfmqtt/src/mqtt_client.c
+@@ -512,7 +512,9 @@ static int MqttClient_DecodePacket(MqttClient* client, byte* rx_buf,
+         }
+     #endif
+         /* Free the properties */
+-        MqttProps_Free(props);
++        if (props != NULL) {
++            MqttProps_Free(props);
++        }
+     }
+ #endif
+ 

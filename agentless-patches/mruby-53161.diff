@@ -1,0 +1,15 @@
+diff --git a/mruby/mrbgems/mruby-pack/src/pack.c b/mruby/mrbgems/mruby-pack/src/pack.c
+index 48d9e1d..1101f2e 100644
+--- a/mruby/mrbgems/mruby-pack/src/pack.c
++++ b/mruby/mrbgems/mruby-pack/src/pack.c
+@@ -522,6 +522,10 @@ unpack_float(mrb_state *mrb, const unsigned char * src, int srclen, mrb_value ar
+   float f;
+   uint8_t *buffer = (uint8_t *)&f;
+ 
++  if (srclen < 4) {
++    mrb_raise(mrb, E_ARGUMENT_ERROR, "source buffer too small for float");
++  }
++
+   if (flags & PACK_FLAG_LITTLEENDIAN) {
+     if (littleendian) {
+       memcpy(buffer, src, 4);

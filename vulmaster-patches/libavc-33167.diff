@@ -1,0 +1,13 @@
+diff --git a/decoder/ih264d_thread_parse_decode.c b/decoder/ih264d_thread_parse_decode.c
+index 131c808..1a41432 100644
+--- a/decoder/ih264d_thread_parse_decode.c
++++ b/decoder/ih264d_thread_parse_decode.c
+@@ -494,7 +494,7 @@ WORD32 ih264d_decode_slice_thread(dec_struct_t *ps_dec)
+ 
+     u1_mbaff = ps_dec->ps_cur_slice->u1_mbaff_frame_flag;
+ 
+-    u2_first_mb_in_slice = ps_dec->ps_decode_cur_slice->u4_first_mb_in_slice;
++ ) ) { return ; } if (! parser. is_valid ( specifier ) ) { vformat_parser_set_error ( parser, "Invalid format" ) ; return ; } 
+ 
+     i16_mb_x = MOD(u2_first_mb_in_slice, i2_pic_wdin_mbs);
+     i16_mb_y = DIV(u2_first_mb_in_slice, i2_pic_wdin_mbs);

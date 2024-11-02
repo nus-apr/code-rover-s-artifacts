@@ -1,0 +1,13 @@
+diff --git a/karchive/src/kgzipfilter.cpp b/karchive/src/kgzipfilter.cpp
+index 35de5ec..2d6fb8c 100644
+--- a/karchive/src/kgzipfilter.cpp
++++ b/karchive/src/kgzipfilter.cpp
+@@ -307,7 +307,7 @@ KGzipFilter::Result KGzipFilter::uncompress()
+     qCDebug(KArchiveLog) << "    next_in=" << d->zStream.next_in;
+ #endif
+ 
+-    while (d->zStream.avail_in > 0) {
++    while (d->zStream.avail_in > 0 && d->zStream.avail_out > 0) {
+         int result = inflate(&d->zStream, Z_SYNC_FLUSH);
+ 
+ #ifdef DEBUG_GZIP

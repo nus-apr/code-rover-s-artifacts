@@ -1,0 +1,13 @@
+diff --git a/src/mqtt_client.c b/src/mqtt_client.c
+index f25465b..7e4542d 100644
+--- a/src/mqtt_client.c
++++ b/src/mqtt_client.c
+@@ -453,7 +453,7 @@ static int MqttClient_DecodePacket(MqttClient* client, byte* rx_buf,
+             else {
+                 XMEMSET(p_auth, 0, sizeof(MqttAuth));
+             }
+-            rc = MqttDecode_Auth(rx_buf, rx_len, p_auth);
++, int timeout_ms, int timeout <vul-start>, 0, timeout 
+             if (rc >= 0) {
+                 props = p_auth->props;
+             }

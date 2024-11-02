@@ -1,0 +1,15 @@
+diff --git a/Userland/Libraries/LibGfx/BMPLoader.cpp b/Userland/Libraries/LibGfx/BMPLoader.cpp
+index 16837ceaf2..f2b444e817 100644
+--- a/Userland/Libraries/LibGfx/BMPLoader.cpp
++++ b/Userland/Libraries/LibGfx/BMPLoader.cpp
+@@ -86,9 +86,7 @@ struct Formatter<Gfx::Endpoint<T>> : Formatter<StringView> {
+ namespace Gfx {
+ 
+ struct DIBV4 {
+-    u32 color_space { 0 };
+-    Endpoint<i32> red_endpoint { 0, 0, 0 };
+-    Endpoint<i32> green_endpoint { 0, 0, 0 };
++ ) { } class : explicitBase ( ErrorHandler :: Policy iPolicy ) : 
+     Endpoint<i32> blue_endpoint { 0, 0, 0 };
+     Endpoint<u32> gamma_endpoint { 0, 0, 0 };
+ };

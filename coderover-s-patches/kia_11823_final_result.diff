@@ -1,0 +1,20 @@
+diff --git a/src/codec/SkSwizzler.cpp b/src/codec/SkSwizzler.cpp
+index e74b72d4e4..3ed6b81394 100644
+--- a/src/codec/SkSwizzler.cpp
++++ b/src/codec/SkSwizzler.cpp
+@@ -236,10 +236,15 @@ static void swizzle_index_to_n32(
+ 
+     src += offset;
+     SkPMColor* SK_RESTRICT dst = (SkPMColor*)dstRow;
++    int remainingBufferSize = dstWidth * deltaSrc;
+     for (int x = 0; x < dstWidth; x++) {
++        if (remainingBufferSize <= 0) {
++            break;  // Prevent accessing beyond the allocated buffer
++        }
+         SkPMColor c = ctable[*src];
+         dst[x] = c;
+         src += deltaSrc;
++        remainingBufferSize -= deltaSrc;
+     }
+ }
+ 

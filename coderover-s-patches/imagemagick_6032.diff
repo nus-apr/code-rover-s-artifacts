@@ -1,0 +1,40 @@
+diff --git a/MagickCore/blob.c b/MagickCore/blob.c
+index 3fafc5998..447f2b1d2 100644
+--- a/MagickCore/blob.c
++++ b/MagickCore/blob.c
+@@ -5433,7 +5433,11 @@ MagickExport ssize_t WriteBlob(Image *image,const size_t length,
+             }
+         }
+       q=blob_info->data+blob_info->offset;
+-      (void) memcpy(q,p,length);
++      size_t adjusted_length = length;
++      size_t available_space = blob_info->extent - blob_info->offset;
++      if (adjusted_length > available_space)
++        adjusted_length = available_space;
++      (void) memcpy(q,p,adjusted_length);
+       blob_info->offset+=length;
+       if (blob_info->offset >= (MagickOffsetType) blob_info->length)
+         blob_info->length=(size_t) blob_info->offset;
+diff --git a/coders/hdr.c b/coders/hdr.c
+index 3ed74ad9f..e387a104b 100644
+--- a/coders/hdr.c
++++ b/coders/hdr.c
+@@ -712,14 +712,16 @@ static MagickBooleanType WriteHDRImage(const ImageInfo *image_info,Image *image,
+       (strchr(property,'\n') == (char *) NULL))
+     {
+       count=FormatLocaleString(header,MagickPathExtent,"#%s\n",property);
+-      (void) WriteBlob(image,(size_t) count,(unsigned char *) header);
++      if (count < MagickPathExtent)
++        (void) WriteBlob(image,(size_t) count,(unsigned char *) header);
+     }
+   property=GetImageProperty(image,"hdr:exposure",exception);
+   if (property != (const char *) NULL)
+     {
+       count=FormatLocaleString(header,MagickPathExtent,"EXPOSURE=%g\n",
+         strtod(property,(char **) NULL));
+-      (void) WriteBlob(image,(size_t) count,(unsigned char *) header);
++      if (count < MagickPathExtent)
++        (void) WriteBlob(image,(size_t) count,(unsigned char *) header);
+     }
+   if (image->gamma != 0.0)
+     {

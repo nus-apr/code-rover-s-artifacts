@@ -1,0 +1,16 @@
+diff --git a/src/media_tools/av_parsers.c b/src/media_tools/av_parsers.c
+index 83afa6f5f..dff969e37 100644
+--- a/src/media_tools/av_parsers.c
++++ b/src/media_tools/av_parsers.c
+@@ -7071,8 +7071,9 @@ static Bool hevc_parse_short_term_ref_pic_set(GF_BitStream *bs, HEVC_SPS *sps, u
+ 
+ 		rps = &sps->rps[idx_rps];
+ 		ref_ps = &sps->rps[ref_idx];
+-		nb_ref_pics = ref_ps->num_negative_pics + ref_ps->num_positive_pics;
+-		for (i = 0; i <= nb_ref_pics; i++) {
++        nb_ref_pics = ref_ps->num_negative_pics + ref_ps->num_positive_pics;
++        if (nb_ref_pics > 16) nb_ref_pics = 16;
++        for (i = 0; i < nb_ref_pics; i++) {
+ 			s32 ref_idc;
+ 			s32 used_by_curr_pic_flag = gf_bs_read_int_log_idx2(bs, 1, "used_by_curr_pic_flag", idx_rps, i);
+ 			ref_idc = used_by_curr_pic_flag ? 1 : 0;

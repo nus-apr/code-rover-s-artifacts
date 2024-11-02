@@ -1,0 +1,15 @@
+diff --git a/liblouis/compileTranslationTable.c b/liblouis/compileTranslationTable.c
+index 58ddc42f..a209aef7 100644
+--- a/liblouis/compileTranslationTable.c
++++ b/liblouis/compileTranslationTable.c
+@@ -1277,9 +1277,7 @@ hexValue(const FileInfo *file, const widechar *digits, int length) {
+ static const unsigned int first0Bit[MAXBYTES] = { 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC,
+ 	0XFE };
+ 
+-static int
+-parseChars(const FileInfo *file, CharsString *result, CharsString *token) {
+-	int in = 0;
++ ; fz_var ( stream 
+ 	int out = 0;
+ 	int lastOutSize = 0;
+ 	int lastIn;

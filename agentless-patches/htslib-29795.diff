@@ -1,0 +1,30 @@
+diff --git a/htslib/htscodecs/htscodecs/rANS_static4x16pr.c b/htslib/htscodecs/htscodecs/rANS_static4x16pr.c
+index 43aedcd..6f8c3b0 100644
+--- a/htslib/htscodecs/htscodecs/rANS_static4x16pr.c
++++ b/htslib/htscodecs/htscodecs/rANS_static4x16pr.c
+@@ -1508,11 +1508,16 @@ static void unstripe(unsigned char *out, unsigned char *outN,
+ 	// General case, around 25% slower overall decode
+ 	while (j < ulen-N) {
+ 	    for (k = 0; k < N; k++)
+-		out[j++] = outN[idxN[k]++];
++		if (j < ulen) {
++		    out[j++] = outN[idxN[k]++];
++		}
+ 	}
+ 	while (j < ulen) {
+-	    for (k = 0; j < ulen; k++)
+-		out[j++] = outN[idxN[k]++];
++	    for (k = 0; j < ulen; k++) {
++		if (j < ulen) {
++		    out[j++] = outN[idxN[k]++];
++		}
++	    }
+ 	}
+ 	break;
+     }
+@@ -1803,4 +1808,4 @@ unsigned char *rans_uncompress_to_4x16(unsigned char *in,  unsigned int in_size,
+ unsigned char *rans_uncompress_4x16(unsigned char *in, unsigned int in_size,
+ 				    unsigned int *out_size) {
+     return rans_uncompress_to_4x16(in, in_size, NULL, out_size);
+-}
++}

@@ -1,0 +1,35 @@
+diff --git a/src/buffer.c b/src/buffer.c
+index 10f00841..82d31db2 100644
+--- a/src/buffer.c
++++ b/src/buffer.c
+@@ -1153,7 +1153,7 @@ int ssh_buffer_unpack_va(struct ssh_buffer_struct *buffer,
+                 break;
+             }
+             len = ntohl(u32len);
+-            if (len > max_len - 1) {
++            if (len >= max_len || len > (max_len - buffer->pos)) {  // Ensure len does not exceed remaining buffer space
+                 rc = SSH_ERROR;
+                 break;
+             }
+diff --git a/src/messages.c b/src/messages.c
+index 9ddfe15c..940ec9ad 100644
+--- a/src/messages.c
++++ b/src/messages.c
+@@ -698,6 +698,7 @@ SSH_PACKET_CALLBACK(ssh_packet_userauth_request){
+   char *service = NULL;
+   char *method = NULL;
+   int rc;
++  uint8_t has_sign = 0;  // Declare and initialize has_sign
+ 
+   (void)user;
+   (void)type;
+@@ -712,7 +713,8 @@ SSH_PACKET_CALLBACK(ssh_packet_userauth_request){
+                          "sss",
+                          &msg->auth_request.username,
+                          &service,
+-                         &method);
++                         &method,
++                         &has_sign);  // Include has_sign in unpacking
+ 
+   if (rc != SSH_OK) {
+       goto error;

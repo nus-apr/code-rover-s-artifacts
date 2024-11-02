@@ -1,0 +1,28 @@
+diff --git a/php-src/Zend/zend_execute_API.c b/php-src/Zend/zend_execute_API.c
+index 5c83a22..37bffd3 100644
+--- a/php-src/Zend/zend_execute_API.c
++++ b/php-src/Zend/zend_execute_API.c
+@@ -394,8 +394,10 @@ void shutdown_executor(void) /* {{{ */
+ 
+ 		while (EG(symtable_cache_ptr) > EG(symtable_cache)) {
+ 			EG(symtable_cache_ptr)--;
+-			zend_hash_destroy(*EG(symtable_cache_ptr));
+-			FREE_HASHTABLE(*EG(symtable_cache_ptr));
++			if (*EG(symtable_cache_ptr)) {
++				zend_hash_destroy(*EG(symtable_cache_ptr));
++				FREE_HASHTABLE(*EG(symtable_cache_ptr));
++			}
+ 		}
+ 
+ 		zend_hash_destroy(&EG(included_files));
+@@ -403,7 +405,9 @@ void shutdown_executor(void) /* {{{ */
+ 		zend_stack_destroy(&EG(user_error_handlers_error_reporting));
+ 		zend_stack_destroy(&EG(user_error_handlers));
+ 		zend_stack_destroy(&EG(user_exception_handlers));
+-		zend_objects_store_destroy(&EG(objects_store));
++		if (EG(objects_store).object_buckets) {
++			zend_objects_store_destroy(&EG(objects_store));
++		}
+ 		if (EG(in_autoload)) {
+ 			zend_hash_destroy(EG(in_autoload));
+ 			FREE_HASHTABLE(EG(in_autoload));

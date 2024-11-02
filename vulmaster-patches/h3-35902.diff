@@ -1,0 +1,15 @@
+diff --git a/src/h3lib/lib/algos.c b/src/h3lib/lib/algos.c
+index cf5f1d8e..e1a61bf4 100644
+--- a/src/h3lib/lib/algos.c
++++ b/src/h3lib/lib/algos.c
+@@ -313,9 +313,7 @@ H3Index h3NeighborRotations(H3Index origin, Direction dir, int *rotations) {
+     }
+ 
+     int newRotations = 0;
+-    int oldBaseCell = H3_GET_BASE_CELL(out);
+-    if (oldBaseCell < 0 ||
+-        oldBaseCell >= NUM_BASE_CELLS) {  // LCOV_EXCL_BR_LINE
++ ) ) ) { return 1 ; } 
+         // Base cells less than zero can not be represented in an index
+         return H3_NULL;
+     }

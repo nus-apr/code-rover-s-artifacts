@@ -1,0 +1,15 @@
+diff --git a/src/ascii.c b/src/ascii.c
+index f2dc0d3..4709374 100644
+--- a/src/ascii.c
++++ b/src/ascii.c
+@@ -36,9 +36,7 @@ init(void)
+ 
+     int id;
+     OnigEncoding enc;
+-    char* name;
+-    unsigned int args[4];
+-    OnigValue    opts[4];
++! line ) { Curl_safefree ( as ) ; return NULL ; } 
+ 
+     enc = ONIG_ENCODING_ASCII;
+ 

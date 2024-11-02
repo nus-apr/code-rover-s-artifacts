@@ -1,0 +1,47 @@
+diff --git a/coders/png.c b/coders/png.c
+index 1217bfc6..8abe7c55 100644
+--- a/coders/png.c
++++ b/coders/png.c
+@@ -1158,11 +1158,17 @@ png_read_raw_profile(Image *image, const ImageInfo *image_info,
+ 
+   sp=text[ii].text+1;
+   /* look for newline */
+-  while (*sp != '\n')
++  while (*sp != '\n' && (sp - text[ii].text) < text[ii].text_length)
+     sp++;
+   /* look for length */
+-  while (*sp == '\0' || *sp == ' ' || *sp == '\n')
++  while ((*sp == '\0' || *sp == ' ' || *sp == '\n') && (sp - text[ii].text) < text[ii].text_length)
+     sp++;
++  if ((sp - text[ii].text) >= text[ii].text_length)
++    {
++      (void) LogMagickEvent(CoderEvent,GetMagickModule(),
++          "ran out of profile data");
++      return (MagickFail);
++    }
+   length=MagickAtoL(sp);
+   while (*sp != ' ' && *sp != '\n')
+     sp++;
+@@ -1185,7 +1191,7 @@ png_read_raw_profile(Image *image, const ImageInfo *image_info,
+   nibbles=length*2;
+   for (i=0; i < (long) nibbles; i++)
+     {
+-      while (*sp < '0' || (*sp > '9' && *sp < 'a') || *sp > 'f')
++      while ((*sp < '0' || (*sp > '9' && *sp < 'a') || *sp > 'f') && (sp - text[ii].text) < text[ii].text_length)
+         {
+           if (*sp == '\0')
+             {
+@@ -1196,6 +1202,13 @@ png_read_raw_profile(Image *image, const ImageInfo *image_info,
+             }
+           sp++;
+         }
++      if ((sp - text[ii].text) >= text[ii].text_length)
++        {
++          MagickFreeMemory(info);
++          (void) LogMagickEvent(CoderEvent,GetMagickModule(),
++              "ran out of profile data");
++          return (MagickFail);
++        }
+       if (i%2 == 0)
+         *dp=16*unhex[(int) *sp++];
+       else

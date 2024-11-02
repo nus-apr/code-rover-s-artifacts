@@ -1,0 +1,16 @@
+diff --git a/php-src/Zend/zend_stream.c b/php-src/Zend/zend_stream.c
+index d7c3317..8e4e3ba 100644
+--- a/php-src/Zend/zend_stream.c
++++ b/php-src/Zend/zend_stream.c
+@@ -268,7 +268,10 @@ ZEND_API void zend_destroy_file_handle(zend_file_handle *file_handle) /* {{{ */
+ 		zend_llist_del_element(&CG(open_files), file_handle, (int (*)(void *, void *)) zend_compare_file_handles);
+ 		/* zend_file_handle_dtor() operates on the copy, so we have to NULLify the original here */
+ 		file_handle->opened_path = NULL;
+-		file_handle->filename = NULL;
++		if (file_handle->filename) {
++			zend_string_release(file_handle->filename);
++			file_handle->filename = NULL;
++		}
+ 	} else {
+ 		zend_file_handle_dtor(file_handle);
+ 	}

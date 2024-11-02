@@ -1,0 +1,28 @@
+diff --git a/src/libopensc/pkcs15.c b/src/libopensc/pkcs15.c
+index 957a29de..92874a8c 100644
+--- a/src/libopensc/pkcs15.c
++++ b/src/libopensc/pkcs15.c
+@@ -2032,7 +2032,10 @@ sc_pkcs15_encode_df(struct sc_context *ctx, struct sc_pkcs15_card *p15card, stru
+ 			continue;
+ 		r = func(ctx, obj, &tmp, &tmpsize);
+ 		if (r) {
+-			free(tmp);
++			if (tmp) {
++				free(tmp);
++				tmp = NULL; // Set tmp to NULL after freeing
++			}
+ 			free(buf);
+ 			return r;
+ 		}
+@@ -2046,7 +2049,10 @@ sc_pkcs15_encode_df(struct sc_context *ctx, struct sc_pkcs15_card *p15card, stru
+ 		}
+ 		buf = p;
+ 		memcpy(buf + bufsize, tmp, tmpsize);
+-		free(tmp);
++		if (tmp) {
++			free(tmp);
++			tmp = NULL; // Set tmp to NULL after freeing
++		}
+ 		bufsize += tmpsize;
+ 	}
+ 	*buf_out = buf;

@@ -1,0 +1,15 @@
+diff --git a/fuzz/fuzz_srcfiles.c b/fuzz/fuzz_srcfiles.c
+index 0f5ff009..94fea57e 100644
+--- a/fuzz/fuzz_srcfiles.c
++++ b/fuzz/fuzz_srcfiles.c
+@@ -21,9 +21,7 @@ limitations under the License.
+ #include <unistd.h>
+ 
+ int examplee(Dwarf_Debug dbg, Dwarf_Die somedie, Dwarf_Error *error);
+-int exampled(Dwarf_Die somedie, Dwarf_Error *error);
+-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+-  char filename[256];
++ ( filename, "/tmp/libfuzzer.%d/one_input.txt" 
+   sprintf(filename, "/tmp/libfuzzer.%d", getpid());
+ 
+   FILE *fp = fopen(filename, "wb");

@@ -1,0 +1,71 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/fuzz_pkcs15init
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7b9a5a77c960 at pc 0x00000043a251 bp 0x7fff627cbae0 sp 0x7fff627cb2a8
+WRITE of size 65 at 0x7b9a5a77c960 thread T0
+SCARINESS: 60 (multi-byte-write-stack-buffer-overflow)
+    #0 0x43a250 in __interceptor_memcpy /src/llvm-project/compiler-rt/lib/asan/../sanitizer_common/sanitizer_common_interceptors.inc:827:5
+    #1 0x542bc3 in __wrap_strlcpy (/out/fuzz_pkcs15init+0x542bc3)
+    #2 0x53611e in do_acl /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:1578:3
+    #3 0x530732 in process_command /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:2071:9
+    #4 0x52f8a9 in process_block /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:2140:11
+    #5 0x531ede in process_ef /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:1036:9
+    #6 0x52f6a2 in process_block /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:2131:11
+    #7 0x531bfe in process_df /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:1020:9
+    #8 0x52f6a2 in process_block /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:2131:11
+    #9 0x531bfe in process_df /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:1020:9
+    #10 0x52f6a2 in process_block /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:2131:11
+    #11 0x52f6a2 in process_block /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:2131:11
+    #12 0x524561 in process_conf /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:2161:9
+    #13 0x528cdd in fuzz_profile_load /src/opensc/src/tests/fuzzing/fuzz_pkcs15init.c:46:10
+    #14 0x52926d in fuzz_pkcs15init_bind /src/opensc/src/tests/fuzzing/fuzz_pkcs15init.c:95:9
+    #15 0x52be5b in LLVMFuzzerTestOneInput /src/opensc/src/tests/fuzzing/fuzz_pkcs15init.c:306:5
+    #16 0x54570b in main (/out/fuzz_pkcs15init+0x54570b)
+    #17 0x7b9a5ad6b082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #18 0x41ffbd in _start (/out/fuzz_pkcs15init+0x41ffbd)
+
+DEDUP_TOKEN: __interceptor_memcpy--__wrap_strlcpy--do_acl
+Address 0x7b9a5a77c960 is located in stack of thread T0 at offset 96 in frame
+    #0 0x535e0f in do_acl /src/opensc/src/tests/fuzzing/../../../src/pkcs15init/profile.c:1566
+
+DEDUP_TOKEN: do_acl
+  This frame has 4 object(s):
+    [32, 96) 'oper' (line 1568)
+    [128, 132) 'op' (line 1576) <== Memory access at offset 96 partially underflows this variable
+    [144, 148) 'method' (line 1576) <== Memory access at offset 96 partially underflows this variable
+    [160, 164) 'id' (line 1576) <== Memory access at offset 96 partially underflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/../sanitizer_common/sanitizer_common_interceptors.inc:827:5 in __interceptor_memcpy
+Shadow bytes around the buggy address:
+  0x0f73cb4e78d0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f73cb4e78e0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f73cb4e78f0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f73cb4e7900: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f73cb4e7910: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+=>0x0f73cb4e7920: f1 f1 f1 f1 00 00 00 00 00 00 00 00[f2]f2 f2 f2
+  0x0f73cb4e7930: 04 f2 04 f2 04 f3 f3 f3 00 00 00 00 00 00 00 00
+  0x0f73cb4e7940: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f73cb4e7950: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f73cb4e7960: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0f73cb4e7970: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

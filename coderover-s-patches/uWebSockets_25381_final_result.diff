@@ -1,0 +1,37 @@
+diff --git a/src/TopicTree.h b/src/TopicTree.h
+index 0b945b3..f774204 100644
+--- a/src/TopicTree.h
++++ b/src/TopicTree.h
+@@ -74,7 +74,7 @@ private:
+     unsigned int messageId = 0;
+ 
+     /* The triggered topics */
+-    Topic *triggeredTopics[64];
++std::vector<Topic *> triggeredTopics;
+     int numTriggeredTopics = 0;
+     Subscriber *min = (Subscriber *) UINTPTR_MAX;
+ 
+@@ -96,18 +96,11 @@ private:
+ 
+             /* If this node is triggered, make sure to remove it from the triggered list */
+             if (topic->triggered) {
+-                Topic *tmp[64];
+-                int length = 0;
+-                for (int i = 0; i < numTriggeredTopics; i++) {
+-                    if (triggeredTopics[i] != topic) {
+-                        tmp[length++] = triggeredTopics[i];
+-                    }
+-                }
+-
+-                for (int i = 0; i < length; i++) {
+-                    triggeredTopics[i] = tmp[i];
+-                }
+-                numTriggeredTopics = length;
++                 triggeredTopics.erase(
++                     std::remove(triggeredTopics.begin(), triggeredTopics.end(), topic),
++                     triggeredTopics.end()
++                 );
++                 numTriggeredTopics = triggeredTopics.size();
+             }
+ 
+             /* Free various memory for the node */

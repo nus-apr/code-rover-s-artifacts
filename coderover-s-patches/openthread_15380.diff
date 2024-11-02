@@ -1,0 +1,44 @@
+diff --git a/src/core/common/message.cpp b/src/core/common/message.cpp
+index 8b7bd2c0b..70716c97b 100644
+--- a/src/core/common/message.cpp
++++ b/src/core/common/message.cpp
+@@ -537,7 +537,10 @@ int Message::Write(uint16_t aOffset, uint16_t aLength, const void *aBuf)
+     uint16_t bytesCopied = 0;
+     uint16_t bytesToCopy;
+ 
+-    assert(aOffset + aLength <= GetLength());
++    if (aOffset + aLength > GetLength())
++    {
++        return 0; // or handle error appropriately
++    }
+ 
+     if (aOffset + aLength >= GetLength())
+     {
+diff --git a/src/core/thread/mle.cpp b/src/core/thread/mle.cpp
+index 348e27986..10a6eef88 100644
+--- a/src/core/thread/mle.cpp
++++ b/src/core/thread/mle.cpp
+@@ -1193,6 +1193,11 @@ otError Mle::AppendResponse(Message &aMessage, const uint8_t *aResponse, uint8_t
+     tlv.SetType(Tlv::kResponse);
+     tlv.SetLength(aResponseLength);
+ 
++    if (sizeof(tlv) + aResponseLength > aMessage.GetLength())
++    {
++        error = OT_ERROR_NO_BUFS;
++        goto exit;
++    }
+     SuccessOrExit(error = aMessage.Append(&tlv, sizeof(tlv)));
+     SuccessOrExit(error = aMessage.Append(aResponse, aResponseLength));
+ 
+diff --git a/src/core/thread/mle_router.cpp b/src/core/thread/mle_router.cpp
+index 126e4d640..472571289 100644
+--- a/src/core/thread/mle_router.cpp
++++ b/src/core/thread/mle_router.cpp
+@@ -577,6 +577,7 @@ otError MleRouter::HandleLinkRequest(const Message &aMessage, const Ip6::Message
+ 
+     // Challenge
+     SuccessOrExit(error = Tlv::GetTlv(aMessage, Tlv::kChallenge, sizeof(challenge), challenge));
++    VerifyOrExit(challenge.GetLength() <= sizeof(challenge), error = OT_ERROR_PARSE);
+     VerifyOrExit(challenge.IsValid(), error = OT_ERROR_PARSE);
+ 
+     // Version

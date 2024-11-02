@@ -1,0 +1,17 @@
+diff --git a/graphicsmagick/coders/png.c b/graphicsmagick/coders/png.c
+index b5076e6..52d7d7a 100644
+--- a/graphicsmagick/coders/png.c
++++ b/graphicsmagick/coders/png.c
+@@ -1165,10 +1165,10 @@ png_read_raw_profile(Image *image, const ImageInfo *image_info,
+ 
+   sp=text[ii].text+1;
+   /* look for newline */
+-  while (*sp != '\n')
++  while (*sp != '\n' && *sp != '\0')
+     sp++;
+   /* look for length */
+-  while (*sp == '\0' || *sp == ' ' || *sp == '\n')
++  while ((*sp == '\0' || *sp == ' ' || *sp == '\n') && *sp != '\0')
+     sp++;
+   length=MagickAtoL(sp);
+   while (*sp != ' ' && *sp != '\n')

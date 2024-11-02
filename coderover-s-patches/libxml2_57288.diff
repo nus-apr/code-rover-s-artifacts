@@ -1,0 +1,66 @@
+diff --git a/HTMLparser.c b/HTMLparser.c
+index e9084950..5e4675b7 100644
+--- a/HTMLparser.c
++++ b/HTMLparser.c
+@@ -4998,10 +4998,15 @@ htmlParseDocument(htmlParserCtxtPtr ctxt) {
+ 	 * if enc != XML_CHAR_ENCODING_NONE
+ 	 * plug some encoding conversion routines.
+ 	 */
+-	start[0] = RAW;
+-	start[1] = NXT(1);
+-	start[2] = NXT(2);
+-	start[3] = NXT(3);
++    if ((ctxt->input->end - ctxt->input->cur) >= 4) {
++        start[0] = RAW;
++        start[1] = NXT(1);
++        start[2] = NXT(2);
++        start[3] = NXT(3);
++    } else {
++        htmlParseErr(ctxt, XML_ERR_INTERNAL_ERROR, "Insufficient data for encoding detection\n", NULL, NULL);
++        return(XML_ERR_INTERNAL_ERROR);
++    }
+ 	enc = xmlDetectCharEncoding(&start[0], 4);
+ 	if (enc != XML_CHAR_ENCODING_NONE) {
+ 	    xmlSwitchEncoding(ctxt, enc);
+@@ -5060,13 +5065,24 @@ htmlParseDocument(htmlParserCtxtPtr ctxt) {
+     /*
+      * Time to start parsing the tree itself
+      */
+-    htmlParseContentInternal(ctxt);
++    if (ctxt->input != NULL && ctxt->input->cur < ctxt->input->end) {
++        htmlParseContentInternal(ctxt);
++    } else {
++        htmlParseErr(ctxt, XML_ERR_INTERNAL_ERROR, "Unexpected end of input\n", NULL, NULL);
++        return -1;
++    }
+ 
+     /*
+      * autoclose
+      */
+-    if (CUR == 0)
+-	htmlAutoCloseOnEnd(ctxt);
++    if (ctxt->input != NULL && ctxt->input->cur < ctxt->input->end) {
++        if (CUR == 0) {
++            htmlAutoCloseOnEnd(ctxt);
++        }
++    } else {
++        htmlParseErr(ctxt, XML_ERR_DOCUMENT_EMPTY, "Document is empty or truncated\n", NULL, NULL);
++        return -1;
++    }
+ 
+ 
+     /*
+@@ -6461,7 +6477,12 @@ htmlSAXParseDoc(const xmlChar *cur, const char *encoding,
+         ctxt->userData = userData;
+     }
+ 
+-    htmlParseDocument(ctxt);
++    if (ctxt->input != NULL && ctxt->input->cur < ctxt->input->end) {
++        htmlParseDocument(ctxt);
++    } else {
++        htmlParseErr(ctxt, XML_ERR_INTERNAL_ERROR, "Invalid input context\n", NULL, NULL);
++        return NULL;
++    }
+     ret = ctxt->myDoc;
+     if (sax != NULL) {
+ 	ctxt->sax = NULL;

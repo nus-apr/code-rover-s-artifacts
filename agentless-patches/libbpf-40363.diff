@@ -1,0 +1,15 @@
+diff --git a/libbpf/src/btf.c b/libbpf/src/btf.c
+index 6ff8cc8..757ae1f 100644
+--- a/libbpf/src/btf.c
++++ b/libbpf/src/btf.c
+@@ -851,6 +851,10 @@ static struct btf *btf_new(const void *data, __u32 size, struct btf *base_btf)
+ 		err = -ENOMEM;
+ 		goto done;
+ 	}
++	if (size > sizeof(data)) {
++		err = -EINVAL;
++		goto done;
++	}
+ 	memcpy(btf->raw_data, data, size);
+ 	btf->raw_size = size;
+ 

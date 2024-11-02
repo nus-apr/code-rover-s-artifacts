@@ -1,0 +1,78 @@
+diff --git a/crypto/asn1/asn1_lib.c b/crypto/asn1/asn1_lib.c
+index 9a0ec68d6b..45aae473a0 100644
+--- a/crypto/asn1/asn1_lib.c
++++ b/crypto/asn1/asn1_lib.c
+@@ -277,7 +277,21 @@ int ASN1_STRING_set(ASN1_STRING *str, const void *_data, int len)
+         if (data == NULL)
+             return 0;
+         else
+-            len = strlen(data);
++            len = strlen((const char *)data);
++    }
++    if ((str->length <= len) || (str->data == NULL)) {
++        c = str->data;
++        str->data = OPENSSL_realloc(c, len + 1);
++        if (str->data == NULL) {
++            ASN1err(ASN1_F_ASN1_STRING_SET, ERR_R_MALLOC_FAILURE);
++            str->data = c;
++            return 0;
++        }
++    }
++    str->length = len;
++    if (data != NULL) {
++        memcpy(str->data, data, len);
++        str->data[len] = '\0'; // Ensure null-termination
+     }
+     if ((str->length <= len) || (str->data == NULL)) {
+         c = str->data;
+diff --git a/crypto/o_str.c b/crypto/o_str.c
+index 6780188cda..bb2c11bf89 100644
+--- a/crypto/o_str.c
++++ b/crypto/o_str.c
+@@ -18,9 +18,12 @@ char *CRYPTO_strdup(const char *str, const char* file, int line)
+ 
+     if (str == NULL)
+         return NULL;
+-    ret = CRYPTO_malloc(strlen(str) + 1, file, line);
+-    if (ret != NULL)
+-        strcpy(ret, str);
++    size_t str_len = strlen(str);
++    ret = CRYPTO_malloc(str_len + 1, file, line);
++    if (ret != NULL) {
++        memcpy(ret, str, str_len);
++        ((char *)ret)[str_len] = '\0'; // Ensure null-termination
++    }
+     return ret;
+ }
+ 
+diff --git a/crypto/x509/v3_utl.c b/crypto/x509/v3_utl.c
+index 24f50a13b7..cfb3df30ad 100644
+--- a/crypto/x509/v3_utl.c
++++ b/crypto/x509/v3_utl.c
+@@ -41,10 +41,22 @@ int X509V3_add_value(const char *name, const char *value,
+     char *tname = NULL, *tvalue = NULL;
+     int sk_allocated = (*extlist == NULL);
+ 
+-    if (name && (tname = OPENSSL_strdup(name)) == NULL)
+-        goto err;
+-    if (value && (tvalue = OPENSSL_strdup(value)) == NULL)
+-        goto err;
++    if (name) {
++        size_t name_len = strlen(name);
++        tname = OPENSSL_malloc(name_len + 1);
++        if (tname == NULL)
++            goto err;
++        memcpy(tname, name, name_len);
++        tname[name_len] = '\0'; // Ensure null-termination
++    }
++    if (value) {
++        size_t value_len = strlen(value);
++        tvalue = OPENSSL_malloc(value_len + 1);
++        if (tvalue == NULL)
++            goto err;
++        memcpy(tvalue, value, value_len);
++        tvalue[value_len] = '\0'; // Ensure null-termination
++    }
+     if ((vtmp = OPENSSL_malloc(sizeof(*vtmp))) == NULL)
+         goto err;
+     if (sk_allocated && (*extlist = sk_CONF_VALUE_new_null()) == NULL)

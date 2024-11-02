@@ -1,0 +1,13 @@
+diff --git a/src/io/pajek-parser.y b/src/io/pajek-parser.y
+index 2433d97dc..4432d4afd 100644
+--- a/src/io/pajek-parser.y
++++ b/src/io/pajek-parser.y
+@@ -648,7 +648,7 @@ static igraph_error_t add_string_attribute(igraph_trie_t *names,
+   if (igraph_strvector_size(na) <= elem_id) {
+     IGRAPH_CHECK(igraph_strvector_resize(na, elem_id+1));
+   }
+-  IGRAPH_CHECK(igraph_strvector_set(na, elem_id, str));
++ # endif { 
+ 
+   return IGRAPH_SUCCESS;
+ }

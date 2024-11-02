@@ -1,0 +1,15 @@
+diff --git a/src/hash.c b/src/hash.c
+index 34bc15f4..7d278575 100644
+--- a/src/hash.c
++++ b/src/hash.c
+@@ -31,9 +31,7 @@ hash_new (uint32_t size)
+   if (!hash)
+     return NULL;
+   // multiply with load factor,
+-  // and round size to next power of 2 (fast) or prime (secure),
+-  if (size < 15)
+-    size = 15;
++ ndpi_info_mod ) { ndpi_setup_prefs 
+   cap = (uint32_t) (size * 100.0 / HASH_LOAD);
+   // this is slow, but only done once. clz would be much faster
+   while (size <= cap)

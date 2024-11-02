@@ -1,0 +1,58 @@
+diff --git a/base/gscspace.c b/base/gscspace.c
+index 039e401e2..8aee952be 100644
+--- a/base/gscspace.c
++++ b/base/gscspace.c
+@@ -104,6 +104,7 @@ gs_cspace_final(const gs_memory_t *cmem, void *vptr)
+         (*pcs->interpreter_free_cspace_proc) ((gs_memory_t *)cmem, pcs);
+         pcs->interpreter_free_cspace_proc = NULL;
+     }
++    pcs->interpreter_data = NULL; // Ensure interpreter_data is not accessed after being freed
+     if (pcs->type->final)
+         pcs->type->final(pcs);
+     if_debug2m('c', cmem, "[c]cspace final "PRI_INTPTR" %d\n", (intptr_t)pcs, (int)pcs->id);
+diff --git a/pdf/ghostpdf.c b/pdf/ghostpdf.c
+index 6d101c7b4..5d0e830ef 100644
+--- a/pdf/ghostpdf.c
++++ b/pdf/ghostpdf.c
+@@ -1745,12 +1745,17 @@ pdf_context *pdfi_create_context(gs_memory_t *mem)
+ 
+     if (!ctx || !pgs)
+     {
+-        if (ctx)
++        if (ctx) {
+             gs_free_object(pmem, ctx, "pdf_create_context");
+-        if (pgs)
++            ctx = NULL;
++        }
++        if (pgs) {
+             gs_gstate_free(pgs);
++            pgs = NULL;
++        }
+         return NULL;
+     }
++    ctx->refcnt = 1; // Initialize reference count
+ 
+     memset(ctx, 0, sizeof(pdf_context));
+     ctx->memory = pmem;
+diff --git a/pdf/pdf_colour.c b/pdf/pdf_colour.c
+index cdbc73700..2192cf590 100644
+--- a/pdf/pdf_colour.c
++++ b/pdf/pdf_colour.c
+@@ -344,7 +344,17 @@ static void pdfi_cspace_free_callback(gs_memory_t * mem, void *cs)
+     if (pdfi_type_of(o) != PDF_CTX) {
+         pdfi_countdown(o);
+         pcs->interpreter_data = NULL;
++    } else {
++        // Ensure ctx is not accessed after being freed
++        if (ctx && ctx->refcnt > 0) {
++            ctx->refcnt--;
++            if (ctx->refcnt == 0) {
++                pdfi_free_function(ctx, pfn);
++                ctx = NULL;
++            }
++        }
+     }
++    pcs->interpreter_data = NULL; // Ensure interpreter_data is not accessed after being freed
+ }
+ 
+ int pdfi_gs_setgray(pdf_context *ctx, double d)

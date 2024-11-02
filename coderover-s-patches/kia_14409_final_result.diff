@@ -1,0 +1,34 @@
+diff --git a/src/sksl/ir/SkSLConstructor.h b/src/sksl/ir/SkSLConstructor.h
+index 1070a0c4eb..2b0cbfc16b 100644
+--- a/src/sksl/ir/SkSLConstructor.h
++++ b/src/sksl/ir/SkSLConstructor.h
+@@ -127,12 +127,28 @@ struct Constructor : public Expression {
+ 
+     const Expression& getVecComponent(int index) const {
+         SkASSERT(fType.kind() == Type::kVector_Kind);
++
++        // Calculate the total number of components in the vector
++        int totalComponents = 0;
++        for (const auto& arg : fArguments) {
++            if (arg->fType.kind() == Type::kScalar_Kind) {
++                totalComponents++;
++            } else {
++                SkASSERT(arg->fType.kind() == Type::kVector_Kind);
++                totalComponents += arg->fType.columns();
++            }
++        }
++
++        // Check if the index is within bounds
++        if (index < 0 || index >= totalComponents) {
++            ABORT("Index %d out of bounds for vector with %d components in %s\n", index, totalComponents, description().c_str());
++        }
++
+         if (fArguments.size() == 1 && fArguments[0]->fType.kind() == Type::kScalar_Kind) {
+             return *fArguments[0];
+         }
+         int current = 0;
+         for (const auto& arg : fArguments) {
+-            SkASSERT(current <= index);
+             if (arg->fType.kind() == Type::kScalar_Kind) {
+                 if (index == current) {
+                     return *arg;

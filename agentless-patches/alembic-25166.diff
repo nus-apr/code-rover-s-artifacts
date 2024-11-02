@@ -1,0 +1,17 @@
+diff --git a/alembic/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp b/alembic/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp
+index f7fd59d..b5241c4 100644
+--- a/alembic/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp
++++ b/alembic/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp
+@@ -1822,7 +1822,11 @@ ReadPropertyHeaders( Ogawa::IGroupPtr iGroup,
+         }
+         else
+         {
+-            header->header.setMetaData( iMetaDataVec[metaDataIndex] );
++            if (metaDataIndex < iMetaDataVec.size()) {
++                header->header.setMetaData( iMetaDataVec[metaDataIndex] );
++            } else {
++                ABCA_THROW("Read invalid: MetaData index out of bounds.");
++            }
+         }
+ 
+         oHeaders.push_back( header );

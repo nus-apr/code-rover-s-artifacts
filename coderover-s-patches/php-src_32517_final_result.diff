@@ -1,0 +1,27 @@
+diff --git a/Zend/zend_stream.c b/Zend/zend_stream.c
+index aadc62558e..5d8931cee6 100644
+--- a/Zend/zend_stream.c
++++ b/Zend/zend_stream.c
+@@ -265,10 +265,19 @@ static int zend_compare_file_handles(zend_file_handle *fh1, zend_file_handle *fh
+ ZEND_API void zend_destroy_file_handle(zend_file_handle *file_handle) /* {{{ */
+ {
+ 	if (file_handle->in_list) {
+-		zend_llist_del_element(&CG(open_files), file_handle, (int (*)(void *, void *)) zend_compare_file_handles);
++		/* Ensure the file handle is valid before attempting to delete */
++		if (file_handle->filename && file_handle->opened_path) {
++			zend_llist_del_element(&CG(open_files), file_handle, (int (*)(void *, void *)) zend_compare_file_handles);
++		}
+ 		/* zend_file_handle_dtor() operates on the copy, so we have to NULLify the original here */
+-		file_handle->opened_path = NULL;
+-		file_handle->filename = NULL;
++		if (file_handle->opened_path) {
++			zend_string_release(file_handle->opened_path);
++			file_handle->opened_path = NULL;
++		}
++		if (file_handle->filename) {
++			zend_string_release(file_handle->filename);
++			file_handle->filename = NULL;
++		}
+ 	} else {
+ 		zend_file_handle_dtor(file_handle);
+ 	}

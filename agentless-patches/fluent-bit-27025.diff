@@ -1,0 +1,12 @@
+diff --git a/fluent-bit/src/flb_config_map.c b/fluent-bit/src/flb_config_map.c
+index a2c7350..53d92aa 100644
+--- a/fluent-bit/src/flb_config_map.c
++++ b/fluent-bit/src/flb_config_map.c
+@@ -350,6 +350,7 @@ static void destroy_map_val(int type, struct flb_config_map_val *value)
+ {
+     if (type == FLB_CONFIG_MAP_STR && value->val.str) {
+         flb_sds_destroy(value->val.str);
++        value->val.str = NULL;
+     }
+     else if ((type >= FLB_CONFIG_MAP_CLIST &&
+               type <= FLB_CONFIG_MAP_SLIST_4) &&

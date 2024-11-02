@@ -1,0 +1,12 @@
+diff --git a/zstd/lib/legacy/zstd_v02.c b/zstd/lib/legacy/zstd_v02.c
+index 0e6a70f..447503c 100644
+--- a/zstd/lib/legacy/zstd_v02.c
++++ b/zstd/lib/legacy/zstd_v02.c
+@@ -2876,6 +2876,7 @@ static size_t ZSTD_decodeLiteralsBlock(void* ctx,
+             const size_t readSize = ZSTD_decompressLiterals(dctx->litBuffer, &litSize, src, srcSize);
+             dctx->litPtr = dctx->litBuffer;
+             dctx->litSize = litSize;
++            if (dctx->litSize + 8 > sizeof(dctx->litBuffer)) return ERROR(corruption_detected);
+             memset(dctx->litBuffer + dctx->litSize, 0, 8);
+             return readSize;   /* works if it's an error too */
+         }

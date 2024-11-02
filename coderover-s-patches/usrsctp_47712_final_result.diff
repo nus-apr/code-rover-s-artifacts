@@ -1,0 +1,64 @@
+diff --git a/usrsctplib/netinet/sctp_output.c b/usrsctplib/netinet/sctp_output.c
+index e5dac57..fac180a 100755
+--- a/usrsctplib/netinet/sctp_output.c
++++ b/usrsctplib/netinet/sctp_output.c
+@@ -13539,21 +13539,21 @@ sctp_lower_sosend(struct socket *so,
+ 	}
+ 	atomic_add_int(&inp->total_sends, 1);
+ 
+-	if (srcv != NULL) {
+-		sinfo_flags = srcv->sinfo_flags;
+-		sinfo_assoc_id = srcv->sinfo_assoc_id;
+-		if (INVALID_SINFO_FLAG(sinfo_flags) ||
+-		    PR_SCTP_INVALID_POLICY(sinfo_flags)) {
+-			error = EINVAL;
+-			goto out_unlocked;
+-		}
+-		if (srcv->sinfo_flags != 0) {
+-			SCTP_STAT_INCR(sctps_sends_with_flags);
+-		}
+-	} else {
+-		sinfo_flags = inp->def_send.sinfo_flags;
+-		sinfo_assoc_id = inp->def_send.sinfo_assoc_id;
+-	}
++    if (srcv != NULL) {
++        sinfo_flags = srcv->sinfo_flags;
++        sinfo_assoc_id = srcv->sinfo_assoc_id;
++        if (INVALID_SINFO_FLAG(sinfo_flags) ||
++            PR_SCTP_INVALID_POLICY(sinfo_flags)) {
++            error = EINVAL;
++            goto out_unlocked;
++        }
++        if (srcv->sinfo_flags != 0) {
++            SCTP_STAT_INCR(sctps_sends_with_flags);
++        }
++    } else {
++        sinfo_flags = inp->def_send.sinfo_flags;
++        sinfo_assoc_id = inp->def_send.sinfo_assoc_id;
++    }
+ #if defined(__FreeBSD__) && !defined(__Userspace__)
+ 	if (flags & MSG_EOR) {
+ 		sinfo_flags |= SCTP_EOR;
+diff --git a/usrsctplib/user_socket.c b/usrsctplib/user_socket.c
+index ce9daed..64bedf0 100755
+--- a/usrsctplib/user_socket.c
++++ b/usrsctplib/user_socket.c
+@@ -825,10 +825,14 @@ usrsctp_sendv(struct socket *so,
+ 		errno = EFAULT;
+ 		return (-1);
+ 	}
+-	memset(&sinfo, 0, sizeof(struct sctp_sndrcvinfo));
+-	assoc_id = NULL;
+-	use_sinfo = 0;
+-	switch (infotype) {
++    if (info != NULL && infolen >= sizeof(struct sctp_sndrcvinfo)) {
++        memcpy(&sinfo, info, sizeof(struct sctp_sndrcvinfo));
++    } else {
++        memset(&sinfo, 0, sizeof(struct sctp_sndrcvinfo));
++    }
++    assoc_id = NULL;
++    use_sinfo = 0;
++    switch (infotype) {
+ 	case SCTP_SENDV_NOINFO:
+ 		if ((infolen != 0) || (info != NULL)) {
+ 			errno = EINVAL;

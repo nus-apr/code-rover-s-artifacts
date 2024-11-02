@@ -1,0 +1,19 @@
+diff --git a/libraw/src/postprocessing/postprocessing_aux.cpp b/libraw/src/postprocessing/postprocessing_aux.cpp
+index d620ca3..26746e9 100644
+--- a/libraw/src/postprocessing/postprocessing_aux.cpp
++++ b/libraw/src/postprocessing/postprocessing_aux.cpp
+@@ -21,11 +21,11 @@
+ void LibRaw::hat_transform(float *temp, float *base, int st, int size, int sc)
+ {
+   int i;
+-  for (i = 0; i < sc; i++)
++  for (i = 0; i < sc && st * (i + sc) < size; i++)
+     temp[i] = 2 * base[st * i] + base[st * (sc - i)] + base[st * (i + sc)];
+-  for (; i + sc < size; i++)
++  for (; i + sc < size && st * (i + sc) < size; i++)
+     temp[i] = 2 * base[st * i] + base[st * (i - sc)] + base[st * (i + sc)];
+-  for (; i < size; i++)
++  for (; i < size && st * (2 * size - 2 - (i + sc)) < size; i++)
+     temp[i] = 2 * base[st * i] + base[st * (i - sc)] +
+               base[st * (2 * size - 2 - (i + sc))];
+ }

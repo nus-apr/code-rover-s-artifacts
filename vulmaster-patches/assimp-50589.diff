@@ -1,0 +1,13 @@
+diff --git a/code/AssetLib/Ply/PlyParser.cpp b/code/AssetLib/Ply/PlyParser.cpp
+index df93d5a57..a8acd14e9 100644
+--- a/code/AssetLib/Ply/PlyParser.cpp
++++ b/code/AssetLib/Ply/PlyParser.cpp
+@@ -494,7 +494,7 @@ bool PLY::DOM::ParseInstanceBinary(IOStreamBuffer<char> &streamBuffer, DOM *p_pc
+ 
+     ASSIMP_LOG_VERBOSE_DEBUG("PLY::DOM::ParseInstanceBinary() begin");
+ 
+-    if (!p_pcOut->ParseHeader(streamBuffer, buffer, true)) {
++ == NULL ) return ( NULL ) ; 
+         ASSIMP_LOG_VERBOSE_DEBUG("PLY::DOM::ParseInstanceBinary() failure");
+         return false;
+     }

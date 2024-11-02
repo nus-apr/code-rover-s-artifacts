@@ -1,0 +1,59 @@
+diff --git a/lib/onigmo/regcomp.c b/lib/onigmo/regcomp.c
+index 59b1f40d4..4800bdf76 100644
+--- a/lib/onigmo/regcomp.c
++++ b/lib/onigmo/regcomp.c
+@@ -3617,8 +3617,11 @@ expand_case_fold_string(Node* node, regex_t* reg)
+       if (r != 0) goto err;
+     }
+     else {
+-      alt_num *= (n + 1);
+-      if (alt_num > THRESHOLD_CASE_FOLD_ALT_FOR_EXPANSION) break;
++    alt_num *= (n + 1);
++    if (alt_num > THRESHOLD_CASE_FOLD_ALT_FOR_EXPANSION) {
++        r = ONIGERR_MEMORY; // Use an existing error code
++        goto err;
++    }
+ 
+       if (IS_NOT_NULL(snode)) {
+ 	r = update_string_node_case_fold(reg, snode);
+diff --git a/lib/onigmo/regparse.c b/lib/onigmo/regparse.c
+index 431aad92a..60110dc7f 100644
+--- a/lib/onigmo/regparse.c
++++ b/lib/onigmo/regparse.c
+@@ -1384,20 +1384,22 @@ onig_node_str_cat(Node* node, const UChar* s, const UChar* end)
+       UChar* p;
+       ptrdiff_t capa = len + addlen + NODE_STR_MARGIN;
+ 
+-      if (capa <= NSTR(node)->capa) {
+-	onig_strcpy(NSTR(node)->s + len, s, end);
+-      }
+-      else {
+-	if (NSTR(node)->s == NSTR(node)->buf)
+-	  p = strcat_capa_from_static(NSTR(node)->s, NSTR(node)->end,
+-				      s, end, capa);
+-	else
+-	  p = strcat_capa(NSTR(node)->s, NSTR(node)->end, s, end, capa);
+-
+-	CHECK_NULL_RETURN_MEMERR(p);
+-	NSTR(node)->s    = p;
+-	NSTR(node)->capa = (int )capa;
+-      }
++    if (capa <= NSTR(node)->capa) {
++        onig_strcpy(NSTR(node)->s + len, s, end);
++    }
++    else {
++        // Ensure capa is at least NODE_STR_BUF_SIZE and sufficient for new data
++        capa = (len + addlen + NODE_STR_MARGIN > capa) ? len + addlen + NODE_STR_MARGIN : capa;
++        if (NSTR(node)->s == NSTR(node)->buf)
++            p = strcat_capa_from_static(NSTR(node)->s, NSTR(node)->end,
++                                        s, end, capa);
++        else
++            p = strcat_capa(NSTR(node)->s, NSTR(node)->end, s, end, capa);
++
++        CHECK_NULL_RETURN_MEMERR(p);
++        NSTR(node)->s    = p;
++        NSTR(node)->capa = (int )capa;
++    }
+     }
+     else {
+       onig_strcpy(NSTR(node)->s + len, s, end);

@@ -1,0 +1,16 @@
+diff --git a/src/hunspell/hashmgr.cxx b/src/hunspell/hashmgr.cxx
+index 14201e9..4b27edd 100644
+--- a/src/hunspell/hashmgr.cxx
++++ b/src/hunspell/hashmgr.cxx
+@@ -107,8 +107,10 @@ HashMgr::HashMgr(const char* tpath, const char* apath, const char* key)
+ }
+ 
+ void HashMgr::free_flag(unsigned short* astr, short alen) {
+-  if (astr && (aliasf.empty() || TESTAFF(astr, ONLYUPCASEFLAG, alen)))
++  if (astr && (aliasf.empty() || TESTAFF(astr, ONLYUPCASEFLAG, alen))) {
+     delete[] astr;
++    astr = nullptr; // Set pointer to nullptr after deletion to prevent dangling pointer
++  }
+ }
+ 
+ void HashMgr::free_table() {

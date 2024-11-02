@@ -1,0 +1,13 @@
+diff --git a/wasm3/source/m3_parse.c b/wasm3/source/m3_parse.c
+index bc164a4..62a1b84 100644
+--- a/wasm3/source/m3_parse.c
++++ b/wasm3/source/m3_parse.c
+@@ -277,7 +277,7 @@ M3Result  Parse_InitExpr  (M3Module * io_module, bytes_t * io_bytes, cbytes_t i_
+ #else
+     M3Compilation compilation;
+ #endif
+-    compilation = (M3Compilation){ NULL, io_module, * io_bytes, i_end };
++    compilation = (M3Compilation){ * io_bytes, io_module, * io_bytes, i_end };
+ 
+     result = Compile_BlockStatements (& compilation);
+ 

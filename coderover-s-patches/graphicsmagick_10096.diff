@@ -1,0 +1,32 @@
+diff --git a/magick/render.c b/magick/render.c
+index 3caf603b..6d5d95c3 100644
+--- a/magick/render.c
++++ b/magick/render.c
+@@ -878,7 +878,9 @@ ConvertPrimitiveToPath(const DrawInfo *draw_info,
+       break;
+   }
+   for (i=0; primitive_info[i].primitive != UndefinedPrimitive; i++);
+-  path_info=MagickAllocateArray(PathInfo *,(2*i+3),sizeof(PathInfo));
++  // Calculate the maximum number of points needed, including ghost lines
++  long max_points = 2 * i + 3 + i; // Additional 'i' for potential ghost lines
++  path_info=MagickAllocateArray(PathInfo *, max_points, sizeof(PathInfo));
+   if (path_info == (PathInfo *) NULL)
+     return((PathInfo *) NULL);
+   coordinates=0;
+@@ -939,6 +941,16 @@ ConvertPrimitiveToPath(const DrawInfo *draw_info,
+       close it (this is a "ghost line").
+     */
+     path_info[start].code=OpenCode;
++    if (n + 2 >= max_points) {
++      // Reallocate path_info if needed
++      PathInfo *new_path_info = (PathInfo *) realloc(path_info, (max_points + i) * sizeof(PathInfo));
++      if (new_path_info == NULL) {
++        free(path_info);
++        return (PathInfo *) NULL;
++      }
++      path_info = new_path_info;
++      max_points += i;
++    }
+     path_info[n].code=GhostlineCode;
+     path_info[n].point=primitive_info[i].point;
+     n++;

@@ -1,0 +1,13 @@
+diff --git a/mruby/src/array.c b/mruby/src/array.c
+index b711919..2a153f9 100644
+--- a/mruby/src/array.c
++++ b/mruby/src/array.c
+@@ -606,7 +606,7 @@ mrb_ary_shift_m(mrb_state *mrb, mrb_value self)
+   else if (len == n) {
+     ARY_SET_LEN(a, 0);
+   }
+-  else {
++  else if (n <= len) {
+     mrb_value *ptr = ARY_PTR(a);
+     mrb_int size = len-n;
+ 

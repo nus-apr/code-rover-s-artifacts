@@ -1,0 +1,15 @@
+diff --git a/src/arch/relic_arch_x64.c b/src/arch/relic_arch_x64.c
+index 5bef299d..39daffce 100644
+--- a/src/arch/relic_arch_x64.c
++++ b/src/arch/relic_arch_x64.c
+@@ -46,9 +46,7 @@
+ /* Public definitions                                                         */
+ /*============================================================================*/
+ 
+-void arch_init(void) {
+-	ctx_t *ctx = core_get();
+-	if (ctx != NULL) {
++ size_ ) ; DCHECK_GE ( nbytes, size_ ) ; <vul-start> ( nbytes, 
+ 		core_get()->lzcnt_ptr =
+ 			(has_lzcnt_hard() ? lzcnt64_hard : lzcnt64_soft);
+ 	}

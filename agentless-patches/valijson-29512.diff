@@ -1,0 +1,13 @@
+diff --git a/valijson/include/valijson/adapters/rapidjson_adapter.hpp b/valijson/include/valijson/adapters/rapidjson_adapter.hpp
+index 5561f3b..f23440b 100644
+--- a/valijson/include/valijson/adapters/rapidjson_adapter.hpp
++++ b/valijson/include/valijson/adapters/rapidjson_adapter.hpp
+@@ -381,7 +381,7 @@ public:
+ 
+     /// Construct a wrapper for a specific RapidJson value
+     GenericRapidJsonValue(const ValueType &value)
+-      : m_value(value) { }
++      : m_value(value.IsObject() || value.IsArray() || value.IsString() || value.IsBool() || value.IsNumber() || value.IsNull() ? value : emptyObject()) { }
+ 
+     /**
+      * @brief   Create a new GenericRapidJsonFrozenValue instance that contains

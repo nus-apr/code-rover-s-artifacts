@@ -1,0 +1,67 @@
+diff --git a/lib/util/lbuf.c b/lib/util/lbuf.c
+index c2a83760b..ab65c856a 100644
+--- a/lib/util/lbuf.c
++++ b/lib/util/lbuf.c
+@@ -111,34 +111,34 @@ sudo_lbuf_append_quoted_v1(struct sudo_lbuf *lbuf, const char *set, const char *
+ 
+     va_start(ap, fmt);
+     while (*fmt != '\0') {
+-	if (fmt[0] == '%' && fmt[1] == 's') {
+-	    if ((s = va_arg(ap, char *)) == NULL)
+-		s = "(NULL)";
+-	    while ((cp = strpbrk(s, set)) != NULL) {
+-		len = (int)(cp - s);
+-		if (!sudo_lbuf_expand(lbuf, len + 2))
+-		    goto done;
+-		memcpy(lbuf->buf + lbuf->len, s, len);
+-		lbuf->len += len;
+-		lbuf->buf[lbuf->len++] = '\\';
+-		lbuf->buf[lbuf->len++] = *cp;
+-		s = cp + 1;
+-	    }
+-	    if (*s != '\0') {
+-		len = strlen(s);
+-		if (!sudo_lbuf_expand(lbuf, len))
+-		    goto done;
+-		memcpy(lbuf->buf + lbuf->len, s, len);
+-		lbuf->len += len;
+-	    }
+-	    fmt += 2;
+-	    continue;
+-	}
+-	if (!sudo_lbuf_expand(lbuf, 2))
+-	    goto done;
+-	if (strchr(set, *fmt) != NULL)
+-	    lbuf->buf[lbuf->len++] = '\\';
+-	lbuf->buf[lbuf->len++] = *fmt++;
++    if (fmt[0] == '%' && fmt[1] == 's') {
++        if ((s = va_arg(ap, char *)) == NULL)
++            s = "(NULL)";
++        while ((cp = strpbrk(s, set)) != NULL) {
++            len = (int)(cp - s);
++            if (!sudo_lbuf_expand(lbuf, lbuf->len + len + 2 + 1))
++                goto done;
++            memcpy(lbuf->buf + lbuf->len, s, len);
++            lbuf->len += len;
++            lbuf->buf[lbuf->len++] = '\\';
++            lbuf->buf[lbuf->len++] = *cp;
++            s = cp + 1;
++        }
++        if (*s != '\0') {
++            len = strlen(s);
++            if (!sudo_lbuf_expand(lbuf, lbuf->len + len + 1))
++                goto done;
++            memcpy(lbuf->buf + lbuf->len, s, len);
++            lbuf->len += len;
++        }
++        fmt += 2;
++        continue;
++    }
++    if (!sudo_lbuf_expand(lbuf, lbuf->len + 2 + 1))
++        goto done;
++    if (strchr(set, *fmt) != NULL)
++        lbuf->buf[lbuf->len++] = '\\';
++    lbuf->buf[lbuf->len++] = *fmt++;
+     }
+     ret = true;
+ 

@@ -1,0 +1,37 @@
+diff --git a/libvips/foreign/jxlload.c b/libvips/foreign/jxlload.c
+index 521d6de27..9c911290d 100644
+--- a/libvips/foreign/jxlload.c
++++ b/libvips/foreign/jxlload.c
+@@ -209,16 +209,24 @@ vips_foreign_load_jxl_fill_input( VipsForeignLoadJxl *jxl,
+ 		INPUT_BUFFER_SIZE - bytes_remaining );
+ #endif /*DEBUG_VERBOSE*/
+ 
+-	memmove( jxl->input_buffer,
++	if (bytes_remaining > jxl->bytes_in_buffer) {
++		// Handle the error: bytes_remaining should not exceed bytes_in_buffer
++		return -1;
++	}
++
++	memmove(jxl->input_buffer,
+ 		jxl->input_buffer + jxl->bytes_in_buffer - bytes_remaining,
+-		bytes_remaining );
+-	bytes_read = vips_source_read( jxl->source,
++		bytes_remaining);
++
++	bytes_read = vips_source_read(jxl->source,
+ 		jxl->input_buffer + bytes_remaining,
+-		INPUT_BUFFER_SIZE - bytes_remaining );
+-	/* Read error, or unexpected end of input.
+-	 */
+-	if( bytes_read <= 0 ) 
+-		return( -1 );
++		INPUT_BUFFER_SIZE - bytes_remaining);
++
++	// Ensure bytes_read is within valid range
++	if (bytes_read < 0 || (size_t)bytes_read > INPUT_BUFFER_SIZE - bytes_remaining) {
++		return -1;
++	}
++
+ 	jxl->bytes_in_buffer = bytes_read + bytes_remaining;
+ 
+ #ifdef DEBUG_VERBOSE

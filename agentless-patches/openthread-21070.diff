@@ -1,0 +1,16 @@
+diff --git a/openthread/src/core/thread/energy_scan_server.cpp b/openthread/src/core/thread/energy_scan_server.cpp
+index a023f95..ed3920d 100644
+--- a/openthread/src/core/thread/energy_scan_server.cpp
++++ b/openthread/src/core/thread/energy_scan_server.cpp
+@@ -145,7 +145,10 @@ void EnergyScanServer::HandleScanResult(Mac::EnergyScanResult *aResult)
+ 
+     if (aResult)
+     {
+-        mScanResults[mScanResultsLength++] = aResult->mMaxRssi;
++        if (mScanResultsLength < 64)
++        {
++            mScanResults[mScanResultsLength++] = aResult->mMaxRssi;
++        }
+     }
+     else
+     {

@@ -1,0 +1,88 @@
+diff --git a/aom_dsp/x86/intrapred_avx2.c b/aom_dsp/x86/intrapred_avx2.c
+index 4525f95136..e5e7618fc8 100644
+--- a/aom_dsp/x86/intrapred_avx2.c
++++ b/aom_dsp/x86/intrapred_avx2.c
+@@ -1407,16 +1407,20 @@ static void highbd_dr_prediction_z1_64xN_avx2(int N, uint16_t *dst,
+     __m256i b, res[2], res1;
+ 
+     int base = x >> frac_bits;
+-    if (base >= max_base_x) {
+-      for (int i = r; i < N; ++i) {
+-        _mm256_storeu_si256((__m256i *)dst, a_mbase_x);  // save 32 values
+-        _mm256_storeu_si256((__m256i *)(dst + 16), a_mbase_x);
+-        _mm256_storeu_si256((__m256i *)(dst + 32), a_mbase_x);
+-        _mm256_storeu_si256((__m256i *)(dst + 48), a_mbase_x);
+-        dst += stride;
+-      }
+-      return;
++  if (base >= max_base_x) {
++    for (int i = r; i < N; ++i) {
++      _mm256_storeu_si256((__m256i *)dst, a_mbase_x);  // save 32 values
++      _mm256_storeu_si256((__m256i *)(dst + 16), a_mbase_x);
++      _mm256_storeu_si256((__m256i *)(dst + 32), a_mbase_x);
++      _mm256_storeu_si256((__m256i *)(dst + 48), a_mbase_x);
++      dst += stride;
+     }
++    return;
++  }
++
++  if (base + 64 > max_base_x) {
++    base = max_base_x - 64;
++  }
+ 
+     __m256i shift = _mm256_srli_epi32(
+         _mm256_and_si256(_mm256_set1_epi32(x), _mm256_set1_epi32(0x3f)), 1);
+diff --git a/av1/common/reconintra.c b/av1/common/reconintra.c
+index df69d6bab5..d3ee91524b 100644
+--- a/av1/common/reconintra.c
++++ b/av1/common/reconintra.c
+@@ -1217,27 +1217,31 @@ static void build_intra_predictors_high(
+     int need_right = !!(extend_modes[mode] & NEED_ABOVERIGHT);
+     if (use_filter_intra) need_right = 0;
+     if (is_dr_mode) need_right = p_angle < 90;
+-    const int num_top_pixels_needed = txwpx + (need_right ? txhpx : 0);
+-    if (n_top_px > 0) {
+-      memcpy(above_row, above_ref, n_top_px * sizeof(above_ref[0]));
+-      i = n_top_px;
+-      if (need_right && n_topright_px > 0) {
+-        assert(n_top_px == txwpx);
+-        memcpy(above_row + txwpx, above_ref + txwpx,
+-               n_topright_px * sizeof(above_ref[0]));
+-        i += n_topright_px;
+-      }
+-      if (i < num_top_pixels_needed)
+-        aom_memset16(&above_row[i], above_row[i - 1],
+-                     num_top_pixels_needed - i);
++  int actual_top_pixels_needed = txwpx + (need_right ? txhpx : 0);
++  if (actual_top_pixels_needed > MAX_TX_SIZE * 2 + 32) {
++    actual_top_pixels_needed = MAX_TX_SIZE * 2 + 32;
++  }
++
++  if (n_top_px > 0) {
++    memcpy(above_row, above_ref, n_top_px * sizeof(above_ref[0]));
++    i = n_top_px;
++    if (need_right && n_topright_px > 0) {
++      assert(n_top_px == txwpx);
++      memcpy(above_row + txwpx, above_ref + txwpx,
++             n_topright_px * sizeof(above_ref[0]));
++      i += n_topright_px;
++    }
++    if (i < actual_top_pixels_needed)
++      aom_memset16(&above_row[i], above_row[i - 1],
++                   actual_top_pixels_needed - i);
++  } else {
++    if (n_left_px > 0) {
++      aom_memset16(above_row, left_ref[0], actual_top_pixels_needed);
+     } else {
+-      if (n_left_px > 0) {
+-        aom_memset16(above_row, left_ref[0], num_top_pixels_needed);
+-      } else {
+-        aom_memset16(above_row, base - 1, num_top_pixels_needed);
+-      }
++      aom_memset16(above_row, base - 1, actual_top_pixels_needed);
+     }
+   }
++  }
+ 
+   if (need_above_left) {
+     if (n_top_px > 0 && n_left_px > 0) {

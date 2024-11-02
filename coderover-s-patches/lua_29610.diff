@@ -1,0 +1,36 @@
+diff --git a/lapi.c b/lapi.c
+index 3583e9c0..246e9cf8 100644
+--- a/lapi.c
++++ b/lapi.c
+@@ -205,8 +205,10 @@ LUA_API void lua_closeslot (lua_State *L, int idx) {
+   api_check(L, hastocloseCfunc(L->ci->nresults) && L->openupval != NULL &&
+                uplevel(L->openupval) == level,
+      "no variable to close at given level");
+-  luaF_close(L, level, CLOSEKTOP, 0);
+-  setnilvalue(s2v(level));
++    luaF_close(L, level, CLOSEKTOP, 0);
++    if (level >= L->stack && level < L->top) {  // Ensure the level is within valid stack bounds
++        setnilvalue(s2v(level));
++    }
+   lua_unlock(L);
+ }
+ 
+diff --git a/lauxlib.c b/lauxlib.c
+index e8fc486e..a6597874 100644
+--- a/lauxlib.c
++++ b/lauxlib.c
+@@ -582,10 +582,10 @@ LUALIB_API void luaL_addstring (luaL_Buffer *B, const char *s) {
+ LUALIB_API void luaL_pushresult (luaL_Buffer *B) {
+   lua_State *L = B->L;
+   lua_pushlstring(L, B->b, B->n);
+-  if (buffonstack(B)) {
+-    lua_closeslot(L, -2);  /* close the box */
+-    lua_remove(L, -2);  /* remove box from the stack */
+-  }
++    if (buffonstack(B) && lua_gettop(L) > 1) {  // Use accessor function to check stack size
++        lua_closeslot(L, -2);  /* close the box */
++        lua_remove(L, -2);  /* remove box from the stack */
++    }
+ }
+ 
+ 

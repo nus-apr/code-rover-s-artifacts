@@ -1,0 +1,37 @@
+diff --git a/deps/jsmn/jsmn.c b/deps/jsmn/jsmn.c
+index 8a187e7b7..6bf1439f0 100644
+--- a/deps/jsmn/jsmn.c
++++ b/deps/jsmn/jsmn.c
+@@ -105,11 +105,17 @@ static int jsmn_parse_string(jsmn_parser *parser, const char *js,
+ 				parser->pos = start;
+ 				return JSMN_ERROR_NOMEM;
+ 			}
+-			jsmn_fill_token(token, JSMN_STRING, (int)(start+1), (int)parser->pos);
++    if (token != NULL) {
++        jsmn_fill_token(token, JSMN_STRING, (int)(start+1), (int)parser->pos);
++        token->size = 0; // Ensure size is initialized
+ #ifdef JSMN_PARENT_LINKS
+-			token->parent = parser->toksuper;
++        token->parent = parser->toksuper;
+ #endif
+-			return 0;
++    } else {
++        parser->pos = start; // Reset position on error
++        return JSMN_ERROR_NOMEM;
++    }
++    return 0;
+ 		}
+ 
+ 		/* Backslash: Quoted symbol expected */
+diff --git a/src/ua_types.c b/src/ua_types.c
+index a2d6e8220..8d5f80ca8 100644
+--- a/src/ua_types.c
++++ b/src/ua_types.c
+@@ -279,6 +279,7 @@ UA_ByteString_allocBuffer(UA_ByteString *bs, size_t length) {
+     bs->data = (u8*)UA_malloc(length);
+     if(!bs->data)
+         return UA_STATUSCODE_BADOUTOFMEMORY;
++    memset(bs->data, 0, length); // Initialize the allocated buffer
+     bs->length = length;
+     return UA_STATUSCODE_GOOD;
+ }

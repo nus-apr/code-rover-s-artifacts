@@ -1,0 +1,29 @@
+diff --git a/FuzzerTracePC.cpp b/FuzzerTracePC.cpp
+index 1cfd3f3..518f895 100644
+--- a/FuzzerTracePC.cpp
++++ b/FuzzerTracePC.cpp
+@@ -326,8 +326,12 @@ void TracePC::HandleCmp(uintptr_t PC, T Arg1, T Arg2) {
+ }
+ 
+ static size_t InternalStrnlen(const char *S, size_t MaxLen) {
++  if (S == nullptr) return 0; // Check for null pointer
+   size_t Len = 0;
+-  for (; Len < MaxLen && S[Len]; Len++) {}
++  // Ensure we do not exceed the buffer size
++  for (; Len < MaxLen && S[Len]; Len++) {
++    if (Len >= MaxLen) break; // Prevent reading beyond the buffer
++  }
+   return Len;
+ }
+ 
+@@ -491,8 +495,10 @@ void __sanitizer_weak_hook_strncmp(void *caller_pc, const char *s1,
+                                    const char *s2, size_t n, int result) {
+   if (fuzzer::ScopedDoingMyOwnMemOrStr::DoingMyOwnMemOrStr) return;
+   if (result == 0) return;  // No reason to mutate.
++  if (s1 == nullptr || s2 == nullptr) return; // Check for null pointers
+   size_t Len1 = fuzzer::InternalStrnlen(s1, n);
+   size_t Len2 = fuzzer::InternalStrnlen(s2, n);
++  // Ensure n does not exceed the actual buffer sizes
+   n = std::min(n, Len1);
+   n = std::min(n, Len2);
+   if (n <= 1) return;  // Not interesting.

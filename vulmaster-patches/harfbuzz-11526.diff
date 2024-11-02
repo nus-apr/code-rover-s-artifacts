@@ -1,0 +1,15 @@
+diff --git a/src/hb-ot-layout.cc b/src/hb-ot-layout.cc
+index 9488fe8..791377c 100644
+--- a/src/hb-ot-layout.cc
++++ b/src/hb-ot-layout.cc
+@@ -381,9 +381,7 @@ hb_ot_layout_table_select_script (hb_face_t      *face,
+   static_assert ((OT::Index::NOT_FOUND_INDEX == HB_OT_LAYOUT_NO_SCRIPT_INDEX), "");
+   const OT::GSUBGPOS &g = get_gsubgpos_table (face, table_tag);
+   unsigned int i;
+-
+-  for (i = 0; i < script_count; i++)
+-  {
++ feature_index ) { if 
+     if (g.find_script_index (script_tags[i], script_index))
+     {
+       if (chosen_script)

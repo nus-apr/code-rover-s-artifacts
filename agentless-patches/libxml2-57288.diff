@@ -1,0 +1,19 @@
+diff --git a/libxml2/parserInternals.c b/libxml2/parserInternals.c
+index 8546b7b..1480bf8 100644
+--- a/libxml2/parserInternals.c
++++ b/libxml2/parserInternals.c
+@@ -286,7 +286,7 @@ xmlHaltParser(xmlParserCtxtPtr ctxt) {
+             xmlFreeParserInputBuffer(ctxt->input->buf);
+             ctxt->input->buf = NULL;
+         }
+-	ctxt->input->cur = BAD_CAST"";
++	ctxt->input->cur = BAD_CAST"\0";
+         ctxt->input->length = 0;
+ 	ctxt->input->base = ctxt->input->cur;
+         ctxt->input->end = ctxt->input->cur;
+@@ -2253,4 +2253,4 @@ xmlKeepBlanksDefault(int val) {
+     xmlKeepBlanksDefaultValue = val;
+     if (!val) xmlIndentTreeOutput = 1;
+     return(old);
+-}
++}

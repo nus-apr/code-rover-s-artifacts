@@ -1,0 +1,31 @@
+diff --git a/epan/dissectors/packet-dns.c b/epan/dissectors/packet-dns.c
+index 8e619fcf3d..64dba3dc08 100644
+--- a/epan/dissectors/packet-dns.c
++++ b/epan/dissectors/packet-dns.c
+@@ -1507,19 +1507,17 @@ add_rr_to_tree(proto_tree  *rr_tree, tvbuff_t *tvb, int offset,
+   if (type == T_SRV) {
+     srv_rr_info = wmem_strsplit(wmem_packet_scope(), name, ".", 3);
+ 
+-    /* The + 1 on the strings is to skip the leading '_' */
++    /* Ensure that srv_rr_info has at least 3 elements */
++    if (srv_rr_info[0] && srv_rr_info[1] && srv_rr_info[2]) {
++        /* The + 1 on the strings is to skip the leading '_' */
++        proto_tree_add_string(rr_tree, hf_dns_srv_service, tvb, offset,
++                              namelen, srv_rr_info[0]);
+ 
+-    proto_tree_add_string(rr_tree, hf_dns_srv_service, tvb, offset,
+-                          namelen, srv_rr_info[0]);
++        proto_tree_add_string(rr_tree, hf_dns_srv_proto, tvb, offset,
++                              namelen, srv_rr_info[1]);
+ 
+-    if (srv_rr_info[1]) {
+-      proto_tree_add_string(rr_tree, hf_dns_srv_proto, tvb, offset,
+-                            namelen, srv_rr_info[1]);
+-
+-      if (srv_rr_info[2]) {
+         proto_tree_add_string(rr_tree, hf_dns_srv_name, tvb, offset,
+                               namelen, srv_rr_info[2]);
+-      }
+     }
+   } else {
+     proto_tree_add_string(rr_tree, hf_dns_rr_name, tvb, offset, namelen, name);

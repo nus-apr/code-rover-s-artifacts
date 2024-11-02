@@ -1,0 +1,22 @@
+diff --git a/sleuthkit/tsk/fs/hfs.c b/sleuthkit/tsk/fs/hfs.c
+index 31b798c..cc73cdc 100644
+--- a/sleuthkit/tsk/fs/hfs.c
++++ b/sleuthkit/tsk/fs/hfs.c
+@@ -836,7 +836,7 @@ hfs_cat_traverse(HFS_INFO * hfs,
+                 }
+ 
+                 key = (hfs_btree_key_cat *) & node[rec_off];
+-                keylen = 2 + tsk_getu16(hfs->fs_info.endian, key->key_len);
++                keylen = sizeof(hfs_btree_key_cat) + tsk_getu16(hfs->fs_info.endian, key->key_len);
+ 
+                 if (keylen > nodesize - rec_off) {
+                     tsk_error_set_errno(TSK_ERR_FS_GENFS);
+@@ -946,7 +946,7 @@ hfs_cat_traverse(HFS_INFO * hfs,
+                 }
+ 
+                 key = (hfs_btree_key_cat *) & node[rec_off];
+-                keylen = 2 + tsk_getu16(hfs->fs_info.endian, key->key_len);
++                keylen = sizeof(hfs_btree_key_cat) + tsk_getu16(hfs->fs_info.endian, key->key_len);
+ 
+                 if (keylen > nodesize - rec_off) {
+                     tsk_error_set_errno(TSK_ERR_FS_GENFS);

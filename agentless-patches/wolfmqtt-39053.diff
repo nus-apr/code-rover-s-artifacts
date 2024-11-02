@@ -1,0 +1,13 @@
+diff --git a/wolfmqtt/src/mqtt_packet.c b/wolfmqtt/src/mqtt_packet.c
+index 52d42a7..0938bcb 100644
+--- a/wolfmqtt/src/mqtt_packet.c
++++ b/wolfmqtt/src/mqtt_packet.c
+@@ -1568,7 +1568,7 @@ int MqttDecode_Disconnect(byte *rx_buf, int rx_buf_len, MqttDisconnect *disc)
+     }
+     rx_payload = &rx_buf[header_len];
+ 
+-    if (remain_len > 0) {
++    if (remain_len > 0 && rx_buf_len > header_len) {
+         /* Decode variable header */
+         disc->reason_code = *rx_payload++;
+ 

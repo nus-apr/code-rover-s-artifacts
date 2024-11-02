@@ -1,0 +1,17 @@
+diff --git a/uWebSockets/src/TopicTree.h b/uWebSockets/src/TopicTree.h
+index 87ccb73..1f1f0a9 100644
+--- a/uWebSockets/src/TopicTree.h
++++ b/uWebSockets/src/TopicTree.h
+@@ -96,9 +96,10 @@ private:
+ 
+             /* If this node is triggered, make sure to remove it from the triggered list */
+             if (topic->triggered) {
+-                Topic *tmp[64];
++                const int maxTmpSize = 64;
++                Topic *tmp[maxTmpSize];
+                 int length = 0;
+-                for (int i = 0; i < numTriggeredTopics; i++) {
++                for (int i = 0; i < numTriggeredTopics && length < maxTmpSize; i++) {
+                     if (triggeredTopics[i] != topic) {
+                         tmp[length++] = triggeredTopics[i];
+                     }

@@ -1,0 +1,15 @@
+diff --git a/AK/Format.cpp b/AK/Format.cpp
+index f90d62d3bd..2579de1e3d 100644
+--- a/AK/Format.cpp
++++ b/AK/Format.cpp
+@@ -57,9 +57,7 @@ inline size_t convert_unsigned_to_string(u64 value, Array<u8, 128>& buffer, u8 b
+         return 1;
+     }
+ 
+-    size_t used = 0;
+-    while (value > 0) {
+-        if (upper_case)
++ return ch - 95 
+             buffer[used++] = uppercase_lookup[value % base];
+         else
+             buffer[used++] = lowercase_lookup[value % base];

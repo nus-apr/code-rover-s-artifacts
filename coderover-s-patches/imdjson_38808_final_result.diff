@@ -1,0 +1,102 @@
+diff --git a/fuzz/fuzz_dump.cpp b/fuzz/fuzz_dump.cpp
+index 2c5b1517..a4564bf6 100644
+--- a/fuzz/fuzz_dump.cpp
++++ b/fuzz/fuzz_dump.cpp
+@@ -14,43 +14,81 @@
+ static void print_json(std::ostream& os, simdjson::dom::element element) noexcept {
+   const char endl='\n';
+   switch (element.type()) {
+-  case simdjson::dom::element_type::ARRAY:
++  case simdjson::dom::element_type::ARRAY: {
+     os << "[";
+-    {
+-      simdjson::dom::array array = element.get_array().value_unsafe();
++    auto array_result = element.get_array();
++    if (array_result.error() == simdjson::SUCCESS) {
++      simdjson::dom::array array = array_result.value();
+       for (simdjson::dom::element child : array) {
+         print_json(os, child);
+         os << ",";
+       }
++    } else {
++      os << "null";
+     }
+     os << "]";
+     break;
+-  case simdjson::dom::element_type::OBJECT:
++  }
++  case simdjson::dom::element_type::OBJECT: {
+     os << "{";
+-    {
+-      simdjson::dom::object object = element.get_object().value_unsafe();
++    auto object_result = element.get_object();
++    if (object_result.error() == simdjson::SUCCESS) {
++      simdjson::dom::object object = object_result.value();
+       for (simdjson::dom::key_value_pair field : object) {
+         os << "\"" << field.key << "\": ";
+         print_json(os, field.value);
+       }
++    } else {
++      os << "null";
+     }
+     os << "}";
+     break;
+-  case simdjson::dom::element_type::INT64:
+-    os << element.get_int64().value_unsafe() << endl;
++  }
++  case simdjson::dom::element_type::INT64: {
++    auto int64_result = element.get_int64();
++    if (int64_result.error() == simdjson::SUCCESS) {
++      os << int64_result.value() << endl;
++    } else {
++      os << "null" << endl;
++    }
+     break;
+-  case simdjson::dom::element_type::UINT64:
+-    os << element.get_uint64().value_unsafe() << endl;
++  }
++  case simdjson::dom::element_type::UINT64: {
++    auto uint64_result = element.get_uint64();
++    if (uint64_result.error() == simdjson::SUCCESS) {
++      os << uint64_result.value() << endl;
++    } else {
++      os << "null" << endl;
++    }
+     break;
+-  case simdjson::dom::element_type::DOUBLE:
+-    os << element.get_double().value_unsafe() << endl;
++  }
++  case simdjson::dom::element_type::DOUBLE: {
++    auto double_result = element.get_double();
++    if (double_result.error() == simdjson::SUCCESS) {
++      os << double_result.value() << endl;
++    } else {
++      os << "null" << endl;
++    }
+     break;
+-  case simdjson::dom::element_type::STRING:
+-    os << element.get_string().value_unsafe() << endl;
++  }
++  case simdjson::dom::element_type::STRING: {
++    auto string_result = element.get_string();
++    if (string_result.error() == simdjson::SUCCESS) {
++      os << string_result.value() << endl;
++    } else {
++      os << "null" << endl;
++    }
+     break;
+-  case simdjson::dom::element_type::BOOL:
+-    os << element.get_bool().value_unsafe() << endl;
++  }
++  case simdjson::dom::element_type::BOOL: {
++    auto bool_result = element.get_bool();
++    if (bool_result.error() == simdjson::SUCCESS) {
++      os << bool_result.value() << endl;
++    } else {
++      os << "null" << endl;
++    }
+     break;
++  }
+   case simdjson::dom::element_type::NULL_VALUE:
+     os << "null" << endl;
+     break;

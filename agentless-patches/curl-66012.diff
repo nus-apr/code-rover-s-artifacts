@@ -1,0 +1,14 @@
+diff --git a/curl/lib/multi.c b/curl/lib/multi.c
+index 6970849..a875c4c 100644
+--- a/curl/lib/multi.c
++++ b/curl/lib/multi.c
+@@ -784,8 +784,8 @@ static CURLcode multi_done(struct Curl_easy *data,
+       data->state.lastconnect_id = -1;
+   }
+ 
+-  Curl_safefree(data->state.buffer);
+   return result;
++  Curl_safefree(data->state.buffer);
+ }
+ 
+ static int close_connect_only(struct Curl_easy *data,

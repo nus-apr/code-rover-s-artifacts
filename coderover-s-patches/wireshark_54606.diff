@@ -1,0 +1,28 @@
+diff --git a/epan/charsets.c b/epan/charsets.c
+index 69bd870ac6..099ac3f0e1 100644
+--- a/epan/charsets.c
++++ b/epan/charsets.c
+@@ -118,6 +118,11 @@ utf_8_validate(const guint8 *start, gint length, const guint8 **end)
+             continue;
+         }
+ 
++        if (length < 1) {
++            *end = ptr;
++            return valid_bytes;
++        }
++
+         ch = *ptr;
+ 
+         if (ch < 0xc2 || ch > 0xf4) {
+@@ -269,8 +274,10 @@ get_utf_8_string(wmem_allocator_t *scope, const guint8 *ptr, gint length)
+             wmem_strbuf_append_len(str, prev, valid_bytes);
+         }
+         length -= (gint)valid_bytes;
+-        if (length) {
++        if (length > 0 && valid_bytes == 0) {
+             wmem_strbuf_append_unichar_repl(str);
++            ptr++;
++            length--;
+         }
+     }
+ 

@@ -1,0 +1,43 @@
+diff --git a/AK/ByteBuffer.h b/AK/ByteBuffer.h
+index 29c51ce43c..3f6f28d210 100644
+--- a/AK/ByteBuffer.h
++++ b/AK/ByteBuffer.h
+@@ -74,8 +74,18 @@ public:
+     Span<u8> span() { return { data(), size() }; }
+     Span<const u8> span() const { return { data(), size() }; }
+ 
+-    u8* offset_pointer(int offset) { return m_data + offset; }
+-    const u8* offset_pointer(int offset) const { return m_data + offset; }
++    u8* offset_pointer(int offset) { 
++        if (offset < 0 || static_cast<size_t>(offset) + 2 > m_size) { // Ensure enough space for u16 read
++            return nullptr;
++        }
++        return m_data + offset; 
++    }
++    const u8* offset_pointer(int offset) const { 
++        if (offset < 0 || static_cast<size_t>(offset) + 2 > m_size) { // Ensure enough space for u16 read
++            return nullptr;
++        }
++        return m_data + offset; 
++    }
+ 
+     void* end_pointer() { return m_data + m_size; }
+     const void* end_pointer() const { return m_data + m_size; }
+diff --git a/Libraries/LibTTF/Font.cpp b/Libraries/LibTTF/Font.cpp
+index 69b3d1ee07..0ce01e25eb 100644
+--- a/Libraries/LibTTF/Font.cpp
++++ b/Libraries/LibTTF/Font.cpp
+@@ -260,7 +260,12 @@ RefPtr<Font> Font::load_from_offset(ByteBuffer&& buffer, u32 offset)
+     Optional<Cmap> opt_cmap = {};
+     Optional<Loca> opt_loca = {};
+ 
+-    auto num_tables = be_u16(buffer.offset_pointer(offset + (u32)Offsets::NumTables));
++    auto num_tables_ptr = buffer.offset_pointer(offset + (u32)Offsets::NumTables);
++    if (!num_tables_ptr) {
++        dbg() << "Invalid offset for NumTables";
++        return nullptr;
++    }
++    auto num_tables = be_u16(num_tables_ptr);
+     if (buffer.size() < offset + (u32)Sizes::OffsetTable + num_tables * (u32)Sizes::TableRecord) {
+         dbg() << "Font file too small";
+         return nullptr;

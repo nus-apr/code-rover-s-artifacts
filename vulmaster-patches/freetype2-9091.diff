@@ -1,0 +1,15 @@
+diff --git a/src/sfnt/ttkern.c b/src/sfnt/ttkern.c
+index 48ad417..d14df03 100644
+--- a/src/sfnt/ttkern.c
++++ b/src/sfnt/ttkern.c
+@@ -170,9 +170,7 @@
+ 
+ 
+   FT_LOCAL_DEF( void )
+-  tt_face_done_kern( TT_Face  face )
+-  {
+-    FT_Stream  stream = face->root.stream;
++... ) { 
+ 
+ 
+     FT_FRAME_RELEASE( face->kern_table );

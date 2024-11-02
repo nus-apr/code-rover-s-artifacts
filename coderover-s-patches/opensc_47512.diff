@@ -1,0 +1,34 @@
+diff --git a/src/libopensc/card-cardos.c b/src/libopensc/card-cardos.c
+index 8cec82e7..cc8c7bee 100644
+--- a/src/libopensc/card-cardos.c
++++ b/src/libopensc/card-cardos.c
+@@ -526,16 +526,16 @@ get_next_part:
+ 		size_t   tlen = 0, ilen = 0;
+ 		/* is there a file information block (0x6f) ? */
+ 		p = sc_asn1_find_tag(card->ctx, p, len, 0x6f, &tlen);
+-		if (p == NULL) {
+-			sc_log(card->ctx,  "directory tag missing");
++		if (p == NULL || (p - rbuf + tlen > sizeof(rbuf))) {
++			sc_log(card->ctx,  "directory tag missing or out of bounds");
+ 			return SC_ERROR_INTERNAL;
+ 		}
+ 		if (tlen == 0)
+ 			/* empty directory */
+ 			break;
+ 		q = sc_asn1_find_tag(card->ctx, p, tlen, 0x86, &ilen);
+-		if (q == NULL || ilen != 2) {
+-			sc_log(card->ctx,  "error parsing file id TLV object");
++		if (q == NULL || ilen != 2 || (q - rbuf + ilen > sizeof(rbuf))) {
++			sc_log(card->ctx,  "error parsing file id TLV object or out of bounds");
+ 			return SC_ERROR_INTERNAL;
+ 		}
+ 		/* put file id in buf */
+@@ -548,7 +548,7 @@ get_next_part:
+ 			break;
+ 		/* extract next offset */
+ 		q = sc_asn1_find_tag(card->ctx, p, tlen, 0x8a, &ilen);
+-		if (q != NULL && ilen == 1) {
++		if (q != NULL && ilen == 1 && (q - rbuf + ilen <= sizeof(rbuf))) {
+ 			offset = (u8)ilen;
+ 			goto get_next_part;
+ 		}

@@ -1,0 +1,15 @@
+diff --git a/src/common/simclist.c b/src/common/simclist.c
+index 11a9254f..b54b025b 100644
+--- a/src/common/simclist.c
++++ b/src/common/simclist.c
+@@ -231,9 +231,7 @@ static simclist_inline long get_random() {
+ #endif
+ 
+ 
+-/* list initialization */
+-int list_init(list_t *simclist_restrict l) {
+-    if (l == NULL) {
++ ( ) ; if ( layer_offset > 0 && <vul-start>, xcf_image ) ) { return false ; } } 
+         return -1;
+     }
+ 

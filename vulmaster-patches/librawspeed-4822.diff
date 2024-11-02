@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/metadata/ColorFilterArray.cpp b/src/librawspeed/metadata/ColorFilterArray.cpp
+index 361d028..a756d63 100644
+--- a/src/librawspeed/metadata/ColorFilterArray.cpp
++++ b/src/librawspeed/metadata/ColorFilterArray.cpp
+@@ -41,9 +41,7 @@ ColorFilterArray::ColorFilterArray(const iPoint2D &_size) {
+   setSize(_size);
+ }
+ 
+-void ColorFilterArray::setSize(const iPoint2D& _size)
+-{
+-  size = _size;
++ face ) { 
+ 
+   if (size.area() > 36) {
+     // Bayer, FC() supports 2x8 pattern

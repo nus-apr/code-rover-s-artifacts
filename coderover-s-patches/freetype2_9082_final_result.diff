@@ -1,0 +1,74 @@
+diff --git a/src/sfnt/ttcmap.c b/src/sfnt/ttcmap.c
+index a3a8c52f9..2b4b2373d 100644
+--- a/src/sfnt/ttcmap.c
++++ b/src/sfnt/ttcmap.c
+@@ -3697,8 +3697,13 @@
+     FT_Memory  memory = FT_FACE_MEMORY( face );
+ 
+ 
+-    FT_FREE( unicodes->maps );
+-    unicodes->num_maps = 0;
++    if (unicodes != NULL) {
++        if (unicodes->maps != NULL) {
++            FT_FREE( unicodes->maps );
++            unicodes->maps = NULL; // Prevent use-after-free
++        }
++        unicodes->num_maps = 0;
++    }
+   }
+ 
+ 
+diff --git a/src/truetype/ttinterp.c b/src/truetype/ttinterp.c
+index da45c373a..95892d960 100644
+--- a/src/truetype/ttinterp.c
++++ b/src/truetype/ttinterp.c
+@@ -249,22 +249,37 @@
+     exec->maxContours = 0;
+ 
+     /* free stack */
+-    FT_FREE( exec->stack );
+-    exec->stackSize = 0;
++    if (exec != NULL) {
++        if (exec->stack != NULL) {
++            FT_FREE( exec->stack );
++            exec->stack = NULL; // Prevent use-after-free
++            exec->stackSize = 0;
++        }
+ 
+-    /* free call stack */
+-    FT_FREE( exec->callStack );
+-    exec->callSize = 0;
+-    exec->callTop  = 0;
++        /* free call stack */
++        if (exec->callStack != NULL) {
++            FT_FREE( exec->callStack );
++            exec->callStack = NULL; // Prevent use-after-free
++            exec->callSize = 0;
++            exec->callTop  = 0;
++        }
+ 
+-    /* free glyph code range */
+-    FT_FREE( exec->glyphIns );
+-    exec->glyphSize = 0;
++        /* free glyph code range */
++        if (exec->glyphIns != NULL) {
++            FT_FREE( exec->glyphIns );
++            exec->glyphIns = NULL; // Prevent use-after-free
++            exec->glyphSize = 0;
++        }
+ 
+-    exec->size = NULL;
+-    exec->face = NULL;
++        exec->size = NULL;
++        exec->face = NULL;
+ 
+-    FT_FREE( exec );
++        // Ensure function pointers or control flow logic are valid
++        // (Assuming there are function pointers or similar logic to check)
++
++        FT_FREE( exec );
++        exec = NULL; // Prevent use-after-free
++    }
+   }
+ 
+ 

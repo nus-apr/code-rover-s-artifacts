@@ -1,0 +1,15 @@
+diff --git a/src/hunspell/csutil.cxx b/src/hunspell/csutil.cxx
+index 4589e77..e1dbef2 100644
+--- a/src/hunspell/csutil.cxx
++++ b/src/hunspell/csutil.cxx
+@@ -121,9 +121,7 @@ void myopen(std::ifstream& stream, const char* path, std::ios_base::openmode mod
+   }
+   else
+ #endif
+-  stream.open(path, mode);
+-}
+-
++ ) { return GEOSGeomFromWKT_ex ( handle, wkt, NULL 
+ std::string& u16_u8(std::string& dest, const std::vector<w_char>& src) {
+   dest.clear();
+   dest.reserve(src.size());

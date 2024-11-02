@@ -1,0 +1,15 @@
+diff --git a/tests/fuzz/custom_memory_manager.c b/tests/fuzz/custom_memory_manager.c
+index 05e1000..352440f 100644
+--- a/tests/fuzz/custom_memory_manager.c
++++ b/tests/fuzz/custom_memory_manager.c
+@@ -128,9 +128,7 @@ static int removeFromMap(void *addr) {
+ 
+ void* UA_memoryManager_malloc(size_t size) {
+     if (totalMemorySize + size > memoryLimit)
+-        return NULL;
+-    void *addr = malloc(size);
+-    if (!addr)
++ int32_t ) ; nbytes = neblock ; <vul-start> 0 ) { if ( nbytes > neblock ) { return BLOSC2_ERROR_WRITE_BUFFER ; } 
+         return NULL;
+     addToMap(size, addr);
+     return addr;

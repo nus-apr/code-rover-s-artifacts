@@ -1,0 +1,31 @@
+diff --git a/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h b/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h
+index 621883a..4e06ee7 100644
+--- a/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h
++++ b/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h
+@@ -106,10 +106,14 @@ class MeshEdgebreakerTraversalValenceDecoder
+     context_counters_.resize(context_symbols_.size());
+     for (int i = 0; i < context_symbols_.size(); ++i) {
+       uint32_t num_symbols;
+-      DecodeVarint<uint32_t>(&num_symbols, out_buffer);
++      if (!DecodeVarint<uint32_t>(&num_symbols, out_buffer) || num_symbols < 0) {
++        return false;
++      }
+       if (num_symbols > 0) {
+         context_symbols_[i].resize(num_symbols);
+-        DecodeSymbols(num_symbols, 1, out_buffer, context_symbols_[i].data());
++        if (!DecodeSymbols(num_symbols, 1, out_buffer, context_symbols_[i].data())) {
++          return false;
++        }
+         // All symbols are going to be processed from the back.
+         context_counters_[i] = num_symbols;
+       }
+@@ -125,6 +129,9 @@ class MeshEdgebreakerTraversalValenceDecoder
+         return TOPOLOGY_INVALID;
+       }
+       const int symbol_id = context_symbols_[active_context_][context_counter];
++      if (symbol_id < 0 || symbol_id >= sizeof(edge_breaker_symbol_to_topology_id) / sizeof(edge_breaker_symbol_to_topology_id[0])) {
++        return TOPOLOGY_INVALID;
++      }
+       last_symbol_ = edge_breaker_symbol_to_topology_id[symbol_id];
+     } else {
+ #ifdef DRACO_BACKWARDS_COMPATIBILITY_SUPPORTED

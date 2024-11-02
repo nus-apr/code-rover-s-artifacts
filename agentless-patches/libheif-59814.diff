@@ -1,0 +1,13 @@
+diff --git a/libheif/libheif/bitstream.cc b/libheif/libheif/bitstream.cc
+index 452c230..07a59c4 100644
+--- a/libheif/libheif/bitstream.cc
++++ b/libheif/libheif/bitstream.cc
+@@ -101,7 +101,7 @@ StreamReader::grow_status StreamReader_memory::wait_for_file_size(int64_t target
+ bool StreamReader_memory::read(void* data, size_t size)
+ {
+   int64_t end_pos = m_position + size;
+-  if (end_pos > m_length) {
++  if (end_pos > m_length || size > m_length - m_position) {
+     return false;
+   }
+ 

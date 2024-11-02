@@ -1,0 +1,41 @@
+diff --git a/av1/common/txb_common.h b/av1/common/txb_common.h
+index cdac90d9e9..17107f2f34 100644
+--- a/av1/common/txb_common.h
++++ b/av1/common/txb_common.h
+@@ -672,10 +672,13 @@ static INLINE void get_txb_ctx(const BLOCK_SIZE plane_bsize,
+     }
+   } else {
+     const int ctx_base = get_entropy_context(tx_size, a, l);
+-    const int ctx_offset = (num_pels_log2_lookup[plane_bsize] >
+-                            num_pels_log2_lookup[txsize_to_bsize[tx_size]])
+-                               ? 10
+-                               : 7;
++     const int valid_plane_bsize = (plane_bsize >= 0 && plane_bsize < BLOCK_SIZES_ALL);
++     const int valid_tx_size = (tx_size >= 0 && tx_size < TX_SIZES_ALL);
++     const int ctx_offset = (valid_plane_bsize && valid_tx_size &&
++                             num_pels_log2_lookup[plane_bsize] >
++                             num_pels_log2_lookup[txsize_to_bsize[tx_size]])
++                                ? 10
++                                : 7;
+     txb_ctx->txb_skip_ctx = ctx_base + ctx_offset;
+   }
+ #undef MAX_TX_SIZE_UNIT
+diff --git a/av1/decoder/decodetxb.c b/av1/decoder/decodetxb.c
+index dc646de9c4..20cdac78d6 100644
+--- a/av1/decoder/decodetxb.c
++++ b/av1/decoder/decodetxb.c
+@@ -319,8 +319,12 @@ uint8_t av1_read_coeffs_txb_facade(const AV1_COMMON *const cm,
+   struct macroblockd_plane *const pd = &xd->plane[plane];
+ 
+   const BLOCK_SIZE bsize = mbmi->sb_type;
+-  const BLOCK_SIZE plane_bsize =
+-      get_plane_block_size(bsize, pd->subsampling_x, pd->subsampling_y);
++   const BLOCK_SIZE plane_bsize =
++       get_plane_block_size(bsize, pd->subsampling_x, pd->subsampling_y);
++   if (plane_bsize == BLOCK_INVALID) {
++       // Handle invalid block size gracefully
++       return 0; // or some appropriate default value
++   }
+ 
+   TXB_CTX txb_ctx;
+   get_txb_ctx(plane_bsize, tx_size, plane, pd->above_context + col,

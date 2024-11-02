@@ -1,0 +1,61 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/svc_dec_fuzzer
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x631000024cf0 at pc 0x00000049de8c bp 0x7ffe076c53f0 sp 0x7ffe076c4bc0
+WRITE of size 640 at 0x631000024cf0 thread T0
+SCARINESS: 45 (multi-byte-write-heap-buffer-overflow)
+    #0 0x49de8b in __asan_memcpy /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3
+    #1 0x61aafe in ih264d_fmt_conv_420sp_to_420sp /src/libavc/decoder/ih264d_format_conv.c:400:9
+    #2 0x61aafe in ih264d_format_convert /src/libavc/decoder/ih264d_format_conv.c:752:13
+    #3 0x4fd89b in isvcd_video_decode /src/libavc/decoder/svc/isvcd_api.c:5587:21
+    #4 0x509495 in isvcd_api_function /src/libavc/decoder/svc/isvcd_api.c:7265:26
+    #5 0x4e8980 in Codec::decodeFrame(unsigned char const*, unsigned long, unsigned long*) /src/libavc/fuzzer/svc_dec_fuzzer.cpp:375:11
+    #6 0x4e9a22 in LLVMFuzzerTestOneInput /src/libavc/fuzzer/svc_dec_fuzzer.cpp:437:22
+    #7 0x4dc3fb in main (/out/svc_dec_fuzzer+0x4dc3fb)
+    #8 0x7768a25b0082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #9 0x41d60d in _start (/out/svc_dec_fuzzer+0x41d60d)
+
+DEDUP_TOKEN: __asan_memcpy--ih264d_fmt_conv_420sp_to_420sp--ih264d_format_convert
+0x631000024cf0 is located 0 bytes to the right of 66800-byte region [0x631000014800,0x631000024cf0)
+allocated by thread T0 here:
+    #0 0x49f597 in posix_memalign /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:145:3
+    #1 0x4e7a46 in iv_aligned_malloc /src/libavc/fuzzer/svc_dec_fuzzer.cpp:85:13
+    #2 0x4e7a46 in Codec::allocFrame() /src/libavc/fuzzer/svc_dec_fuzzer.cpp:308:48
+    #3 0x4e8cce in Codec::decodeFrame(unsigned char const*, unsigned long, unsigned long*) /src/libavc/fuzzer/svc_dec_fuzzer.cpp:399:9
+    #4 0x4e9a22 in LLVMFuzzerTestOneInput /src/libavc/fuzzer/svc_dec_fuzzer.cpp:437:22
+    #5 0x4dc3fb in main (/out/svc_dec_fuzzer+0x4dc3fb)
+
+DEDUP_TOKEN: posix_memalign--iv_aligned_malloc--Codec::allocFrame()
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3 in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x0c627fffc940: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c627fffc950: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c627fffc960: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c627fffc970: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c627fffc980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c627fffc990: 00 00 00 00 00 00 00 00 00 00 00 00 00 00[fa]fa
+  0x0c627fffc9a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c627fffc9b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c627fffc9c0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c627fffc9d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c627fffc9e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

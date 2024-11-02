@@ -1,0 +1,51 @@
+diff --git a/src/njs_object_prop.c b/src/njs_object_prop.c
+index dc1aa21..66a8cac 100644
+--- a/src/njs_object_prop.c
++++ b/src/njs_object_prop.c
+@@ -22,11 +22,20 @@ njs_object_prop_alloc(njs_vm_t *vm, const njs_value_t *name,
+                         sizeof(njs_object_prop_t));
+ 
+     if (njs_fast_path(prop != NULL)) {
+-        /* GC: retain. */
+-        prop->value = *value;
++        /* Ensure value and name are not NULL before dereferencing. */
++        if (value != NULL) {
++            /* GC: retain. */
++            prop->value = *value;
++        } else {
++            njs_set_undefined(&prop->value);
++        }
+ 
+-        /* GC: retain. */
+-        prop->name = *name;
++        if (name != NULL) {
++            /* GC: retain. */
++            prop->name = *name;
++        } else {
++            njs_set_undefined(&prop->name);
++        }
+ 
+         prop->type = NJS_PROPERTY;
+         prop->writable = attributes;
+diff --git a/src/njs_regexp.c b/src/njs_regexp.c
+index 374610e..3402afe 100644
+--- a/src/njs_regexp.c
++++ b/src/njs_regexp.c
+@@ -1048,9 +1048,14 @@ njs_regexp_exec_result(njs_vm_t *vm, njs_regexp_t *regexp,
+                 goto fail;
+             }
+ 
+-            prop = njs_object_prop_alloc(vm, &name,
+-                                         &array->start[group->capture], 1);
+-            if (njs_slow_path(prop == NULL)) {
++            if (group->capture < array->length) {
++                prop = njs_object_prop_alloc(vm, &name,
++                                             &array->start[group->capture], 1);
++                if (njs_slow_path(prop == NULL)) {
++                    goto fail;
++                }
++            } else {
++                njs_internal_error(vm, "Invalid capture index");
+                 goto fail;
+             }
+ 

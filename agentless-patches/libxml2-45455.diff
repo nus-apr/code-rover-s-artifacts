@@ -1,0 +1,22 @@
+diff --git a/libxml2/tree.c b/libxml2/tree.c
+index 79cdf43..93cb493 100644
+--- a/libxml2/tree.c
++++ b/libxml2/tree.c
+@@ -3746,7 +3746,10 @@ xmlFreeNodeList(xmlNodePtr cur) {
+ 	     */
+ 	    if ((cur->name != NULL) &&
+ 		(cur->type != XML_TEXT_NODE) &&
+-		(cur->type != XML_COMMENT_NODE))
++		(cur->type != XML_COMMENT_NODE) &&
++		(cur->doc != NULL) &&
++		(cur->doc->dict != NULL) &&
++		(xmlDictOwns(cur->doc->dict, cur->name)))
+ 		DICT_FREE(cur->name)
+ 	    xmlFree(cur);
+ 	}
+@@ -10153,4 +10156,4 @@ xmlDOMWrapAdoptNode(xmlDOMWrapCtxtPtr ctxt,
+ 	}
+     }
+     return (0);
+-}
++}

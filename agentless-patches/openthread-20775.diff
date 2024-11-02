@@ -1,0 +1,13 @@
+diff --git a/openthread/src/core/thread/network_data_leader_ftd.cpp b/openthread/src/core/thread/network_data_leader_ftd.cpp
+index b495060..3b839c1 100644
+--- a/openthread/src/core/thread/network_data_leader_ftd.cpp
++++ b/openthread/src/core/thread/network_data_leader_ftd.cpp
+@@ -192,7 +192,7 @@ void Leader::HandleCommissioningSet(Coap::Message &aMessage, const Ip6::MessageI
+     MeshCoP::Tlv *cur;
+     MeshCoP::Tlv *end;
+ 
+-    VerifyOrExit(length <= sizeof(tlvs));
++    VerifyOrExit(length < sizeof(tlvs));
+     VerifyOrExit(Get<Mle::MleRouter>().GetRole() == OT_DEVICE_ROLE_LEADER);
+ 
+     aMessage.Read(offset, length, tlvs);

@@ -1,0 +1,17 @@
+diff --git a/karchive/src/karchive.cpp b/karchive/src/karchive.cpp
+index 802ce53..6f229bc 100644
+--- a/karchive/src/karchive.cpp
++++ b/karchive/src/karchive.cpp
+@@ -181,8 +181,10 @@ bool KArchive::close()
+         delete d->dev; // we created it ourselves in open()
+     }
+ 
+-    delete d->rootDir;
+-    d->rootDir = nullptr;
++    if (d->rootDir) {
++        delete d->rootDir;
++        d->rootDir = nullptr;
++    }
+     d->mode = QIODevice::NotOpen;
+     d->dev = nullptr;
+     return closeSucceeded;

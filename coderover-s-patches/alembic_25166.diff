@@ -1,0 +1,36 @@
+diff --git a/lib/Alembic/AbcCoreAbstract/MetaData.h b/lib/Alembic/AbcCoreAbstract/MetaData.h
+index 98936701..b074ff02 100644
+--- a/lib/Alembic/AbcCoreAbstract/MetaData.h
++++ b/lib/Alembic/AbcCoreAbstract/MetaData.h
+@@ -108,7 +108,10 @@ public:
+     //! MetaData instance.
+     MetaData& operator=( const MetaData &iCopy )
+     {
+-        m_tokenMap = iCopy.m_tokenMap;
++        if (this != &iCopy) // Check for self-assignment
++        {
++            m_tokenMap = iCopy.m_tokenMap;
++        }
+         return *this;
+     }
+ 
+diff --git a/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp b/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp
+index c9d0f3ea..bebe9201 100644
+--- a/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp
++++ b/lib/Alembic/AbcCoreOgawa/ReadUtil.cpp
+@@ -1822,7 +1822,14 @@ ReadPropertyHeaders( Ogawa::IGroupPtr iGroup,
+         }
+         else
+         {
+-            header->header.setMetaData( iMetaDataVec[metaDataIndex] );
++            if (metaDataIndex < iMetaDataVec.size()) // Validate index
++            {
++                header->header.setMetaData( iMetaDataVec[metaDataIndex] );
++            }
++            else
++            {
++                ABCA_THROW("Read invalid: MetaData index out of bounds.");
++            }
+         }
+ 
+         oHeaders.push_back( header );

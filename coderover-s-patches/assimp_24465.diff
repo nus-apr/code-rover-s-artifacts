@@ -1,0 +1,16 @@
+diff --git a/include/assimp/IOStreamBuffer.h b/include/assimp/IOStreamBuffer.h
+index 6ca9be84a..656c6ef17 100644
+--- a/include/assimp/IOStreamBuffer.h
++++ b/include/assimp/IOStreamBuffer.h
+@@ -288,7 +288,10 @@ bool IOStreamBuffer<T>::getNextDataLine( std::vector<T> &buffer, T continuationT
+         }
+     }
+     
+-    buffer[ i ] = '\n';
++    if (i >= buffer.size()) {
++        buffer.resize(i + 1);
++    }
++    buffer[i] = '\n';
+     ++m_cachePos;
+ 
+     return true;

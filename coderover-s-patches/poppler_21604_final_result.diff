@@ -1,0 +1,21 @@
+diff --git a/poppler/XRef.cc b/poppler/XRef.cc
+index 9d6b80f1..1ff76774 100644
+--- a/poppler/XRef.cc
++++ b/poppler/XRef.cc
+@@ -208,8 +208,14 @@ ObjectStream::ObjectStream(XRef *xref, int objStrNumA, int recursion) {
+ }
+ 
+ ObjectStream::~ObjectStream() {
+-  delete[] objs;
+-  gfree(objNums);
++  if (objs) {
++    delete[] objs;
++    objs = nullptr;
++  }
++  if (objNums) {
++    gfree(objNums);
++    objNums = nullptr;
++  }
+ }
+ 
+ Object ObjectStream::getObject(int objIdx, int objNum) {

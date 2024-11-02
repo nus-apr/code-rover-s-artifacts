@@ -1,0 +1,13 @@
+diff --git a/aom/aom_dsp/entdec.c b/aom/aom_dsp/entdec.c
+index 05b4029..c299aec 100644
+--- a/aom/aom_dsp/entdec.c
++++ b/aom/aom_dsp/entdec.c
+@@ -86,7 +86,7 @@ static void od_ec_dec_refill(od_ec_dec *dec) {
+   bptr = dec->bptr;
+   end = dec->end;
+   s = OD_EC_WINDOW_SIZE - 9 - (cnt + 15);
+-  for (; s >= 0 && bptr < end; s -= 8, bptr++) {
++  for (; s >= 0 && bptr < end - 1; s -= 8, bptr++) {
+     /*Each time a byte is inserted into the window (dif), bptr advances and cnt
+        is incremented by 8, so the total number of consumed bits (the return
+        value of od_ec_dec_tell) does not change.*/

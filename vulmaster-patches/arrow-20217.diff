@@ -1,0 +1,15 @@
+diff --git a/cpp/src/arrow/status.h b/cpp/src/arrow/status.h
+index c44e311..4cca81b 100644
+--- a/cpp/src/arrow/status.h
++++ b/cpp/src/arrow/status.h
+@@ -157,9 +157,7 @@ class ARROW_EXPORT Status : public util::EqualityComparable<Status>,
+   inline Status& operator&=(const Status& s) noexcept;
+   inline Status& operator&=(Status&& s) noexcept;
+ 
+-  /// Return a success status
+-  static Status OK() { return Status(); }
+-
++ ) ; } template 
+   template <typename... Args>
+   static Status FromArgs(StatusCode code, Args&&... args) {
+     return Status(code, util::StringBuilder(std::forward<Args>(args)...));

@@ -1,0 +1,88 @@
+Reading 6146 bytes from /tmp/poc
+======================= INFO =========================
+This binary is built for AFL-fuzz.
+To run the target function on individual input(s) execute this:
+  /out/ia_fuzz < INPUT_FILE
+or
+  /out/ia_fuzz INPUT_FILE1 [INPUT_FILE2 ... ]
+To fuzz with afl-fuzz execute this:
+  afl-fuzz [afl-flags] /out/ia_fuzz [-N]
+afl-fuzz will run N iterations before re-spawning the process (default: 1000)
+======================================================
+3
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x623000101102 at pc 0x0000008bf189 bp 0x7ffd62c84c00 sp 0x7ffd62c84bf8
+READ of size 1 at 0x623000101102 thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x8bf188 in r_utf8_strlen /src/radare2/libr/util/utf8.c:578:14
+    #1 0xa91116 in getstr /src/radare2/libr/../libr/bin/p/bin_dex.c:68:13
+    #2 0xa8f7b1 in parse_class /src/radare2/libr/../libr/bin/p/bin_dex.c:1452:15
+    #3 0xa8ec1f in dex_loadcode /src/radare2/libr/../libr/bin/p/bin_dex.c:1672:4
+    #4 0xa8b265 in entries /src/radare2/libr/../libr/bin/p/bin_dex.c:1810:3
+    #5 0xba9817 in r_bin_object_set_items /src/radare2/libr/bin/obj.c:338:16
+    #6 0xba915f in r_bin_object_new /src/radare2/libr/bin/obj.c:239:2
+    #7 0xa65158 in r_bin_file_new_from_bytes /src/radare2/libr/bin/bfile.c:467:18
+    #8 0xa6bbb8 in r_bin_open_io /src/radare2/libr/bin/bin.c:407:13
+    #9 0x5f0cff in cmd_open_bin /src/radare2/libr/core/./cmd_open.c:302:6
+    #10 0x540a1c in cmd_open /src/radare2/libr/core/./cmd_open.c:1360:3
+    #11 0x619b9a in r_cmd_call /src/radare2/libr/core/cmd_api.c:235:10
+    #12 0x568893 in r_core_cmd_subst_i /src/radare2/libr/core/cmd.c:3027:12
+    #13 0x51592d in r_core_cmd_subst /src/radare2/libr/core/cmd.c:2036:9
+    #14 0x50ed2d in r_core_cmd /src/radare2/libr/core/cmd.c:3761:9
+    #15 0x4f5d05 in LLVMFuzzerTestOneInput /src/radare2/targets/ia_fuzz.cc:13:2
+    #16 0x100eb9f in ExecuteFilesOnyByOne(int, char**) /src/libfuzzer/afl/afl_driver.cpp:156:5
+    #17 0x100ee01 in main /src/libfuzzer/afl/afl_driver.cpp:193:12
+    #18 0x7e7c4ff4e83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #19 0x41efa8 in _start (/out/ia_fuzz+0x41efa8)
+
+DEDUP_TOKEN: r_utf8_strlen--getstr--parse_class
+0x623000101102 is located 0 bytes to the right of 6146-byte region [0x6230000ff900,0x623000101102)
+allocated by thread T0 here:
+    #0 0x4b1d8a in calloc /src/llvm/projects/compiler-rt/lib/asan/asan_malloc_linux.cc:154
+    #1 0xa6b98b in r_bin_open_io /src/radare2/libr/bin/bin.c:364:15
+    #2 0x5f0cff in cmd_open_bin /src/radare2/libr/core/./cmd_open.c:302:6
+    #3 0x540a1c in cmd_open /src/radare2/libr/core/./cmd_open.c:1360:3
+    #4 0x619b9a in r_cmd_call /src/radare2/libr/core/cmd_api.c:235:10
+    #5 0x568893 in r_core_cmd_subst_i /src/radare2/libr/core/cmd.c:3027:12
+    #6 0x51592d in r_core_cmd_subst /src/radare2/libr/core/cmd.c:2036:9
+    #7 0x50ed2d in r_core_cmd /src/radare2/libr/core/cmd.c:3761:9
+    #8 0x4f5d05 in LLVMFuzzerTestOneInput /src/radare2/targets/ia_fuzz.cc:13:2
+    #9 0x100eb9f in ExecuteFilesOnyByOne(int, char**) /src/libfuzzer/afl/afl_driver.cpp:156:5
+    #10 0x100ee01 in main /src/libfuzzer/afl/afl_driver.cpp:193:12
+    #11 0x7e7c4ff4e83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: calloc--r_bin_open_io--cmd_open_bin
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/radare2/libr/util/utf8.c:578:14 in r_utf8_strlen
+Shadow bytes around the buggy address:
+  0x0c46800181d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c46800181e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c46800181f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c4680018200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c4680018210: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c4680018220:[02]fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c4680018230: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c4680018240: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c4680018250: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c4680018260: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c4680018270: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

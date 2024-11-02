@@ -1,0 +1,20 @@
+diff --git a/src/pkcs15init/profile.c b/src/pkcs15init/profile.c
+index 13ef881e..c5ed1c26 100644
+--- a/src/pkcs15init/profile.c
++++ b/src/pkcs15init/profile.c
+@@ -1348,8 +1348,13 @@ do_fileid(struct state *cur, int argc, char **argv)
+ 		}
+ 		*path = df->path;
+ 	}
+-	memcpy(path->value + path->len, temp.value, 2);
+-	path->len += 2;
++	if (path->len + 2 <= sizeof(path->value)) {
++		memcpy(path->value + path->len, temp.value, 2);
++		path->len += 2;
++	} else {
++		parse_error(cur, "Insufficient space in path buffer\n");
++		return 1;
++	}
+ 
+ 	file->id = (temp.value[0] << 8) | temp.value[1];
+ 	return 0;

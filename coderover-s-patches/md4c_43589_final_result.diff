@@ -1,0 +1,31 @@
+diff --git a/src/md4c.c b/src/md4c.c
+index 779f808..d01102c 100644
+--- a/src/md4c.c
++++ b/src/md4c.c
+@@ -802,6 +802,10 @@ struct MD_UNICODE_FOLD_INFO_tag {
+     static inline int
+     md_decode_unicode(const CHAR* str, OFF off, SZ str_size, SZ* p_char_size)
+     {
++        if (off >= str_size) {
++            *p_char_size = 0;
++            return -1; // Indicate an error or invalid character
++        }
+         return md_decode_utf16le__(str+off, str_size-off, p_char_size);
+     }
+ #elif defined MD4C_USE_UTF8
+@@ -1559,7 +1563,15 @@ md_link_label_hash(const CHAR* label, SZ size)
+     while(off < size) {
+         SZ char_size;
+ 
++        if (off >= size) {
++            break; // Prevent reading beyond the end of the label
++        }
++
+         codepoint = md_decode_unicode(label, off, size, &char_size);
++        if (char_size == 0 || off + char_size > size) {
++            break; // Stop processing if an invalid character is encountered or if it would read out of bounds
++        }
++
+         is_whitespace = ISUNICODEWHITESPACE_(codepoint) || ISNEWLINE_(label[off]);
+ 
+         if(is_whitespace) {

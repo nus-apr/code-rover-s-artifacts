@@ -1,0 +1,13 @@
+diff --git a/stb/stb_image.h b/stb/stb_image.h
+index 35ed429..3dbffa1 100644
+--- a/stb/stb_image.h
++++ b/stb/stb_image.h
+@@ -1249,7 +1249,7 @@ static unsigned char *stbi__load_and_postprocess_8bit(stbi__context *s, int *x,
+    STBI_ASSERT(ri.bits_per_channel == 8 || ri.bits_per_channel == 16);
+ 
+    if (ri.bits_per_channel != 8) {
+-      result = stbi__convert_16_to_8((stbi__uint16 *) result, *x, *y, req_comp == 0 ? *comp : req_comp);
++      result = stbi__convert_16_to_8((stbi__uint16 *) result, *x, *y, *comp);
+       ri.bits_per_channel = 8;
+    }
+ 

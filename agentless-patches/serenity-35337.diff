@@ -1,0 +1,14 @@
+diff --git a/serenity/AK/RefPtr.h b/serenity/AK/RefPtr.h
+index b913a98..a63507a 100644
+--- a/serenity/AK/RefPtr.h
++++ b/serenity/AK/RefPtr.h
+@@ -90,6 +90,9 @@ struct RefPtrTraits {
+         // unlock it
+         FlatPtr bits;
+         for (;;) {
++            bits = atomic_var.load(AK::MemoryOrder::memory_order_acquire);
++            if (bits == 0)
++                return 0; // Memory is already freed or invalid
+             bits = atomic_var.fetch_or(1, AK::MemoryOrder::memory_order_acq_rel);
+             if (!(bits & 1))
+                 break;

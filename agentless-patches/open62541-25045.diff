@@ -1,0 +1,13 @@
+diff --git a/open62541/src/ua_types_encoding_json.c b/open62541/src/ua_types_encoding_json.c
+index d61cd7c..3e6f71f 100644
+--- a/open62541/src/ua_types_encoding_json.c
++++ b/open62541/src/ua_types_encoding_json.c
+@@ -3115,7 +3115,7 @@ Array_decodeJson_internal(void **dst, const UA_DataType *type,
+     size_t length = (size_t)parseCtx->tokenArray[parseCtx->index].size;
+ 
+     /* Save the length of the array */
+-    size_t *p = (size_t*) dst - 1;
++    size_t *p = (size_t*) dst;
+     *p = length;
+ 
+     /* Return early for empty arrays */

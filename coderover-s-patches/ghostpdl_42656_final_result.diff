@@ -1,0 +1,15 @@
+diff --git a/base/gxfapi.c b/base/gxfapi.c
+index d4ecc4a58..014136075 100644
+--- a/base/gxfapi.c
++++ b/base/gxfapi.c
+@@ -294,8 +294,8 @@ recreate_multiple_master(gs_font_base *pbfont)
+         if (changed) {
+             r = (I->set_mm_weight_vector(I, &I->ff, pfont1->data.WeightVector.values, pfont1->data.WeightVector.count) == gs_error_invalidaccess);
+             I->face.WeightVector.count = pfont1->data.WeightVector.count;
+-            memcpy(I->face.WeightVector.values, pfont1->data.WeightVector.values,
+-                   pfont1->data.WeightVector.count * sizeof(pfont1->data.WeightVector.values[0]));
++            memmove(I->face.WeightVector.values, pfont1->data.WeightVector.values,
++                    pfont1->data.WeightVector.count * sizeof(pfont1->data.WeightVector.values[0]));
+         }
+     }
+     return r;

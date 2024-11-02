@@ -1,0 +1,51 @@
+diff --git a/Packet++/src/GreLayer.cpp b/Packet++/src/GreLayer.cpp
+index bae6aaef..f4327844 100644
+--- a/Packet++/src/GreLayer.cpp
++++ b/Packet++/src/GreLayer.cpp
+@@ -539,7 +539,27 @@ void GREv1Layer::computeCalculateFields()
+ {
+ 	computeCalculateFieldsInner();
+ 
+-	getGreHeader()->payloadLength = htobe16(m_DataLen - getHeaderLen());
++	uint16_t headerLen = getHeaderLen();
++	if (m_DataLen >= headerLen)
++	{
++		uint16_t calculatedPayloadLength = m_DataLen - headerLen;
++		// Ensure calculated payload length does not exceed buffer size
++		if (calculatedPayloadLength <= m_DataLen)
++		{
++			getGreHeader()->payloadLength = htobe16(calculatedPayloadLength);
++		}
++		else
++		{
++			PCPP_LOG_ERROR("Calculated payload length exceeds data length");
++			getGreHeader()->payloadLength = 0; // Set to a safe default value
++		}
++	}
++	else
++	{
++		// Log an error if header length exceeds total data length
++		PCPP_LOG_ERROR("Header length exceeds total data length");
++		getGreHeader()->payloadLength = 0; // Set to a safe default value
++	}
+ }
+ 
+ std::string GREv1Layer::toString() const
+diff --git a/Pcap++/src/PcapFileDevice.cpp b/Pcap++/src/PcapFileDevice.cpp
+index 2e361353..1e711f35 100644
+--- a/Pcap++/src/PcapFileDevice.cpp
++++ b/Pcap++/src/PcapFileDevice.cpp
+@@ -304,7 +304,13 @@ bool PcapFileReaderDevice::getNextPacket(RawPacket& rawPacket)
+ 		return false;
+ 	}
+ 
++	// Allocate buffer based on captured length, ensuring it is sufficient for the packet data
+ 	uint8_t* pMyPacketData = new uint8_t[pkthdr.caplen];
++	if (pMyPacketData == nullptr)
++	{
++		PCPP_LOG_ERROR("Memory allocation failed for packet data");
++		return false;
++	}
+ 	memcpy(pMyPacketData, pPacketData, pkthdr.caplen);
+ #if defined(PCAP_TSTAMP_PRECISION_NANO)
+ 	timespec ts = { pkthdr.ts.tv_sec, static_cast<long>(pkthdr.ts.tv_usec) }; //because we opened with nano second precision 'tv_usec' is actually nanos

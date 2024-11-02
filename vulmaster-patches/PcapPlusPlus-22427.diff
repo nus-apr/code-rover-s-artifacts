@@ -1,0 +1,15 @@
+diff --git a/Tests/Fuzzers/FuzzTarget.cpp b/Tests/Fuzzers/FuzzTarget.cpp
+index c6c5600..3f8a223 100644
+--- a/Tests/Fuzzers/FuzzTarget.cpp
++++ b/Tests/Fuzzers/FuzzTarget.cpp
+@@ -8,9 +8,7 @@ int dumpDataToPcapFile(const uint8_t *data, size_t size) {
+ 	FILE *fd;
+ 	int written = 0;
+ 
+-	fd = fopen("/tmp/fuzz_sample.pcap", "wb");
+-	if (fd == NULL) {
+-		printf("Error opening pcap file for writing\n");
++ ( ) { RAROptions_Init 
+ 		return -1;
+ 	}
+ 

@@ -1,0 +1,13 @@
+diff --git a/botan/src/lib/pubkey/ec_group/curve_gfp.cpp b/botan/src/lib/pubkey/ec_group/curve_gfp.cpp
+index 71cf3a4..d1158dc 100644
+--- a/botan/src/lib/pubkey/ec_group/curve_gfp.cpp
++++ b/botan/src/lib/pubkey/ec_group/curve_gfp.cpp
+@@ -83,7 +83,7 @@ void CurveGFp_Montgomery::curve_mul(BigInt& z, const BigInt& x, const BigInt& y,
+       }
+ 
+    const size_t output_size = 2*m_p_words + 1;
+-   ws.resize(2*(m_p_words+2));
++   ws.resize(3*(m_p_words+2));
+ 
+    if(z.size() < output_size)
+       z.grow_to(output_size);

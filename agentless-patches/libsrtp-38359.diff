@@ -1,0 +1,13 @@
+diff --git a/libsrtp/srtp/srtp.c b/libsrtp/srtp/srtp.c
+index b2b0558..854fe82 100644
+--- a/libsrtp/srtp/srtp.c
++++ b/libsrtp/srtp/srtp.c
+@@ -962,7 +962,7 @@ srtp_err_status_t srtp_stream_init_keys(srtp_stream_ctx_t *srtp,
+      * the legacy CTR mode KDF, which uses a 112 bit master SALT.
+      */
+     memset(tmp_key, 0x0, MAX_SRTP_KEY_LEN);
+-    memcpy(tmp_key, key, input_keylen);
++    memcpy(tmp_key, key, input_keylen > MAX_SRTP_KEY_LEN ? MAX_SRTP_KEY_LEN : input_keylen);
+ 
+ /* initialize KDF state     */
+ #if defined(OPENSSL) && defined(OPENSSL_KDF)

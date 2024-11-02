@@ -1,0 +1,13 @@
+diff --git a/graphicsmagick/magick/render.c b/graphicsmagick/magick/render.c
+index cae38cd..46f5a99 100644
+--- a/graphicsmagick/magick/render.c
++++ b/graphicsmagick/magick/render.c
+@@ -886,7 +886,7 @@ ConvertPrimitiveToPath(const DrawInfo *draw_info,
+       break;
+   }
+   for (i=0; primitive_info[i].primitive != UndefinedPrimitive; i++);
+-  path_info=MagickAllocateArray(PathInfo *,(2*i+3),sizeof(PathInfo));
++  path_info=MagickAllocateArray(PathInfo *,(3*i+3),sizeof(PathInfo));
+   if (path_info == (PathInfo *) NULL)
+     return((PathInfo *) NULL);
+   coordinates=0;

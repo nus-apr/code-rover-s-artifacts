@@ -1,0 +1,47 @@
+diff --git a/AK/RefPtr.h b/AK/RefPtr.h
+index 66815279dc..6715328dd0 100644
+--- a/AK/RefPtr.h
++++ b/AK/RefPtr.h
+@@ -91,8 +91,10 @@ struct RefPtrTraits {
+         FlatPtr bits;
+         for (;;) {
+             bits = atomic_var.fetch_or(1, AK::MemoryOrder::memory_order_acq_rel);
+-            if (!(bits & 1))
++            if (!(bits & 1)) {
++                VERIFY(!(bits & 1)); // Ensure the lock bit is not set
+                 break;
++            }
+ #ifdef KERNEL
+             Kernel::Processor::wait_check();
+ #endif
+@@ -411,9 +413,11 @@ private:
+         // 3. Thread A finishes step #1 by attempting to add a reference to
+         //    the object that was already deleted in step #2
+         FlatPtr bits = PtrTraits::lock(m_bits);
+-        if (T* ptr = PtrTraits::as_ptr(bits))
++        if (T* ptr = PtrTraits::as_ptr(bits)) {
+             ptr->ref();
+-        PtrTraits::unlock(m_bits, bits);
++            PtrTraits::unlock(m_bits, bits); // Ensure unlock is called only if lock was successful
++        }
++        return bits;
+         return bits;
+     }
+ 
+diff --git a/Userland/Libraries/LibJS/Runtime/Value.cpp b/Userland/Libraries/LibJS/Runtime/Value.cpp
+index 1f3de02866..c3be44536a 100644
+--- a/Userland/Libraries/LibJS/Runtime/Value.cpp
++++ b/Userland/Libraries/LibJS/Runtime/Value.cpp
+@@ -1388,10 +1388,10 @@ TriState abstract_relation(GlobalObject& global_object, bool left_first, Value l
+     if (left_first) {
+         x_primitive = lhs.to_primitive(global_object, Value::PreferredType::Number);
+         if (global_object.vm().exception())
+-            return {};
++            return TriState::Unknown; // Return a safe state instead of an empty value
+         y_primitive = rhs.to_primitive(global_object, Value::PreferredType::Number);
+         if (global_object.vm().exception())
+-            return {};
++            return TriState::Unknown; // Return a safe state instead of an empty value
+     } else {
+         y_primitive = lhs.to_primitive(global_object, Value::PreferredType::Number);
+         if (global_object.vm().exception())

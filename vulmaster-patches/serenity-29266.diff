@@ -1,0 +1,15 @@
+diff --git a/AK/Format.cpp b/AK/Format.cpp
+index 14ed0459dd..160cee2d61 100644
+--- a/AK/Format.cpp
++++ b/AK/Format.cpp
+@@ -78,9 +78,7 @@ void vformat_impl(TypeErasedFormatParams& params, FormatBuilder& builder, Format
+ {
+     const auto literal = parser.consume_literal();
+     builder.put_literal(literal);
+-
+-    FormatParser::FormatSpecifier specifier;
+-    if (!parser.consume_specifier(specifier)) {
++ size ) { assert ( size > 0 ) ; 
+         ASSERT(parser.is_eof());
+         return;
+     }

@@ -1,0 +1,44 @@
+diff --git a/libsepol/cil/src/cil_build_ast.c b/libsepol/cil/src/cil_build_ast.c
+index 67bbdcab..3e11fa5b 100644
+--- a/libsepol/cil/src/cil_build_ast.c
++++ b/libsepol/cil/src/cil_build_ast.c
+@@ -797,13 +797,20 @@ void cil_destroy_classperms_list(struct cil_list **cp_list)
+ 
+ 	cil_list_for_each(curr, *cp_list) {
+ 		if (curr->flavor == CIL_CLASSPERMS) {
+-			cil_destroy_classperms(curr->data);
++			if (curr->data != NULL) { // Check if data is not NULL
++				cil_destroy_classperms(curr->data);
++				curr->data = NULL; // Set data to NULL after destruction
++			}
+ 		} else {
+-			cil_destroy_classperms_set(curr->data);
++			if (curr->data != NULL) { // Check if data is not NULL
++				cil_destroy_classperms_set(curr->data);
++				curr->data = NULL; // Set data to NULL after destruction
++			}
+ 		}
+ 	}
+ 
+ 	cil_list_destroy(cp_list, CIL_FALSE);
++	*cp_list = NULL; // Set list to NULL after destruction
+ }
+ 
+ int cil_gen_classpermission(struct cil_db *db, struct cil_tree_node *parse_current, struct cil_tree_node *ast_node)
+diff --git a/libsepol/cil/src/cil_list.c b/libsepol/cil/src/cil_list.c
+index 85446b4c..4271beb6 100644
+--- a/libsepol/cil/src/cil_list.c
++++ b/libsepol/cil/src/cil_list.c
+@@ -68,8 +68,11 @@ void cil_list_destroy(struct cil_list **list, unsigned destroy_data)
+ 		if (item->flavor == CIL_LIST) {
+ 			cil_list_destroy((struct cil_list**)&(item->data), destroy_data);
+ 			free(item);
++			item = NULL; // Set item to NULL after freeing
+ 		} else {
+-			cil_list_item_destroy(&item, destroy_data);
++			if (item != NULL) { // Check if item is not NULL
++				cil_list_item_destroy(&item, destroy_data);
++			}
+ 		}
+ 		item = next;
+ 	}

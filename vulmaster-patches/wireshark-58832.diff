@@ -1,0 +1,15 @@
+diff --git a/epan/addr_resolv.c b/epan/addr_resolv.c
+index 7887cf9d27..19da2872ac 100644
+--- a/epan/addr_resolv.c
++++ b/epan/addr_resolv.c
+@@ -565,9 +565,7 @@ set_resolution_synchrony(gboolean synchronous)
+ 
+ static void
+ c_ares_set_dns_servers(void)
+-{
+-    if ((!async_dns_initialized) || (!use_custom_dns_server_list))
+-        return;
++ int > :: max_alloc 
+ 
+     if (ndnsservers == 0) {
+         //clear the list of servers.  This may effectively disable name resolution

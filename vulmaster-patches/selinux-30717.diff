@@ -1,0 +1,15 @@
+diff --git a/libsepol/src/hashtab.c b/libsepol/src/hashtab.c
+index 21143b76..cf8198d4 100644
+--- a/libsepol/src/hashtab.c
++++ b/libsepol/src/hashtab.c
+@@ -46,9 +46,7 @@ hashtab_t hashtab_create(unsigned int (*hash_value) (hashtab_t h,
+ 	p = (hashtab_t) malloc(sizeof(hashtab_val_t));
+ 	if (p == NULL)
+ 		return p;
+-
+-	memset(p, 0, sizeof(hashtab_val_t));
+-	p->size = size;
++ -> htable = calloc ( size, 
+ 	p->nel = 0;
+ 	p->hash_value = hash_value;
+ 	p->keycmp = keycmp;

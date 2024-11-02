@@ -1,0 +1,15 @@
+diff --git a/libavc/fuzzer/svc_dec_fuzzer.cpp b/libavc/fuzzer/svc_dec_fuzzer.cpp
+index 182d7a1..9ca92f8 100644
+--- a/libavc/fuzzer/svc_dec_fuzzer.cpp
++++ b/libavc/fuzzer/svc_dec_fuzzer.cpp
+@@ -296,8 +296,8 @@ void Codec::allocFrame()
+             [[fallthrough]];
+         default:
+             sizes[0] = mWidth * mHeight;
+-            sizes[1] = mWidth * mHeight >> 2;
+-            sizes[2] = mWidth * mHeight >> 2;
++            sizes[1] = (mWidth * mHeight) >> 1; // Corrected size for U and V planes
++            sizes[2] = (mWidth * mHeight) >> 1; // Corrected size for U and V planes
+             num_bufs = 3;
+             break;
+     }

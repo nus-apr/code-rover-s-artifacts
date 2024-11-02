@@ -1,0 +1,47 @@
+diff --git a/src/server/ua_server_worker.c b/src/server/ua_server_worker.c
+index 5791361bd..67df51352 100644
+--- a/src/server/ua_server_worker.c
++++ b/src/server/ua_server_worker.c
+@@ -75,7 +75,13 @@ workerLoop(UA_Worker *worker) {
+             continue;
+         }
+         
+-        dc->callback(server, dc->data);
++    if(dc->callback) {
++        UA_Session *session = (UA_Session *)dc->data;
++        // Ensure the session is valid before executing the callback
++        if(session && session->sessionHandle != NULL) {
++            dc->callback(server, dc->data);
++        }
++    }
+         UA_free(dc);
+     }
+ 
+diff --git a/src/server/ua_session_manager.c b/src/server/ua_session_manager.c
+index 05980e897..144c9b884 100644
+--- a/src/server/ua_session_manager.c
++++ b/src/server/ua_session_manager.c
+@@ -156,5 +156,7 @@ UA_SessionManager_removeSession(UA_SessionManager *sm, const UA_NodeId *token) {
+     }
+     if(!current)
+         return UA_STATUSCODE_BADSESSIONIDINVALID;
++    // Invalidate the session handle before removing the session
++    current->session.sessionHandle = NULL;
+     return removeSession(sm, current);
+ }
+diff --git a/src/server/ua_subscription.c b/src/server/ua_subscription.c
+index a3e43cdf3..d745112e4 100644
+--- a/src/server/ua_subscription.c
++++ b/src/server/ua_subscription.c
+@@ -372,6 +372,11 @@ UA_Subscription_answerPublishRequestsNoSubscription(UA_Server *server,
+     if(!session || LIST_FIRST(&session->serverSubscriptions))
+         return;
+ 
++    // Check if the session is still valid
++    if(session->sessionHandle == NULL) {
++        return;
++    }
++
+     /* Send a response for every queued request */
+     UA_PublishResponseEntry *pre;
+     while((pre = SIMPLEQ_FIRST(&session->responseQueue))) {

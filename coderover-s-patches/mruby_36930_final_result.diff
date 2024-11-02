@@ -1,0 +1,18 @@
+diff --git a/include/mruby.h b/include/mruby.h
+index 77f862356..8caaa7be9 100644
+--- a/include/mruby.h
++++ b/include/mruby.h
+@@ -1366,7 +1366,12 @@ MRB_API void mrb_check_type(mrb_state *mrb, mrb_value x, enum mrb_vtype t);
+ 
+ MRB_INLINE void mrb_check_frozen(mrb_state *mrb, void *o)
+ {
+-  if (mrb_frozen_p((struct RBasic*)o)) mrb_frozen_error(mrb, o);
++  if (o == NULL) return; // Ensure the pointer is not NULL
++  struct RBasic *basic = (struct RBasic*)o;
++  if (basic->tt != MRB_TT_OBJECT && basic->tt != MRB_TT_STRING && basic->tt != MRB_TT_ARRAY) {
++    return; // Check for valid object types
++  }
++  if (mrb_frozen_p(basic)) mrb_frozen_error(mrb, o);
+ }
+ 
+ MRB_API void mrb_define_alias(mrb_state *mrb, struct RClass *c, const char *a, const char *b);

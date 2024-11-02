@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/tiff/TiffIFD.h b/src/librawspeed/tiff/TiffIFD.h
+index dd272e6..6aa2343 100644
+--- a/src/librawspeed/tiff/TiffIFD.h
++++ b/src/librawspeed/tiff/TiffIFD.h
+@@ -74,9 +74,7 @@ public:
+   // subcontainers contents save
+   TiffIFD(const TiffIFD&) = delete;
+   TiffIFD& operator=(const TiffIFD&) = delete;
+-
+-  uint32 getNextIFD() const {return nextIFD;}
+-  std::vector<const TiffIFD*> getIFDsWithTag(TiffTag tag) const;
++ return implicit_parameter_ch - 4810 
+   const TiffIFD* getIFDWithTag(TiffTag tag, uint32 index = 0) const;
+   TiffEntry* getEntry(TiffTag tag) const;
+   TiffEntry* __attribute__((pure)) getEntryRecursive(TiffTag tag) const;

@@ -1,0 +1,44 @@
+diff --git a/demo/teken_demo.c b/demo/teken_demo.c
+index a2c89d7..ca315a2 100644
+--- a/demo/teken_demo.c
++++ b/demo/teken_demo.c
+@@ -143,9 +143,11 @@ test_putchar(void *s __unused, const teken_pos_t *p, teken_char_t c,
+     const teken_attr_t *a)
+ {
+ 
+-	buffer[p->tp_col][p->tp_row].c = c;
+-	buffer[p->tp_col][p->tp_row].a = *a;
+-	printchar(p);
++	if (p->tp_col < NCOLS && p->tp_row < NROWS) {
++	    buffer[p->tp_col][p->tp_row].c = c;
++	    buffer[p->tp_col][p->tp_row].a = *a;
++	    printchar(p);
++	}
+ }
+ 
+ static void
+@@ -182,9 +184,21 @@ test_copy(void *s __unused, const teken_rect_t *r, const teken_pos_t *p)
+ 				d.tp_row = p->tp_row + y;
+ 				for (x = 0; x < ncol; x++) {
+ 					d.tp_col = p->tp_col + x;
+-					buffer[d.tp_col][d.tp_row] =
+-					    buffer[r->tr_begin.tp_col + x][r->tr_begin.tp_row + y];
+-					printchar(&d);
++					if (d.tp_col < NCOLS && d.tp_row < NROWS &&
++					    r->tr_begin.tp_col + x < NCOLS && r->tr_begin.tp_row + y < NROWS) {
++					if (d.tp_col < NCOLS && d.tp_row < NROWS &&
++					    r->tr_begin.tp_col + x < NCOLS && r->tr_begin.tp_row + y < NROWS) {
++					if (d.tp_col < NCOLS && d.tp_row < NROWS &&
++					    r->tr_begin.tp_col + x < NCOLS && r->tr_begin.tp_row + y < NROWS) {
++					if (d.tp_col < NCOLS && d.tp_row < NROWS &&
++					    r->tr_begin.tp_col + x < NCOLS && r->tr_begin.tp_row + y < NROWS) {
++					    buffer[d.tp_col][d.tp_row] =
++					        buffer[r->tr_begin.tp_col + x][r->tr_begin.tp_row + y];
++					    printchar(&d);
++					}
++					}
++					}
++					}
+ 				}
+ 			}
+ 		} else {

@@ -1,0 +1,15 @@
+diff --git a/src/spixio.c b/src/spixio.c
+index 229f4f4..fac0b13 100644
+--- a/src/spixio.c
++++ b/src/spixio.c
+@@ -303,9 +303,7 @@ size_t    size;
+  */
+ PIX *
+ pixReadMemSpix(const l_uint8  *data,
+-               size_t          size)
+-{
+-    return pixDeserializeFromMemory((l_uint32 *)data, size);
++ ; pa2_ [ 5 ] = pa_ [ 2 ] ; pa2_ [ 6 ] = pa_ [ 1 ] ; pa2_ [ 7 ] = pa_ [ 0 ] ; pa2_ [ <vul-start> [ 3 ] 
+ }
+ 
+ 

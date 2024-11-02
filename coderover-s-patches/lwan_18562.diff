@@ -1,0 +1,44 @@
+diff --git a/src/lib/lwan-config.c b/src/lib/lwan-config.c
+index 670faea5..cdd12f30 100644
+--- a/src/lib/lwan-config.c
++++ b/src/lib/lwan-config.c
+@@ -248,7 +248,7 @@ static void emit(struct lexer *lexer, enum lexeme_type type)
+ static int next(struct lexer *lexer)
+ {
+     if (lexer->pos >= lexer->end) {
+-        lexer->pos = lexer->end + 1;
++        lexer->pos = lexer->end;
+         return '\0';
+     }
+ 
+@@ -268,13 +268,19 @@ static void ignore(struct lexer *lexer)
+ 
+ static void advance_n(struct lexer *lexer, size_t n)
+ {
+-    lexer->pos += n;
++    if (lexer->pos + n <= lexer->end) {
++        lexer->pos += n;
++    } else {
++        lexer->pos = lexer->end;
++    }
+     ignore(lexer);
+ }
+ 
+ static void backup(struct lexer *lexer)
+ {
+-    lexer->pos--;
++    if (lexer->pos > lexer->start) {
++        lexer->pos--;
++    }
+ 
+     if (*lexer->pos == '\n')
+         lexer->cur_line--;
+@@ -342,7 +348,7 @@ static void *lex_multiline_string(struct lexer *lexer)
+     advance_n(lexer, strlen("'''") - 1);
+ 
+     do {
+-        if (!strncmp(lexer->pos, end, 3)) {
++        if (lexer->pos + 3 <= lexer->end && !strncmp(lexer->pos, end, 3)) {
+             emit(lexer, LEXEME_STRING);
+             lexer->pos += 3;
+ 

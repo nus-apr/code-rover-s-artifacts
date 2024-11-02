@@ -1,0 +1,13 @@
+diff --git a/fluent-bit/src/flb_http_client.c b/fluent-bit/src/flb_http_client.c
+index c0eec4a..ecc20b2 100644
+--- a/fluent-bit/src/flb_http_client.c
++++ b/fluent-bit/src/flb_http_client.c
+@@ -1107,7 +1107,7 @@ int flb_http_do(struct flb_http_client *c, size_t *bytes)
+             return -1;
+         }
+         c->header_buf = tmp;
+-        c->header_len = new_size;
++        c->header_size = new_size;
+     }
+ 
+     /* Append the ending header CRLF */

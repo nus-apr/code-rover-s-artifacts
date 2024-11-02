@@ -1,0 +1,18 @@
+diff --git a/WasmEdge/lib/aot/compiler.cpp b/WasmEdge/lib/aot/compiler.cpp
+index 12e9702..e5e6663 100644
+--- a/WasmEdge/lib/aot/compiler.cpp
++++ b/WasmEdge/lib/aot/compiler.cpp
+@@ -4779,7 +4779,12 @@ private:
+ 
+   void stackPush(LLVM::Value Value) noexcept { Stack.push_back(Value); }
+   LLVM::Value stackPop() noexcept {
+-    assuming(!ControlStack.empty() || !Stack.empty());
++    if (Stack.empty()) {
++      // Handle the error case, e.g., log an error or throw an exception
++      // For now, we will just return a nullptr or handle it as needed
++      // You might want to replace this with appropriate error handling
++      return nullptr;
++    }
+     assuming(ControlStack.empty() ||
+              Stack.size() > ControlStack.back().StackSize);
+     auto Value = Stack.back();

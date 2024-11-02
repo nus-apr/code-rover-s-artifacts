@@ -1,0 +1,20 @@
+diff --git a/openthread/src/core/thread/mesh_forwarder.cpp b/openthread/src/core/thread/mesh_forwarder.cpp
+index 52d893e..62b1006 100644
+--- a/openthread/src/core/thread/mesh_forwarder.cpp
++++ b/openthread/src/core/thread/mesh_forwarder.cpp
+@@ -1574,6 +1574,7 @@ otError MeshForwarder::GetFramePriority(uint8_t *           aFrame,
+     aPriority = GetNetif().GetIp6().DscpToPriority(ip6Header.GetDscp());
+     VerifyOrExit(ip6Header.GetNextHeader() == Ip6::kProtoUdp);
+ 
++    VerifyOrExit(aFrameLength >= headerLength, error = OT_ERROR_PARSE);
+     aFrame += headerLength;
+     aFrameLength -= headerLength;
+ 
+@@ -1583,6 +1584,7 @@ otError MeshForwarder::GetFramePriority(uint8_t *           aFrame,
+     }
+     else
+     {
++        VerifyOrExit(aFrameLength >= sizeof(Ip6::UdpHeader), error = OT_ERROR_PARSE);
+         memcpy(&udpHeader, aFrame, sizeof(Ip6::UdpHeader));
+     }
+ 

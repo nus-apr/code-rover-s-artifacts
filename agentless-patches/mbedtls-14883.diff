@@ -1,0 +1,29 @@
+diff --git a/mbedtls/library/x509_crt.c b/mbedtls/library/x509_crt.c
+index 0c9df51..87599e5 100644
+--- a/mbedtls/library/x509_crt.c
++++ b/mbedtls/library/x509_crt.c
+@@ -3273,14 +3273,16 @@ void mbedtls_x509_crt_free( mbedtls_x509_crt *crt )
+             mbedtls_free( seq_prv );
+         }
+ 
+-        seq_cur = cert_cur->subject_alt_names.next;
+-        while( seq_cur != NULL )
+-        {
+-            seq_prv = seq_cur;
+-            seq_cur = seq_cur->next;
+-            mbedtls_platform_zeroize( seq_prv,
+-                                      sizeof( mbedtls_x509_sequence ) );
+-            mbedtls_free( seq_prv );
++        if (cert_cur->subject_alt_names.next != NULL) {
++            seq_cur = cert_cur->subject_alt_names.next;
++            while( seq_cur != NULL )
++            {
++                seq_prv = seq_cur;
++                seq_cur = seq_cur->next;
++                mbedtls_platform_zeroize( seq_prv,
++                                          sizeof( mbedtls_x509_sequence ) );
++                mbedtls_free( seq_prv );
++            }
+         }
+ 
+         seq_cur = cert_cur->certificate_policies.next;

@@ -1,0 +1,13 @@
+diff --git a/fluent-bit/lib/onigmo/regcomp.c b/fluent-bit/lib/onigmo/regcomp.c
+index 815d9b2..276df42 100644
+--- a/fluent-bit/lib/onigmo/regcomp.c
++++ b/fluent-bit/lib/onigmo/regcomp.c
+@@ -4589,7 +4589,7 @@ alt_merge_opt_exact_info(OptExactInfo* to, OptExactInfo* add, OptEnv* env)
+     if (to->s[i] != add->s[i]) break;
+     len = enclen(env->enc, to->s + i, to->s + to->len);
+ 
+-    for (j = 1; j < len; j++) {
++    for (j = 1; j < len && (i + j) < to->len && (i + j) < add->len; j++) {
+       if (to->s[i+j] != add->s[i+j]) break;
+     }
+     if (j < len) break;

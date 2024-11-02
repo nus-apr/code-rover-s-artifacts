@@ -1,0 +1,19 @@
+diff --git a/net-snmp/snmplib/asn1.c b/net-snmp/snmplib/asn1.c
+index fc4c756..3ddcc07 100644
+--- a/net-snmp/snmplib/asn1.c
++++ b/net-snmp/snmplib/asn1.c
+@@ -1226,6 +1226,14 @@ asn_build_header(u_char * data,
+         ERROR_MSG(ebuf);
+         return NULL;
+     }
++    if (*datalength < 1) {
++        snprintf(ebuf, sizeof(ebuf),
++                "insufficient buffer length for type :%lu",
++                (unsigned long)*datalength);
++        ebuf[ sizeof(ebuf)-1 ] = 0;
++        ERROR_MSG(ebuf);
++        return NULL;
++    }
+     *data++ = type;
+     (*datalength)--;
+     return asn_build_length(data, datalength, length);

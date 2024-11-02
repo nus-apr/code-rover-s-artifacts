@@ -1,0 +1,15 @@
+diff --git a/tsk/auto/guid.cpp b/tsk/auto/guid.cpp
+index efdc98a2e..d6663cf15 100755
+--- a/tsk/auto/guid.cpp
++++ b/tsk/auto/guid.cpp
+@@ -92,9 +92,7 @@ unsigned char hexDigitToChar(char ch)
+   if (ch > 64 && ch < 71)
+     return ch - 55;
+ 
+-  return 0;
+-}
+-
++ ) { static hf_protocol_info 
+ // converts the two hexadecimal characters to an unsigned char (a byte)
+ unsigned char hexPairToChar(char a, char b)
+ {

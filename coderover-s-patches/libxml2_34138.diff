@@ -1,0 +1,31 @@
+diff --git a/parser.c b/parser.c
+index 9bda9458..929052cd 100644
+--- a/parser.c
++++ b/parser.c
+@@ -9959,11 +9959,21 @@ xmlParseElement(xmlParserCtxtPtr ctxt) {
+ 	return;
+ 
+     if (CUR == 0) {
+-        const xmlChar *name = ctxt->nameTab[ctxt->nameNr - 1];
+-        int line = ctxt->pushTab[ctxt->nameNr - 1].line;
+-        xmlFatalErrMsgStrIntStr(ctxt, XML_ERR_TAG_NOT_FINISHED,
+-                "Premature end of data in tag %s line %d\n",
+-		name, line, NULL);
++        if (ctxt->nameNr > 0 && ctxt->pushTab != NULL) {
++            const xmlChar *name = ctxt->nameTab[ctxt->nameNr - 1];
++            if (ctxt->pushTab[ctxt->nameNr - 1].line != NULL) {
++                int line = ctxt->pushTab[ctxt->nameNr - 1].line;
++                xmlFatalErrMsgStrIntStr(ctxt, XML_ERR_TAG_NOT_FINISHED,
++                        "Premature end of data in tag %s line %d\n",
++                        name, line, NULL);
++            } else {
++                xmlFatalErrMsg(ctxt, XML_ERR_INTERNAL_ERROR,
++                        "Internal error: invalid line information\n");
++            }
++        } else {
++            xmlFatalErrMsg(ctxt, XML_ERR_INTERNAL_ERROR,
++                    "Internal error: no element name or pushTab unavailable\n");
++        }
+         return;
+     }
+ 

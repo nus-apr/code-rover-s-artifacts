@@ -1,0 +1,17 @@
+diff --git a/libjxl/lib/jxl/image_ops.h b/libjxl/lib/jxl/image_ops.h
+index 87d18e5..76160db 100644
+--- a/libjxl/lib/jxl/image_ops.h
++++ b/libjxl/lib/jxl/image_ops.h
+@@ -46,8 +46,10 @@ void CopyImageTo(const Rect& rect_from, const Plane<T>& from,
+                  const Rect& rect_to, Plane<T>* JXL_RESTRICT to) {
+   PROFILER_ZONE("CopyImageR");
+   JXL_DASSERT(SameSize(rect_from, rect_to));
+-  JXL_DASSERT(rect_from.IsInside(from));
+-  JXL_DASSERT(rect_to.IsInside(*to));
++  JXL_DASSERT(rect_from.x0() + rect_from.xsize() <= from.xsize() &&
++              rect_from.y0() + rect_from.ysize() <= from.ysize());
++  JXL_DASSERT(rect_to.x0() + rect_to.xsize() <= to->xsize() &&
++              rect_to.y0() + rect_to.ysize() <= to->ysize());
+   if (rect_from.xsize() == 0) return;
+   for (size_t y = 0; y < rect_from.ysize(); ++y) {
+     const T* JXL_RESTRICT row_from = rect_from.ConstRow(from, y);

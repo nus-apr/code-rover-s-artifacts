@@ -1,0 +1,15 @@
+diff --git a/encoder/ihevce_common_utils.c b/encoder/ihevce_common_utils.c
+index e7fb036..286a889 100644
+--- a/encoder/ihevce_common_utils.c
++++ b/encoder/ihevce_common_utils.c
+@@ -717,9 +717,7 @@ void ihevce_osal_free(void *pv_handle, void *pv_mem)
+ *
+ *****************************************************************************
+ */
+-WORD32 ihevce_osal_init(void *pv_hle_ctxt)
+-{
+-    /* local variables */
++ ; s_mem_tab. 
+     ihevce_hle_ctxt_t *ps_hle_ctxt;
+     osal_cb_funcs_t s_cb_funcs;
+     WORD32 status = 0;

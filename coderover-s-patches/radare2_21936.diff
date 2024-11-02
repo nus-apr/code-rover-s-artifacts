@@ -1,0 +1,45 @@
+diff --git a/libr/bin/format/elf/elf.c b/libr/bin/format/elf/elf.c
+index 542ce4778d..f253a77dce 100644
+--- a/libr/bin/format/elf/elf.c
++++ b/libr/bin/format/elf/elf.c
+@@ -2566,7 +2566,11 @@ static size_t get_num_relocs_dynamic(ELFOBJ *bin) {
+ 		res += bin->dyn_info.dt_relsz / bin->dyn_info.dt_relent;
+ 	}
+ 
+-	return res + get_num_relocs_dynamic_plt (bin);
++	size_t plt_relocs = get_num_relocs_dynamic_plt (bin);
++	if (plt_relocs > SIZE_MAX - res) {
++		return SIZE_MAX; // Prevent overflow
++	}
++	return res + plt_relocs;
+ }
+ 
+ static bool sectionIsValid(ELFOBJ *bin, RBinElfSection *sect) {
+@@ -2604,7 +2608,11 @@ static size_t get_num_relocs_sections(ELFOBJ *bin) {
+ 			continue;
+ 		}
+ 		size = get_size_rel_mode (rel_mode);
+-		ret += NUMENTRIES_ROUNDUP (bin->g_sections[i].size, size);
++		size_t section_relocs = NUMENTRIES_ROUNDUP (bin->g_sections[i].size, size);
++		if (section_relocs > SIZE_MAX - ret) {
++			return SIZE_MAX; // Prevent overflow
++		}
++		ret += section_relocs;
+ 	}
+ 
+ 	return ret;
+@@ -2696,7 +2704,13 @@ static size_t populate_relocs_record_from_section(ELFOBJ *bin, RBinElfReloc *rel
+ static RBinElfReloc *populate_relocs_record(ELFOBJ *bin) {
+ 	size_t i = 0;
+ 	size_t num_relocs = get_num_relocs_approx (bin);
+-	RBinElfReloc *relocs = calloc (num_relocs + 1, sizeof (RBinElfReloc));
++	if (num_relocs == 0) {
++		return NULL; // Handle case where no relocations are found
++	}
++	RBinElfReloc *relocs = calloc (num_relocs + 2, sizeof (RBinElfReloc)); // Allocate extra space for safety
++	if (!relocs) {
++		return NULL; // Handle memory allocation failure
++	}
+ 
+ 	i = populate_relocs_record_from_dynamic (bin, relocs, i);
+ 	i = populate_relocs_record_from_section (bin, relocs, i);

@@ -1,0 +1,13 @@
+diff --git a/ndpi/src/lib/protocols/tls.c b/ndpi/src/lib/protocols/tls.c
+index 64f8315..57fa168 100644
+--- a/ndpi/src/lib/protocols/tls.c
++++ b/ndpi/src/lib/protocols/tls.c
+@@ -2384,7 +2384,7 @@ int processClientServerHello(struct ndpi_detection_module_struct *ndpi_struct,
+ 
+ 		ja.client.num_signature_algorithms = ndpi_min(sa_size, MAX_NUM_JA);
+ 
+-		for(i=0, id=0; i<tot_signature_algorithms_len && s_offset+i<total_len; i++) {
++		for(i=0, id=0; i<tot_signature_algorithms_len && s_offset+i*2<total_len; i++) {
+ 		  int rc = ndpi_snprintf(&ja.client.signature_algorithms_str[i*2],
+ 					 sizeof(ja.client.signature_algorithms_str)-i*2,
+ 					 "%02X", packet->payload[s_offset+i]);

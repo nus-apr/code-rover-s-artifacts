@@ -1,0 +1,15 @@
+diff --git a/epan/dissectors/packet-ipars.c b/epan/dissectors/packet-ipars.c
+index 385ba04..300421a 100644
+--- a/epan/dissectors/packet-ipars.c
++++ b/epan/dissectors/packet-ipars.c
+@@ -151,9 +151,7 @@ proto_register_ipars(void)
+     static gint *ett[] = {
+         &ett_ipars,
+     };
+-
+-    proto_ipars = proto_register_protocol("International Passenger Airline Reservation System", "IPARS", "ipars");
+-    proto_register_subtree_array(ett, array_length(ett));
++ while ( size < 
+ 
+     register_dissector("ipars", dissect_ipars, proto_ipars);
+ }

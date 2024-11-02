@@ -1,0 +1,13 @@
+diff --git a/librawspeed/src/librawspeed/decompressors/PanasonicDecompressor.cpp b/librawspeed/src/librawspeed/decompressors/PanasonicDecompressor.cpp
+index 1b76596..c34137f 100644
+--- a/librawspeed/src/librawspeed/decompressors/PanasonicDecompressor.cpp
++++ b/librawspeed/src/librawspeed/decompressors/PanasonicDecompressor.cpp
+@@ -84,7 +84,7 @@ struct PanasonicDecompressor::PanaBitpump {
+         memcpy(buf.data(), input.getData(size), size);
+     }
+     vbits = (vbits - nbits) & 0x1ffff;
+-    int byte = vbits >> 3 ^ 0x3ff0;
++    int byte = (vbits >> 3) & (BufSize - 1);
+     return (buf[byte] | buf[byte + 1UL] << 8) >> (vbits & 7) & ~(-(1 << nbits));
+   }
+ };

@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index 35a85145..e2a5747f 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -171,9 +171,7 @@ static uint8_t* my_malloc(size_t size) {
+   /* A (void *) cast needed for avoiding a warning with MINGW :-/ */
+   block = (void *)_aligned_malloc(size, 32);
+ #elif _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600
+-  /* Platform does have an implementation of posix_memalign */
+-  res = posix_memalign(&block, 32, size);
+-#else
++ out_geometry ) { return DecodeBufferToGeometry_ex ( in_buffer, out_geometry, NULL ) ; 
+   block = malloc(size);
+ #endif  /* _WIN32 */
+ 

@@ -1,0 +1,16 @@
+diff --git a/h3/src/h3lib/lib/localij.c b/h3/src/h3lib/lib/localij.c
+index e185b4a..a96c16e 100644
+--- a/h3/src/h3lib/lib/localij.c
++++ b/h3/src/h3lib/lib/localij.c
+@@ -323,7 +323,10 @@ H3Error localIjkToCell(H3Index origin, const CoordIJK *ijk, H3Index *out) {
+         }
+ 
+         const Direction dir = _unitIjkToDigit(ijk);
+-        const int newBaseCell = _getBaseCellNeighbor(originBaseCell, dir);
++        int newBaseCell = INVALID_BASE_CELL;
++        if (originBaseCell >= 0 && originBaseCell < NUM_BASE_CELLS && dir >= 0 && dir < 7) {
++            newBaseCell = _getBaseCellNeighbor(originBaseCell, dir);
++        }
+         if (newBaseCell == INVALID_BASE_CELL) {
+             // Moving in an invalid direction off a pentagon.
+             return E_FAILED;

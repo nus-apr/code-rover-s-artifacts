@@ -1,0 +1,6 @@
+diff --git a/htscodecs b/htscodecs
+--- a/htscodecs
++++ b/htscodecs
+@@ -1 +1 @@
+-Subproject commit dca826bbc598d6dcae450e92e60dcf789454999d
++Subproject commit dca826bbc598d6dcae450e92e60dcf789454999d-dirty

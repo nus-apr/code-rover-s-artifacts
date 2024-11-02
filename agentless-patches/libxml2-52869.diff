@@ -1,0 +1,14 @@
+diff --git a/libxml2/xmlreader.c b/libxml2/xmlreader.c
+index dcf028f..233ed81 100644
+--- a/libxml2/xmlreader.c
++++ b/libxml2/xmlreader.c
+@@ -1364,7 +1364,8 @@ get_next_node:
+                     oldnode = NULL;
+ 		xmlUnlinkNode(tmp);
+ 		xmlTextReaderFreeNode(reader, tmp);
+-	    }
++                reader->node = NULL;
++            }
+ 	}
+ 
+ 	goto node_found;

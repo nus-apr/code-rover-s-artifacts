@@ -1,0 +1,16 @@
+diff --git a/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c b/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c
+index 15139501..adb34bc9 100644
+--- a/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c
++++ b/internal-complibs/zstd-1.4.9/decompress/zstd_decompress.c
+@@ -769,8 +769,9 @@ static size_t ZSTD_copyRawBlock(void* dst, size_t dstCapacity,
+         if (srcSize == 0) return 0;
+         RETURN_ERROR(dstBuffer_null, "");
+     }
+-    ZSTD_memcpy(dst, src, srcSize);
+-    return srcSize;
++    size_t copySize = srcSize > dstCapacity ? dstCapacity : srcSize;
++    ZSTD_memcpy(dst, src, copySize);
++    return copySize;
+ }
+ 
+ static size_t ZSTD_setRleBlock(void* dst, size_t dstCapacity,

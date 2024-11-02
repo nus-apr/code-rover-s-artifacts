@@ -1,0 +1,15 @@
+diff --git a/coders/heic.c b/coders/heic.c
+index c10c35815..045f9d346 100644
+--- a/coders/heic.c
++++ b/coders/heic.c
+@@ -903,6 +903,10 @@ static MagickBooleanType decodeH265Image(Image *image, HEICImageContext *ctx, un
+    */
+   for (p = buffer; p < buffer + ctx->itemInfo[id].size; /* void */) {
+     nal_unit_size = readInt(p);
++    if (p + nal_unit_size + 4 > buffer + ctx->itemInfo[id].size) {
++      ThrowImproperImageHeader("NAL unit size exceeds buffer bounds");
++      goto err_out_free;
++    }
+     p[0] = 0;
+     p[1] = 0;
+     p[2] = 0;

@@ -1,0 +1,16 @@
+diff --git a/wireshark/epan/reassemble.c b/wireshark/epan/reassemble.c
+index f4d63dc..eba2da9 100644
+--- a/wireshark/epan/reassemble.c
++++ b/wireshark/epan/reassemble.c
+@@ -393,7 +393,10 @@ void
+ unref_fd_head(gpointer data)
+ {
+ 	fragment_head *fd_head = (fragment_head *) data;
+-	fd_head->ref_count--;
++
++	if (fd_head->ref_count > 0) {
++		fd_head->ref_count--;
++	}
+ 
+ 	if (fd_head->ref_count == 0) {
+ 		free_fd_head(fd_head);

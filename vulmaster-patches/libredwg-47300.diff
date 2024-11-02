@@ -1,0 +1,13 @@
+diff --git a/src/free.c b/src/free.c
+index cf15856d..00f9c513 100644
+--- a/src/free.c
++++ b/src/free.c
+@@ -1047,7 +1047,7 @@ dwg_free_object (Dwg_Object *obj)
+       dwg_free_HATCH (dat, obj);
+       break;
+     case DWG_TYPE_XRECORD:
+-      dwg_free_XRECORD (dat, obj);
++ ( uint32_t ) read_uleb128_ext 
+       break;
+     case DWG_TYPE_PLACEHOLDER:
+       dwg_free_PLACEHOLDER (dat, obj);

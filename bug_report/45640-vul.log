@@ -1,0 +1,51 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/ping_dcm_fuzzer
+=================================================================
+==12==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000009a70 at pc 0x000000cbe55b bp 0x7ffe68343970 sp 0x7ffe68343968
+READ of size 4 at 0x602000009a70 thread T0
+SCARINESS: 27 (4-byte-read-heap-buffer-overflow-far-from-bounds)
+    #0 0xcbe55a in ReadDCMImage /src/imagemagick/coders/dcm.c:4141:29
+    #1 0x8e3376 in ReadImage /src/imagemagick/MagickCore/constitute.c:563:15
+    #2 0xbea73e in ReadStream /src/imagemagick/MagickCore/stream.c:1083:9
+    #3 0x86d5ca in PingBlob /src/imagemagick/MagickCore/blob.c:3637:13
+    #4 0x795021 in Magick::Image::ping(Magick::Blob const&) /src/imagemagick/Magick++/lib/Image.cpp:3873:12
+    #5 0x7565b5 in LLVMFuzzerTestOneInput /src/imagemagick/Magick++/fuzz/ping_fuzzer.cc:44:11
+    #6 0x75702b in main (/out/ping_dcm_fuzzer+0x75702b)
+    #7 0x7ca1a8e89082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #8 0x69cacd in _start (/out/ping_dcm_fuzzer+0x69cacd)
+
+DEDUP_TOKEN: ReadDCMImage--ReadImage--ReadStream
+Address 0x602000009a70 is a wild pointer inside of access range of size 0x000000000004.
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/imagemagick/coders/dcm.c:4141:29 in ReadDCMImage
+Shadow bytes around the buggy address:
+  0x0c047fff92f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9300: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9310: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9320: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9330: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+=>0x0c047fff9340: fa fa fa fa fa fa fa fa fa fa fa fa fa fa[fa]fa
+  0x0c047fff9350: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9360: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9370: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9380: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9390: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==12==ABORTING

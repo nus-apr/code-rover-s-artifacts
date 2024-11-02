@@ -1,0 +1,32 @@
+diff --git a/src/imageformats/xcf.cpp b/src/imageformats/xcf.cpp
+index 5bf6077..332c061 100644
+--- a/src/imageformats/xcf.cpp
++++ b/src/imageformats/xcf.cpp
+@@ -887,6 +887,10 @@ bool XCFImageFormat::loadLayer(QDataStream &xcf_io, XCFImage &xcf_image)
+     delete[] layer.name;
+ 
+     xcf_io >> layer.width >> layer.height >> layer.type >> layer.name;
++    if (layer.width <= 0 || layer.height <= 0) {
++        qCDebug(XCFPLUGIN) << "Invalid layer dimensions" << layer.width << layer.height;
++        return false;
++    }
+ 
+     // Don't want to keep passing this around, dumb XCF format
+     layer.compression = XcfCompressionType(xcf_image.compression);
+@@ -954,11 +958,16 @@ bool XCFImageFormat::loadLayer(QDataStream &xcf_io, XCFImage &xcf_image)
+ 
+     if (!xcf_image.initialized) {
+         if (!initializeImage(xcf_image)) {
++            qCDebug(XCFPLUGIN) << "Failed to initialize XCF image";
+             return false;
+         }
+         copyLayerToImage(xcf_image);
+         xcf_image.initialized = true;
+     } else {
++        if (xcf_image.image.isNull() || xcf_image.image.width() <= 0 || xcf_image.image.height() <= 0) {
++            qCDebug(XCFPLUGIN) << "Invalid XCF image before merging layer";
++            return false;
++        }
+         mergeLayerIntoImage(xcf_image);
+     }
+ 

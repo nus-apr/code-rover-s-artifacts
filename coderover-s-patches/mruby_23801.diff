@@ -1,0 +1,52 @@
+diff --git a/src/gc.c b/src/gc.c
+index 6c83911d5..33fbf2ebf 100644
+--- a/src/gc.c
++++ b/src/gc.c
+@@ -271,7 +271,10 @@ mrb_calloc(mrb_state *mrb, size_t nelem, size_t len)
+ MRB_API void
+ mrb_free(mrb_state *mrb, void *p)
+ {
+-  (mrb->allocf)(mrb, p, 0, mrb->allocf_ud);
++    if (p != NULL && !mrb->gc.out_of_memory) { // Check if the pointer is not already freed
++        (mrb->allocf)(mrb, p, 0, mrb->allocf_ud);
++        mrb->gc.out_of_memory = TRUE; // Mark as freed
++    }
+ }
+ 
+ MRB_API void*
+@@ -425,10 +428,11 @@ free_heap(mrb_state *mrb, mrb_gc *gc)
+ void
+ mrb_gc_destroy(mrb_state *mrb, mrb_gc *gc)
+ {
+-  free_heap(mrb, gc);
++    free_heap(mrb, gc);
+ #ifndef MRB_GC_FIXED_ARENA
+-  mrb_free(mrb, gc->arena);
++    mrb_free(mrb, gc->arena);
+ #endif
++    mrb->gc.out_of_memory = FALSE; // Reset the flag for future allocations
+ }
+ 
+ static void
+diff --git a/src/state.c b/src/state.c
+index 533bdaa0b..f3fb57450 100644
+--- a/src/state.c
++++ b/src/state.c
+@@ -60,10 +60,13 @@ mrb_open_core(mrb_allocf f, void *ud)
+ void*
+ mrb_default_allocf(mrb_state *mrb, void *p, size_t size, void *ud)
+ {
+-  if (size == 0) {
+-    free(p);
+-    return NULL;
+-  }
++    if (size == 0) {
++        if (p != NULL && !mrb->gc.out_of_memory) { // Check if the pointer is not already freed
++            free(p);
++            mrb->gc.out_of_memory = TRUE; // Mark as freed
++        }
++        return NULL;
++    }
+   else {
+     return realloc(p, size);
+   }

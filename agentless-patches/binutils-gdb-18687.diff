@@ -1,0 +1,30 @@
+diff --git a/binutils-gdb/opcodes/v850-dis.c b/binutils-gdb/opcodes/v850-dis.c
+index b8d6278..6efc8bc 100644
+--- a/binutils-gdb/opcodes/v850-dis.c
++++ b/binutils-gdb/opcodes/v850-dis.c
+@@ -425,7 +425,11 @@ disassemble (bfd_vma memaddr,
+ 	      switch (flag)
+ 		{
+ 		case V850_OPERAND_REG:
+-		  info->fprintf_func (info->stream, "%s", v850_reg_names[value]);
++		  if (value >= 0 && value < sizeof(v850_reg_names)/sizeof(v850_reg_names[0])) {
++		    info->fprintf_func (info->stream, "%s", v850_reg_names[value]);
++		  } else {
++		    info->fprintf_func (info->stream, "invalid");
++		  }
+ 		  break;
+ 		case (V850_OPERAND_REG|V850_REG_EVEN):
+ 		  info->fprintf_func (info->stream, "%s", v850_reg_names[value * 2]);
+@@ -434,7 +438,11 @@ disassemble (bfd_vma memaddr,
+ 		  info->fprintf_func (info->stream, "ep");
+ 		  break;
+ 		case V850_OPERAND_SRG:
+-		  info->fprintf_func (info->stream, "%s", v850_sreg_names[value]);
++		  if (value >= 0 && value < sizeof(v850_sreg_names)/sizeof(v850_sreg_names[0])) {
++		    info->fprintf_func (info->stream, "%s", v850_sreg_names[value]);
++		  } else {
++		    info->fprintf_func (info->stream, "invalid");
++		  }
+ 		  break;
+ 		case V850E_OPERAND_REG_LIST:
+ 		  {

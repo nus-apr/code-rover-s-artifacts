@@ -1,0 +1,13 @@
+diff --git a/fuzzer.cpp b/fuzzer.cpp
+index 791d6dc..c47c1eb 100644
+--- a/fuzzer.cpp
++++ b/fuzzer.cpp
+@@ -453,7 +453,7 @@ bool wolfMQTTFuzzer::Initialize(void) {
+ #endif
+ 
+         CHECK_EQ(MqttClient_NetConnect(client, "dummy", 12345, 1000, 0, NULL), MQTT_CODE_SUCCESS);
+-        CHECK_EQ(MqttClient_Connect(client, connect), MQTT_CODE_SUCCESS);
++ { l_int32 format 
+ 
+         ret = true;
+     } catch ( ... ) {

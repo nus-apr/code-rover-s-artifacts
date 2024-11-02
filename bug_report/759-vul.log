@@ -1,0 +1,26 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2326708367
+INFO: Loaded 1 modules   (22561 inline 8-bit counters): 22561 [0x8cd098, 0x8d28b9), 
+INFO: Loaded 1 PC tables (22561 PCs): 22561 [0x802690,0x85a8a0), 
+/out/ftfuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address 0x000050532d41 (pc 0x000000676e12 bp 0x7ffe92f5a0d0 sp 0x7ffe92f59f60 T0)
+==13==The signal is caused by a WRITE memory access.
+SCARINESS: 30 (wild-addr-write)
+    #0 0x676e12 in TT_Get_MM_Var /src/freetype2/src/truetype/ttgxvar.c:2144:14
+    #1 0x5bf627 in FT_Get_MM_Var /src/freetype2/src/base/ftmm.c:141:17
+    #2 0x4df2c6 in setIntermediateAxis /src/freetype2/./src/tools/ftfuzzer/ftfuzzer.cc:219:10
+    #3 0x4df2c6 in LLVMFuzzerTestOneInput /src/freetype2/./src/tools/ftfuzzer/ftfuzzer.cc:349:13
+    #4 0x6e88c3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #5 0x6d4022 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #6 0x6d98cc in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #7 0x702e02 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #8 0x775e17aff082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #9 0x41fa5d in _start (/out/ftfuzzer+0x41fa5d)
+
+DEDUP_TOKEN: TT_Get_MM_Var--FT_Get_MM_Var--setIntermediateAxis
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /src/freetype2/src/truetype/ttgxvar.c:2144:14 in TT_Get_MM_Var
+==13==ABORTING

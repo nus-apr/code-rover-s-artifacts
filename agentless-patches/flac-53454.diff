@@ -1,0 +1,17 @@
+diff --git a/flac/oss-fuzz/fuzzer_reencoder.cc b/flac/oss-fuzz/fuzzer_reencoder.cc
+index 5c64ed9..9a4c409 100644
+--- a/flac/oss-fuzz/fuzzer_reencoder.cc
++++ b/flac/oss-fuzz/fuzzer_reencoder.cc
+@@ -61,8 +61,10 @@ namespace FLAC {
+             int num_metadata_blocks = 0;
+ 
+             void metadata_callback(const ::FLAC__StreamMetadata *metadata) override {
+-                if((metadata_blocks[num_metadata_blocks] = FLAC__metadata_object_clone(metadata)) != NULL)
+-			num_metadata_blocks++;
++                if (num_metadata_blocks < 16) {
++                    if ((metadata_blocks[num_metadata_blocks] = FLAC__metadata_object_clone(metadata)) != NULL)
++                        num_metadata_blocks++;
++                }
+             }
+ 
+             ::FLAC__StreamDecoderReadStatus read_callback(FLAC__byte buffer[], size_t *bytes)  override {

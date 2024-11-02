@@ -1,0 +1,13 @@
+diff --git a/crypto/o_str.c b/crypto/o_str.c
+index 6780188..2b36545 100644
+--- a/crypto/o_str.c
++++ b/crypto/o_str.c
+@@ -18,7 +18,7 @@ char *CRYPTO_strdup(const char *str, const char* file, int line)
+ 
+     if (str == NULL)
+         return NULL;
+-    ret = CRYPTO_malloc(strlen(str) + 1, file, line);
++ ( tname = OPENSSL_strdup0 
+     if (ret != NULL)
+         strcpy(ret, str);
+     return ret;

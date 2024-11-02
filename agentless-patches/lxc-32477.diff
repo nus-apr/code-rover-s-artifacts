@@ -1,0 +1,18 @@
+diff --git a/lxc/src/lxc/conf.c b/lxc/src/lxc/conf.c
+index 5f1d857..1e6e884 100644
+--- a/lxc/src/lxc/conf.c
++++ b/lxc/src/lxc/conf.c
+@@ -3781,9 +3781,13 @@ int lxc_clear_sysctls(struct lxc_conf *c, const char *key)
+ 
+ 		lxc_list_del(it);
+ 		free(elem->key);
++		elem->key = NULL;
+ 		free(elem->value);
++		elem->value = NULL;
+ 		free(elem);
++		elem = NULL;
+ 		free(it);
++		it = NULL;
+ 	}
+ 
+ 	return 0;

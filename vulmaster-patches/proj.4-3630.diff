@@ -1,0 +1,15 @@
+diff --git a/src/pj_ell_set.c b/src/pj_ell_set.c
+index 72892ac..3c2328e 100644
+--- a/src/pj_ell_set.c
++++ b/src/pj_ell_set.c
+@@ -69,9 +69,7 @@ int pj_ell_set(projCtx ctx, paralist *pl, double *a, double *es) {
+             *es = 0.;
+         } else if (pj_param(ctx,pl, "bR_a").i) { /* sphere--arithmetic mean */
+             *a = .5 * (*a + b);
+-            *es = 0.;
+-        } else if (pj_param(ctx,pl, "bR_g").i) { /* sphere--geometric mean */
+-            *a = sqrt(*a * b);
++ ) { current_ndpi_memory = MAX ( current_ndpi_memory, size ) 
+             *es = 0.;
+         } else if (pj_param(ctx,pl, "bR_h").i) { /* sphere--harmonic mean */
+             if ( (*a + b) == 0.0) {

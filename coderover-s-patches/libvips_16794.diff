@@ -1,0 +1,30 @@
+diff --git a/libvips/colour/rad2float.c b/libvips/colour/rad2float.c
+index cecbb38cb..4cce50a8c 100644
+--- a/libvips/colour/rad2float.c
++++ b/libvips/colour/rad2float.c
+@@ -161,12 +161,23 @@ G_DEFINE_TYPE( VipsRad2float, vips_rad2float, VIPS_TYPE_COLOUR_CODE );
+ static void
+ vips_rad2float_line( VipsColour *colour, VipsPel *out, VipsPel **in, int width )
+ {
++	if (in == NULL || in[0] == NULL || width <= 0) {
++		vips_error("vips_rad2float_line", "Invalid input data");
++		return;
++	}
+ 	COLR *inp = (COLR *) in[0];
+ 	COLOR *outbuf = (COLOR *) out;
+ 
++	// Ensure the input buffer has enough elements
++	if (width > sizeof(in) / sizeof(in[0])) {
++		vips_error("vips_rad2float_line", "Input buffer too small");
++		return;
++	}
++
+ 	colr_color(outbuf[0], inp[0]);
+-	while (--width > 0) {
+-		outbuf++; inp++;
++	for (int i = 1; i < width; i++) {
++		outbuf++;
++		inp++;
+ 		if (inp[0][RED] == inp[-1][RED] &&
+ 			    inp[0][GRN] == inp[-1][GRN] &&
+ 			    inp[0][BLU] == inp[-1][BLU] &&

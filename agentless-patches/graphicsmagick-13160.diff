@@ -1,0 +1,13 @@
+diff --git a/graphicsmagick/magick/render.c b/graphicsmagick/magick/render.c
+index cae38cd..629b2ef 100644
+--- a/graphicsmagick/magick/render.c
++++ b/graphicsmagick/magick/render.c
+@@ -1892,6 +1892,8 @@ DrawDashPolygon(const DrawInfo *draw_info,const PrimitiveInfo *primitive_info,
+       return(MagickFail);
+     }
+   dash_polygon[0]=primitive_info[0];
++  if (draw_info->dash_pattern == (double *) NULL)
++    return(MagickFail);
+   scale=ExpandAffine(&draw_info->affine);
+   length=scale*draw_info->dash_pattern[0];
+   offset=draw_info->dash_offset != 0.0 ? scale*draw_info->dash_offset : 0.0;

@@ -1,0 +1,17 @@
+diff --git a/serenity/Userland/Libraries/LibCrypto/ASN1/DER.h b/serenity/Userland/Libraries/LibCrypto/ASN1/DER.h
+index 0f8fc6c..74ad5e9 100644
+--- a/serenity/Userland/Libraries/LibCrypto/ASN1/DER.h
++++ b/serenity/Userland/Libraries/LibCrypto/ASN1/DER.h
+@@ -48,10 +48,10 @@ static bool der_decode_integer(const u8* in, size_t length, UnsignedBigInteger&
+ 
+     // decode length
+     size_t z = in[x++];
+-    if ((x & 0x80) == 0) {
++    if ((z & 0x80) == 0) {
+         // overflow
+         if (x + z > length) {
+-            dbgln("would overflow {} > {}", z + x, length);
++            dbgln("would overflow {} > {}", x + z, length);
+             return false;
+         }
+ 

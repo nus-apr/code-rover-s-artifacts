@@ -1,0 +1,14 @@
+diff --git a/turbojpeg.c b/turbojpeg.c
+index cb8abe1a..4b748f68 100644
+--- a/turbojpeg.c
++++ b/turbojpeg.c
+@@ -1381,6 +1381,9 @@ DLLEXPORT int tjDecompress2(tjhandle handle, const unsigned char *jpegBuf,
+     /* If we get here, the JPEG code has signaled an error. */
+     retval = -1;  goto bailout;
+   }
++  if (dstBuf == NULL || (size_t)pitch * dinfo->output_height > jpegSize) {
++    THROW("tjDecompress2(): dstBuf is not large enough");
++  }
+   for (i = 0; i < (int)dinfo->output_height; i++) {
+     if (flags & TJFLAG_BOTTOMUP)
+       row_pointer[i] = &dstBuf[(dinfo->output_height - i - 1) * (size_t)pitch];

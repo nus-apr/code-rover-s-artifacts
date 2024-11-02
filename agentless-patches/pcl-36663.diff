@@ -1,0 +1,17 @@
+diff --git a/pcl/io/src/ply_io.cpp b/pcl/io/src/ply_io.cpp
+index 662c2cb..1109fd5 100644
+--- a/pcl/io/src/ply_io.cpp
++++ b/pcl/io/src/ply_io.cpp
+@@ -274,7 +274,11 @@ namespace pcl
+   {
+     unsetDenseFlagIfNotFinite(value, cloud_);
+ 
+-    memcpy (&cloud_->data[vertex_count_ * cloud_->point_step + vertex_offset_before_],
++    std::size_t index = vertex_count_ * cloud_->point_step + vertex_offset_before_;
++    if (index + sizeof(Scalar) > cloud_->data.size()) {
++        cloud_->data.resize(index + sizeof(Scalar));
++    }
++    memcpy (&cloud_->data[index],
+             &value,
+             sizeof (Scalar));
+     vertex_offset_before_ += static_cast<int> (sizeof (Scalar));

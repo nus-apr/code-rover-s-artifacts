@@ -1,0 +1,15 @@
+diff --git a/src/draco/compression/decode.cc b/src/draco/compression/decode.cc
+index ab70ef1..c47e9b1 100644
+--- a/src/draco/compression/decode.cc
++++ b/src/draco/compression/decode.cc
+@@ -41,9 +41,7 @@ StatusOr<std::unique_ptr<PointCloudDecoder>> CreatePointCloudDecoder(
+ }
+ #endif
+ 
+-#ifdef DRACO_MESH_COMPRESSION_SUPPORTED
+-StatusOr<std::unique_ptr<MeshDecoder>> CreateMeshDecoder(uint8_t method) {
+-  if (method == MESH_SEQUENTIAL_ENCODING) {
++ ret ; } ret = 
+     return std::unique_ptr<MeshDecoder>(new MeshSequentialDecoder());
+   } else if (method == MESH_EDGEBREAKER_ENCODING) {
+     return std::unique_ptr<MeshDecoder>(new MeshEdgebreakerDecoder());

@@ -1,0 +1,52 @@
+diff --git a/mrbgems/mruby-compiler/core/y.tab.c b/mrbgems/mruby-compiler/core/y.tab.c
+index b4808bce7..a4d72bb8b 100644
+--- a/mrbgems/mruby-compiler/core/y.tab.c
++++ b/mrbgems/mruby-compiler/core/y.tab.c
+@@ -11071,23 +11071,30 @@ heredoc_remove_indent(parser_state *p, parser_heredoc_info *hinf)
+     len = (size_t)pair->cdr;
+     escaped = n->cdr;
+     if (escaped) {
+-      char *newstr = strndup(str, len);
+-      size_t newlen = 0;
+-      start = 0;
+-      while (start < len) {
+-        end = escaped ? (size_t)escaped->car : len;
+-        size_t esclen = end - start;
+-        heredoc_count_indent(hinf, str + start, esclen, &indent, &offset);
+-        esclen -= offset;
+-        memcpy(newstr + newlen, str + start + offset, esclen);
+-        newlen += esclen;
+-        start = end;
+-        if (escaped)
+-          escaped = escaped->cdr;
+-      }
+-      newstr[newlen] = '\0';
+-      pair->car = (node*)newstr;
+-      pair->cdr = (node*)newlen;
++       char *newstr = (char *)malloc(len + 1); // Allocate buffer with original length
++       if (!newstr) {
++         // Handle allocation failure
++         return;
++       }
++       size_t newlen = 0;
++       start = 0;
++       while (start < len) {
++         end = escaped ? (size_t)escaped->car : len;
++         size_t esclen = end - start;
++         heredoc_count_indent(hinf, str + start, esclen, &indent, &offset);
++         esclen -= offset;
++         if (newlen + esclen > len) { // Ensure we do not exceed allocated buffer
++           esclen = len - newlen;
++         }
++         memcpy(newstr + newlen, str + start + offset, esclen);
++         newlen += esclen;
++         start = end;
++         if (escaped)
++           escaped = escaped->cdr;
++       }
++       newstr[newlen] = '\0';
++       pair->car = (node*)newstr;
++       pair->cdr = (node*)newlen;
+     } else {
+       heredoc_count_indent(hinf, str, len, &indent, &offset);
+       pair->car = (node*)(str + offset);

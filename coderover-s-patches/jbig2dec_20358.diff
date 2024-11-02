@@ -1,0 +1,35 @@
+diff --git a/jbig2_generic.c b/jbig2_generic.c
+index 66c04c6..7dcee92 100644
+--- a/jbig2_generic.c
++++ b/jbig2_generic.c
+@@ -863,9 +863,11 @@ jbig2_decode_generic_template0_TPGDON(Jbig2Ctx *ctx,
+                     }
+                     if (y >= 2 && x >= 4 && x < right)
+                     {
+-                        CONTEXT  = jbig2_image_get_pixels_fast(image, x - 4, y,     4);
+-                        CONTEXT |= jbig2_image_get_pixels_fast(image, x - 3, y - 1, 7) << 4;
+-                        CONTEXT |= jbig2_image_get_pixels_fast(image, x - 2, y - 2, 5) << 11;
++    if (x >= 4 && y >= 2) {
++        CONTEXT  = jbig2_image_get_pixels_fast(image, x - 4, y,     4);
++        CONTEXT |= jbig2_image_get_pixels_fast(image, x - 3, y - 1, 7) << 4;
++        CONTEXT |= jbig2_image_get_pixels_fast(image, x - 2, y - 2, 5) << 11;
++    }
+                     }
+                     else
+                     {
+diff --git a/jbig2_image.h b/jbig2_image.h
+index c6973eb..8426e9f 100644
+--- a/jbig2_image.h
++++ b/jbig2_image.h
+@@ -57,7 +57,10 @@ jbig2_image_get_pixels_fast(Jbig2Image *image, int x, int y, int bits)
+ {
+     const int byte = (x >> 3) + y * image->stride;
+     const int bit = 7 - (x & 7);
+-    int v = ((image->data[byte]<<8) | (image->data[byte+1]))>>(bit+9-bits);
++    int v = 0;
++    if (byte >= 0 && byte + 1 < image->stride * image->height) {
++        v = ((image->data[byte]<<8) | (image->data[byte+1]))>>(bit+9-bits);
++    }
+ 
+     return v & ((1<<bits)-1);
+ }

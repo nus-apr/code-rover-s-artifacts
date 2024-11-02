@@ -1,0 +1,25 @@
+diff --git a/binutils/objdump.c b/binutils/objdump.c
+index 356e3ecd853..ca922eeaa33 100644
+--- a/binutils/objdump.c
++++ b/binutils/objdump.c
+@@ -3693,14 +3693,17 @@ reloc_at (struct dwarf_section * dsec, dwarf_vma offset)
+   arelent ** relocs;
+   arelent * rp;
+ 
+-  if (dsec == NULL || dsec->reloc_info == NULL)
++  if (dsec == NULL || dsec->reloc_info == NULL || dsec->num_relocs <= 0)
+     return false;
+ 
+   relocs = (arelent **) dsec->reloc_info;
+ 
+-  for (; (rp = * relocs) != NULL; ++ relocs)
+-    if (rp->address == offset)
++  for (unsigned long i = 0; i < dsec->num_relocs; ++i)
++  {
++    rp = relocs[i];
++    if (rp != NULL && rp->address == offset)
+       return true;
++  }
+ 
+   return false;
+ }

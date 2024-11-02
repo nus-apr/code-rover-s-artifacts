@@ -1,0 +1,41 @@
+diff --git a/Userland/Libraries/LibJS/Heap/HeapBlock.h b/Userland/Libraries/LibJS/Heap/HeapBlock.h
+index 03b202317a..8107601f52 100644
+--- a/Userland/Libraries/LibJS/Heap/HeapBlock.h
++++ b/Userland/Libraries/LibJS/Heap/HeapBlock.h
+@@ -41,7 +41,13 @@ public:
+         }
+ 
+         if (allocated_cell) {
+-            ASAN_UNPOISON_MEMORY_REGION(allocated_cell, m_cell_size);
++            // Ensure the allocated cell is valid before unpoisoning
++            if (is_valid_cell_pointer(allocated_cell)) {
++                ASAN_UNPOISON_MEMORY_REGION(allocated_cell, m_cell_size);
++            } else {
++                // Handle invalid cell pointer case
++                return nullptr;
++            }
+         }
+         return allocated_cell;
+     }
+diff --git a/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp b/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp
+index 1d7e74cee2..39f13d39f2 100644
+--- a/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp
++++ b/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp
+@@ -30,8 +30,15 @@ PrimitiveString::~PrimitiveString()
+ String const& PrimitiveString::string() const
+ {
+     if (!m_has_utf8_string) {
+-        m_utf8_string = utf16_string_view().to_utf8(Utf16View::AllowInvalidCodeUnits::Yes);
+-        m_has_utf8_string = true;
++        // Ensure utf16_string_view() is valid before converting
++        if (!m_utf16_string.is_empty()) {
++            m_utf8_string = utf16_string_view().to_utf8(Utf16View::AllowInvalidCodeUnits::Yes);
++            m_has_utf8_string = true;
++        } else {
++            // Handle the case where the UTF-16 string is invalid
++            static String empty_string;
++            return empty_string;
++        }
+     }
+     return m_utf8_string;
+ }

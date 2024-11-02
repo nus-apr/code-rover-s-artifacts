@@ -1,0 +1,17 @@
+diff --git a/wolfmqtt/src/mqtt_client.c b/wolfmqtt/src/mqtt_client.c
+index 2821de4..6c1fc4f 100644
+--- a/wolfmqtt/src/mqtt_client.c
++++ b/wolfmqtt/src/mqtt_client.c
+@@ -400,7 +400,11 @@ static int MqttClient_DecodePacket(MqttClient* client, byte* rx_buf,
+         #ifdef WOLFMQTT_V5
+             p_subscribe_ack->protocol_level = client->protocol_level;
+         #endif
+-            rc = MqttDecode_SubscribeAck(rx_buf, rx_len, p_subscribe_ack);
++            if (rx_len >= sizeof(MqttSubscribeAck)) {
++                rc = MqttDecode_SubscribeAck(rx_buf, rx_len, p_subscribe_ack);
++            } else {
++                rc = -1; // Indicate an error due to insufficient buffer size
++            }
+             if (rc >= 0) {
+                 packet_id = p_subscribe_ack->packet_id;
+             #ifdef WOLFMQTT_V5

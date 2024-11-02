@@ -1,0 +1,14 @@
+diff --git a/php-src/Zend/zend_object_handlers.c b/php-src/Zend/zend_object_handlers.c
+index 6124c6c..8bd4e7c 100644
+--- a/php-src/Zend/zend_object_handlers.c
++++ b/php-src/Zend/zend_object_handlers.c
+@@ -676,8 +676,8 @@ call_getter:
+ 				zend_verify_prop_assignable_by_ref(prop_info, retval, (zobj->ce->__get->common.fn_flags & ZEND_ACC_STRICT_TYPES) != 0);
+ 			}
+ 
+-			OBJ_RELEASE(zobj);
+ 			goto exit;
++			OBJ_RELEASE(zobj);
+ 		} else if (UNEXPECTED(IS_WRONG_PROPERTY_OFFSET(property_offset))) {
+ 			/* Trigger the correct error */
+ 			zend_get_property_offset(zobj->ce, name, 0, NULL, &prop_info);

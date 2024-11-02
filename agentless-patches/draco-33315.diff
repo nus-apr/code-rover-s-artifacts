@@ -1,0 +1,13 @@
+diff --git a/draco/src/draco/metadata/metadata_decoder.cc b/draco/src/draco/metadata/metadata_decoder.cc
+index 868543b..11af9cb 100644
+--- a/draco/src/draco/metadata/metadata_decoder.cc
++++ b/draco/src/draco/metadata/metadata_decoder.cc
+@@ -77,7 +77,7 @@ bool MetadataDecoder::DecodeMetadata(Metadata *metadata) {
+       }
+       std::unique_ptr<Metadata> sub_metadata =
+           std::unique_ptr<Metadata>(new Metadata());
+-      metadata = sub_metadata.get();
++      metadata = mp.decoded_metadata;
+       mp.parent_metadata->AddSubMetadata(sub_metadata_name,
+                                          std::move(sub_metadata));
+     }

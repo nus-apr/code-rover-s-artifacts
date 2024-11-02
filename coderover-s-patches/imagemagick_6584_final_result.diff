@@ -1,0 +1,31 @@
+diff --git a/MagickCore/draw.c b/MagickCore/draw.c
+index f0301ad5f..faf6f01ed 100644
+--- a/MagickCore/draw.c
++++ b/MagickCore/draw.c
+@@ -5352,7 +5352,11 @@ static void TraceBezier(PrimitiveInfo *primitive_info,
+   }
+   quantum=(size_t) MagickMin((double) quantum/number_coordinates,
+     (double) BezierQuantum);
++#define MAX_CONTROL_POINTS 10000  // Define a safe limit for control points
++
+   control_points=quantum*number_coordinates;
++  if (control_points > MAX_CONTROL_POINTS)  // Check against the safe limit
++    ThrowFatalException(ResourceLimitFatalError,"Exceeded maximum control points");
+   coefficients=(double *) AcquireQuantumMemory((size_t)
+     number_coordinates,sizeof(*coefficients));
+   points=(PointInfo *) AcquireQuantumMemory((size_t) control_points,
+@@ -5388,10 +5392,12 @@ static void TraceBezier(PrimitiveInfo *primitive_info,
+   p=primitive_info;
+   for (i=0; i < (ssize_t) control_points; i++)
+   {
+-    TracePoint(p,points[i]);
++    if ((p - primitive_info) < control_points)  // Ensure we do not exceed allocated space
++      TracePoint(p,points[i]);
+     p+=p->coordinates;
+   }
+-  TracePoint(p,end);
++  if ((p - primitive_info) < control_points)  // Ensure we do not exceed allocated space
++    TracePoint(p,end);
+   p+=p->coordinates;
+   primitive_info->coordinates=(size_t) (p-primitive_info);
+   for (i=0; i < (ssize_t) primitive_info->coordinates; i++)

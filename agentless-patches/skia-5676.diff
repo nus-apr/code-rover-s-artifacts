@@ -1,0 +1,13 @@
+diff --git a/skia/src/jumper/SkJumper_stages.cpp b/skia/src/jumper/SkJumper_stages.cpp
+index c6e9354..62061c1 100644
+--- a/skia/src/jumper/SkJumper_stages.cpp
++++ b/skia/src/jumper/SkJumper_stages.cpp
+@@ -1100,7 +1100,7 @@ SI void clip_color(F* r, F* g, F* b, F a) {
+       mx = max(*r, *g, *b),
+       l  = lum(*r, *g, *b);
+ 
+-    auto clip = [=](F c) {
++    auto clip = [&](F c) {
+         c = if_then_else(mn >= 0, c, l + (c - l) * (    l) / (l - mn)   );
+         c = if_then_else(mx >  a,    l + (c - l) * (a - l) / (mx - l), c);
+         c = max(c, 0);  // Sometimes without this we may dip just a little negative.

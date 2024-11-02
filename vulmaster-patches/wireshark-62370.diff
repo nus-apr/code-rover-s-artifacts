@@ -1,0 +1,15 @@
+diff --git a/epan/addr_and_mask.c b/epan/addr_and_mask.c
+index b776d85a87..ce31eee432 100644
+--- a/epan/addr_and_mask.c
++++ b/epan/addr_and_mask.c
+@@ -35,9 +35,7 @@ ip_get_subnet_mask(const guint32 mask_length)
+ 	};
+ 
+ 	ws_assert(mask_length <= 32);
+-
+-	return masks[mask_length];
+-}
++ { if ( 
+ 
+ /*
+  * These routines return the length of the address in bytes on success

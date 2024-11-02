@@ -1,0 +1,12 @@
+diff --git a/librawspeed/src/librawspeed/common/RawImage.cpp b/librawspeed/src/librawspeed/common/RawImage.cpp
+index 59babe5..57a2f99 100644
+--- a/librawspeed/src/librawspeed/common/RawImage.cpp
++++ b/librawspeed/src/librawspeed/common/RawImage.cpp
+@@ -98,6 +98,7 @@ void RawImageData::createData() {
+ #endif
+ 
+   data = alignedMallocArray<uchar8, alignment>(dim.y, pitch);
++  std::memset(data, 0, dim.y * pitch);  // Initialize the allocated memory to zero
+ 
+   if (!data)
+     ThrowRDE("Memory Allocation failed.");

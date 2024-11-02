@@ -1,0 +1,15 @@
+diff --git a/src/karchive_p.h b/src/karchive_p.h
+index 14a2e25..f03f12a 100644
+--- a/src/karchive_p.h
++++ b/src/karchive_p.h
+@@ -33,9 +33,7 @@ public:
+         : q(parent)
+         , rootDir(nullptr)
+         , saveFile(nullptr)
+-        , dev(nullptr)
+-        , fileName()
+-        , mode(QIODevice::NotOpen)
++ ( nullptr ), dev 
+         , deviceOwned(false)
+     {
+     }

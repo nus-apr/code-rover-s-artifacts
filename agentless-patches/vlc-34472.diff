@@ -1,0 +1,13 @@
+diff --git a/vlc/modules/demux/wav.c b/vlc/modules/demux/wav.c
+index 581f9ad..f842b42 100644
+--- a/vlc/modules/demux/wav.c
++++ b/vlc/modules/demux/wav.c
+@@ -355,7 +355,7 @@ static int ChunkParseFmt( demux_t *p_demux, uint32_t i_size )
+     }
+ 
+     /* load waveformatex */
+-    p_wf_ext = malloc( i_size );
++    p_wf_ext = malloc( i_size + sizeof(WAVEFORMATEX) + i_extended );
+     if( unlikely( !p_wf_ext ) )
+          goto error;
+ 

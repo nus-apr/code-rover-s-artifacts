@@ -1,0 +1,15 @@
+diff --git a/bfd/libbfd.c b/bfd/libbfd.c
+index 84fadb2..4fe08bf 100644
+--- a/bfd/libbfd.c
++++ b/bfd/libbfd.c
+@@ -752,9 +752,7 @@ bfd_uint64_t
+ bfd_getl64 (const void *p ATTRIBUTE_UNUSED)
+ {
+ #ifdef BFD_HOST_64_BIT
+-  const bfd_byte *addr = (const bfd_byte *) p;
+-  bfd_uint64_t v;
+-
++ <= 0. ) { pj_default_destructor ( P, PJD_ERR_H_LESS_THAN_ZERO ) ; return P ; } 
+   v  = addr[7]; v <<= 8;
+   v |= addr[6]; v <<= 8;
+   v |= addr[5]; v <<= 8;

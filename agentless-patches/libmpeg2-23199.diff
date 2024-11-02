@@ -1,0 +1,23 @@
+diff --git a/libmpeg2/common/ideint.c b/libmpeg2/common/ideint.c
+index 290f3b5..601643a 100644
+--- a/libmpeg2/common/ideint.c
++++ b/libmpeg2/common/ideint.c
+@@ -310,10 +310,10 @@ IDEINT_ERROR_T ideint_process(void *pv_ctxt,
+                     input_boundary = 1;
+ 
+                     if(((num_blks_x - 1) == col) && (ps_out_frm->ai4_wd[i] & 0x7))
+-                        blk_wd = (ps_out_frm->ai4_wd[i] & 0x7);
++                        blk_wd = ps_out_frm->ai4_wd[i] - (col << 3);
+ 
+                     if(((num_blks_y - 1) == row) && (ps_out_frm->ai4_ht[i] & 0x7))
+-                        blk_ht = (ps_out_frm->ai4_ht[i] & 0x7);
++                        blk_ht = ps_out_frm->ai4_ht[i] - (row << 3);
+ 
+                 }
+ 
+@@ -416,4 +416,4 @@ IDEINT_ERROR_T ideint_process(void *pv_ctxt,
+         }
+     }
+     return IDEINT_ERROR_NONE;
+-}
++}

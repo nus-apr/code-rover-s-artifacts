@@ -1,0 +1,34 @@
+diff --git a/libyara/modules/elf.c b/libyara/modules/elf.c
+index 7b504b84..ec42680a 100644
+--- a/libyara/modules/elf.c
++++ b/libyara/modules/elf.c
+@@ -85,6 +85,10 @@ static const char* str_table_entry(const char* str_table_base,
+                                    const char* str_table_limit,
+                                    int index) {
+   size_t len;
++  // Ensure index is non-negative and within the bounds of the string table
++  if (index < 0 || str_table_base + index >= str_table_limit)
++    return NULL;
++
+   const char* str_entry = str_table_base + index;
+ 
+   // The first entry in the string table must be a null character, if not the
+@@ -92,16 +96,10 @@ static const char* str_table_entry(const char* str_table_base,
+   if (*str_table_base != '\0')
+     return NULL;
+ 
+-  if (index < 0)
+-    return NULL;
+-
+-  if (str_entry >= str_table_limit)
+-    return NULL;
+-
+   len = strnlen(str_entry, str_table_limit - str_entry);
+ 
+-  // Entry is clamped by extent of string table, not null-terminated.
+-  if (str_entry + len == str_table_limit)
++  // Ensure that str_entry + len does not exceed str_table_limit
++  if (str_entry + len >= str_table_limit)
+     return NULL;
+ 
+   return str_entry;

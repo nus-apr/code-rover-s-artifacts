@@ -1,0 +1,13 @@
+diff --git a/skia/third_party/externals/piex/src/tiff_parser.cc b/skia/third_party/externals/piex/src/tiff_parser.cc
+index 9bb03fa..fe8583c 100644
+--- a/skia/third_party/externals/piex/src/tiff_parser.cc
++++ b/skia/third_party/externals/piex/src/tiff_parser.cc
+@@ -599,7 +599,7 @@ bool GetFullCropDimension(const tiff_directory::TiffDirectory& tiff_directory,
+   if (tiff_directory.Has(kExifTagDefaultCropSize)) {
+     std::vector<std::uint32_t> crop(2);
+     std::vector<Rational> crop_rational(2);
+-    if (tiff_directory.Get(kExifTagDefaultCropSize, &crop)) {
++    if (tiff_directory.Get(kExifTagDefaultCropSize, &crop) && crop.size() >= 2) {
+       *width = crop[0];
+       *height = crop[1];
+     } else if (tiff_directory.Get(kExifTagDefaultCropSize, &crop_rational) &&

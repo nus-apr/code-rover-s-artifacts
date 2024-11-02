@@ -1,0 +1,38 @@
+diff --git a/lib/compress/zstd_compress.c b/lib/compress/zstd_compress.c
+index 4c2254ab..f9267700 100644
+--- a/lib/compress/zstd_compress.c
++++ b/lib/compress/zstd_compress.c
+@@ -963,8 +963,8 @@ static size_t ZSTD_resetCCtx_internal(ZSTD_CCtx* zc,
+         zc->seqStore.llCode = (BYTE*) ptr;
+         zc->seqStore.mlCode = zc->seqStore.llCode + maxNbSeq;
+         zc->seqStore.ofCode = zc->seqStore.mlCode + maxNbSeq;
+-        zc->seqStore.litStart = zc->seqStore.ofCode + maxNbSeq;
+-        ptr = zc->seqStore.litStart + blockSize;
++    zc->seqStore.litStart = zc->seqStore.ofCode + maxNbSeq;
++    ptr = zc->seqStore.litStart + blockSize; // Ensure enough space for literals
+ 
+         /* ldm bucketOffsets table */
+         if (params.ldmParams.enableLdm) {
+@@ -1565,8 +1565,12 @@ ZSTD_blockCompressor ZSTD_selectBlockCompressor(ZSTD_strategy strat, int extDict
+ }
+ 
+ static void ZSTD_storeLastLiterals(seqStore_t* seqStorePtr,
+-                                   const BYTE* anchor, size_t lastLLSize)
++                                   const BYTE* anchor, size_t lastLLSize, size_t blockSize)
+ {
++    size_t availableSpace = (seqStorePtr->litStart + blockSize) - seqStorePtr->lit;
++    if (lastLLSize > availableSpace) {
++        lastLLSize = availableSpace; // Limit to available space to prevent overflow
++    }
+     memcpy(seqStorePtr->lit, anchor, lastLLSize);
+     seqStorePtr->lit += lastLLSize;
+ }
+@@ -1593,7 +1597,7 @@ static size_t ZSTD_compressBlock_internal(ZSTD_CCtx* zc, void* dst, size_t dstCa
+ 
+     /* Last literals */
+     anchor = (const BYTE*)src + srcSize - lastLLSize;
+-    ZSTD_storeLastLiterals(&zc->seqStore, anchor, lastLLSize);
++    ZSTD_storeLastLiterals(&zc->seqStore, anchor, lastLLSize, zc->blockSize);
+ 
+     return ZSTD_compressSequences(&zc->seqStore, zc->entropy, &zc->appliedParams.cParams, dst, dstCapacity, srcSize);
+ }

@@ -1,0 +1,15 @@
+diff --git a/include/fluent-bit/flb_mem.h b/include/fluent-bit/flb_mem.h
+index 23f419821..41767f5ac 100644
+--- a/include/fluent-bit/flb_mem.h
++++ b/include/fluent-bit/flb_mem.h
+@@ -51,9 +51,7 @@
+     #define ALLOCSZ_ATTR(x,...)
+ #endif
+ 
+-static inline ALLOCSZ_ATTR(1)
+-void *flb_malloc(const size_t size) {
+-    void *aux;
++ MAT_ACC_RDONLY ) { fp = fopen_safe ( matname, "rb", fp ) ; 
+ 
+     if (size == 0) {
+         return NULL;

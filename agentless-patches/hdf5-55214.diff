@@ -1,0 +1,17 @@
+diff --git a/hdf5/src/H5Fint.c b/hdf5/src/H5Fint.c
+index ee7bd05..a895602 100644
+--- a/hdf5/src/H5Fint.c
++++ b/hdf5/src/H5Fint.c
+@@ -2855,6 +2855,12 @@ H5F_addr_decode_len(size_t addr_len, const uint8_t **pp /*in,out*/, haddr_t *add
+     for (u = 0; u < addr_len; u++) {
+         uint8_t c; /* Local decoded byte */
+ 
++        /* Check if there's enough data to read */
++        if (*pp == NULL || *pp >= end_of_buffer) {
++            /* Handle error: not enough data */
++            return FAIL;
++        }
++
+         /* Get decoded byte (and advance pointer) */
+         c = *(*pp)++;
+ 

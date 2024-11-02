@@ -1,0 +1,16 @@
+diff --git a/assimp/code/AssetLib/NDO/NDOLoader.cpp b/assimp/code/AssetLib/NDO/NDOLoader.cpp
+index 9d03881..a6884d6 100644
+--- a/assimp/code/AssetLib/NDO/NDOLoader.cpp
++++ b/assimp/code/AssetLib/NDO/NDOLoader.cpp
+@@ -162,6 +162,11 @@ void NDOImporter::InternReadFile( const std::string& pFile,
+         head = (const char*)reader.GetPtr();
+         reader.IncPtr(temp + 76); /* skip unknown stuff */
+ 
++        // Ensure temp does not exceed the remaining data size
++        size_t remainingDataSize = reader.GetRemainingSize();
++        if (temp > remainingDataSize) {
++            throw std::runtime_error("Invalid string length");
++        }
+         obj.name = std::string(head, temp);
+ 
+         // read edge table

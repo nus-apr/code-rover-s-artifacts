@@ -1,0 +1,13 @@
+diff --git a/lwan/src/lib/lwan-request.c b/lwan/src/lib/lwan-request.c
+index ce0a954..ad4e1b0 100644
+--- a/lwan/src/lib/lwan-request.c
++++ b/lwan/src/lib/lwan-request.c
+@@ -230,7 +230,7 @@ static char *parse_proxy_protocol_v2(struct lwan_request *request, char *buffer)
+     enum { LOCAL = 0x20, PROXY = 0x21, TCP4 = 0x11, TCP6 = 0x21 };
+ 
+     size = proto_signature_length + (unsigned int)ntohs(hdr->len);
+-    if (UNLIKELY(size > (unsigned int)sizeof(*hdr)))
++    if (UNLIKELY(size < proto_signature_length || size > (unsigned int)sizeof(*hdr)))
+         return NULL;
+ 
+     if (LIKELY(hdr->cmd_ver == PROXY)) {

@@ -1,0 +1,29 @@
+diff --git a/libhevc/decoder/ihevcd_parse_slice.c b/libhevc/decoder/ihevcd_parse_slice.c
+index 10449d8..494150c 100644
+--- a/libhevc/decoder/ihevcd_parse_slice.c
++++ b/libhevc/decoder/ihevcd_parse_slice.c
+@@ -2395,7 +2395,8 @@ IHEVCD_ERROR_T ihevcd_parse_slice_data(codec_t *ps_codec)
+ 
+         if(ps_slice_hdr->i1_num_ref_idx_l1_active != 0)
+         {
+-            for(i = 0; i < ps_slice_hdr->i1_num_ref_idx_l1_active; i++)
++            int max_ref_idx_l1 = sizeof(ps_mv_buf->ai4_l1_collocated_poc[0]) / sizeof(ps_mv_buf->ai4_l1_collocated_poc[0][0]);
++            for(i = 0; i < ps_slice_hdr->i1_num_ref_idx_l1_active && i < max_ref_idx_l1; i++)
+             {
+                 ps_mv_buf->ai4_l1_collocated_poc[(ps_codec->s_parse.i4_cur_slice_idx & (MAX_SLICE_HDR_CNT - 1))][i] = ((pic_buf_t *)ps_slice_hdr->as_ref_pic_list1[i].pv_pic_buf)->i4_abs_poc;
+                 ps_mv_buf->ai1_l1_collocated_poc_lt[(ps_codec->s_parse.i4_cur_slice_idx & (MAX_SLICE_HDR_CNT - 1))][i] = ((pic_buf_t *)ps_slice_hdr->as_ref_pic_list1[i].pv_pic_buf)->u1_used_as_ref;
+@@ -2404,7 +2405,8 @@ IHEVCD_ERROR_T ihevcd_parse_slice_data(codec_t *ps_codec)
+ 
+         if(ps_slice_hdr->i1_num_ref_idx_l0_active != 0)
+         {
+-            for(i = 0; i < ps_slice_hdr->i1_num_ref_idx_l0_active; i++)
++            int max_ref_idx_l0 = sizeof(ps_mv_buf->ai4_l0_collocated_poc[0]) / sizeof(ps_mv_buf->ai4_l0_collocated_poc[0][0]);
++            for(i = 0; i < ps_slice_hdr->i1_num_ref_idx_l0_active && i < max_ref_idx_l0; i++)
+             {
+                 ps_mv_buf->ai4_l0_collocated_poc[(ps_codec->s_parse.i4_cur_slice_idx & (MAX_SLICE_HDR_CNT - 1))][i] = ((pic_buf_t *)ps_slice_hdr->as_ref_pic_list0[i].pv_pic_buf)->i4_abs_poc;
+                 ps_mv_buf->ai1_l0_collocated_poc_lt[(ps_codec->s_parse.i4_cur_slice_idx & (MAX_SLICE_HDR_CNT - 1))][i] = ((pic_buf_t *)ps_slice_hdr->as_ref_pic_list0[i].pv_pic_buf)->u1_used_as_ref;
+@@ -3508,4 +3510,3 @@ IHEVCD_ERROR_T ihevcd_parse_slice_data(codec_t *ps_codec)
+ 
+ 
+ 
+-

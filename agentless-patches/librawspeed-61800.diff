@@ -1,0 +1,29 @@
+diff --git a/librawspeed/src/librawspeed/decoders/DngDecoder.cpp b/librawspeed/src/librawspeed/decoders/DngDecoder.cpp
+index 7a3b577..d84e6b3 100644
+--- a/librawspeed/src/librawspeed/decoders/DngDecoder.cpp
++++ b/librawspeed/src/librawspeed/decoders/DngDecoder.cpp
+@@ -273,15 +273,17 @@ void DngDecoder::parseColorMatrix() const {
+ 
+   const auto srat_vals = mat->getSRationalArray(mat->count);
+   bool Success = true;
+-  mRaw->metadata.colorMatrix.reserve(mat->count);
+-  for (const auto& val : srat_vals) {
+-    Success &= val.den != 0;
++  if (mat->count >= 9) {
++    mRaw->metadata.colorMatrix.reserve(mat->count);
++    for (const auto& val : srat_vals) {
++      Success &= val.den != 0;
++      if (!Success)
++        break;
++      mRaw->metadata.colorMatrix.emplace_back(val);
++    }
+     if (!Success)
+-      break;
+-    mRaw->metadata.colorMatrix.emplace_back(val);
++      mRaw->metadata.colorMatrix.clear();
+   }
+-  if (!Success)
+-    mRaw->metadata.colorMatrix.clear();
+ }
+ 
+ DngTilingDescription

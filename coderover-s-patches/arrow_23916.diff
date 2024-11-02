@@ -1,0 +1,16 @@
+diff --git a/cpp/src/arrow/array/concatenate.cc b/cpp/src/arrow/array/concatenate.cc
+index bcb7843d9..b59def2e3 100644
+--- a/cpp/src/arrow/array/concatenate.cc
++++ b/cpp/src/arrow/array/concatenate.cc
+@@ -135,6 +135,11 @@ static Status PutOffsets(const std::shared_ptr<Buffer>& src, Offset first_offset
+   auto src_begin = reinterpret_cast<const Offset*>(src->data());
+   auto src_end = reinterpret_cast<const Offset*>(src->data() + src->size());
+ 
++  // Ensure the buffer has at least one element
++  if (src->size() < sizeof(Offset)) {
++    return Status::Invalid("source buffer is too small to contain offsets");
++  }
++
+   // Compute the range of values which is spanned by this range of offsets
+   values_range->offset = src_begin[0];
+   values_range->length = *src_end - values_range->offset;

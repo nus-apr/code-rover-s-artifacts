@@ -1,0 +1,13 @@
+diff --git a/arrow/cpp/src/arrow/array/concatenate.cc b/arrow/cpp/src/arrow/array/concatenate.cc
+index 9128dbc..08430f8 100644
+--- a/arrow/cpp/src/arrow/array/concatenate.cc
++++ b/arrow/cpp/src/arrow/array/concatenate.cc
+@@ -137,7 +137,7 @@ static Status PutOffsets(const std::shared_ptr<Buffer>& src, Offset first_offset
+ 
+   // Compute the range of values which is spanned by this range of offsets
+   values_range->offset = src_begin[0];
+-  values_range->length = *src_end - values_range->offset;
++  values_range->length = src_end[-1] - values_range->offset;
+   if (first_offset > std::numeric_limits<Offset>::max() - values_range->length) {
+     return Status::Invalid("offset overflow while concatenating arrays");
+   }

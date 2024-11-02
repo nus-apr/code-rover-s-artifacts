@@ -1,0 +1,90 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2186050992
+INFO: Loaded 1 modules   (7958 inline 8-bit counters): 7958 [0x836fdb0, 0x8371cc6), 
+INFO: Loaded 1 PC tables (7958 PCs): 7958 [0x8313214,0x8322ac4), 
+/out/avc_dec_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0xf4801e04 at pc 0x08282aff bp 0xee9fe248 sp 0xee9fe240
+READ of size 4 at 0xf4801e04 thread T24
+SCARINESS: 17 (4-byte-read-heap-buffer-overflow)
+    #0 0x8282afe in ih264d_decode_slice_thread /src/libavc/decoder/ih264d_thread_parse_decode.c:497:57
+    #1 0x8282edd in ih264d_decode_picture_thread /src/libavc/decoder/ih264d_thread_parse_decode.c:602:9
+    #2 0x8181012 in __asan::AsanThread::ThreadStart(unsigned long long, __sanitizer::atomic_uintptr_t*) /src/llvm-project/compiler-rt/lib/asan/asan_thread.cpp:273:25
+    #3 0x815e617 in asan_thread_start(void*) /src/llvm-project/compiler-rt/lib/asan/asan_interceptors.cpp:205:13
+    #4 0xf6806269 in start_thread /build/glibc-S7Ft5T/glibc-2.23/nptl/pthread_create.c:333
+    #5 0xf670552d in clone (/lib32/libc.so.6+0xe552d)
+
+DEDUP_TOKEN: ih264d_decode_slice_thread--ih264d_decode_picture_thread--__asan::AsanThread::ThreadStart(unsigned long long, __sanitizer::atomic_uintptr_t*)
+0xf4801e04 is located 4 bytes to the right of 3456-byte region [0xf4801080,0xf4801e00)
+allocated by thread T0 here:
+    #0 0x8175f0c in posix_memalign /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:226:3
+    #1 0x81abb73 in iv_aligned_malloc(void*, int, int) /src/libavc/fuzzer/avc_dec_fuzzer.cpp:63:12
+    #2 0x823f3c2 in ih264d_allocate_dynamic_bufs /src/libavc/decoder/ih264d_utils.c:2086:14
+    #3 0x823d4f6 in ih264d_init_pic /src/libavc/decoder/ih264d_utils.c:873:15
+    #4 0x825a8b7 in ih264d_start_of_pic /src/libavc/decoder/ih264d_parse_slice.c:341:11
+    #5 0x820c4fe in ih264d_mark_err_slice_skip /src/libavc/decoder/ih264d_parse_pslice.c:1530:23
+    #6 0x826105b in ih264d_parse_decode_slice /src/libavc/decoder/ih264d_parse_slice.c:1402:15
+    #7 0x822e472 in ih264d_parse_nal_unit /src/libavc/decoder/ih264d_parse_headers.c:1287:40
+    #8 0x81b60c5 in ih264d_video_decode /src/libavc/decoder/ih264d_api.c:2370:15
+    #9 0x81bf892 in ih264d_api_function /src/libavc/decoder/ih264d_api.c:4169:26
+    #10 0x81adfc3 in Codec::decodeFrame(unsigned char const*, unsigned int, unsigned int*) /src/libavc/fuzzer/avc_dec_fuzzer.cpp:313:9
+    #11 0x81ae93b in LLVMFuzzerTestOneInput /src/libavc/fuzzer/avc_dec_fuzzer.cpp:362:18
+    #12 0x80a73d1 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #13 0x8091a4e in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #14 0x809797b in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #15 0x80c1087 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #16 0xf6638646 in __libc_start_main (/lib32/libc.so.6+0x18646)
+
+DEDUP_TOKEN: posix_memalign--iv_aligned_malloc(void*, int, int)--ih264d_allocate_dynamic_bufs
+Thread T24 created by T0 here:
+    #0 0x815e50c in pthread_create /src/llvm-project/compiler-rt/lib/asan/asan_interceptors.cpp:214:3
+    #1 0x81fd8bc in ithread_create /src/libavc/common/ithread.c:80:12
+    #2 0x820d87a in ih264d_mark_err_slice_skip /src/libavc/decoder/ih264d_parse_pslice.c:1563:21
+    #3 0x826105b in ih264d_parse_decode_slice /src/libavc/decoder/ih264d_parse_slice.c:1402:15
+    #4 0x822e472 in ih264d_parse_nal_unit /src/libavc/decoder/ih264d_parse_headers.c:1287:40
+    #5 0x81b60c5 in ih264d_video_decode /src/libavc/decoder/ih264d_api.c:2370:15
+    #6 0x81bf892 in ih264d_api_function /src/libavc/decoder/ih264d_api.c:4169:26
+    #7 0x81adfc3 in Codec::decodeFrame(unsigned char const*, unsigned int, unsigned int*) /src/libavc/fuzzer/avc_dec_fuzzer.cpp:313:9
+    #8 0x81ae93b in LLVMFuzzerTestOneInput /src/libavc/fuzzer/avc_dec_fuzzer.cpp:362:18
+    #9 0x80a73d1 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #10 0x8091a4e in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #11 0x809797b in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #12 0x80c1087 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #13 0xf6638646 in __libc_start_main (/lib32/libc.so.6+0x18646)
+
+DEDUP_TOKEN: pthread_create--ithread_create--ih264d_mark_err_slice_skip
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/libavc/decoder/ih264d_thread_parse_decode.c:497:57 in ih264d_decode_slice_thread
+Shadow bytes around the buggy address:
+  0x3e900370: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3e900380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3e900390: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3e9003a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3e9003b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x3e9003c0:[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e9003d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e9003e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e9003f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e900400: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3e900410: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

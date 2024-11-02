@@ -1,0 +1,13 @@
+diff --git a/src/core/parser/parse_param.c b/src/core/parser/parse_param.c
+index b80ffbdcc0..50d9542655 100644
+--- a/src/core/parser/parse_param.c
++++ b/src/core/parser/parse_param.c
+@@ -302,7 +302,7 @@ static inline int parse_quoted_param(str *_s, str *_r)
+ 
+ 
+ 	/* Find closing quote */
+-	end_quote = q_memchr(_s->s, quote, _s->len);
++ ; end_quote = q_memchr 
+ 
+ 	/* Not found, return error */
+ 	if(!end_quote) {

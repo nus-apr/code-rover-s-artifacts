@@ -1,0 +1,31 @@
+diff --git a/src/kar.cpp b/src/kar.cpp
+index 4960c84..0345422 100644
+--- a/src/kar.cpp
++++ b/src/kar.cpp
+@@ -154,13 +154,19 @@ bool KAr::openArchive(QIODevice::OpenMode mode)
+                 skip_entry = true;
+             } else { // Longfilename
+                 //qCDebug(KArchiveLog) << "Longfilename #" << name.mid(1, 15).toInt();
+-                if (! ar_longnames) {
+-                    setErrorString(tr("Invalid longfilename reference"));
+-                    delete[] ar_longnames;
+-                    return false;
+-                }
+-                name = &ar_longnames[name.mid(1, 15).toInt()];
+-                name = name.left(name.indexOf("/"));
++                 if (! ar_longnames) {
++                     setErrorString(tr("Invalid longfilename reference"));
++                     delete[] ar_longnames;
++                     return false;
++                 }
++                 int index = name.mid(1, 15).toInt();
++                 if (index < 0 || index >= size) {
++                     setErrorString(tr("Longfilename index out of bounds"));
++                     delete[] ar_longnames;
++                     return false;
++                 }
++                 name = &ar_longnames[index];
++                 name = name.left(name.indexOf("/"));
+             }
+         }
+         if (skip_entry) {

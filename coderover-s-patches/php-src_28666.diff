@@ -1,0 +1,28 @@
+diff --git a/ext/standard/array.c b/ext/standard/array.c
+index d20e797781..3172122305 100644
+--- a/ext/standard/array.c
++++ b/ext/standard/array.c
+@@ -2808,10 +2808,20 @@ PHP_FUNCTION(range)
+ 			} ZEND_HASH_FILL_END();
+ 		} else if (high > low) {	/* Positive Steps */
+ 			if (lstep <= 0) {
+-				err = 1;
+-				goto err;
++				zend_value_error("Step must be a positive non-zero value");
++				RETURN_THROWS();
++			}
++			if ((high - low) < lstep) {
++				zend_value_error("Invalid range: step is too large for the given range");
++				RETURN_THROWS();
++			}
++			uint32_t size = (uint32_t)(((high - low) / lstep) + 1);
++			if (size > 0 && size < HT_MAX_SIZE) {
++				array_init_size(return_value, size);
++			} else {
++				zend_value_error("Calculated size is out of bounds");
++				RETURN_THROWS();
+ 			}
+-			array_init_size(return_value, (uint32_t)(((high - low) / lstep) + 1));
+ 			zend_hash_real_init_packed(Z_ARRVAL_P(return_value));
+ 			ZEND_HASH_FILL_PACKED(Z_ARRVAL_P(return_value)) {
+ 				for (; low <= high; low += (unsigned int)lstep) {

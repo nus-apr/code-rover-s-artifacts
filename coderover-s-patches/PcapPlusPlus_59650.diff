@@ -1,0 +1,37 @@
+diff --git a/Packet++/header/IPv4Layer.h b/Packet++/header/IPv4Layer.h
+index 0040c214..9cbc1ab4 100644
+--- a/Packet++/header/IPv4Layer.h
++++ b/Packet++/header/IPv4Layer.h
+@@ -488,7 +488,14 @@ namespace pcpp
+ 		 * Get the destination IP address in the form of IPv4Address
+ 		 * @return An IPv4Address containing the destination address
+ 		 */
+-		IPv4Address getDstIPv4Address() const { return getIPv4Header()->ipDst; }
++		IPv4Address getDstIPv4Address() const {
++			iphdr* header = getIPv4Header();
++			if (header == nullptr) {
++				// Handle error or return a default value
++				return IPv4Address(); // Assuming IPv4Address has a default constructor
++			}
++			return header->ipDst;
++		}
+ 
+ 		/**
+ 		 * Set the dest IP address
+diff --git a/Packet++/src/RawPacket.cpp b/Packet++/src/RawPacket.cpp
+index a70faf75..f7b565af 100644
+--- a/Packet++/src/RawPacket.cpp
++++ b/Packet++/src/RawPacket.cpp
+@@ -104,6 +104,12 @@ bool RawPacket::setRawData(const uint8_t* pRawData, int rawDataLen, timespec tim
+ 		delete[] m_RawData;
+ 	}
+ 
++	if (rawDataLen > m_RawDataLen) // Use m_RawDataLen to ensure bounds
++	{
++		PCPP_LOG_ERROR("Raw data length exceeds current buffer size");
++		return false;
++	}
++
+ 	m_RawData = (uint8_t*)pRawData;
+ 	m_RawDataLen = rawDataLen;
+ 	m_TimeStamp = timestamp;

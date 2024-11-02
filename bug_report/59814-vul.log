@@ -1,0 +1,71 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2260572162
+INFO: Loaded 1 modules   (21109 inline 8-bit counters): 21109 [0x85f6af8, 0x85fbd6d), 
+INFO: Loaded 1 PC tables (21109 PCs): 21109 [0x85fbd70,0x8625118), 
+/out/color_conversion_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0xe7cff7ef at pc 0x081bb2d4 bp 0xffc98e68 sp 0xffc98a50
+WRITE of size 131080 at 0xe7cff7ef thread T0
+SCARINESS: 45 (multi-byte-write-heap-buffer-overflow)
+    #0 0x81bb2d3 in __asan_memcpy /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3
+    #1 0x82063bf in StreamReader_memory::read(void*, unsigned int) /src/libheif/libheif/bitstream.cc:108:3
+    #2 0x82044e2 in read_plane_interleaved(BitstreamRange*, std::__1::shared_ptr<HeifPixelImage>, heif_channel, int, int, int, int) /src/libheif/fuzzing/color_conversion_fuzzer.cc:101:5
+    #3 0x81fff9f in test(unsigned char const*, unsigned int) /src/libheif/fuzzing/color_conversion_fuzzer.cc:212:16
+    #4 0x81fff9f in LLVMFuzzerTestOneInput /src/libheif/fuzzing/color_conversion_fuzzer.cc:272:16
+    #5 0x80c045e in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #6 0x80ab3be in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #7 0x80b0fc0 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #8 0x80daba7 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #9 0xe8eeeed4 in __libc_start_main (/lib32/libc.so.6+0x1aed4) (BuildId: d56935956a210bf85f6592f3178b979ad4f7b35f)
+    #10 0x80a2505 in _start (/out/color_conversion_fuzzer+0x80a2505)
+
+DEDUP_TOKEN: __asan_memcpy--StreamReader_memory::read(void*, unsigned int)--read_plane_interleaved(BitstreamRange*, std::__1::shared_ptr<HeifPixelImage>, heif_channel, int, int, int, int)
+0xe7cff7ef is located 0 bytes to the right of 786415-byte region [0xe7c3f800,0xe7cff7ef)
+allocated by thread T0 here:
+    #0 0x81fcf79 in operator new[](unsigned int) /src/llvm-project/compiler-rt/lib/asan/asan_new_delete.cpp:98:3
+    #1 0x8310b17 in HeifPixelImage::ImagePlane::alloc(int, int, int, heif_chroma) /src/libheif/libheif/pixelimage.cc:194:21
+    #2 0x83102da in HeifPixelImage::add_plane(heif_channel, int, int, int) /src/libheif/libheif/pixelimage.cc:147:13
+    #3 0x8204314 in read_plane_interleaved(BitstreamRange*, std::__1::shared_ptr<HeifPixelImage>, heif_channel, int, int, int, int) /src/libheif/fuzzing/color_conversion_fuzzer.cc:93:15
+    #4 0x81fff9f in test(unsigned char const*, unsigned int) /src/libheif/fuzzing/color_conversion_fuzzer.cc:212:16
+    #5 0x81fff9f in LLVMFuzzerTestOneInput /src/libheif/fuzzing/color_conversion_fuzzer.cc:272:16
+    #6 0x80c045e in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #7 0x80ab3be in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #8 0x80b0fc0 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #9 0x80daba7 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #10 0xe8eeeed4 in __libc_start_main (/lib32/libc.so.6+0x1aed4) (BuildId: d56935956a210bf85f6592f3178b979ad4f7b35f)
+
+DEDUP_TOKEN: operator new[](unsigned int)--HeifPixelImage::ImagePlane::alloc(int, int, int, heif_chroma)--HeifPixelImage::add_plane(heif_channel, int, int, int)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3 in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x3cf9fea0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3cf9feb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3cf9fec0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3cf9fed0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x3cf9fee0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x3cf9fef0: 00 00 00 00 00 00 00 00 00 00 00 00 00[07]fa fa
+  0x3cf9ff00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3cf9ff10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3cf9ff20: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3cf9ff30: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x3cf9ff40: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

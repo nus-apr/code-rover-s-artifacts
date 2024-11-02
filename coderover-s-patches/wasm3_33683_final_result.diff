@@ -1,0 +1,24 @@
+diff --git a/source/m3_compile.c b/source/m3_compile.c
+index 835a9a4..5811ddd 100644
+--- a/source/m3_compile.c
++++ b/source/m3_compile.c
+@@ -242,8 +242,8 @@ void  MarkSlotAllocated  (IM3Compilation o, u16 i_slot)
+ 
+ void  MarkSlotsAllocated  (IM3Compilation o, u16 i_slot, u16 i_numSlots)
+ {
+-    while (i_numSlots--)
+-        MarkSlotAllocated (o, i_slot++);
++    for (u16 j = 0; j < i_numSlots && i_slot + j < o->maxStackSlots; ++j)
++        MarkSlotAllocated (o, i_slot + j);
+ }
+ 
+ void  MarkSlotsAllocatedByType  (IM3Compilation o, u16 i_slot, u8 i_type)
+@@ -265,7 +265,7 @@ M3Result  AllocateSlotsWithinRange  (IM3Compilation o, u16 * o_slot, u8 i_type,
+ 
+     // search for 1 or 2 consecutive slots in the execution stack
+     u16 i = i_startSlot;
+-    while (i + searchOffset < i_endSlot)
++    while (i + searchOffset < i_endSlot && i < o->maxStackSlots)
+     {
+         if (o->m3Slots [i] == 0 and o->m3Slots [i + searchOffset] == 0)
+         {

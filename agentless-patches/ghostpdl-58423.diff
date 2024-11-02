@@ -1,0 +1,12 @@
+diff --git a/ghostpdl/base/gscspace.c b/ghostpdl/base/gscspace.c
+index d9a539f..681afdb 100644
+--- a/ghostpdl/base/gscspace.c
++++ b/ghostpdl/base/gscspace.c
+@@ -103,6 +103,7 @@ gs_cspace_final(const gs_memory_t *cmem, void *vptr)
+     if (pcs->interpreter_free_cspace_proc != NULL) {
+         (*pcs->interpreter_free_cspace_proc) ((gs_memory_t *)cmem, pcs);
+         pcs->interpreter_free_cspace_proc = NULL;
++        pcs->interpreter_data = NULL; // Ensure interpreter data is also cleared
+     }
+     if (pcs->type->final)
+         pcs->type->final(pcs);

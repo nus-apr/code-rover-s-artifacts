@@ -1,0 +1,15 @@
+diff --git a/src/libespeak-ng/encoding.c b/src/libespeak-ng/encoding.c
+index 3ae221d2..fd6cd998 100644
+--- a/src/libespeak-ng/encoding.c
++++ b/src/libespeak-ng/encoding.c
+@@ -536,6 +536,10 @@ string_decoder_getc_codepage(espeak_ng_TEXT_DECODER *decoder)
+ static uint32_t
+ string_decoder_getc_utf_8(espeak_ng_TEXT_DECODER *decoder)
+ {
++	if (decoder->current >= decoder->end) {
++		decoder->current = decoder->end;
++		return 0xFFFD; // Return a special value indicating end of buffer
++	}
+ 	uint8_t  c = *decoder->current++;
+ 	uint32_t ret;
+ 	switch (c & 0xF0)

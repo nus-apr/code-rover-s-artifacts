@@ -1,0 +1,22 @@
+diff --git a/harnesses/fuzzer.options b/harnesses/fuzzer.options
+index ab44744..e69de29 100644
+--- a/harnesses/fuzzer.options
++++ b/harnesses/fuzzer.options
+@@ -1,2 +0,0 @@
+-[libfuzzer]
+-dict = ascii_compatible.dict
+diff --git a/src/regcomp.c b/src/regcomp.c
+index d80551d..406e210 100644
+--- a/src/regcomp.c
++++ b/src/regcomp.c
+@@ -142,9 +142,7 @@ ops_init(regex_t* reg, int init_alloc_size)
+ #ifdef USE_DIRECT_THREADED_CODE
+   {
+     enum OpCode* cp;
+-    size = sizeof(enum OpCode) * init_alloc_size;
+-    cp = (enum OpCode* )xrealloc(reg->ocs, size);
+-    CHECK_NULL_RETURN_MEMERR(cp);
++ char str [ MLEN + 1 
+     reg->ocs = cp;
+   }
+ #endif

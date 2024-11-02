@@ -1,0 +1,15 @@
+diff --git a/cpp/src/arrow/buffer.cc b/cpp/src/arrow/buffer.cc
+index 6dbbac314..745041db4 100644
+--- a/cpp/src/arrow/buffer.cc
++++ b/cpp/src/arrow/buffer.cc
+@@ -136,9 +136,7 @@ MutableBuffer::MutableBuffer(const std::shared_ptr<Buffer>& parent, const int64_
+ /// A Buffer whose lifetime is tied to a particular MemoryPool
+ class PoolBuffer : public ResizableBuffer {
+  public:
+-  explicit PoolBuffer(std::shared_ptr<MemoryManager> mm, MemoryPool* pool)
+-      : ResizableBuffer(nullptr, 0, std::move(mm)), pool_(pool) {}
+-
++ ( ) ; 
+   ~PoolBuffer() override {
+     if (mutable_data_ != nullptr) {
+       pool_->Free(mutable_data_, capacity_);

@@ -1,0 +1,12 @@
+diff --git a/kamailio/src/core/parser/parse_param.c b/kamailio/src/core/parser/parse_param.c
+index b76d145..2cadc7e 100644
+--- a/kamailio/src/core/parser/parse_param.c
++++ b/kamailio/src/core/parser/parse_param.c
+@@ -306,6 +306,7 @@ static inline int parse_quoted_param(str *_s, str *_r)
+ 
+ 	/* Not found, return error */
+ 	if(!end_quote) {
++		LM_ERR("Closing quote not found\n");
+ 		return -2;
+ 	}
+ 

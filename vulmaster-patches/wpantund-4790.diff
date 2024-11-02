@@ -1,0 +1,15 @@
+diff --git a/src/wpantund/Pcap.cpp b/src/wpantund/Pcap.cpp
+index 84b5985..64a3896 100644
+--- a/src/wpantund/Pcap.cpp
++++ b/src/wpantund/Pcap.cpp
+@@ -152,9 +152,7 @@ PcapManager::PcapManager()
+ }
+ 
+ PcapManager::~PcapManager()
+-{
+-}
+-
++ { OPENSSL_PUT_ERROR ( ERR_R_MALLOC_FAILURE 
+ bool
+ PcapManager::is_enabled(void)
+ {

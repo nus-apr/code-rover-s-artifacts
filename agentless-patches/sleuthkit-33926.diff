@@ -1,0 +1,18 @@
+diff --git a/sleuthkit/tsk/fs/iso9660.c b/sleuthkit/tsk/fs/iso9660.c
+index d01052a..5483e43 100644
+--- a/sleuthkit/tsk/fs/iso9660.c
++++ b/sleuthkit/tsk/fs/iso9660.c
+@@ -607,10 +607,9 @@ iso9660_load_inodes_dir(TSK_FS_INFO * fs, TSK_OFF_T a_offs, int count,
+                 }
+ 
+                 // if no extension, remove the final '.'
+-                if (in_node->inode.fn[strlen(in_node->inode.fn) - 1] ==
+-                    '.')
+-                    in_node->inode.fn[strlen(in_node->inode.fn) - 1] =
+-                        '\0';
++                size_t fn_len = strlen(in_node->inode.fn);
++                if (fn_len > 0 && in_node->inode.fn[fn_len - 1] == '.')
++                    in_node->inode.fn[fn_len - 1] = '\0';
+                 
+                 
+                 if (strlen(in_node->inode.fn) == 0) {

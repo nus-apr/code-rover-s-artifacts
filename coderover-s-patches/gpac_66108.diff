@@ -1,0 +1,13 @@
+diff --git a/src/filters/reframe_mp3.c b/src/filters/reframe_mp3.c
+index f5a852d4d..b484ad029 100644
+--- a/src/filters/reframe_mp3.c
++++ b/src/filters/reframe_mp3.c
+@@ -639,7 +639,7 @@ restart:
+ 
+ 
+ 		//ready to send packet
+-		if (size + 1 < remain-bytes_skipped) {
++		if (size + 2 < remain-bytes_skipped) {
+ 			//make sure we are sync!
+ 			if (sync[size] !=0xFF) {
+ 				if ((sync[size]=='T') && (sync[size+1]=='A') && (sync[size+2]=='G')) {

@@ -1,0 +1,69 @@
+INFO: Seed: 2256814198
+INFO: Loaded 1 modules   (12037 inline 8-bit counters): 12037 [0xab8c20, 0xabbb25), 
+INFO: Loaded 1 PC tables (12037 PCs): 12037 [0xabbb28,0xaeab78), 
+/out/fuzz_process_packet: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==12==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x6070000000d2 at pc 0x0000004c0399 bp 0x7fffea761720 sp 0x7fffea760ec8
+READ of size 4 at 0x6070000000d2 thread T0
+SCARINESS: 17 (4-byte-read-heap-buffer-overflow)
+    #0 0x4c0398 in MemcmpInterceptorCommon(void*, int (*)(void const*, void const*, unsigned long), void const*, void const*, unsigned long) /src/llvm-project/compiler-rt/lib/asan/../sanitizer_common/sanitizer_common_interceptors.inc:839:7
+    #1 0x4c08ea in bcmp /src/llvm-project/compiler-rt/lib/asan/../sanitizer_common/sanitizer_common_interceptors.inc:885:10
+    #2 0x5c8a73 in check_ymsg /src/ndpi/src/lib/protocols/yahoo.c:78:9
+    #3 0x5c6662 in ndpi_search_yahoo_tcp /src/ndpi/src/lib/protocols/yahoo.c:98:11
+    #4 0x5c61d4 in ndpi_search_yahoo /src/ndpi/src/lib/protocols/yahoo.c:372:2
+    #5 0x564c91 in check_ndpi_tcp_flow_func /src/ndpi/src/lib/ndpi_main.c:4129:4
+    #6 0x56a384 in ndpi_detection_process_packet /src/ndpi/src/lib/ndpi_main.c:4879:3
+    #7 0x55453a in LLVMFuzzerTestOneInput /src/ndpi/fuzz/fuzz_process_packet.c:24:3
+    #8 0x45a011 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:556:15
+    #9 0x444b31 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #10 0x44a7ee in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:774:9
+    #11 0x474712 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #12 0x7e823d3ba83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #13 0x41dfa8 in _start (/out/fuzz_process_packet+0x41dfa8)
+
+DEDUP_TOKEN: MemcmpInterceptorCommon(void*, int (*)(void const*, void const*, unsigned long), void const*, void const*, unsigned long)--bcmp--check_ymsg
+0x6070000000d2 is located 0 bytes to the right of 66-byte region [0x607000000090,0x6070000000d2)
+allocated by thread T0 here:
+    #0 0x521bad in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:145:3
+    #1 0x432e17 in operator new(unsigned long) (/out/fuzz_process_packet+0x432e17)
+    #2 0x444b31 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #3 0x44a7ee in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:774:9
+    #4 0x474712 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #5 0x7e823d3ba83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: malloc--operator new(unsigned long)--fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/../sanitizer_common/sanitizer_common_interceptors.inc:839:7 in MemcmpInterceptorCommon(void*, int (*)(void const*, void const*, unsigned long), void const*, void const*, unsigned long)
+Shadow bytes around the buggy address:
+  0x0c0e7fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c0e7fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c0e7fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c0e7fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c0e7fff8000: fa fa fa fa 00 00 00 00 00 00 00 00 02 fa fa fa
+=>0x0c0e7fff8010: fa fa 00 00 00 00 00 00 00 00[02]fa fa fa fa fa
+  0x0c0e7fff8020: 00 00 00 00 00 00 00 00 00 fa fa fa fa fa 00 00
+  0x0c0e7fff8030: 00 00 00 00 00 00 00 fa fa fa fa fa 00 00 00 00
+  0x0c0e7fff8040: 00 00 00 00 00 fa fa fa fa fa 00 00 00 00 00 00
+  0x0c0e7fff8050: 00 00 00 fa fa fa fa fa fd fd fd fd fd fd fd fd
+  0x0c0e7fff8060: fd fa fa fa fa fa 00 00 00 00 00 00 00 00 00 fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==12==ABORTING

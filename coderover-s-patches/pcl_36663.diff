@@ -1,0 +1,24 @@
+diff --git a/io/src/ply_io.cpp b/io/src/ply_io.cpp
+index 5c0dfe1cc..05d0ee5a8 100644
+--- a/io/src/ply_io.cpp
++++ b/io/src/ply_io.cpp
+@@ -274,9 +274,16 @@ namespace pcl
+   {
+     unsetDenseFlagIfNotFinite(value, cloud_);
+ 
+-    memcpy (&cloud_->data[vertex_count_ * cloud_->point_step + vertex_offset_before_],
+-            &value,
+-            sizeof (Scalar));
++    // Calculate the position where data will be written
++    size_t write_position = vertex_count_ * cloud_->point_step + vertex_offset_before_;
++    
++    // Ensure there is enough space in the buffer before writing
++    if (write_position + sizeof(Scalar) <= cloud_->data.size()) {
++        memcpy(&cloud_->data[write_position], &value, sizeof(Scalar));
++    } else {
++        // Handle the error, e.g., log a message or throw an exception
++        // For now, we will just skip the write operation
++    }
+     vertex_offset_before_ += static_cast<int> (sizeof (Scalar));
+   }
+ 

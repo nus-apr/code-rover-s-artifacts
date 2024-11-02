@@ -1,0 +1,36 @@
+diff --git a/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp b/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp
+index 8a9096b8d5..33ed37dbc9 100644
+--- a/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp
++++ b/modules/imgcodecs/src/grfmt_jpeg2000_openjpeg.cpp
+@@ -221,19 +221,23 @@ void copyToMatImpl(std::vector<InT*>&& in, Mat& out, uint8_t shift)
+     }
+     else
+     {
+-        for (int i = 0; i < size.height; ++i)
++    for (int i = 0; i < size.height; ++i)
++    {
++        auto rowPtr = out.ptr<OutT>(i);
++        for (std::size_t c = 0; c < channelsCount; ++c)
+         {
+-            auto rowPtr = out.ptr<OutT>(i);
+-            for (std::size_t c = 0; c < channelsCount; ++c)
++            const auto first = in[c];
++            const auto last = first + size.width;
++            if (last > first + size.width) // Ensure we do not exceed the input buffer
+             {
+-                const auto first = in[c];
+-                const auto last = first + size.width;
+-                auto dOut = ChannelsIt(rowPtr, c, channelsCount);
+-                std::transform(first, last, dOut, [](InT val) -> OutT { return static_cast<OutT>(val); });
+-                in[c] += size.width;
++                CV_Error(Error::StsOutOfRange, "Input data exceeds expected size");
+             }
++            auto dOut = ChannelsIt(rowPtr, c, channelsCount);
++            std::transform(first, last, dOut, [](InT val) -> OutT { return static_cast<OutT>(val); });
++            in[c] += size.width;
+         }
+     }
++    }
+ }
+ 
+ template<typename InT>

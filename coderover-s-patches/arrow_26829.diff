@@ -1,0 +1,30 @@
+diff --git a/cpp/src/arrow/util/bitmap_writer.h b/cpp/src/arrow/util/bitmap_writer.h
+index 7cb2fc6a9..8646707ad 100644
+--- a/cpp/src/arrow/util/bitmap_writer.h
++++ b/cpp/src/arrow/util/bitmap_writer.h
+@@ -163,7 +163,9 @@ class FirstTimeBitmapWriter {
+   void Finish() {
+     // Store current byte if we didn't went go bitmap storage
+     if (length_ > 0 && (bit_mask_ != 0x01 || position_ < length_)) {
+-      bitmap_[byte_offset_] = current_byte_;
++      if (byte_offset_ < length_) {  // Ensure byte_offset_ is within bounds
++        bitmap_[byte_offset_] = current_byte_;
++      }
+     }
+   }
+ 
+diff --git a/cpp/src/parquet/level_conversion.cc b/cpp/src/parquet/level_conversion.cc
+index 3f57be39e..5ba28560c 100644
+--- a/cpp/src/parquet/level_conversion.cc
++++ b/cpp/src/parquet/level_conversion.cc
+@@ -141,7 +141,9 @@ void DefRepLevelsToListInfo(const int16_t* def_levels, const int16_t* rep_levels
+     }
+   }
+   if (valid_bits_writer != nullptr) {
+-    valid_bits_writer->Finish();
++    if (valid_bits_writer != nullptr && valid_bits_writer->position() < output->values_read_upper_bound) {
++      valid_bits_writer->Finish();
++    }
+   }
+   if (offsets != nullptr) {
+     output->values_read = offsets - orig_pos;

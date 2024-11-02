@@ -1,0 +1,22 @@
+diff --git a/openexr/src/lib/OpenEXRCore/internal_xdr.h b/openexr/src/lib/OpenEXRCore/internal_xdr.h
+index 9822eff..8fdcf39 100644
+--- a/openexr/src/lib/OpenEXRCore/internal_xdr.h
++++ b/openexr/src/lib/OpenEXRCore/internal_xdr.h
+@@ -246,8 +246,15 @@ static inline uint32_t
+ unaligned_load32 (const void* src)
+ {
+     uint32_t tmp;
+-    memcpy (&tmp, src, 4);
++    if (src != NULL && ((uintptr_t)src % 4 == 0)) {
++        memcpy (&tmp, src, 4);
++    } else {
++        // Handle error or use a safe method to read unaligned memory
++        // For example, read byte by byte if alignment is not guaranteed
++        const uint8_t* byte_src = (const uint8_t*)src;
++        tmp = byte_src[0] | (byte_src[1] << 8) | (byte_src[2] << 16) | (byte_src[3] << 24);
++    }
+     return one_to_native32 (tmp);
+ }
+ 
+-#endif /* OPENEXR_PRIVATE_XDR_H */
++#endif /* OPENEXR_PRIVATE_XDR_H */

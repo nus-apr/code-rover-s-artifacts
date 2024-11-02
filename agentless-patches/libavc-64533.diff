@@ -1,0 +1,32 @@
+diff --git a/libavc/decoder/svc/isvcd_process_epslice.c b/libavc/decoder/svc/isvcd_process_epslice.c
+index 4fa59ea..053433c 100644
+--- a/libavc/decoder/svc/isvcd_process_epslice.c
++++ b/libavc/decoder/svc/isvcd_process_epslice.c
+@@ -2028,14 +2028,21 @@ WORD32 isvcd_process_inter_mb_rsd_pred_target_lyr(svc_dec_lyr_struct_t *ps_svc_l
+     u4_recwidth_cr = ps_dec->u2_frm_wd_uv << u1_mb_field_decoding_flag;
+ 
+     u2_luma_stride = ps_svc_lyr_dec->u2_residual_resample_luma_stride;
+-    pi2_luma_res_ptr = ps_svc_lyr_dec->pi2_il_residual_resample_mb_luma_frm_start +
+-                       (ps_cur_mb_info->u2_mbx << 4) +
+-                       ((ps_cur_mb_info->u2_mby << 4) * u2_luma_stride);
++    // Ensure the calculated pointers do not exceed the allocated buffer size
++    size_t luma_offset = (ps_cur_mb_info->u2_mbx << 4) + ((ps_cur_mb_info->u2_mby << 4) * u2_luma_stride);
++    if (luma_offset < 512) { // Assuming 512 is the buffer size
++        pi2_luma_res_ptr = ps_svc_lyr_dec->pi2_il_residual_resample_mb_luma_frm_start + luma_offset;
++    } else {
++        return IV_FAIL; // Handle error appropriately
++    }
+ 
+     u2_chroma_stride = ps_svc_lyr_dec->u2_residual_resample_chroma_stride;
+-    pi2_chroma_res_ptr = ps_svc_lyr_dec->pi2_il_residual_resample_mb_chroma_frm_start +
+-                         (ps_cur_mb_info->u2_mbx << 4) +
+-                         ((ps_cur_mb_info->u2_mby << 3) * u2_chroma_stride);
++    size_t chroma_offset = (ps_cur_mb_info->u2_mbx << 4) + ((ps_cur_mb_info->u2_mby << 3) * u2_chroma_stride);
++    if (chroma_offset < 512) { // Assuming 512 is the buffer size
++        pi2_chroma_res_ptr = ps_svc_lyr_dec->pi2_il_residual_resample_mb_chroma_frm_start + chroma_offset;
++    } else {
++        return IV_FAIL; // Handle error appropriately
++    }
+ 
+     ret = isvcd_process_residual_resample_mb(ps_svc_lyr_dec, ps_cur_mb_info);
+     if(ret != OK)

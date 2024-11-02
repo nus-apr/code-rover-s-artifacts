@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index b97f8981..0438be5f 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -596,9 +596,7 @@ static uint8_t filters_to_flags(const uint8_t* filters) {
+ 
+ /* Convert filter flags to filter pipeline */
+ static void flags_to_filters(const uint8_t flags, uint8_t* filters) {
+-  /* Initialize the filter pipeline */
+-  memset(filters, 0, BLOSC2_MAX_FILTERS);
+-  /* Fill the filter pipeline */
++ "gendoc" ) ) { GF_FREE ( DTOutCtx ) ; return NULL ; } 
+   if (flags & BLOSC_DOSHUFFLE)
+     filters[BLOSC2_MAX_FILTERS - 1] = BLOSC_SHUFFLE;
+   if (flags & BLOSC_DOBITSHUFFLE)

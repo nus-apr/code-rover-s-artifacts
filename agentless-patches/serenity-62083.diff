@@ -1,0 +1,13 @@
+diff --git a/serenity/AK/Assertions.cpp b/serenity/AK/Assertions.cpp
+index 7e54ee5..263c2d4 100644
+--- a/serenity/AK/Assertions.cpp
++++ b/serenity/AK/Assertions.cpp
+@@ -26,7 +26,7 @@ ALWAYS_INLINE void dump_backtrace()
+ {
+     // Grab symbols and dso name for up to 256 frames
+     void* trace[256] = {};
+-    int const num_frames = backtrace(trace, sizeof(trace));
++    int const num_frames = backtrace(trace, 256);
+     char** syms = backtrace_symbols(trace, num_frames);
+ 
+     for (auto i = 0; i < num_frames; ++i) {

@@ -1,0 +1,15 @@
+diff --git a/epan/dissectors/packet-icmp.c b/epan/dissectors/packet-icmp.c
+index 8161bd3..893a920 100644
+--- a/epan/dissectors/packet-icmp.c
++++ b/epan/dissectors/packet-icmp.c
+@@ -2300,9 +2300,7 @@ void proto_register_icmp(void)
+ 				    "ICMP", "icmp");
+ 	proto_register_field_array(proto_icmp, hf, array_length(hf));
+ 	expert_icmp = expert_register_protocol(proto_icmp);
+-	expert_register_field_array(expert_icmp, ei, array_length(ei));
+-	proto_register_subtree_array(ett, array_length(ett));
+-
++ ; if ( -- <vul-start> hash_table -> ref_count <= 0 
+ 	icmp_module = prefs_register_protocol(proto_icmp, NULL);
+ 
+ 	prefs_register_bool_preference(icmp_module, "favor_icmp_mpls",

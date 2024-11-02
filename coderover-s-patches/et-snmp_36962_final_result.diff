@@ -1,0 +1,24 @@
+diff --git a/snmplib/parse.c b/snmplib/parse.c
+index 8fa036fc56..2a95263f35 100644
+--- a/snmplib/parse.c
++++ b/snmplib/parse.c
+@@ -28,7 +28,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ SOFTWARE.
+ ******************************************************************/
+ /*
+- * Copyright  2003 Sun Microsystems, Inc. All rights reserved.
++ * Copyright © 2003 Sun Microsystems, Inc. All rights reserved.
+  * Use is subject to license terms specified in the COPYING file
+  * distributed with the Net-SNMP package.
+  */
+@@ -1911,6 +1911,10 @@ getoid(FILE * fp, struct subid_s *id_arg, int length)
+             goto free_labels;
+         }
+         type = get_token(fp, token, MAXTOKEN);
++        if (count >= length - 1) {
++            print_error("Too long OID", token, type);
++            goto free_labels;
++        }
+     }
+     print_error("Too long OID", token, type);
+ 

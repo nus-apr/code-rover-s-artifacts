@@ -1,0 +1,13 @@
+diff --git a/harfbuzz/src/hb-ot-layout-gsub-table.hh b/harfbuzz/src/hb-ot-layout-gsub-table.hh
+index 79f0a9b..122a8fe 100644
+--- a/harfbuzz/src/hb-ot-layout-gsub-table.hh
++++ b/harfbuzz/src/hb-ot-layout-gsub-table.hh
+@@ -774,7 +774,7 @@ struct LigatureSubstFormat1
+   inline void closure (hb_closure_context_t *c) const
+   {
+     TRACE_CLOSURE (this);
+-    unsigned int count = ligatureSet.len;
++    unsigned int count = ligatureSet.len ? ligatureSet.len : 0;
+     for (hb_auto_t<Coverage::Iter> iter (this+coverage); iter.more (); iter.next ())
+     {
+       if (unlikely (iter.get_coverage () >= count))

@@ -1,0 +1,18 @@
+diff --git a/libxaac/encoder/ixheaace_fd_qc_adjthr.c b/libxaac/encoder/ixheaace_fd_qc_adjthr.c
+index 56f34ae..ba51445 100644
+--- a/libxaac/encoder/ixheaace_fd_qc_adjthr.c
++++ b/libxaac/encoder/ixheaace_fd_qc_adjthr.c
+@@ -979,7 +979,12 @@ VOID iusace_quantize_lines(const WORD32 gain, const WORD32 num_lines, FLOAT32 *p
+   FLOAT32 k = 0.4054f;
+   WORD32 line;
+ 
+-  quantizer = ixheaace_fd_quant_table[gain + 128];
++  WORD32 index = gain + 128;
++  if (index < 0 || index >= sizeof(ixheaace_fd_quant_table) / sizeof(ixheaace_fd_quant_table[0])) {
++    // Handle error: index out of bounds
++    return;
++  }
++  quantizer = ixheaace_fd_quant_table[index];
+   for (line = 0; line < num_lines; line++) {
+     FLOAT32 tmp = ptr_mdct_spec[line];
+     if (tmp < 0.0f) {

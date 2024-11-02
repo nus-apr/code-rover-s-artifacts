@@ -1,0 +1,30 @@
+diff --git a/Packet++/src/DnsResource.cpp b/Packet++/src/DnsResource.cpp
+index 2f86c86a..1587666b 100644
+--- a/Packet++/src/DnsResource.cpp
++++ b/Packet++/src/DnsResource.cpp
+@@ -15,7 +15,7 @@ IDnsResource::IDnsResource(DnsLayer* dnsLayer, size_t offsetInLayer)
+ 	char decodedName[256];
+ 	m_NameLength = decodeName((const char*)getRawData(), decodedName);
+ 	if (m_NameLength > 0)
+-		m_DecodedName = decodedName;
++		m_DecodedName = std::string(decodedName);
+ }
+ 
+ IDnsResource::IDnsResource(uint8_t* emptyRawData)
+@@ -69,9 +69,13 @@ size_t IDnsResource::decodeName(const char* encodedName, char* result, int itera
+ 			decodeName((const char*)(m_DnsLayer->m_Data + offsetInLayer), tempResult, iteration+1);
+ 			while (tempResult[i] != 0 && decodedNameLength < 255)
+ 			{
+-				resultPtr[0] = tempResult[i++];
+-				resultPtr++;
+-				decodedNameLength++;
++				if (decodedNameLength < 255) {
++					resultPtr[0] = tempResult[i++];
++					resultPtr++;
++					decodedNameLength++;
++				} else {
++					break;
++				}
+ 			}
+ 
+ 			resultPtr[0] = 0;

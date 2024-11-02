@@ -1,0 +1,49 @@
+diff --git a/blosc/bitshuffle-avx2.c b/blosc/bitshuffle-avx2.c
+index 28e2ff7e..923d1d5b 100644
+--- a/blosc/bitshuffle-avx2.c
++++ b/blosc/bitshuffle-avx2.c
+@@ -112,9 +112,11 @@ int64_t bshuf_trans_byte_bitrow_avx2(void* in, void* out, const size_t size,
+   size_t ii, jj, kk, hh, mm;
+ 
+   CHECK_MULT_EIGHT(size);
++  if (nrows == 0 || nbyte_row == 0 || size < nrows * nbyte_row) return -1; // Validate input parameters
+ 
+-  if (elem_size % 4)
++  if (elem_size % 4 || size < 8 * elem_size || size < 32)
+     return bshuf_trans_byte_bitrow_sse2(in, out, size, elem_size);
++  if (size < 32 * nrows) return -1; // Ensure sufficient size for AVX2 operations
+ 
+   __m256i ymm_0[8];
+   __m256i ymm_1[8];
+diff --git a/blosc/bitshuffle-sse2.c b/blosc/bitshuffle-sse2.c
+index 47076433..6bf61544 100644
+--- a/blosc/bitshuffle-sse2.c
++++ b/blosc/bitshuffle-sse2.c
+@@ -325,8 +325,10 @@ int64_t bshuf_trans_byte_bitrow_sse2(void* in, void* out, const size_t size,
+ 
+   CHECK_MULT_EIGHT(size);
+ 
++  if (nrows == 0 || nbyte_row == 0 || size < nrows * nbyte_row) return -1; // Validate input parameters
+   for (ii = 0; ii + 7 < nrows; ii += 8) {
+     for (jj = 0; jj + 15 < nbyte_row; jj += 16) {
++      if ((ii + 7) * nbyte_row + jj + 15 >= size) return -1; // Ensure indices are within bounds
+       a0 = _mm_loadu_si128((__m128i*)&in_b[(ii + 0) * nbyte_row + jj]);
+       b0 = _mm_loadu_si128((__m128i*)&in_b[(ii + 1) * nbyte_row + jj]);
+       c0 = _mm_loadu_si128((__m128i*)&in_b[(ii + 2) * nbyte_row + jj]);
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index b30e9f05..4ca8bcab 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -1148,7 +1148,11 @@ int pipeline_d(blosc2_context* context, const int32_t bsize, uint8_t* dest,
+         }
+         break;
+       case BLOSC_BITSHUFFLE:
+-        bitunshuffle(typesize, bsize, _src, _dest, _tmp, context->src[BLOSC2_CHUNK_VERSION]);
++        if (bsize > 0 && typesize > 0) { // Validate parameters before calling bitunshuffle
++          bitunshuffle(typesize, bsize, _src, _dest, _tmp, context->src[BLOSC2_CHUNK_VERSION]);
++        } else {
++          return -1; // Return error if parameters are invalid
++        }
+         break;
+       case BLOSC_DELTA:
+         if (context->nthreads == 1) {

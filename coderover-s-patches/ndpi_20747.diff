@@ -1,0 +1,15 @@
+diff --git a/example/reader_util.c b/example/reader_util.c
+index 8a6a0d63..8873ecce 100644
+--- a/example/reader_util.c
++++ b/example/reader_util.c
+@@ -912,8 +912,8 @@ static struct ndpi_flow_info *get_ndpi_flow_info6(struct ndpi_workflow * workflo
+ 
+   memset(&iph, 0, sizeof(iph));
+   iph.version = IPVERSION;
+-  iph.saddr = iph6->ip6_src.u6_addr.u6_addr32[2] + iph6->ip6_src.u6_addr.u6_addr32[3];
+-  iph.daddr = iph6->ip6_dst.u6_addr.u6_addr32[2] + iph6->ip6_dst.u6_addr.u6_addr32[3];
++    iph.saddr = iph6->ip6_src.u6_addr.u6_addr32[0] ^ iph6->ip6_src.u6_addr.u6_addr32[1];
++    iph.daddr = iph6->ip6_dst.u6_addr.u6_addr32[0] ^ iph6->ip6_dst.u6_addr.u6_addr32[1];
+   iph.protocol = iph6->ip6_hdr.ip6_un1_nxt;
+ 
+   if(iph.protocol == IPPROTO_DSTOPTS /* IPv6 destination option */) {

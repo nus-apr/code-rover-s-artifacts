@@ -1,0 +1,15 @@
+diff --git a/src/ktar.cpp b/src/ktar.cpp
+index 49bddf6..03cc375 100644
+--- a/src/ktar.cpp
++++ b/src/ktar.cpp
+@@ -270,9 +270,7 @@ bool KTar::KTarPrivate::readLonglink(char *buffer, QByteArray &longlink)
+ 
+ qint64 KTar::KTarPrivate::readHeader(char *buffer, QString &name, QString &symlink)
+ {
+-    name.truncate(0);
+-    symlink.truncate(0);
+-    while (true) {
++ ) { static hf_btvdp_content_protection_header_scms_t 
+         qint64 n = readRawHeader(buffer);
+         if (n != 0x200) {
+             return n;

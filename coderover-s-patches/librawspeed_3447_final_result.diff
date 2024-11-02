@@ -1,0 +1,32 @@
+diff --git a/src/librawspeed/common/RawImage.h b/src/librawspeed/common/RawImage.h
+index 28489aee..212ccdaf 100644
+--- a/src/librawspeed/common/RawImage.h
++++ b/src/librawspeed/common/RawImage.h
+@@ -130,7 +130,26 @@ public:
+   virtual void calculateBlackAreas() = 0;
+   virtual void setWithLookUp(ushort16 value, uchar8* dst, uint32* random) = 0;
+   void sixteenBitLookup();
+-  void transferBadPixelsToMap() REQUIRES(!mBadPixelMutex);
++  void transferBadPixelsToMap() REQUIRES(!mBadPixelMutex) {
++    // Assuming mBadPixelMapPitch and uncropped_dim are relevant for calculating the buffer size
++    size_t bufferSize = mBadPixelMapPitch * uncropped_dim.y;
++
++    // Example loop that might be causing the overflow
++    for (size_t y = 0; y < uncropped_dim.y; ++y) {
++      for (size_t x = 0; x < uncropped_dim.x; ++x) {
++        size_t index = mBadPixelMapPitch * y + (x >> 3);
++        
++        // Ensure index is within bounds
++        if (index >= bufferSize) {
++          // Handle the error, e.g., log it, resize the buffer, or break the loop
++          continue;
++        }
++        
++        // Safe access to mBadPixelMap
++        mBadPixelMap[index] |= 1 << (x & 7);
++      }
++    }
++  }
+   void fixBadPixels() REQUIRES(!mBadPixelMutex);
+   void expandBorder(iRectangle2D validData);
+   void setTable(const std::vector<ushort16>& table_, bool dither);

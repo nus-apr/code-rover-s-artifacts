@@ -1,0 +1,13 @@
+diff --git a/ghostpdl/base/gxtype1.c b/ghostpdl/base/gxtype1.c
+index 73d8089..1579201 100644
+--- a/ghostpdl/base/gxtype1.c
++++ b/ghostpdl/base/gxtype1.c
+@@ -549,7 +549,7 @@ c_return:
+                 default:
+                     goto out;
+                 case 3:
+-                    if (csp >= &(cstack[1]))
++                    if (csp > &(cstack[1]))
+                         csp -= 2;
+                     goto top;
+                 case 12:

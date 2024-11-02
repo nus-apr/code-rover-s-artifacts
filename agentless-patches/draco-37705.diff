@@ -1,0 +1,18 @@
+diff --git a/draco/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h b/draco/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h
+index e3f8276..06edbaa 100644
+--- a/draco/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h
++++ b/draco/src/draco/compression/mesh/mesh_edgebreaker_traversal_valence_decoder.h
+@@ -125,7 +125,12 @@ class MeshEdgebreakerTraversalValenceDecoder
+         return TOPOLOGY_INVALID;
+       }
+       const int symbol_id = context_symbols_[active_context_][context_counter];
+-      last_symbol_ = edge_breaker_symbol_to_topology_id[symbol_id];
++      if (symbol_id >= 0 && symbol_id < 5) {
++        last_symbol_ = edge_breaker_symbol_to_topology_id[symbol_id];
++      } else {
++        // Handle the error case, e.g., set last_symbol_ to a default value or return an error code.
++        last_symbol_ = TOPOLOGY_INVALID; // Assuming TOPOLOGY_INVALID is a valid error code.
++      }
+     } else {
+ #ifdef DRACO_BACKWARDS_COMPATIBILITY_SUPPORTED
+       if (BitstreamVersion() < DRACO_BITSTREAM_VERSION(2, 2)) {

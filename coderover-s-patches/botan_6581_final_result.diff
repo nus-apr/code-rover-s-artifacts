@@ -1,0 +1,39 @@
+diff --git a/src/lib/math/mp/mp_monty.cpp b/src/lib/math/mp/mp_monty.cpp
+index cc6388f4d..3ab30d256 100644
+--- a/src/lib/math/mp/mp_monty.cpp
++++ b/src/lib/math/mp/mp_monty.cpp
+@@ -27,6 +27,8 @@ void bigint_monty_redc(word z[],
+ 
+    if(ws_size < z_size)
+       throw Invalid_Argument("bigint_monty_redc workspace too small");
++   if(z_size < p_size + 1)
++      throw Invalid_Argument("bigint_monty_redc z buffer too small");
+ 
+    CT::poison(z, z_size);
+    CT::poison(p, p_size);
+@@ -59,7 +61,8 @@ void bigint_monty_redc(word z[],
+ 
+       for(size_t j = p_size + 1; j < z_size - i; ++j)
+          {
+-         z_i[j] += carry;
++         if(j < ws_size - i) // Ensure we do not exceed ws_size
++            z_i[j] += carry;
+          carry = carry & !z_i[j];
+          }
+       }
+diff --git a/src/lib/pubkey/ec_group/curve_gfp.cpp b/src/lib/pubkey/ec_group/curve_gfp.cpp
+index a55741fb0..989014a7f 100644
+--- a/src/lib/pubkey/ec_group/curve_gfp.cpp
++++ b/src/lib/pubkey/ec_group/curve_gfp.cpp
+@@ -83,7 +83,10 @@ void CurveGFp_Montgomery::curve_mul(BigInt& z, const BigInt& x, const BigInt& y,
+       }
+ 
+    const size_t output_size = 2*m_p_words + 1;
+-   ws.resize(2*(m_p_words+2));
++   if(ws.size() < 2*(m_p_words+2))
++      ws.resize(2*(m_p_words+2), 0);
++   else
++      std::fill(ws.begin(), ws.end(), 0);
+ 
+    if(z.size() < output_size)
+       z.grow_to(output_size);

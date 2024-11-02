@@ -1,0 +1,13 @@
+diff --git a/postgis/liblwgeom/lwin_wkb.c b/postgis/liblwgeom/lwin_wkb.c
+index a124f80..dc80a22 100644
+--- a/postgis/liblwgeom/lwin_wkb.c
++++ b/postgis/liblwgeom/lwin_wkb.c
+@@ -125,7 +125,7 @@ uint8_t* bytes_from_hexbytes(const char *hexbuf, size_t hexsize)
+ */
+ static inline void wkb_parse_state_check(wkb_parse_state *s, size_t next)
+ {
+-	if( (s->pos + next) > (s->wkb + s->wkb_size) )
++	if( (s->pos + next) > s->wkb_size )
+ 	{
+ 		lwerror("WKB structure does not match expected size!");
+ 		return;

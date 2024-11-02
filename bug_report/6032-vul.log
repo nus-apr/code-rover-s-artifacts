@@ -1,0 +1,68 @@
+INFO: Seed: 2202394155
+INFO: Loaded 1 modules   (52862 inline 8-bit counters): 52862 [0x126e650, 0x127b4ce), 
+INFO: Loaded 1 PC tables (52862 PCs): 52862 [0xde5c90,0xeb4470), 
+/out/encoder_hdr_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7e73ba349820 at pc 0x0000004e056d bp 0x7fff041ac110 sp 0x7fff041ab8c0
+READ of size 4097 at 0x7e73ba349820 thread T0
+SCARINESS: 41 (multi-byte-read-stack-buffer-overflow)
+    #0 0x4e056c in __asan_memcpy /src/llvm/projects/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cc:23
+    #1 0x663a01 in WriteBlob /src/imagemagick/MagickCore/blob.c:5436:14
+    #2 0x96343d in WriteHDRImage /src/imagemagick/coders/hdr.c:715:14
+    #3 0x6ba33b in WriteImage /src/imagemagick/MagickCore/constitute.c:1114:14
+    #4 0x6bafa6 in WriteImages /src/imagemagick/MagickCore/constitute.c:1333:13
+    #5 0x65b89b in ImagesToBlob /src/imagemagick/MagickCore/blob.c:2304:18
+    #6 0x5c7758 in Magick::Image::write(Magick::Blob*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) /src/imagemagick/Magick++/lib/Image.cpp:4887:8
+    #7 0x51d773 in LLVMFuzzerTestOneInput /src/imagemagick/Magick++/fuzz/encoder_fuzzer.cc:28:11
+    #8 0x5474a0 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/libfuzzer/FuzzerLoop.cpp:515:13
+    #9 0x51e5b9 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/libfuzzer/FuzzerDriver.cpp:280:6
+    #10 0x529f04 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/libfuzzer/FuzzerDriver.cpp:703:9
+    #11 0x51dc5c in main /src/libfuzzer/FuzzerMain.cpp:20:10
+    #12 0x7e73b930d83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #13 0x41d928 in _start (/out/encoder_hdr_fuzzer+0x41d928)
+
+DEDUP_TOKEN: __asan_memcpy--WriteBlob--WriteHDRImage
+Address 0x7e73ba349820 is located in stack of thread T0 at offset 4128 in frame
+    #0 0x96309f in WriteHDRImage /src/imagemagick/coders/hdr.c:660
+
+DEDUP_TOKEN: WriteHDRImage
+  This frame has 3 object(s):
+    [32, 4128) 'header' (line 661)
+    [4256, 4260) 'pixel' (line 684) <== Memory access at offset 4128 partially underflows this variable
+    [4272, 4276) 'exponent' (line 782) <== Memory access at offset 4128 partially underflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/llvm/projects/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cc:23 in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x0fcef74612b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fcef74612c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fcef74612d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fcef74612e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fcef74612f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0fcef7461300: 00 00 00 00[f2]f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2
+  0x0fcef7461310: f2 f2 f2 f2 04 f2 f8 f3 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0fcef7461320: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0fcef7461330: f5 f5 f5 f5 f5 f5 f5 f5 00 00 00 00 00 00 00 00
+  0x0fcef7461340: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0fcef7461350: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

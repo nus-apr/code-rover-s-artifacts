@@ -1,0 +1,15 @@
+diff --git a/libyara/arena.c b/libyara/arena.c
+index 805f6d7..b84711c 100644
+--- a/libyara/arena.c
++++ b/libyara/arena.c
+@@ -171,9 +171,7 @@ YR_ARENA_PAGE* yr_arena_page_for_address(
+ static int _yr_arena_make_ptr_relocatable(
+     YR_ARENA* arena,
+     void* base,
+-    va_list offsets)
+-{
+-  YR_RELOC* reloc;
++ char str [ size + 1 
+   YR_ARENA_PAGE* page;
+ 
+   size_t offset;

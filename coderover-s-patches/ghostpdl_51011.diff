@@ -1,0 +1,76 @@
+diff --git a/base/gxtype1.c b/base/gxtype1.c
+index d3af50ece..ba4fed078 100644
+--- a/base/gxtype1.c
++++ b/base/gxtype1.c
+@@ -374,6 +374,9 @@ gs_type1_piece_codes(/*const*/ gs_font_type1 *pfont, /* lgtm[cpp/use-of-goto] */
+     int code, call_depth = 0;
+ 
+     CLEAR_CSTACK(cstack, csp);
++    if (csp < cstack) {
++        return_error(gs_error_invalidfont);
++    }
+     cip = pgd->bits.data;
+     end = pgd->bits.data + pgd->bits.size;
+  call:
+@@ -451,26 +454,28 @@ gs_type1_piece_codes(/*const*/ gs_font_type1 *pfont, /* lgtm[cpp/use-of-goto] */
+                 cnext;
+             }
+             break;
+-        case c2_callgsubr:
+-            call_depth++;
+-            if (csp < &(cstack[0])) {
+-                c = pdata->gsubrNumberBias;
+-            }
+-            else {
+-                c = fixed2int_var(*csp) + pdata->gsubrNumberBias;
+-            }
+-            code = pdata->procs.subr_data
+-                (pfont, c, true, &ipsp[1].cs_data);
+-            if (code < 0)
+-                return_error(code);
+-            if (csp >= &(cstack[0])) {
+-                --csp;
+-            }
+-            ipsp->ip = cip, ipsp->dstate = state, ipsp->ip_end = end;
+-            ++ipsp;
+-            cip = ipsp->cs_data.bits.data;
+-            end = ipsp->cs_data.bits.data + ipsp->cs_data.bits.size;
+-            goto call;
++                case c2_callgsubr:
++                    call_depth++;
++                    if (csp < &(cstack[0])) {
++                        c = pdata->gsubrNumberBias;
++                    }
++                    else {
++                        c = fixed2int_var(*csp) + pdata->gsubrNumberBias;
++                    }
++                    code = pdata->procs.subr_data
++                        (pfont, c, true, &ipsp[1].cs_data);
++                    if (code < 0)
++                        return_error(code);
++                    if (csp >= &(cstack[0])) {
++                        --csp;
++                    } else {
++                        return_error(gs_error_invalidfont);
++                    }
++                    ipsp->ip = cip, ipsp->dstate = state, ipsp->ip_end = end;
++                    ++ipsp;
++                    cip = ipsp->cs_data.bits.data;
++                    end = ipsp->cs_data.bits.data + ipsp->cs_data.bits.size;
++                    goto call;
+         case c_callsubr:
+             call_depth++;
+             if (csp < &(cstack[0])) {
+@@ -549,8 +554,11 @@ c_return:
+                 default:
+                     goto out;
+                 case 3:
+-                    if (csp >= &(cstack[1]))
++                    if (csp >= &(cstack[1])) {
+                         csp -= 2;
++                    } else {
++                        return_error(gs_error_invalidfont);
++                    }
+                     goto top;
+                 case 12:
+                 case 13:

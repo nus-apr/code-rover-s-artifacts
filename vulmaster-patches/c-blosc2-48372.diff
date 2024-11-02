@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc-private.h b/blosc/blosc-private.h
+index 73e21c39..b43632ce 100644
+--- a/blosc/blosc-private.h
++++ b/blosc/blosc-private.h
+@@ -67,9 +67,7 @@ static inline void endian_handler(bool little, void *dest, const void *pa, int s
+       case 8:
+         pa2_[0] = pa_[7];
+         pa2_[1] = pa_[6];
+-        pa2_[2] = pa_[5];
+-        pa2_[3] = pa_[4];
+-        pa2_[4] = pa_[3];
++ size ) { memset 
+         pa2_[5] = pa_[2];
+         pa2_[6] = pa_[1];
+         pa2_[7] = pa_[0];

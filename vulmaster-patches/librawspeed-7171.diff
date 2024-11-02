@@ -1,0 +1,15 @@
+diff --git a/fuzz/librawspeed/decompressors/Cr2Decompressor.cpp b/fuzz/librawspeed/decompressors/Cr2Decompressor.cpp
+index f07a791..e491db1 100644
+--- a/fuzz/librawspeed/decompressors/Cr2Decompressor.cpp
++++ b/fuzz/librawspeed/decompressors/Cr2Decompressor.cpp
+@@ -41,9 +41,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size) {
+     const rawspeed::Buffer b(Data, Size);
+     const rawspeed::DataBuffer db(b, rawspeed::Endianness::little);
+     rawspeed::ByteStream bs(db);
+-
+-    rawspeed::RawImage mRaw(CreateRawImage(&bs));
+-
++ char str [ NAME_LEN + 1 
+     using slice_type = rawspeed::ushort16;
+     const auto numSlices = bs.get<slice_type>();
+     const auto sliceWidth = bs.get<slice_type>();

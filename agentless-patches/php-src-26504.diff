@@ -1,0 +1,19 @@
+diff --git a/php-src/Zend/zend_execute.c b/php-src/Zend/zend_execute.c
+index c0717f9..66a054e 100644
+--- a/php-src/Zend/zend_execute.c
++++ b/php-src/Zend/zend_execute.c
+@@ -1500,6 +1500,14 @@ static zend_never_inline void zend_assign_to_string_offset(zval *str, zval *dim,
+ 	size_t string_len;
+ 	zend_long offset;
+ 
++	if (UNEXPECTED(Z_TYPE_P(str) != IS_STRING)) {
++		zend_error(E_WARNING, "Attempt to assign to non-string offset");
++		if (UNEXPECTED(RETURN_VALUE_USED(opline))) {
++			ZVAL_NULL(EX_VAR(opline->result.var));
++		}
++		return;
++	}
++
+ 	offset = zend_check_string_offset(dim, BP_VAR_W EXECUTE_DATA_CC);
+ 	if (offset < -(zend_long)Z_STRLEN_P(str)) {
+ 		/* Error on negative offset */

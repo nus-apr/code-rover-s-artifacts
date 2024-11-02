@@ -1,0 +1,30 @@
+diff --git a/src/core/SkDraw_vertices.cpp b/src/core/SkDraw_vertices.cpp
+index 69bcff41b2..3c7fe6e032 100644
+--- a/src/core/SkDraw_vertices.cpp
++++ b/src/core/SkDraw_vertices.cpp
+@@ -66,7 +66,10 @@ static bool texture_to_matrix(const VertState& state, const SkPoint verts[],
+     dst[0] = verts[state.f0];
+     dst[1] = verts[state.f1];
+     dst[2] = verts[state.f2];
+-    return matrix->setPolyToPoly(src, dst, 3);
++    if (!matrix->setPolyToPoly(src, dst, 3)) {
++        return false;
++    }
++    return true;
+ }
+ 
+ class SkTriColorShader : public SkShaderBase {
+@@ -272,9 +275,10 @@ void SkDraw::drawVertices(SkVertices::VertexMode vmode, int count,
+                 SkMatrix tmpCtm;
+                 if (textures) {
+                     SkMatrix localM;
+-                    texture_to_matrix(state, vertices, textures, &localM);
+-                    tmpCtm = SkMatrix::Concat(*fMatrix, localM);
+-                    ctm = &tmpCtm;
++                     if (texture_to_matrix(state, vertices, textures, &localM)) {
++                         tmpCtm = SkMatrix::Concat(*fMatrix, localM);
++                         ctm = &tmpCtm;
++                     }
+                 }
+ 
+                 if (matrix43 && !update_tricolor_matrix(ctmInv, vertices, dstColors,

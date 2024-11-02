@@ -1,0 +1,15 @@
+diff --git a/wolfmqtt/src/mqtt_client.c b/wolfmqtt/src/mqtt_client.c
+index 57cba5f..f3d5dd6 100644
+--- a/wolfmqtt/src/mqtt_client.c
++++ b/wolfmqtt/src/mqtt_client.c
+@@ -1734,7 +1734,9 @@ int MqttClient_Subscribe(MqttClient *client, MqttSubscribe *subscribe)
+             return rc;
+         }
+ 
+-        subscribe->stat = MQTT_MSG_WAIT;
++        if (subscribe != NULL) {
++            subscribe->stat = MQTT_MSG_WAIT;
++        }
+     }
+ 
+     /* Wait for subscribe ack packet */

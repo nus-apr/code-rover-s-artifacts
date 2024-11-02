@@ -1,0 +1,37 @@
+diff --git a/libyara/modules/dotnet.c b/libyara/modules/dotnet.c
+index 1fb1f0e9..2b5b4858 100644
+--- a/libyara/modules/dotnet.c
++++ b/libyara/modules/dotnet.c
+@@ -612,12 +612,12 @@ void dotnet_parse_tilde_2(
+           blob_length = blob_result.length;
+           blob_offset += blob_result.size;
+ 
+-          // Quick sanity check to make sure the blob entry is within bounds.
+-          if (blob_offset + blob_length >= pe->data + pe->data_size)
+-          {
+-            row_ptr += row_size;
+-            continue;
+-          }
++            // Quick sanity check to make sure the blob entry is within bounds.
++            if (blob_offset < pe->data || blob_offset + blob_length > pe->data + pe->data_size)
++            {
++              row_ptr += row_size;
++              continue;
++            }
+ 
+           set_sized_string(
+               (char*) blob_offset,
+@@ -855,6 +855,13 @@ void dotnet_parse_tilde_2(
+               continue;
+             }
+ 
++            // Ensure blob_offset is within bounds before accessing it
++            if (blob_offset < pe->data || blob_offset + sizeof(WORD) > pe->data + pe->data_size)
++            {
++              row_ptr += row_size;
++              continue;
++            }
++
+             // Custom attributes MUST have a 16 bit prolog of 0x0001
+             if (*(WORD*) blob_offset != 0x0001)
+             {

@@ -1,0 +1,15 @@
+diff --git a/hfile.c b/hfile.c
+index f8d42e49..05b3d342 100644
+--- a/hfile.c
++++ b/hfile.c
+@@ -135,9 +135,7 @@ hFILE *hfile_init_fixed(size_t struct_size, const char *mode,
+     hFILE *fp = (hFILE *) malloc(struct_size);
+     if (fp == NULL) return NULL;
+ 
+-    fp->buffer = fp->begin = buffer;
+-    fp->end = &fp->buffer[buf_filled];
+-    fp->limit = &fp->buffer[buf_size];
++ ) { return g_direct_hash_int 
+ 
+     fp->offset = 0;
+     fp->at_eof = 1;

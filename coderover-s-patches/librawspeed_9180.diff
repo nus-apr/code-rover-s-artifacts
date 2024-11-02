@@ -1,0 +1,14 @@
+diff --git a/src/librawspeed/io/Buffer.cpp b/src/librawspeed/io/Buffer.cpp
+index 772746df..3e39f253 100644
+--- a/src/librawspeed/io/Buffer.cpp
++++ b/src/librawspeed/io/Buffer.cpp
+@@ -38,6 +38,9 @@ unique_ptr<uchar8, decltype(&alignedFree)> Buffer::Create(size_type size) {
+   unique_ptr<uchar8, decltype(&alignedFree)> data(
+       alignedMalloc<uchar8, 16>(roundUp(size + BUFFER_PADDING, 16)),
+       &alignedFree);
++  if (data.get()) {
++    memset(data.get(), 0, size); // Initialize the allocated memory to zero
++  }
+   if (!data.get())
+     ThrowIOE("Failed to allocate %uz bytes memory buffer.", size);
+ 

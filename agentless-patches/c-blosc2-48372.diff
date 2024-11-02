@@ -1,0 +1,22 @@
+diff --git a/c-blosc2/plugins/codecs/zfp/blosc2-zfp.c b/c-blosc2/plugins/codecs/zfp/blosc2-zfp.c
+index 88d5ff6..19ca3c9 100644
+--- a/c-blosc2/plugins/codecs/zfp/blosc2-zfp.c
++++ b/c-blosc2/plugins/codecs/zfp/blosc2-zfp.c
+@@ -708,9 +708,16 @@ int zfp_getcell(void *thread_context, const uint8_t *block, int32_t cbytes, uint
+             if (strcmp("caterva", context->schunk->metalayers[nmetalayer]->name) == 0) {
+                 meta = true;
+                 uint8_t *pmeta = context->schunk->metalayers[nmetalayer]->content;
++                if (pmeta == NULL) {
++                  return BLOSC2_ERROR_DATA;  // or another appropriate error code
++                }
+                 ndim = (int8_t) pmeta[2];
+                 assert(ndim <= ZFP_MAX_DIM);
+-                pmeta += (6 + ndim * 9 + ndim * 5);
++                size_t required_size = 6 + ndim * 9 + ndim * 5;
++                if (context->schunk->metalayers[nmetalayer]->content_len < required_size) {
++                  return BLOSC2_ERROR_DATA;  // or another appropriate error code
++                }
++                pmeta += required_size;
+                 for (int8_t i = 0; (uint8_t) i < ndim; i++) {
+                   pmeta += 1;
+                   swap_store(blockmeta + i, pmeta, sizeof(int32_t));

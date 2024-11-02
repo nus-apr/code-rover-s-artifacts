@@ -1,0 +1,26 @@
+diff --git a/av1/decoder/decodeframe.c b/av1/decoder/decodeframe.c
+index c843657d0d..b62daaa013 100644
+--- a/av1/decoder/decodeframe.c
++++ b/av1/decoder/decodeframe.c
+@@ -2493,8 +2493,8 @@ static AOM_INLINE void dec_row_mt_alloc(AV1DecRowMTSync *dec_row_mt_sync,
+   }
+ #endif  // CONFIG_MULTITHREAD
+ 
+-  CHECK_MEM_ERROR(cm, dec_row_mt_sync->cur_sb_col,
+-                  aom_malloc(sizeof(*(dec_row_mt_sync->cur_sb_col)) * rows));
++    CHECK_MEM_ERROR(cm, dec_row_mt_sync->cur_sb_col,
++                    aom_malloc(sizeof(*(dec_row_mt_sync->cur_sb_col)) * dec_row_mt_sync->allocated_sb_rows));
+ 
+   // Set up nsync.
+   dec_row_mt_sync->sync_range = get_sync_range(cm->width);
+@@ -2564,7 +2564,9 @@ static INLINE void sync_write(AV1DecRowMTSync *const dec_row_mt_sync, int r,
+   if (sig) {
+     pthread_mutex_lock(&dec_row_mt_sync->mutex_[r]);
+ 
+-    dec_row_mt_sync->cur_sb_col[r] = cur;
++    if (r >= 0 && r < dec_row_mt_sync->allocated_sb_rows) {
++        dec_row_mt_sync->cur_sb_col[r] = cur;
++    }
+ 
+     pthread_cond_signal(&dec_row_mt_sync->cond_[r]);
+     pthread_mutex_unlock(&dec_row_mt_sync->mutex_[r]);

@@ -1,0 +1,16 @@
+diff --git a/open62541/src/server/ua_securechannel_manager.c b/open62541/src/server/ua_securechannel_manager.c
+index 0dea6b0..0c4d90c 100644
+--- a/open62541/src/server/ua_securechannel_manager.c
++++ b/open62541/src/server/ua_securechannel_manager.c
+@@ -27,6 +27,11 @@ void UA_SecureChannelManager_deleteMembers(UA_SecureChannelManager* cm) {
+         LIST_REMOVE(entry, pointers);
+         UA_SecureChannel_deleteMembersCleanup(&entry->channel);
+         UA_free(entry);
++        UA_SecureChannel_deleteMembersCleanup(&entry->channel);
++        UA_free(entry);
++        entry = NULL;
++        UA_SecureChannel_deleteMembersCleanup(&entry->channel);
++        UA_free(entry);
+     }
+ }
+ 

@@ -1,0 +1,72 @@
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60200000d04f at pc 0x00000073db86 bp 0x7ffdd0b73670 sp 0x7ffdd0b73668
+READ of size 1 at 0x60200000d04f thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x73db85 in pdf_decrypt_string /src/clamav/libclamav/pdfng.c:253:13
+    #1 0x73db85 in pdf_finalize_string /src/clamav/libclamav/pdfng.c:397:24
+    #2 0x73e88c in pdf_parse_string /src/clamav/libclamav/pdfng.c:700:11
+    #3 0x7404b1 in pdf_parse_dict /src/clamav/libclamav/pdfng.c:889:23
+    #4 0x72424f in pdf_extract_obj /src/clamav/libclamav/pdf.c:1601:27
+    #5 0x73691c in pdf_find_and_extract_objs /src/clamav/libclamav/pdf.c:3657:22
+    #6 0x73691c in cli_pdf /src/clamav/libclamav/pdf.c:3889:18
+    #7 0x584ffd in cli_scanpdf /src/clamav/libclamav/scanners.c:2838:11
+    #8 0x573784 in cli_magic_scan /src/clamav/libclamav/scanners.c:4996:23
+    #9 0x587fe3 in scan_common /src/clamav/libclamav/scanners.c:5497:14
+    #10 0x4fd9d4 in LLVMFuzzerTestOneInput /src/clamav/fuzz/clamav_scanmap_fuzzer.cpp:110:5
+    #11 0x4fd78d in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:255:7
+    #12 0x4fd598 in LLVMFuzzerRunDriver /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c
+    #13 0x4fd158 in main /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:300:10
+    #14 0x756763d34082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #15 0x43e81d in _start (/out/clamav_scanmap_PDF_fuzzer+0x43e81d)
+
+DEDUP_TOKEN: pdf_decrypt_string--pdf_finalize_string--pdf_parse_string
+0x60200000d04f is located 1 bytes to the left of 1-byte region [0x60200000d050,0x60200000d051)
+allocated by thread T0 here:
+    #0 0x4bfe2e in __interceptor_calloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:77:3
+    #1 0x4ff11f in cli_calloc /src/clamav/libclamav/others_common.c:251:13
+    #2 0x73cd3d in pdf_finalize_string /src/clamav/libclamav/pdfng.c:310:14
+    #3 0x73e88c in pdf_parse_string /src/clamav/libclamav/pdfng.c:700:11
+    #4 0x7404b1 in pdf_parse_dict /src/clamav/libclamav/pdfng.c:889:23
+    #5 0x72424f in pdf_extract_obj /src/clamav/libclamav/pdf.c:1601:27
+    #6 0x73691c in pdf_find_and_extract_objs /src/clamav/libclamav/pdf.c:3657:22
+    #7 0x73691c in cli_pdf /src/clamav/libclamav/pdf.c:3889:18
+    #8 0x584ffd in cli_scanpdf /src/clamav/libclamav/scanners.c:2838:11
+    #9 0x573784 in cli_magic_scan /src/clamav/libclamav/scanners.c:4996:23
+    #10 0x587fe3 in scan_common /src/clamav/libclamav/scanners.c:5497:14
+    #11 0x4fd9d4 in LLVMFuzzerTestOneInput /src/clamav/fuzz/clamav_scanmap_fuzzer.cpp:110:5
+    #12 0x4fd78d in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:255:7
+
+DEDUP_TOKEN: __interceptor_calloc--cli_calloc--pdf_finalize_string
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/clamav/libclamav/pdfng.c:253:13 in pdf_decrypt_string
+Shadow bytes around the buggy address:
+  0x0c047fff99b0: fa fa fd fa fa fa fd fd fa fa fd fd fa fa fd fd
+  0x0c047fff99c0: fa fa fd fd fa fa fd fd fa fa fd fa fa fa 00 01
+  0x0c047fff99d0: fa fa 00 01 fa fa 00 01 fa fa 00 fa fa fa fd fd
+  0x0c047fff99e0: fa fa fd fa fa fa fd fd fa fa fd fd fa fa fd fd
+  0x0c047fff99f0: fa fa fd fd fa fa fd fd fa fa fd fa fa fa 00 00
+=>0x0c047fff9a00: fa fa 00 06 fa fa 00 01 fa[fa]01 fa fa fa fa fa
+  0x0c047fff9a10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9a20: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9a30: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9a40: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9a50: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

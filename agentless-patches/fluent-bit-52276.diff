@@ -1,0 +1,13 @@
+diff --git a/fluent-bit/lib/onigmo/regparse.c b/fluent-bit/lib/onigmo/regparse.c
+index 8fe138c..9b85d5c 100644
+--- a/fluent-bit/lib/onigmo/regparse.c
++++ b/fluent-bit/lib/onigmo/regparse.c
+@@ -1123,7 +1123,7 @@ node_new(void)
+   Node* node;
+ 
+   node = (Node* )xmalloc(sizeof(Node));
+-  /* xmemset(node, 0, sizeof(Node)); */
++  xmemset(node, 0, sizeof(Node));
+   return node;
+ }
+ 

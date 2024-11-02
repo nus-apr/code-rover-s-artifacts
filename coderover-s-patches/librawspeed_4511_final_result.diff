@@ -1,0 +1,30 @@
+diff --git a/src/librawspeed/decompressors/PanasonicDecompressor.cpp b/src/librawspeed/decompressors/PanasonicDecompressor.cpp
+index a1f91b5b..e5cd63c9 100644
+--- a/src/librawspeed/decompressors/PanasonicDecompressor.cpp
++++ b/src/librawspeed/decompressors/PanasonicDecompressor.cpp
+@@ -77,11 +77,22 @@ struct PanasonicDecompressor::PanaBitpump {
+        * size we allow the decoder to decode this
+        */
+       auto size = std::min(input.getRemainSize(), BufSize - load_flags);
+-      memcpy(buf.data() + load_flags, input.getData(size), size);
++      if (size > 0) {
++          // Ensure buffer is large enough
++          if (buf.size() < load_flags + size) {
++              buf.resize(load_flags + size);
++          }
++          memcpy(buf.data() + load_flags, input.getData(size), size);
++      }
+ 
+       size = std::min(input.getRemainSize(), load_flags);
+-      if (size != 0)
+-        memcpy(buf.data(), input.getData(size), size);
++      if (size > 0) {
++          // Ensure buffer is large enough
++          if (buf.size() < size) {
++              buf.resize(size);
++          }
++          memcpy(buf.data(), input.getData(size), size);
++      }
+     }
+     vbits = (vbits - nbits) & 0x1ffff;
+     int byte = vbits >> 3 ^ 0x3ff0;

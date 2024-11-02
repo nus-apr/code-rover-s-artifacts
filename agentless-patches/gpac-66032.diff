@@ -1,0 +1,19 @@
+diff --git a/gpac/src/filters/in_file.c b/gpac/src/filters/in_file.c
+index e206d96..9f3b228 100644
+--- a/gpac/src/filters/in_file.c
++++ b/gpac/src/filters/in_file.c
+@@ -245,7 +245,7 @@ static GF_Err filein_initialize_ex(GF_Filter *filter)
+ 			if (ctx->file_size>500000000) ctx->block_size = 1000000;
+ 			else ctx->block_size = 5000;
+ 		}
+-		ctx->block = gf_malloc(ctx->block_size +1);
++		ctx->block = gf_malloc(ctx->block_size + 1 + 1); // Allocate extra space for null-terminator
+ 	}
+ 	return GF_OK;
+ }
+@@ -765,4 +765,4 @@ const GF_FilterRegister *fin_register(GF_FilterSession *session)
+ {
+ 	return NULL;
+ }
+-#endif // GPAC_DISABLE_FIN
++#endif // GPAC_DISABLE_FIN

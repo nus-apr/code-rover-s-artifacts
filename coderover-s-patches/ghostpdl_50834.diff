@@ -1,0 +1,44 @@
+diff --git a/base/ttinterp.c b/base/ttinterp.c
+index 63846c8d8..a1737ef0f 100644
+--- a/base/ttinterp.c
++++ b/base/ttinterp.c
+@@ -731,6 +731,10 @@ static int nInstrCount=0;
+   static Short  GetShortIns( EXEC_OP )
+   {
+     /* Reading a byte stream so there is no endianess (DaveP) */
++    if (CUR.IP + 2 > CUR.codeSize) {
++      CUR.error = TT_Err_Code_Overflow;
++      return 0; // or some error value
++    }
+     CUR.IP += 2;
+     return ( CUR.code[CUR.IP-2] << 8) +
+              CUR.code[CUR.IP-1];
+@@ -2347,6 +2351,11 @@ static int nInstrCount=0;
+   {
+     Int  L, K;
+ 
++    if (CUR.IP + 1 >= CUR.codeSize) {
++      CUR.error = TT_Err_Code_Overflow;
++      return;
++    }
++
+     L = (Int)CUR.code[CUR.IP + 1];
+ 
+     if ( BOUNDS( L, CUR.stackSize+1-CUR.top ) )
+@@ -2358,9 +2367,14 @@ static int nInstrCount=0;
+     CUR.IP += 2;
+ 
+     for ( K = 0; K < L; K++ )
+-      { args[K] = GET_ShortIns();
+-        DBG_PRINT1(" %d", args[K]);
++    {
++      if (CUR.IP + 2 > CUR.codeSize) {
++        CUR.error = TT_Err_Code_Overflow;
++        return;
+       }
++      args[K] = GET_ShortIns();
++      DBG_PRINT1(" %d", args[K]);
++    }
+ 
+     CUR.step_ins = FALSE;
+     CUR.new_top += L;

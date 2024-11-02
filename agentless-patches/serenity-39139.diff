@@ -1,0 +1,18 @@
+diff --git a/serenity/AK/Format.h b/serenity/AK/Format.h
+index 2a9bde0..3f48e84 100644
+--- a/serenity/AK/Format.h
++++ b/serenity/AK/Format.h
+@@ -239,9 +239,11 @@ public:
+     static_assert(sizeof...(Parameters) <= max_format_arguments);
+ 
+     explicit VariadicFormatParams(const Parameters&... parameters)
+-        : m_data({ TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }... })
+     {
+-        this->set_parameters(m_data);
++        if constexpr (sizeof...(Parameters) > 0) {
++            m_data = { TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }... };
++            this->set_parameters(m_data);
++        }
+     }
+ 
+ private:

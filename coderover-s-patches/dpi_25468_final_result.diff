@@ -1,0 +1,139 @@
+diff --git a/src/lib/ndpi_main.c b/src/lib/ndpi_main.c
+index 74d34edf..302df628 100644
+--- a/src/lib/ndpi_main.c
++++ b/src/lib/ndpi_main.c
+@@ -105,12 +105,18 @@ void *ndpi_calloc(unsigned long count, size_t size) {
+ /* ****************************************** */
+ 
+ void ndpi_free(void *ptr) {
+-  if(_ndpi_free) {
+-    if(ptr)
+-      _ndpi_free(ptr);
+-  } else {
+-    if(ptr)
+-      free(ptr);
++  if(ptr) {
++    // Synchronize access to prevent race conditions
++    #pragma omp critical
++    {
++      if(_ndpi_free) {
++        // Ensure the custom free function is safe
++        _ndpi_free(ptr);
++      } else {
++        free(ptr);
++      }
++      ptr = NULL; // Prevent use after free
++    }
+   }
+ }
+ 
+@@ -6224,45 +6230,74 @@ int ndpi_match_bigram(struct ndpi_detection_module_struct *ndpi_str,
+ 
+ void ndpi_free_flow(struct ndpi_flow_struct *flow) {
+   if(flow) {
+-    if(flow->http.url)
+-      ndpi_free(flow->http.url);
+-    if(flow->http.content_type)
+-      ndpi_free(flow->http.content_type);
+-    if(flow->http.user_agent)
+-      ndpi_free(flow->http.user_agent);
+-    if(flow->kerberos_buf.pktbuf)
+-      ndpi_free(flow->kerberos_buf.pktbuf);
+-
+-    if(flow_is_proto(flow, NDPI_PROTOCOL_TLS) ||
+-       flow_is_proto(flow, NDPI_PROTOCOL_QUIC)) {
+-      if(flow->protos.stun_ssl.ssl.server_names)
+-	ndpi_free(flow->protos.stun_ssl.ssl.server_names);
+-
+-      if(flow->protos.stun_ssl.ssl.alpn)
+-	ndpi_free(flow->protos.stun_ssl.ssl.alpn);
+-
+-      if(flow->protos.stun_ssl.ssl.tls_supported_versions)
+-	ndpi_free(flow->protos.stun_ssl.ssl.tls_supported_versions);
+-
+-      if(flow->protos.stun_ssl.ssl.issuerDN)
+-	ndpi_free(flow->protos.stun_ssl.ssl.issuerDN);
+-
+-      if(flow->protos.stun_ssl.ssl.subjectDN)
+-	ndpi_free(flow->protos.stun_ssl.ssl.subjectDN);
++    // Synchronize access to prevent race conditions
++    #pragma omp critical
++    {
++      if(flow->http.url) {
++        ndpi_free(flow->http.url);
++        flow->http.url = NULL;
++      }
++      if(flow->http.content_type) {
++        ndpi_free(flow->http.content_type);
++        flow->http.content_type = NULL;
++      }
++      if(flow->http.user_agent) {
++        ndpi_free(flow->http.user_agent);
++        flow->http.user_agent = NULL;
++      }
++      if(flow->kerberos_buf.pktbuf) {
++        ndpi_free(flow->kerberos_buf.pktbuf);
++        flow->kerberos_buf.pktbuf = NULL;
++      }
+ 
+-      if(flow->l4.tcp.tls.srv_cert_fingerprint_ctx)
+-	ndpi_free(flow->l4.tcp.tls.srv_cert_fingerprint_ctx);
++      if(flow_is_proto(flow, NDPI_PROTOCOL_TLS) ||
++         flow_is_proto(flow, NDPI_PROTOCOL_QUIC)) {
++        if(flow->protos.stun_ssl.ssl.server_names) {
++          ndpi_free(flow->protos.stun_ssl.ssl.server_names);
++          flow->protos.stun_ssl.ssl.server_names = NULL;
++        }
++
++        if(flow->protos.stun_ssl.ssl.alpn) {
++          ndpi_free(flow->protos.stun_ssl.ssl.alpn);
++          flow->protos.stun_ssl.ssl.alpn = NULL;
++        }
++
++        if(flow->protos.stun_ssl.ssl.tls_supported_versions) {
++          ndpi_free(flow->protos.stun_ssl.ssl.tls_supported_versions);
++          flow->protos.stun_ssl.ssl.tls_supported_versions = NULL;
++        }
++
++        if(flow->protos.stun_ssl.ssl.issuerDN) {
++          ndpi_free(flow->protos.stun_ssl.ssl.issuerDN);
++          flow->protos.stun_ssl.ssl.issuerDN = NULL;
++        }
++
++        if(flow->protos.stun_ssl.ssl.subjectDN) {
++          ndpi_free(flow->protos.stun_ssl.ssl.subjectDN);
++          flow->protos.stun_ssl.ssl.subjectDN = NULL;
++        }
++
++        if(flow->l4.tcp.tls.srv_cert_fingerprint_ctx) {
++          ndpi_free(flow->l4.tcp.tls.srv_cert_fingerprint_ctx);
++          flow->l4.tcp.tls.srv_cert_fingerprint_ctx = NULL;
++        }
++
++        if(flow->protos.stun_ssl.ssl.encrypted_sni.esni) {
++          ndpi_free(flow->protos.stun_ssl.ssl.encrypted_sni.esni);
++          flow->protos.stun_ssl.ssl.encrypted_sni.esni = NULL;
++        }
++      }
+ 
+-      if(flow->protos.stun_ssl.ssl.encrypted_sni.esni)
+-	ndpi_free(flow->protos.stun_ssl.ssl.encrypted_sni.esni);
+-    }
++      if(flow->l4_proto == IPPROTO_TCP) {
++        if(flow->l4.tcp.tls.message.buffer) {
++          ndpi_free(flow->l4.tcp.tls.message.buffer);
++          flow->l4.tcp.tls.message.buffer = NULL;
++        }
++      }
+ 
+-    if(flow->l4_proto == IPPROTO_TCP) {
+-      if(flow->l4.tcp.tls.message.buffer)
+-	ndpi_free(flow->l4.tcp.tls.message.buffer);
++      ndpi_free(flow);
++      flow = NULL;
+     }
+-
+-    ndpi_free(flow);
+   }
+ }
+ 

@@ -1,0 +1,14 @@
+diff --git a/ghostpdl/base/gxfapi.c b/ghostpdl/base/gxfapi.c
+index 3456a93..fee94e3 100644
+--- a/ghostpdl/base/gxfapi.c
++++ b/ghostpdl/base/gxfapi.c
+@@ -493,6 +493,9 @@ gs_fapi_prepare_font(gs_font *pfont, gs_fapi_server *I, int subfont, const char
+             if (!I->ff.is_mtx_skipped)
+                 I->ff.is_mtx_skipped = (gs_fapi_get_metrics_count(&I->ff) != 0);
+             I->ff.subfont = 0;
++            if (I->get_scaled_font == NULL) {
++                return -1; // Or appropriate error code
++            }
+             if ((code =
+                  gs_fapi_renderer_retcode(mem, I,
+                                           I->get_scaled_font(I, &I->ff,

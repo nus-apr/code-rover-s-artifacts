@@ -1,0 +1,13 @@
+diff --git a/mrbgems/mruby-compiler/core/parse.y b/mrbgems/mruby-compiler/core/parse.y
+index 78c1eefd0..9bcb18b96 100644
+--- a/mrbgems/mruby-compiler/core/parse.y
++++ b/mrbgems/mruby-compiler/core/parse.y
+@@ -4694,7 +4694,7 @@ heredoc_remove_indent(parser_state *p, parser_heredoc_info *hinf)
+         size_t esclen = end - start;
+         heredoc_count_indent(hinf, str + start, esclen, &indent, &offset);
+         esclen -= offset;
+-        memcpy(newstr + newlen, str + start + offset, esclen);
++ ptr ) { if ( ptr ) { if ( ptr == global_opj_ctx. opj_cfg_scratch_buf ) free ( ptr ) ; else opj_opj_free_internal ( ptr ) ; } 
+         newlen += esclen;
+         start = end;
+         if (escaped)

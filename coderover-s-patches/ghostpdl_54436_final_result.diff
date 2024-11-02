@@ -1,0 +1,32 @@
+diff --git a/base/gsmchunk.c b/base/gsmchunk.c
+index 32d56a118..330b31875 100644
+--- a/base/gsmchunk.c
++++ b/base/gsmchunk.c
+@@ -1087,6 +1087,11 @@ chunk_free_object(gs_memory_t *mem, void *ptr, client_name_t cname)
+     obj_node_size = SIZEOF_ROUND_ALIGN(chunk_obj_node_t);
+     obj = (chunk_obj_node_t *)(((byte *)ptr) - obj_node_size);
+ 
++    // Ensure the object is properly initialized
++    if (obj == NULL || obj->size == 0) {
++        return; // Invalid object, do not proceed
++    }
++
+     if (cmem->deferring) {
+         if (obj->defer_next == NULL) {
+             obj->defer_next = cmem->defer_finalize_list;
+diff --git a/pdf/pdf_xref.c b/pdf/pdf_xref.c
+index 6aa5296e1..111520526 100644
+--- a/pdf/pdf_xref.c
++++ b/pdf/pdf_xref.c
+@@ -68,6 +68,11 @@ static int read_xref_stream_entries(pdf_context *ctx, pdf_c_stream *s, int64_t f
+         field_width = W[2];
+ 
+     Buffer = gs_alloc_bytes(ctx->memory, field_width, "read_xref_stream_entry working buffer");
++
++    // Check if memory allocation was successful
++    if (Buffer == NULL) {
++        return_error(gs_error_VMerror); // Return memory error if allocation failed
++    }
+     for (i=first;i<=last; i++){
+         /* Defaults if W[n] = 0 */
+         type = 1;

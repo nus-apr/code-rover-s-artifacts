@@ -1,0 +1,15 @@
+diff --git a/fuzzing/TopicTree.cpp b/fuzzing/TopicTree.cpp
+index 8bc1897..b689561 100644
+--- a/fuzzing/TopicTree.cpp
++++ b/fuzzing/TopicTree.cpp
+@@ -37,9 +37,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+             std::string_view lastString((char *) data + 5, size - 5);
+ 
+             /* First 4 bytes is the subscriber id */
+-            uint32_t id;
+-            memcpy(&id, data, 4);
+-
++ { if (! l 
+             /* Then one byte action */
+             if (data[4] == 'S') {
+                 /* Subscribe */

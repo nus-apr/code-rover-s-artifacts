@@ -1,0 +1,104 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2313091960
+INFO: Loaded 1 modules   (48940 inline 8-bit counters): 48940 [0xfe0038, 0xfebf64), 
+INFO: Loaded 1 PC tables (48940 PCs): 48940 [0xfebf68,0x10ab228), 
+/out/FuzzJs: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: use-after-poison on address 0x62d0002e9c30 at pc 0x00000064f8a3 bp 0x7ffe5f3f7890 sp 0x7ffe5f3f7888
+WRITE of size 8 at 0x62d0002e9c30 thread T0
+SCARINESS: 52 (8-byte-write-use-after-poison)
+    #0 0x64f8a2 in AK::Atomic<unsigned long, (AK::MemoryOrder)5>::fetch_or(unsigned long, AK::MemoryOrder) volatile /src/serenity/Meta/Lagom/build/../../../AK/Atomic.h:226:16
+    #1 0x64f8a2 in AK::RefPtrTraits<AK::StringImpl>::lock(AK::Atomic<unsigned long, (AK::MemoryOrder)5>&) /src/serenity/Meta/Lagom/build/../../../AK/RefPtr.h:93:31
+    #2 0x64f8a2 in AK::RefPtr<AK::StringImpl, AK::RefPtrTraits<AK::StringImpl> >::add_ref_raw() const /src/serenity/Meta/Lagom/build/../../../AK/RefPtr.h:413:24
+    #3 0x64f8a2 in AK::RefPtr<AK::StringImpl, AK::RefPtrTraits<AK::StringImpl> >::RefPtr(AK::RefPtr<AK::StringImpl, AK::RefPtrTraits<AK::StringImpl> > const&) /src/serenity/Meta/Lagom/build/../../../AK/RefPtr.h:171:24
+    #4 0x64f810 in AK::String::String(AK::String const&) /src/serenity/Meta/Lagom/build/../../../AK/String.h:52:11
+    #5 0x916800 in JS::abstract_relation(JS::GlobalObject&, bool, JS::Value, JS::Value) /src/serenity/Userland/Libraries/LibJS/Runtime/Value.cpp:1405:25
+    #6 0x91804d in JS::less_than(JS::GlobalObject&, JS::Value, JS::Value) /src/serenity/Userland/Libraries/LibJS/Runtime/Value.cpp:806:25
+    #7 0x9fb8cf in JS::BinaryExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:602:16
+    #8 0x9fb48a in JS::BinaryExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:569:30
+    #9 0x9fb48a in JS::BinaryExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:569:30
+    #10 0xa1da07 in JS::SequenceExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:2234:33
+    #11 0x9edfa7 in JS::ExpressionStatement::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:109:26
+    #12 0x65acf4 in JS::Interpreter::execute_statement(JS::GlobalObject&, JS::Statement const&, JS::ScopeType) /src/serenity/Userland/Libraries/LibJS/Interpreter.cpp:172:27
+    #13 0x9ed806 in JS::Program::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:91:24
+    #14 0x656fa9 in JS::Interpreter::run(JS::GlobalObject&, JS::Program const&) /src/serenity/Userland/Libraries/LibJS/Interpreter.cpp:58:26
+    #15 0x64e22a in LLVMFuzzerTestOneInput /src/serenity/Meta/Lagom/build/../Fuzzers/FuzzJs.cpp:24:22
+    #16 0x550883 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #17 0x53bd22 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #18 0x5419ce in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #19 0x56b642 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #20 0x774ee63f083f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #21 0x517058 in _start (/out/FuzzJs+0x517058)
+
+DEDUP_TOKEN: AK::Atomic<unsigned long, (AK::MemoryOrder)5>::fetch_or(unsigned long, AK::MemoryOrder) volatile--AK::RefPtrTraits<AK::StringImpl>::lock(AK::Atomic<unsigned long, (AK::MemoryOrder)5>&)--AK::RefPtr<AK::StringImpl, AK::RefPtrTraits<AK::StringImpl> >::add_ref_raw() const
+0x62d0002e9c30 is located 7216 bytes inside of 16384-byte region [0x62d0002e8000,0x62d0002ec000)
+allocated by thread T0 here:
+    #0 0x61b122 in aligned_alloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:192:3
+    #1 0xa39acc in JS::BlockAllocator::allocate_block(char const*) /src/serenity/Userland/Libraries/LibJS/Heap/BlockAllocator.cpp:58:31
+    #2 0x7a21ed in JS::HeapBlock::create_with_cell_size(JS::Heap&, unsigned long) /src/serenity/Userland/Libraries/LibJS/Heap/HeapBlock.cpp:29:66
+    #3 0xa3ab43 in JS::CellAllocator::allocate_cell(JS::Heap&) /src/serenity/Userland/Libraries/LibJS/Heap/CellAllocator.cpp:27:22
+    #4 0x78c953 in JS::Heap::allocate_cell(unsigned long) /src/serenity/Userland/Libraries/LibJS/Heap/Heap.cpp:67:22
+    #5 0x839ce4 in JS::PrimitiveString* JS::Heap::allocate_without_global_object<JS::PrimitiveString, AK::String>(AK::String&&) /src/serenity/Meta/Lagom/build/../../../Userland/Libraries/LibJS/Heap/Heap.h:35:24
+    #6 0x839ab6 in JS::js_string(JS::Heap&, AK::String) /src/serenity/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp:29:17
+    #7 0x839e91 in JS::js_string(JS::VM&, AK::String) /src/serenity/Userland/Libraries/LibJS/Runtime/PrimitiveString.cpp:34:12
+    #8 0x85eb03 in JS::RegExpPrototype::to_string(JS::VM&, JS::GlobalObject&) /src/serenity/Userland/Libraries/LibJS/Runtime/RegExpPrototype.cpp:247:12
+    #9 0x7a5501 in AK::Function<JS::Value (JS::VM&, JS::GlobalObject&)>::CallableWrapper<JS::Value (*)(JS::VM&, JS::GlobalObject&)>::call(JS::VM&, JS::GlobalObject&) /src/serenity/Meta/Lagom/build/../../../AK/Function.h:151:20
+    #10 0x80c14a in AK::Function<JS::Value (JS::VM&, JS::GlobalObject&)>::operator()(JS::VM&, JS::GlobalObject&) const /src/serenity/Meta/Lagom/build/../../../AK/Function.h:91:25
+    #11 0x80bfdc in JS::NativeFunction::call() /src/serenity/Userland/Libraries/LibJS/Runtime/NativeFunction.cpp:42:12
+    #12 0x90501d in JS::VM::call_internal(JS::Function&, JS::Value, AK::Optional<JS::MarkedValueList>) /src/serenity/Userland/Libraries/LibJS/Runtime/VM.cpp:527:28
+    #13 0x82876a in JS::Value JS::VM::call<AK::Optional<JS::MarkedValueList> >(JS::Function&, JS::Value, AK::Optional<JS::MarkedValueList>) /src/serenity/Meta/Lagom/build/../../../Userland/Libraries/LibJS/Runtime/VM.h:299:128
+    #14 0x82876a in JS::Value JS::VM::call<>(JS::Function&, JS::Value) /src/serenity/Meta/Lagom/build/../../../Userland/Libraries/LibJS/Runtime/VM.h:302:91
+    #15 0x82876a in JS::Object::ordinary_to_primitive(JS::Value::PreferredType) const /src/serenity/Userland/Libraries/LibJS/Runtime/Object.cpp:1028:30
+    #16 0x9101bf in JS::Value::to_primitive(JS::GlobalObject&, JS::Value::PreferredType) const /src/serenity/Userland/Libraries/LibJS/Runtime/Value.cpp:424:28
+    #17 0x916625 in JS::abstract_relation(JS::GlobalObject&, bool, JS::Value, JS::Value) /src/serenity/Userland/Libraries/LibJS/Runtime/Value.cpp:1392:27
+    #18 0x91804d in JS::less_than(JS::GlobalObject&, JS::Value, JS::Value) /src/serenity/Userland/Libraries/LibJS/Runtime/Value.cpp:806:25
+    #19 0x9fb8cf in JS::BinaryExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:602:16
+    #20 0x9fb48a in JS::BinaryExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:569:30
+    #21 0x9fb48a in JS::BinaryExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:569:30
+    #22 0xa1da07 in JS::SequenceExpression::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:2234:33
+    #23 0x9edfa7 in JS::ExpressionStatement::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:109:26
+    #24 0x65acf4 in JS::Interpreter::execute_statement(JS::GlobalObject&, JS::Statement const&, JS::ScopeType) /src/serenity/Userland/Libraries/LibJS/Interpreter.cpp:172:27
+    #25 0x9ed806 in JS::Program::execute(JS::Interpreter&, JS::GlobalObject&) const /src/serenity/Userland/Libraries/LibJS/AST.cpp:91:24
+    #26 0x656fa9 in JS::Interpreter::run(JS::GlobalObject&, JS::Program const&) /src/serenity/Userland/Libraries/LibJS/Interpreter.cpp:58:26
+    #27 0x64e22a in LLVMFuzzerTestOneInput /src/serenity/Meta/Lagom/build/../Fuzzers/FuzzJs.cpp:24:22
+    #28 0x550883 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #29 0x53bd22 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #30 0x5419ce in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #31 0x56b642 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+
+DEDUP_TOKEN: aligned_alloc--JS::BlockAllocator::allocate_block(char const*)--JS::HeapBlock::create_with_cell_size(JS::Heap&, unsigned long)
+SUMMARY: AddressSanitizer: use-after-poison /src/serenity/Meta/Lagom/build/../../../AK/Atomic.h:226:16 in AK::Atomic<unsigned long, (AK::MemoryOrder)5>::fetch_or(unsigned long, AK::MemoryOrder) volatile
+Shadow bytes around the buggy address:
+  0x0c5a80055330: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a80055340: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a80055350: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a80055360: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a80055370: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+=>0x0c5a80055380: f7 f7 f7 f7 f7 f7[f7]f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a80055390: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a800553a0: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a800553b0: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a800553c0: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c5a800553d0: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

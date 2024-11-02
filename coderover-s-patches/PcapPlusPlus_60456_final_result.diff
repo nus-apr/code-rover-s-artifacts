@@ -1,0 +1,62 @@
+diff --git a/Packet++/src/SSLHandshake.cpp b/Packet++/src/SSLHandshake.cpp
+index 840ddb55..dc656df8 100644
+--- a/Packet++/src/SSLHandshake.cpp
++++ b/Packet++/src/SSLHandshake.cpp
+@@ -1277,9 +1277,18 @@ size_t SSLHandshakeMessage::getMessageLength() const
+ {
+ 	ssl_tls_handshake_layer* handshakeLayer = (ssl_tls_handshake_layer*)m_Data;
+ 	//TODO: add handshakeLayer->length1 to the calculation
+-	size_t len = sizeof(ssl_tls_handshake_layer) + be16toh(handshakeLayer->length2);
+-	if (len > m_DataLen)
+-		return m_DataLen;
++    // Interpret length fields according to SSL/TLS specification
++    uint16_t length1 = handshakeLayer->length1;
++    uint16_t length2 = be16toh(handshakeLayer->length2);
++
++    // Calculate total length using both fields
++    size_t len = sizeof(ssl_tls_handshake_layer) + (length1 << 16) + length2;
++
++    // Ensure calculated length does not exceed available data
++    if (len > m_DataLen || len < sizeof(ssl_tls_handshake_layer)) {
++        return m_DataLen;
++    }
++    return len;
+ 
+ 	return len;
+ }
+diff --git a/Packet++/src/SSLLayer.cpp b/Packet++/src/SSLLayer.cpp
+index 422d0938..2cc6960b 100644
+--- a/Packet++/src/SSLLayer.cpp
++++ b/Packet++/src/SSLLayer.cpp
+@@ -130,16 +130,21 @@ SSLHandshakeLayer::SSLHandshakeLayer(uint8_t* data, size_t dataLen, Layer* prevL
+ 		recordDataLen = m_DataLen - sizeof(ssl_tls_record_layer);
+ 
+ 	size_t curPosIndex = 0;
+-	while (true)
+-	{
+-		SSLHandshakeMessage* message = SSLHandshakeMessage::createHandshakeMessage(curPos, recordDataLen-curPosIndex, this);
+-		if (message == nullptr)
+-			break;
+-
+-		m_MessageList.pushBack(message);
+-		curPos += message->getMessageLength();
+-		curPosIndex += message->getMessageLength();
+-	}
++    while (curPosIndex < recordDataLen)
++    {
++        SSLHandshakeMessage* message = SSLHandshakeMessage::createHandshakeMessage(curPos, recordDataLen-curPosIndex, this);
++        if (message == nullptr)
++            break;
++
++        size_t messageLen = message->getMessageLength();
++        // Ensure message length does not exceed available data
++        if (curPosIndex + messageLen > recordDataLen || messageLen < sizeof(ssl_tls_handshake_layer))
++            break;
++
++        m_MessageList.pushBack(message);
++        curPos += messageLen;
++        curPosIndex += messageLen;
++    }
+ }
+ 
+ SSLHandshakeMessage* SSLHandshakeLayer::getHandshakeMessageAt(int index) const

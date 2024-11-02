@@ -1,0 +1,51 @@
+diff --git a/MagickCore/annotate.c b/MagickCore/annotate.c
+index 91913a97a..aa64b9831 100644
+--- a/MagickCore/annotate.c
++++ b/MagickCore/annotate.c
+@@ -1467,8 +1467,13 @@ static MagickBooleanType RenderFreetype(Image *image,const DrawInfo *draw_info,
+     (void) FT_Attach_File(face,draw_info->metrics);
+   encoding_type=FT_ENCODING_UNICODE;
+   ft_status=FT_Select_Charmap(face,encoding_type);
+-  if ((ft_status != 0) && (face->num_charmaps != 0))
+-    ft_status=FT_Set_Charmap(face,face->charmaps[0]);
++   if ((ft_status != 0) || (face == (FT_Face) NULL) || (face->num_charmaps == 0))
++   {
++     (void) FT_Done_Face(face);
++     (void) FT_Done_FreeType(library);
++     ThrowBinaryException(TypeError,"UnableToSetCharmap",encoding);
++   }
++   ft_status=FT_Set_Charmap(face,face->charmaps[0]);
+   if (encoding != (const char *) NULL)
+     {
+       if (LocaleCompare(encoding,"AdobeCustom") == 0)
+@@ -1652,15 +1657,21 @@ static MagickBooleanType RenderFreetype(Image *image,const DrawInfo *draw_info,
+   missing_glyph_id=FT_Get_Char_Index(face,' ');
+   code=0;
+   last_character=(ssize_t) length-1;
+-  for (i=0; i < (ssize_t) length; i++)
+-  {
+-    FT_Outline
+-      outline;
+-
+-    /*
+-      Render UTF-8 sequence.
+-    */
+-    glyph.id=(FT_UInt) grapheme[i].index;
++   if (grapheme == (GraphemeInfo *) NULL)
++   {
++     (void) FT_Done_Face(face);
++     (void) FT_Done_FreeType(library);
++     ThrowBinaryException(TypeError,"InvalidGraphemeInfo",draw_info->text);
++   }
++   for (i=0; i < (ssize_t) length; i++)
++   {
++     FT_Outline
++       outline;
++
++     /*
++       Render UTF-8 sequence.
++     */
++     glyph.id=(FT_UInt) grapheme[i].index;
+     if (glyph.id == 0)
+       glyph.id=missing_glyph_id;
+     if ((glyph.id != 0) && (last_glyph_id != 0))

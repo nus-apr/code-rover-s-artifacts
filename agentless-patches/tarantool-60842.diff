@@ -1,0 +1,18 @@
+diff --git a/tarantool/third_party/luajit/src/lj_snap.c b/tarantool/third_party/luajit/src/lj_snap.c
+index 76aaca8..778059a 100644
+--- a/tarantool/third_party/luajit/src/lj_snap.c
++++ b/tarantool/third_party/luajit/src/lj_snap.c
+@@ -679,7 +679,12 @@ static void snap_restoreval(jit_State *J, GCtrace *T, ExitState *ex,
+     } else if (irt_ispri(t)) {
+       setpriV(o, irt_toitype(t));
+     } else {
+-      setgcV(J->L, o, (GCobj *)ex->gpr[r-RID_MIN_GPR], irt_toitype(t));
++      GCobj *gco = (GCobj *)ex->gpr[r-RID_MIN_GPR];
++      if (gco != NULL) {
++        setgcV(J->L, o, gco, irt_toitype(t));
++      } else {
++        setnilV(o);  // Set to nil if the object is invalid
++      }
+     }
+   }
+ }

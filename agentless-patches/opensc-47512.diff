@@ -1,0 +1,13 @@
+diff --git a/opensc/src/libopensc/card-cardos.c b/opensc/src/libopensc/card-cardos.c
+index 2e9a9b6..62ad377 100644
+--- a/opensc/src/libopensc/card-cardos.c
++++ b/opensc/src/libopensc/card-cardos.c
+@@ -549,7 +549,7 @@ get_next_part:
+ 		/* extract next offset */
+ 		q = sc_asn1_find_tag(card->ctx, p, tlen, 0x8a, &ilen);
+ 		if (q != NULL && ilen == 1) {
+-			offset = (u8)ilen;
++			offset = q[0];
+ 			goto get_next_part;
+ 		}
+ 		len -= tlen + 2;

@@ -1,0 +1,79 @@
+Reading 68 bytes from /tmp/poc
+======================= INFO =========================
+This binary is built for AFL-fuzz.
+To run the target function on individual input(s) execute this:
+  /out/encoder_mvg_fuzzer < INPUT_FILE
+or
+  /out/encoder_mvg_fuzzer INPUT_FILE1 [INPUT_FILE2 ... ]
+To fuzz with afl-fuzz execute this:
+  afl-fuzz [afl-flags] /out/encoder_mvg_fuzzer [-N]
+afl-fuzz will run N iterations before re-spawning the process (default: 1000)
+======================================================
+=================================================================
+==12==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x6130000001a8 at pc 0x0000004e0335 bp 0x7ffd8b9ed300 sp 0x7ffd8b9ecab0
+WRITE of size 40 at 0x6130000001a8 thread T0
+SCARINESS: 45 (multi-byte-write-heap-buffer-overflow)
+    #0 0x4e0334 in __asan_memcpy /src/llvm/projects/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cc:23
+    #1 0x67163c in DrawDashPolygon /src/imagemagick/MagickCore/draw.c:1597:21
+    #2 0x66b9dc in DrawPrimitive /src/imagemagick/MagickCore/draw.c:4721:18
+    #3 0x663aaa in DrawImage /src/imagemagick/MagickCore/draw.c:3257:17
+    #4 0x908061 in ReadMVGImage /src/imagemagick/coders/mvg.c:221:10
+    #5 0x62c107 in ReadImage /src/imagemagick/MagickCore/constitute.c:497:13
+    #6 0x5cddcf in BlobToImage /src/imagemagick/MagickCore/blob.c:466:13
+    #7 0x526d84 in Magick::Image::read(Magick::Blob const&) /src/imagemagick/Magick++/lib/Image.cpp:4008:12
+    #8 0x51d3ea in LLVMFuzzerTestOneInput /src/imagemagick/Magick++/fuzz/encoder_fuzzer.cc:20:11
+    #9 0x51dbcf in ExecuteFilesOnyByOne(int, char**) /src/libfuzzer/afl/afl_driver.cpp:279:5
+    #10 0x51e16f in main /src/libfuzzer/afl/afl_driver.cpp:316:12
+    #11 0x7c1428cd483f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #12 0x41d618 in _start (/out/encoder_mvg_fuzzer+0x41d618)
+
+DEDUP_TOKEN: __asan_memcpy--DrawDashPolygon--DrawPrimitive
+0x6130000001a8 is located 0 bytes to the right of 360-byte region [0x613000000040,0x6130000001a8)
+allocated by thread T0 here:
+    #0 0x4e13d8 in malloc /src/llvm/projects/compiler-rt/lib/asan/asan_malloc_linux.cc:88
+    #1 0x670e31 in DrawDashPolygon /src/imagemagick/MagickCore/draw.c:1514:34
+    #2 0x66b9dc in DrawPrimitive /src/imagemagick/MagickCore/draw.c:4721:18
+    #3 0x663aaa in DrawImage /src/imagemagick/MagickCore/draw.c:3257:17
+    #4 0x908061 in ReadMVGImage /src/imagemagick/coders/mvg.c:221:10
+    #5 0x62c107 in ReadImage /src/imagemagick/MagickCore/constitute.c:497:13
+    #6 0x5cddcf in BlobToImage /src/imagemagick/MagickCore/blob.c:466:13
+    #7 0x526d84 in Magick::Image::read(Magick::Blob const&) /src/imagemagick/Magick++/lib/Image.cpp:4008:12
+    #8 0x51d3ea in LLVMFuzzerTestOneInput /src/imagemagick/Magick++/fuzz/encoder_fuzzer.cc:20:11
+    #9 0x51dbcf in ExecuteFilesOnyByOne(int, char**) /src/libfuzzer/afl/afl_driver.cpp:279:5
+    #10 0x51e16f in main /src/libfuzzer/afl/afl_driver.cpp:316:12
+    #11 0x7c1428cd483f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: malloc--DrawDashPolygon--DrawPrimitive
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm/projects/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cc:23 in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x0c267fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c267fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c267fff8000: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x0c267fff8010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c267fff8020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c267fff8030: 00 00 00 00 00[fa]fa fa fa fa fa fa fa fa fa fa
+  0x0c267fff8040: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c267fff8050: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c267fff8060: fd fd fd fd fd fd fd fd fd fd fd fd fd fa fa fa
+  0x0c267fff8070: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c267fff8080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==12==ABORTING

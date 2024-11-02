@@ -1,0 +1,54 @@
+diff --git a/src/array.c b/src/array.c
+index e83f7e2d8..6c8c45247 100644
+--- a/src/array.c
++++ b/src/array.c
+@@ -590,15 +590,18 @@ mrb_ary_shift_m(mrb_state *mrb, mrb_value self)
+     return mrb_ary_shift(mrb, self);
+   };
+   ary_modify_check(mrb, a);
+-  if (len == 0 || n == 0) return mrb_ary_new(mrb);
+-  if (n > len) n = len;
+-  val = mrb_ary_new_from_values(mrb, n, ARY_PTR(a));
+-  if (ARY_SHARED_P(a)) {
+-  L_SHIFT:
+-    a->as.heap.ptr+=n;
+-    a->as.heap.len-=n;
+-    return val;
+-  }
++    if (len == 0 || n <= 0) return mrb_ary_new(mrb); // Ensure n is non-negative
++    if (n > len) n = len;
++    if (!a || !ARY_PTR(a)) return mrb_nil_value(); // Check for null pointer
++    val = mrb_ary_new_from_values(mrb, n, ARY_PTR(a));
++    if (ARY_SHARED_P(a)) {
++      ary_make_shared(mrb, a);  // Ensure shared array is properly handled
++    L_SHIFT:
++      a->as.heap.ptr += n;
++      a->as.heap.len -= n;
++      ARY_SET_LEN(a, len-n);  // Update array length after modification
++      return val;
++    }
+   if (len > ARY_SHIFT_SHARED_MIN) {
+     ary_make_shared(mrb, a);
+     goto L_SHIFT;
+@@ -607,14 +610,17 @@ mrb_ary_shift_m(mrb_state *mrb, mrb_value self)
+     ARY_SET_LEN(a, 0);
+   }
+   else {
++    if (!a || !ARY_PTR(a)) return mrb_nil_value(); // Check for null pointer
+     mrb_value *ptr = ARY_PTR(a);
+     mrb_int size = len-n;
+ 
+-    while (size--) {
+-      *ptr = *(ptr+n);
+-      ++ptr;
++    if (n <= len) {  // Ensure n is within bounds
++      while (size--) {
++        *ptr = *(ptr+n);
++        ++ptr;
++      }
++      ARY_SET_LEN(a, len-n);  // Update array length after shifting
+     }
+-    ARY_SET_LEN(a, len-n);
+   }
+   return val;
+ }

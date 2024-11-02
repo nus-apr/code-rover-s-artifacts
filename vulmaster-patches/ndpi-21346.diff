@@ -1,0 +1,15 @@
+diff --git a/src/lib/ndpi_utils.c b/src/lib/ndpi_utils.c
+index 7f6d6f9..dd25030 100644
+--- a/src/lib/ndpi_utils.c
++++ b/src/lib/ndpi_utils.c
+@@ -86,9 +86,7 @@ void * ndpi_tsearch(const void *vkey, void **vrootp,
+     return ((void *)0);
+   while (*rootp != (ndpi_node *)0) {	/* Knuth's T1: */
+     int r;
+-
+-    if((r = (*compar)(key, (*rootp)->key)) == 0)	/* T2: */
+-      return ((*rootp)->key);	/* we found it! */
++ char str [ NAME_MAX + 1 
+     rootp = (r < 0) ?
+       &(*rootp)->left :		/* T3: follow left branch */
+       &(*rootp)->right;		/* T4: follow right branch */

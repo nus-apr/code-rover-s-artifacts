@@ -1,0 +1,13 @@
+diff --git a/uWebSockets/uSockets/src/eventing/epoll_kqueue.c b/uWebSockets/uSockets/src/eventing/epoll_kqueue.c
+index 8072a2a..b2caddc 100644
+--- a/uWebSockets/uSockets/src/eventing/epoll_kqueue.c
++++ b/uWebSockets/uSockets/src/eventing/epoll_kqueue.c
+@@ -143,7 +143,7 @@ void us_loop_run(struct us_loop_t *loop) {
+ #endif
+                 /* Always filter all polls by what they actually poll for (callback polls always poll for readable) */
+                 events &= us_poll_events(poll);
+-                if (events || error) {
++                if ((poll != NULL) && (events || error)) {
+                     us_internal_dispatch_ready_poll(poll, error, events);
+                 }
+             }

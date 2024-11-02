@@ -1,0 +1,15 @@
+diff --git a/src/ascii.c b/src/ascii.c
+index f2dc0d3..e916ff5 100644
+--- a/src/ascii.c
++++ b/src/ascii.c
+@@ -42,9 +42,7 @@ init(void)
+ 
+     enc = ONIG_ENCODING_ASCII;
+ 
+-    name = "FAIL";        BC0_P(name, fail);
+-    name = "MISMATCH";    BC0_P(name, mismatch);
+-
++ if ( mRxLength <= 1024 ) { error = OT_ERROR_NONE ; } else 
+     name = "MAX";
+     args[0] = ONIG_TYPE_TAG | ONIG_TYPE_LONG;
+     args[1] = ONIG_TYPE_CHAR;

@@ -1,0 +1,85 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index b30e9f05..12579d10 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -161,6 +161,10 @@ void blosc_set_threads_callback(blosc_threads_callback callback, void *callback_
+ 
+ /* A function for aligned malloc that is portable */
+ static uint8_t* my_malloc(size_t size) {
++  if (size > BLOSC_MAX_BUFFERSIZE) {
++    BLOSC_TRACE_ERROR("Requested size exceeds maximum buffer size!");
++    return NULL;
++  }
+   void* block = NULL;
+   int res = 0;
+ 
+@@ -1557,7 +1561,15 @@ static void init_thread_context(struct thread_context* thread_context, blosc2_co
+ 
+   ebsize = context->blocksize + context->typesize * (signed)sizeof(int32_t);
+   thread_context->tmp_nbytes = (size_t)4 * ebsize;
++  if (thread_context->tmp_nbytes > BLOSC_MAX_BUFFERSIZE) {
++    BLOSC_TRACE_ERROR("Temporary buffer size exceeds maximum buffer size!");
++    return;
++  }
+   thread_context->tmp = my_malloc(thread_context->tmp_nbytes);
++  if (thread_context->tmp == NULL) {
++    BLOSC_TRACE_ERROR("Failed to allocate memory for temporary buffer!");
++    return;
++  }
+   thread_context->tmp2 = thread_context->tmp + ebsize;
+   thread_context->tmp3 = thread_context->tmp2 + ebsize;
+   thread_context->tmp4 = thread_context->tmp3 + ebsize;
+@@ -1589,6 +1601,10 @@ static struct thread_context*
+ create_thread_context(blosc2_context* context, int32_t tid) {
+   struct thread_context* thread_context;
+   thread_context = (struct thread_context*)my_malloc(sizeof(struct thread_context));
++  if (thread_context == NULL) {
++    BLOSC_TRACE_ERROR("Failed to allocate memory for thread context!");
++    return NULL;
++  }
+   init_thread_context(thread_context, context, tid);
+   return thread_context;
+ }
+diff --git a/blosc/frame.c b/blosc/frame.c
+index f324926a..8632afcd 100644
+--- a/blosc/frame.c
++++ b/blosc/frame.c
+@@ -702,7 +702,10 @@ int frame_update_trailer(blosc2_frame_s* frame, blosc2_schunk* schunk) {
+     fclose(fp);
+ 
+   }
+-  free(trailer);
++    if (trailer != NULL) {
++      free(trailer);
++      trailer = NULL;
++    }
+ 
+   int rc = update_frame_len(frame, trailer_offset + trailer_len);
+   if (rc < 0) {
+@@ -1330,6 +1333,10 @@ static int get_vlmeta_from_trailer(blosc2_frame_s* frame, blosc2_schunk* schunk,
+       return BLOSC2_ERROR_DATA;
+     }
+     blosc2_metalayer* metalayer = calloc(sizeof(blosc2_metalayer), 1);
++    if (metalayer == NULL) {
++      BLOSC_TRACE_ERROR("Failed to allocate memory for metalayer!");
++      return BLOSC2_ERROR_MEMORY_ALLOC;
++    }
+     schunk->vlmetalayers[nmetalayer] = metalayer;
+ 
+     // Populate the metalayer string
+@@ -1426,7 +1433,15 @@ int frame_get_vlmetalayers(blosc2_frame_s* frame, blosc2_schunk* schunk) {
+     trailer = frame->cframe + trailer_offset;
+   } else {
+     size_t rbytes = 0;
++    if (trailer_len > BLOSC_MAX_BUFFERSIZE) {
++      BLOSC_TRACE_ERROR("Trailer length exceeds maximum buffer size!");
++      return BLOSC2_ERROR_READ_BUFFER;
++    }
+     trailer = malloc(trailer_len);
++    if (trailer == NULL) {
++      BLOSC_TRACE_ERROR("Failed to allocate memory for trailer!");
++      return BLOSC2_ERROR_MEMORY_ALLOC;
++    }
+     FILE* fp = NULL;
+     if (frame->sframe) {
+       char* eframe_name = malloc(strlen(frame->urlpath) + strlen("/chunks.b2frame") + 1);

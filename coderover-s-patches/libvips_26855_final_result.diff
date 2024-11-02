@@ -1,0 +1,38 @@
+diff --git a/libvips/foreign/tiff2vips.c b/libvips/foreign/tiff2vips.c
+index b622d4e2a..c1a5b6158 100644
+--- a/libvips/foreign/tiff2vips.c
++++ b/libvips/foreign/tiff2vips.c
+@@ -1330,6 +1330,12 @@ rtiff_parse_palette( Rtiff *rtiff, VipsImage *out )
+ 	if( rtiff_check_bits_palette( rtiff ) ||
+ 		rtiff_check_min_samples( rtiff, 1 ) )
+ 		return( -1 ); 
++	/* Validate bits_per_sample to ensure it is within a valid range */
++	if (bits_per_sample < 1 || bits_per_sample > 16) {
++		vips_error("tiff2vips", "%s", _("invalid bits_per_sample"));
++		return (-1);
++	}
++
+ 	len = 1 << bits_per_sample;
+ 
+ 	if( !(read = VIPS_NEW( out, PaletteRead )) ||
+@@ -1338,6 +1344,20 @@ rtiff_parse_palette( Rtiff *rtiff, VipsImage *out )
+ 		!(read->blue8 = VIPS_ARRAY( out, len, VipsPel )) )
+ 		return( -1 );
+ 
++	/* Ensure that the colormap is correctly retrieved */
++	if( !TIFFGetField( rtiff->tiff, 
++		TIFFTAG_COLORMAP, 
++		&read->red16, &read->green16, &read->blue16 ) ) {
++		vips_error( "tiff2vips", "%s", _( "bad colormap" ) );
++		return( -1 );
++	}
++
++	/* Check that the retrieved colormap length matches the expected length */
++	if (!read->red16 || !read->green16 || !read->blue16) {
++		vips_error("tiff2vips", "%s", _("colormap retrieval failed"));
++		return (-1);
++	}
++
+ 	/* Get maps, convert to 8-bit data.
+ 	 */
+ 	if( !TIFFGetField( rtiff->tiff, 

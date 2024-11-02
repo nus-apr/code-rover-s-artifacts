@@ -1,0 +1,39 @@
+diff --git a/epan/to_str.c b/epan/to_str.c
+index 62841b4273..1601512d6f 100644
+--- a/epan/to_str.c
++++ b/epan/to_str.c
+@@ -162,10 +162,12 @@ bytes_to_hexstr_punct(char *out, const guint8 *ad, guint32 len, char punct)
+ 	if (!ad)
+ 		REPORT_DISSECTOR_BUG("Null pointer passed to bytes_to_hexstr_punct()");
+ 
+-	out = byte_to_hex(out, ad[0]);
+-	for (i = 1; i < len; i++) {
+-		*out++ = punct;
+-		out = byte_to_hex(out, ad[i]);
++	if (len > 0) {
++		out = byte_to_hex(out, ad[0]);
++		for (i = 1; i < len; i++) {
++			*out++ = punct;
++			out = byte_to_hex(out, ad[i]);
++		}
+ 	}
+ 	return out;
+ }
+@@ -197,13 +199,13 @@ bytestring_to_str(wmem_allocator_t *scope, const guint8 *ad, const guint32 len,
+ 	if (!punct)
+ 		return bytes_to_str(scope, ad, len);
+ 
+-	buf=(gchar *)wmem_alloc(scope, MAX_BYTE_STR_LEN+3+1);
+-	if (buflen > MAX_BYTE_STR_LEN/3) {	/* bd_len > 16 */
++	buf = (gchar *)wmem_alloc(scope, (buflen * 3) + 3 + 1); // Allocate buffer with sufficient space for hex conversion
++	if (buflen > MAX_BYTE_STR_LEN / 3) {	/* bd_len > 16 */
+ 		truncated = 1;
+-		buflen = MAX_BYTE_STR_LEN/3;
++		buflen = MAX_BYTE_STR_LEN / 3;
+ 	}
+ 
+-	buf_ptr = bytes_to_hexstr_punct(buf, ad, buflen, punct); /* max MAX_BYTE_STR_LEN-1 bytes */
++	buf_ptr = bytes_to_hexstr_punct(buf, ad, buflen, punct); // Ensure buffer usage is safe
+ 
+ 	if (truncated) {
+ 		*buf_ptr++ = punct;			/* 1 byte */

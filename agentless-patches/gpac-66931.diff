@@ -1,0 +1,39 @@
+diff --git a/gpac/src/filters/inspect.c b/gpac/src/filters/inspect.c
+index 7148fbc..c4cf183 100644
+--- a/gpac/src/filters/inspect.c
++++ b/gpac/src/filters/inspect.c
+@@ -193,14 +193,15 @@ static void inspect_printf(FILE *dump, const char *fmt, ...)
+ 
+ 
+ #ifndef GPAC_DISABLE_AV_PARSERS
+-static u32 inspect_get_nal_size(char *ptr, u32 nalh_size)
++static u32 inspect_get_nal_size(char *ptr, u32 nalh_size, u32 available_size)
+ {
+ 	u32 nal_size=0;
+ 	u32 v = nalh_size;
+-	while (v) {
++	while (v && available_size) {
+ 		nal_size |= (u8) *ptr;
+ 		ptr++;
+ 		v-=1;
++		available_size--;
+ 		if (v) nal_size <<= 8;
+ 	}
+ 	return nal_size;
+@@ -3214,7 +3215,7 @@ props_done:
+ 			}
+ 		}
+ 		while (size) {
+-			u32 nal_size = inspect_get_nal_size((char*)data, pctx->nalu_size_length);
++			u32 nal_size = inspect_get_nal_size((char*)data, pctx->nalu_size_length, size);
+ 			data += pctx->nalu_size_length;
+ 
+ 			if (pctx->nalu_size_length + nal_size > size) {
+@@ -5017,6 +5018,4 @@ const GF_FilterRegister *probe_register(GF_FilterSession *session)
+ {
+ 	return NULL;
+ }
+-#endif // GPAC_DISABLE_INSPECT
+-
+-
++#endif // GPAC_DISABLE_INSPECT

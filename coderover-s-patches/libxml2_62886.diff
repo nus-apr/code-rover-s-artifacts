@@ -1,0 +1,16 @@
+diff --git a/dict.c b/dict.c
+index 8bfc9f15..65cc24b5 100644
+--- a/dict.c
++++ b/dict.c
+@@ -520,6 +520,11 @@ xmlDictFindEntry(const xmlDict *dict, const xmlChar *prefix,
+     unsigned mask, pos, displ;
+     int found = 0;
+ 
++    if (dict == NULL || dict->table == NULL) {
++        fprintf(stderr, "Error: Invalid dictionary state\n");
++        return NULL;
++    }
++
+     mask = dict->size - 1;
+     pos = hashValue & mask;
+     entry = &dict->table[pos];

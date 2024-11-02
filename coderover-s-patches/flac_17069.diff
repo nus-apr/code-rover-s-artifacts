@@ -1,0 +1,38 @@
+diff --git a/src/libFLAC/bitreader.c b/src/libFLAC/bitreader.c
+index 935208a5..d418e7fb 100644
+--- a/src/libFLAC/bitreader.c
++++ b/src/libFLAC/bitreader.c
+@@ -864,8 +864,12 @@ incomplete_lsbs:
+ 			cwords = br->consumed_words;
+ 			words = br->words;
+ 			ucbits = FLAC__BITS_PER_WORD - br->consumed_bits;
+-			b = br->buffer[cwords] << br->consumed_bits;
+-		} while(cwords >= words && val < end);
++    if (cwords < words) {
++        b = br->buffer[cwords] << br->consumed_bits;
++    } else {
++        return false; // Prevent out-of-bounds access
++    }
++    } while(cwords < words && val < end);
+ 	}
+ 
+ 	if(ucbits == 0 && cwords < words) {
+diff --git a/src/libFLAC/stream_decoder.c b/src/libFLAC/stream_decoder.c
+index 5b96086c..0e985b21 100644
+--- a/src/libFLAC/stream_decoder.c
++++ b/src/libFLAC/stream_decoder.c
+@@ -2770,8 +2770,12 @@ FLAC__bool read_residual_partitioned_rice_(FLAC__StreamDecoder *decoder, uint32_
+ 		if(rice_parameter < pesc) {
+ 			partitioned_rice_contents->raw_bits[partition] = 0;
+ 			u = (partition_order == 0 || partition > 0)? partition_samples : partition_samples - predictor_order;
+-			if(!FLAC__bitreader_read_rice_signed_block(decoder->private_->input, residual + sample, u, rice_parameter))
+-				return false; /* read_callback_ sets the state for us */
++    if(u > 0 && rice_parameter < 32) { // Validate parameters
++        if(!FLAC__bitreader_read_rice_signed_block(decoder->private_->input, residual + sample, u, rice_parameter))
++            return false; /* read_callback_ sets the state for us */
++    } else {
++        return false; // Invalid parameters
++    }
+ 			sample += u;
+ 		}
+ 		else {

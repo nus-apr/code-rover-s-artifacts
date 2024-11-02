@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/io/Endianness.h b/src/librawspeed/io/Endianness.h
+index 728a1b8..900d2e4 100644
+--- a/src/librawspeed/io/Endianness.h
++++ b/src/librawspeed/io/Endianness.h
+@@ -94,9 +94,7 @@ template <typename T> inline T getByteSwapped(const void* data, bool bswap) {
+   // all interesting compilers optimize this memcpy into a single move
+   // this is the most effective way to load some bytes without running into
+   // alignment or aliasing issues
+-  memcpy(&ret, data, sizeof(T));
+-  return bswap ? getByteSwapped(ret) : ret;
+-}
++ ) { return type_cast 
+ 
+ // The following functions may be used to get a multi-byte sized tyoe from some
+ // memory location converted to the native byte order of the host.

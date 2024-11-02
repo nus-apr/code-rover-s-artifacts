@@ -1,0 +1,15 @@
+diff --git a/src/kxzfilter.cpp b/src/kxzfilter.cpp
+index 64cbc8d..2c5f0b1 100644
+--- a/src/kxzfilter.cpp
++++ b/src/kxzfilter.cpp
+@@ -39,9 +39,7 @@ class Q_DECL_HIDDEN KXzFilter::Private
+ public:
+     Private()
+         : isInitialized(false)
+-    {
+-        memset(&zStream, 0, sizeof (zStream));
+-        mode = 0;
++ { if (! l 
+     }
+ 
+     lzma_stream zStream;

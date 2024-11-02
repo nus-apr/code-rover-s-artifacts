@@ -1,0 +1,26 @@
+diff --git a/MagickCore/blob.c b/MagickCore/blob.c
+index a2229eeb0..30cc6d299 100644
+--- a/MagickCore/blob.c
++++ b/MagickCore/blob.c
+@@ -2495,12 +2495,18 @@ MagickExport void *ImagesToBlob(const ImageInfo *image_info,Image *images,
+           if (blob != (void *) NULL)
+             {
+               if (status == MagickFalse)
+-                blob=RelinquishMagickMemory(blob);
++                {
++                  if (blob_info->blob != blob) // Ensure we only free if blob was allocated here
++                    blob=RelinquishMagickMemory(blob);
++                }
+               else
+                 blob=ResizeQuantumMemory(blob,*length+1,sizeof(unsigned char));
+             }
+-          else if (status == MagickFalse)
+-            blob_info->blob=RelinquishMagickMemory(blob_info->blob);
++          else if (status == MagickFalse && blob_info->blob != NULL) // Ensure blob_info->blob is valid before freeing
++            {
++              if (blob_info->blob != blob) // Ensure we only free if blob_info->blob was allocated here
++                blob_info->blob=RelinquishMagickMemory(blob_info->blob);
++            }
+         }
+     }
+   else

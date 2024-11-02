@@ -1,0 +1,15 @@
+diff --git a/tests/fuzz/fuzz_json_decode.cc b/tests/fuzz/fuzz_json_decode.cc
+index 70e532a..5923782 100644
+--- a/tests/fuzz/fuzz_json_decode.cc
++++ b/tests/fuzz/fuzz_json_decode.cc
+@@ -16,9 +16,7 @@
+ */
+ extern "C" int
+ LLVMFuzzerTestOneInput(uint8_t *data, size_t size) {
+-    UA_ByteString buf;
+-    buf.data = (UA_Byte*)data;
+-    buf.length = size;
++ ) ; } return from_msgpack_internal_internal 
+ 
+     UA_Variant out;
+     UA_Variant_init(&out);

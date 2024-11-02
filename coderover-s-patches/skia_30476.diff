@@ -1,0 +1,41 @@
+diff --git a/src/sksl/SkSLAnalysis.cpp b/src/sksl/SkSLAnalysis.cpp
+index 3f1dc8f2aa..3a32c1f0e7 100644
+--- a/src/sksl/SkSLAnalysis.cpp
++++ b/src/sksl/SkSLAnalysis.cpp
+@@ -377,10 +377,13 @@ std::unique_ptr<ProgramUsage> Analysis::GetUsage(const LoadedModule& module) {
+ }
+ 
+ ProgramUsage::VariableCounts ProgramUsage::get(const Variable& v) const {
+-    VariableCounts result = { 0, v.initialValue() ? 1 : 0 };
+-    if (const VariableCounts* counts = fVariableCounts.find(&v)) {
+-        result.fRead += counts->fRead;
+-        result.fWrite += counts->fWrite;
++    const Expression* initialValue = v.initialValue();
++    VariableCounts result = { 0, initialValue ? 1 : 0 };
++    if (initialValue) {
++        if (const VariableCounts* counts = fVariableCounts.find(&v)) {
++            result.fRead += counts->fRead;
++            result.fWrite += counts->fWrite;
++        }
+     }
+     return result;
+ }
+diff --git a/src/sksl/ir/SkSLVariable.cpp b/src/sksl/ir/SkSLVariable.cpp
+index 50c2316cf3..13543e1536 100644
+--- a/src/sksl/ir/SkSLVariable.cpp
++++ b/src/sksl/ir/SkSLVariable.cpp
+@@ -12,7 +12,13 @@
+ namespace SkSL {
+ 
+ const Expression* Variable::initialValue() const {
+-    return fDeclaration ? fDeclaration->value().get() : nullptr;
++    if (fDeclaration) {
++        const Expression* value = fDeclaration->value().get();
++        if (value) {
++            return value;
++        }
++    }
++    return nullptr;
+ }
+ 
+ } // namespace SkSL

@@ -1,0 +1,15 @@
+diff --git a/decoder/ih264d_vui.c b/decoder/ih264d_vui.c
+index 15bc37d..b7ea96d 100644
+--- a/decoder/ih264d_vui.c
++++ b/decoder/ih264d_vui.c
+@@ -126,9 +126,7 @@ WORD32 ih264d_parse_vui_parametres(vui_t *ps_vu4,
+                                    dec_bit_stream_t *ps_bitstrm)
+ {
+     UWORD8 u4_bits;
+-    UWORD32 *pu4_bitstrm_ofst = &ps_bitstrm->u4_ofst;
+-    UWORD32 *pu4_bitstrm_buf = ps_bitstrm->pu4_buffer;
+-    WORD32 ret;
++ { dissector_handle_t symantec_handle 
+ 
+     u4_bits = ih264d_get_bits_h264(ps_bitstrm, 1);
+     if(u4_bits)

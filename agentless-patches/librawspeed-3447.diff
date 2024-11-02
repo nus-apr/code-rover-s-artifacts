@@ -1,0 +1,16 @@
+diff --git a/librawspeed/src/librawspeed/common/RawImage.cpp b/librawspeed/src/librawspeed/common/RawImage.cpp
+index 1ec01a3..5321f4b 100644
+--- a/librawspeed/src/librawspeed/common/RawImage.cpp
++++ b/librawspeed/src/librawspeed/common/RawImage.cpp
+@@ -295,7 +295,10 @@ void RawImageData::transferBadPixelsToMap()
+   for (unsigned int pos : mBadPixelPositions) {
+     uint32 pos_x = pos&0xffff;
+     uint32 pos_y = pos>>16;
+-    mBadPixelMap[mBadPixelMapPitch * pos_y + (pos_x >> 3)] |= 1 << (pos_x&7);
++    size_t index = mBadPixelMapPitch * pos_y + (pos_x >> 3);
++    if (index < static_cast<size_t>(mBadPixelMapPitch) * uncropped_dim.y) {
++        mBadPixelMap[index] |= 1 << (pos_x&7);
++    }
+   }
+   mBadPixelPositions.clear();
+ }

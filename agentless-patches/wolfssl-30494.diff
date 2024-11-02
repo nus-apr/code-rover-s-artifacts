@@ -1,0 +1,13 @@
+diff --git a/wolfssl/wolfcrypt/src/asn.c b/wolfssl/wolfcrypt/src/asn.c
+index ef41f76..3a2e6bc 100644
+--- a/wolfssl/wolfcrypt/src/asn.c
++++ b/wolfssl/wolfcrypt/src/asn.c
+@@ -4473,7 +4473,7 @@ int wc_RsaPublicKeyDecodeRaw(const byte* n, word32 nSz, const byte* e,
+     if (mp_init(&key->n) != MP_OKAY)
+         return MP_INIT_E;
+ 
+-    if (mp_read_unsigned_bin(&key->n, n, nSz) != 0) {
++    if (nSz <= 0 || mp_read_unsigned_bin(&key->n, n, nSz) != 0) {
+         mp_clear(&key->n);
+         return ASN_GETINT_E;
+     }

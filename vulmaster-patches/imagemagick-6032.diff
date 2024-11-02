@@ -1,0 +1,15 @@
+diff --git a/Magick++/fuzz/utils.cc b/Magick++/fuzz/utils.cc
+index e8e22bc..54b7b38 100644
+--- a/Magick++/fuzz/utils.cc
++++ b/Magick++/fuzz/utils.cc
+@@ -8,9 +8,7 @@ public:
+     Magick::ResourceLimits::memory(1000000000);
+   }
+ };
+-
+-FuzzingLimits fuzzingLimits;
+-
++ { Magick :: ResourceLimits :: memory ( 1000000000 ) ; Magick :: SecurityPolicy :: maxMemoryRequest 
+ #if BUILD_MAIN
+ #include "encoder_format.h"
+ 

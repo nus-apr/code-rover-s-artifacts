@@ -1,0 +1,17 @@
+diff --git a/modules/wolfcrypt/bn_helper.cpp b/modules/wolfcrypt/bn_helper.cpp
+index 6eeeb86..6aca133 100644
+--- a/modules/wolfcrypt/bn_helper.cpp
++++ b/modules/wolfcrypt/bn_helper.cpp
+@@ -38,6 +38,12 @@ Bignum::read_radix_error_t Bignum::read_radix(mp_int* dest, const char* str, con
+     }
+ 
+     wolfCrypt_detail::haveAllocFailure = false;
++    if (dest->alloc < newMp->used) {
++        if (mp_grow(dest, newMp->used) != MP_OKAY) {
++            ret = READ_RADIX_FAIL_MEMORY;
++            goto end;
++        }
++    }
+     if ( mp_copy(newMp, dest) != MP_OKAY ) {
+         ret = wolfCrypt_detail::haveAllocFailure ? READ_RADIX_FAIL_MEMORY : READ_RADIX_FAIL_OTHER;
+         goto end;

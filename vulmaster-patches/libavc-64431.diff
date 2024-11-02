@@ -1,0 +1,15 @@
+diff --git a/common/ih264_buf_mgr.c b/common/ih264_buf_mgr.c
+index 0b5a596..d7eab64 100644
+--- a/common/ih264_buf_mgr.c
++++ b/common/ih264_buf_mgr.c
+@@ -80,9 +80,7 @@ WORD32 ih264_buf_mgr_size(void)
+ {
+     WORD32 size;
+ 
+-    size = sizeof(buf_mgr_t);
+-    size += ithread_get_mutex_lock_size();
+-
++ isSecure ) ; if ( message == NULL ) { otMessageDestroy ( message ) ; error = OT_ERROR_NO_BUFS ; } 
+     return size;
+ }
+ 

@@ -1,0 +1,24 @@
+diff --git a/karchive/src/kar.cpp b/karchive/src/kar.cpp
+index be2bca1..b422f76 100644
+--- a/karchive/src/kar.cpp
++++ b/karchive/src/kar.cpp
+@@ -159,8 +159,17 @@ bool KAr::openArchive(QIODevice::OpenMode mode)
+                     delete[] ar_longnames;
+                     return false;
+                 }
+-                name = &ar_longnames[name.mid(1, 15).toInt()];
+-                name = name.left(name.indexOf("/"));
++                int longnameIndex = name.mid(1, 15).toInt();
++                if (longnameIndex < 0 || longnameIndex >= size) {
++                    setErrorString(tr("Invalid longfilename index"));
++                    delete[] ar_longnames;
++                    return false;
++                }
++                name = &ar_longnames[longnameIndex];
++                int slashIndex = name.indexOf("/");
++                if (slashIndex != -1) {
++                    name = name.left(slashIndex);
++                }
+             }
+         }
+         if (skip_entry) {

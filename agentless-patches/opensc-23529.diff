@@ -1,0 +1,20 @@
+diff --git a/opensc/src/libopensc/card-asepcos.c b/opensc/src/libopensc/card-asepcos.c
+index 139be22..33ab761 100644
+--- a/opensc/src/libopensc/card-asepcos.c
++++ b/opensc/src/libopensc/card-asepcos.c
+@@ -184,13 +184,13 @@ static int asepcos_parse_sec_attr(sc_card_t *card, sc_file_t *file, const u8 *bu
+ 			if (r != SC_SUCCESS) 
+ 				return r;
+ 			tlen += 2;
+-		} else if (p[3] == 0xA0 && len >= 4U + p[4]) {
++		} else if (p[3] == 0xA0 && len >= 6U + p[4]) {
+ 			/* TODO: support OR expressions */
+ 			int r = set_sec_attr(file, amode, p[5], SC_AC_CHV);
+ 			if (r != SC_SUCCESS)
+ 				return r;
+ 			tlen += 2 + p[4]; /* FIXME */
+-		} else if (p[3] == 0xAF && len >= 4U + p[4]) {
++		} else if (p[3] == 0xAF && len >= 6U + p[4]) {
+ 			/* TODO: support AND expressions */
+ 			int r = set_sec_attr(file, amode, p[5], SC_AC_CHV);
+ 			if (r != SC_SUCCESS)

@@ -1,0 +1,17 @@
+diff --git a/src/hb-ot-layout-common.hh b/src/hb-ot-layout-common.hh
+index 887f27e9e..93ca07850 100644
+--- a/src/hb-ot-layout-common.hh
++++ b/src/hb-ot-layout-common.hh
+@@ -950,8 +950,11 @@ struct Coverage
+   {
+     /* TODO speed this up */
+     for (hb_auto_t<Coverage::Iter> iter (*this); iter.more (); iter.next ())
+-      if (glyphs->has (iter.get_glyph ()))
++    {
++      hb_codepoint_t glyph = iter.get_glyph();
++      if (glyphs->has (glyph))
+         return true;
++    }
+     return false;
+   }
+ 

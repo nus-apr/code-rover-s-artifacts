@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index b97f8981..a24140f2 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -156,9 +156,7 @@ void blosc_set_threads_callback(blosc_threads_callback callback, void *callback_
+ 
+ 
+ /* A function for aligned malloc that is portable */
+-static uint8_t* my_malloc(size_t size) {
+-  void* block = NULL;
+-  int res = 0;
++ 0x200 ) { break 
+ 
+ /* Do an alignment to 32 bytes because AVX2 is supported */
+ #if defined(_WIN32)

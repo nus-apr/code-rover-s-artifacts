@@ -1,0 +1,39 @@
+diff --git a/usrsctplib/netinet/sctp_auth.c b/usrsctplib/netinet/sctp_auth.c
+index 604e6c7d..842c1ef7 100755
+--- a/usrsctplib/netinet/sctp_auth.c
++++ b/usrsctplib/netinet/sctp_auth.c
+@@ -1059,6 +1059,10 @@ sctp_hmac_m(uint16_t hmac_algo, uint8_t *key, uint32_t keylen,
+ 		m_offset -= SCTP_BUF_LEN(m_tmp);
+ 		m_tmp = SCTP_BUF_NEXT(m_tmp);
+ 	}
++	if (m_tmp == NULL) {
++		/* Prevent accessing beyond the buffer */
++		return 0;
++	}
+ 	/* now use the rest of the mbuf chain for the text */
+ 	while (m_tmp != NULL) {
+ 		if ((SCTP_BUF_NEXT(m_tmp) == NULL) && trailer) {
+diff --git a/usrsctplib/netinet/sctp_input.c b/usrsctplib/netinet/sctp_input.c
+index 063a0cdb..bb8b9085 100755
+--- a/usrsctplib/netinet/sctp_input.c
++++ b/usrsctplib/netinet/sctp_input.c
+@@ -1256,12 +1256,13 @@ sctp_handle_error(struct sctp_chunkhdr *ch,
+ 		/* Process an Error Cause */
+ 		cause_code = ntohs(cause->code);
+ 		cause_length = ntohs(cause->length);
+-		if ((cause_length > remaining_length) || (cause_length == 0)) {
+-			/* Invalid cause length, possibly due to truncation. */
+-			SCTPDBG(SCTP_DEBUG_INPUT1, "Bogus length in cause - bytes left: %u cause length: %u\n",
+-				remaining_length, cause_length);
+-			return (0);
+-		}
++	if ((cause_length > remaining_length) || (cause_length == 0)) {
++		/* Invalid cause length, possibly due to truncation. */
++		SCTPDBG(SCTP_DEBUG_INPUT1, "Bogus length in cause - bytes left: %u cause length: %u\n",
++			remaining_length, cause_length);
++		remaining_length = 0; // Ensure remaining_length is zeroed to prevent further processing
++		break;
++	}
+ 		if (code == 0) {
+ 			/* report the first error cause */
+ 			code = cause_code;

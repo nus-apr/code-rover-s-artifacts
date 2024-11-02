@@ -1,0 +1,1 @@
+/bin/arvo: line 27:    13 Segmentation fault      /out/av1_dec_fuzzer /tmp/poc

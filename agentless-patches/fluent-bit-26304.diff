@@ -1,0 +1,28 @@
+diff --git a/fluent-bit/src/flb_utils.c b/fluent-bit/src/flb_utils.c
+index 0cd23c1..491aec1 100644
+--- a/fluent-bit/src/flb_utils.c
++++ b/fluent-bit/src/flb_utils.c
+@@ -568,12 +568,12 @@ void flb_utils_bytes_to_human_readable_size(size_t bytes,
+ }
+ 
+ 
+-static inline void encoded_to_buf(char *out, const char *in, int len)
++static inline void encoded_to_buf(char *out, const char *in, int len, int out_size)
+ {
+     int i;
+     char *p = out;
+ 
+-    for (i = 0; i < len; i++) {
++    for (i = 0; i < len && i < out_size; i++) {
+         *p++ = in[i];
+     }
+ }
+@@ -647,7 +647,7 @@ int flb_utils_write_str(char *buf, int *off, size_t size,
+                 return FLB_FALSE;
+             }
+             len = snprintf(tmp, sizeof(tmp) - 1, "\\u%.4hhx", (unsigned char) c);
+-            encoded_to_buf(p, tmp, len);
++            encoded_to_buf(p, tmp, len, available - written);
+             p += len;
+         }
+         else if (c >= 0x80 && c <= 0xFFFF) {

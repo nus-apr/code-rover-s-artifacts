@@ -1,0 +1,13 @@
+diff --git a/libplist/src/oplist.c b/libplist/src/oplist.c
+index d3acbdd..5589723 100644
+--- a/libplist/src/oplist.c
++++ b/libplist/src/oplist.c
+@@ -710,7 +710,7 @@ static int node_from_openstep(parse_ctx ctx, plist_t *plist)
+                 }
+                 ctx->pos++;
+             }
+-            if (*ctx->pos != c) {
++            if (ctx->pos >= ctx->end || *ctx->pos != c) {
+                 plist_free_data(data);
+                 PLIST_OSTEP_ERR("Missing closing quote (%c) at offset %ld\n", c, ctx->pos - ctx->start);
+                 ctx->err++;

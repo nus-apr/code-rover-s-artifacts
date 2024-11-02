@@ -1,0 +1,35 @@
+diff --git a/usrsctplib/netinet/sctp_asconf.c b/usrsctplib/netinet/sctp_asconf.c
+index b4d5f18f..4feb0649 100755
+--- a/usrsctplib/netinet/sctp_asconf.c
++++ b/usrsctplib/netinet/sctp_asconf.c
+@@ -291,7 +291,6 @@ sctp_asconf_del_remote_addrs_except(struct sctp_tcb *stcb, struct sockaddr *src)
+ 	TAILQ_FOREACH(net, &stcb->asoc.nets, sctp_next) {
+ 		if (net != src_net) {
+ 			/* delete this address */
+-			sctp_remove_net(stcb, net);
+ 			SCTPDBG(SCTP_DEBUG_ASCONF1,
+ 				"asconf_del_remote_addrs_except: deleting ");
+ 			SCTPDBG_ADDR(SCTP_DEBUG_ASCONF1,
+@@ -299,6 +298,7 @@ sctp_asconf_del_remote_addrs_except(struct sctp_tcb *stcb, struct sockaddr *src)
+ 			/* notify upper layer */
+ 			sctp_ulp_notify(SCTP_NOTIFY_ASCONF_DELETE_IP, stcb, 0,
+ 			    (struct sockaddr *)&net->ro._l_addr, SCTP_SO_NOT_LOCKED);
++			sctp_remove_net(stcb, net);
+ 		}
+ 	}
+ 	return (0);
+diff --git a/usrsctplib/netinet/sctp_pcb.c b/usrsctplib/netinet/sctp_pcb.c
+index 7b4a1944..99a7967c 100755
+--- a/usrsctplib/netinet/sctp_pcb.c
++++ b/usrsctplib/netinet/sctp_pcb.c
+@@ -5242,7 +5242,9 @@ out:
+ 		sctp_free_remote_addr(stcb->asoc.alternate);
+ 		stcb->asoc.alternate = NULL;
+ 	}
+-	sctp_free_remote_addr(net);
++	if (net->ref_count == 0) {
++		sctp_free_remote_addr(net);
++	}
+ }
+ 
+ /*

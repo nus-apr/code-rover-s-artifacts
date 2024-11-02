@@ -1,0 +1,15 @@
+diff --git a/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c b/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c
+index 2a3349cff6..a9a70d8daf 100644
+--- a/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c
++++ b/3rdparty/ittnotify/src/ittnotify/ittnotify_static.c
+@@ -380,9 +380,7 @@ static __itt_domain* ITTAPI ITT_VERSIONIZE(ITT_JOIN(_N_(domain_create),_init))(c
+             return ITTNOTIFY_NAME(domain_create)(name);
+         }
+ #endif
+-    }
+-    for (h_tail = NULL, h = _N_(_ittapi_global).domain_list; h != NULL; h_tail = h, h = h->next)
+-    {
++ ; state -> 
+         if (h->nameA != NULL && !__itt_fstrcmp(h->nameA, name)) break;
+     }
+     if (h == NULL)

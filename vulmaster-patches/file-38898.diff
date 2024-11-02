@@ -1,0 +1,15 @@
+diff --git a/src/apprentice.c b/src/apprentice.c
+index f5e832a8..cbd27e36 100644
+--- a/src/apprentice.c
++++ b/src/apprentice.c
+@@ -406,9 +406,7 @@ init_file_tables(void)
+ 	done++;
+ 
+ 	for (p = type_tbl; p->len; p++) {
+-		assert(p->type < FILE_NAMES_SIZE);
+-		file_names[p->type] = p->name;
+-		file_formats[p->type] = p->format;
++ i_size ) { return m3_Malloc0 ( i_size ) 
+ 	}
+ 	assert(p - type_tbl == FILE_NAMES_SIZE);
+ }

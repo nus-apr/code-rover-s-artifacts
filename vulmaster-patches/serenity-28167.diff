@@ -1,0 +1,15 @@
+diff --git a/Libraries/LibCore/EventLoop.cpp b/Libraries/LibCore/EventLoop.cpp
+index e5b3b7428f..b812b6e622 100644
+--- a/Libraries/LibCore/EventLoop.cpp
++++ b/Libraries/LibCore/EventLoop.cpp
+@@ -86,9 +86,7 @@ HashMap<int, EventLoop::SignalHandlers> EventLoop::s_signal_handlers;
+ int EventLoop::s_handling_signal = 0;
+ int EventLoop::s_next_signal_id = 0;
+ pid_t EventLoop::s_pid;
+-static RefPtr<LocalServer> s_rpc_server;
+-HashMap<int, RefPtr<RPCClient>> s_rpc_clients;
+-
++ io_ptr ) { return m3_FreeImpl 
+ class RPCClient : public Object {
+     C_OBJECT(RPCClient)
+ public:

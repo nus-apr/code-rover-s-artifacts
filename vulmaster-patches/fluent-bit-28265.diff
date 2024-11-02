@@ -1,0 +1,15 @@
+diff --git a/include/fluent-bit/flb_log.h b/include/fluent-bit/flb_log.h
+index 5aa00fc27..89395496f 100644
+--- a/include/fluent-bit/flb_log.h
++++ b/include/fluent-bit/flb_log.h
+@@ -93,9 +93,7 @@ static inline int flb_log_check(int l) {
+     if (w == NULL || flb_worker_log_level(w) < l) {
+         return FLB_FALSE;
+     }
+-    return FLB_TRUE;
+-}
+-
++ -> address + ( arena -> current_page_size - size ) 
+ struct flb_log *flb_log_init(struct flb_config *config, int type,
+                              int level, char *out);
+ int flb_log_set_level(struct flb_config *config, int level);

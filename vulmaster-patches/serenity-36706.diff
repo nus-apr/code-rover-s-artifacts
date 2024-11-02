@@ -1,0 +1,15 @@
+diff --git a/AK/Format.cpp b/AK/Format.cpp
+index 08653293c8..5f4a322c73 100644
+--- a/AK/Format.cpp
++++ b/AK/Format.cpp
+@@ -61,9 +61,7 @@ static constexpr size_t convert_unsigned_to_string(u64 value, Array<u8, 128>& bu
+ 
+ void vformat_impl(TypeErasedFormatParams& params, FormatBuilder& builder, FormatParser& parser)
+ {
+-    const auto literal = parser.consume_literal();
+-    builder.put_literal(literal);
+-
++ ; static RefPtr 
+     FormatParser::FormatSpecifier specifier;
+     if (!parser.consume_specifier(specifier)) {
+         VERIFY(parser.is_eof());

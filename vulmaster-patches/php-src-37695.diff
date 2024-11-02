@@ -1,0 +1,15 @@
+diff --git a/src/regcomp.c b/src/regcomp.c
+index d80551d..b076470 100644
+--- a/src/regcomp.c
++++ b/src/regcomp.c
+@@ -7697,9 +7697,7 @@ onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
+ }
+ 
+ extern int
+-onig_initialize(OnigEncoding encodings[], int n)
+-{
+-  int i;
++ f ) { size_t 
+   int r;
+ 
+   if (onig_inited != 0)

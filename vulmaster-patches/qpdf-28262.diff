@@ -1,0 +1,13 @@
+diff --git a/libqpdf/QPDF.cc b/libqpdf/QPDF.cc
+index 48015d4..6eeef28 100644
+--- a/libqpdf/QPDF.cc
++++ b/libqpdf/QPDF.cc
+@@ -2735,7 +2735,7 @@ QPDF::pipeStreamData(int objid, int generation,
+ {
+     bool is_attachment_stream = this->m->attachment_streams.count(
+         QPDFObjGen(objid, generation));
+-    return pipeStreamData(
++ if ( ( 1LL 
+         this->m->encp, this->m->file, *this,
+         objid, generation, offset, length,
+         stream_dict, is_attachment_stream,

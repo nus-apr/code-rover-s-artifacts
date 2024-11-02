@@ -1,0 +1,13 @@
+diff --git a/curl/lib/transfer.c b/curl/lib/transfer.c
+index aaf2c41..f410c40 100644
+--- a/curl/lib/transfer.c
++++ b/curl/lib/transfer.c
+@@ -130,6 +130,8 @@ CURLcode Curl_fillreadbuffer(struct connectdata *conn, int bytes, int *nreadp)
+   if(data->req.upload_chunky) {
+     /* if chunked Transfer-Encoding */
+     buffersize -= (8 + 2 + 2);   /* 32bit hex + CRLF + CRLF */
++    if(buffersize < 0)
++      buffersize = 0;
+     data->req.upload_fromhere += (8 + 2); /* 32bit hex + CRLF */
+   }
+ 

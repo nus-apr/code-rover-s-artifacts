@@ -1,0 +1,33 @@
+diff --git a/src/metadata/fuji.cpp b/src/metadata/fuji.cpp
+index 30e64c2e..168d7f03 100644
+--- a/src/metadata/fuji.cpp
++++ b/src/metadata/fuji.cpp
+@@ -225,8 +225,12 @@ void LibRaw::parseAdobeRAFMakernote()
+ 
+     PrivateOrder = PrivateMknBuf.sget2(0);
+     unsigned s, l;
+-    s = ifd_start = PrivateMknBuf.sget4(2)+6;
+-    l = ifd_len = PrivateMknBuf.sget4(ifd_start);
++  s = ifd_start = PrivateMknBuf.sget4(2) + 6;
++  if (ifd_start + 4 > PrivateMknLength) {
++    // Handle error: insufficient buffer size
++    return;
++  }
++  l = ifd_len = PrivateMknBuf.sget4(ifd_start);
+ 
+ 	if (!PrivateMknBuf.sget4(ifd_start+ifd_len+4))
+       FujiShotSelect = 0;
+diff --git a/src/utils/utils_libraw.cpp b/src/utils/utils_libraw.cpp
+index dc81d0dd..67abbf15 100644
+--- a/src/utils/utils_libraw.cpp
++++ b/src/utils/utils_libraw.cpp
+@@ -700,7 +700,8 @@ unsigned char checked_buffer_t::operator[](int idx)
+ }
+ unsigned checked_buffer_t::sget4(int offset)
+ {
+-  checkoffset(offset + 4);
++  checkoffset(offset);
++  checkoffset(offset + 3); // Ensure the entire 4-byte range is within bounds
+   return libraw_sget4_static(_order, _data + offset);
+ }
+ 

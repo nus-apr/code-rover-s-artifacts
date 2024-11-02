@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index 7242f5a9..7f4dacb2 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -2696,9 +2696,7 @@ int blosc_get_complib_info(const char* compname, char** complib, char** version)
+ }
+ 
+ /* Return `nbytes`, `cbytes` and `blocksize` from a compressed buffer. */
+-void blosc_cbuffer_sizes(const void* cbuffer, size_t* nbytes,
+-                         size_t* cbytes, size_t* blocksize) {
+-  uint8_t* _src = (uint8_t*)(cbuffer);    /* current pos for source buffer */
++ - streampos ) { to_read = MIN ( 
+   uint8_t version = _src[0];                        /* blosc format version */
+   if (version > BLOSC_VERSION_FORMAT) {
+     /* Version from future */

@@ -1,0 +1,14 @@
+diff --git a/mruby/mrbgems/mruby-pack/src/pack.c b/mruby/mrbgems/mruby-pack/src/pack.c
+index 42c360c..b890e9e 100644
+--- a/mruby/mrbgems/mruby-pack/src/pack.c
++++ b/mruby/mrbgems/mruby-pack/src/pack.c
+@@ -1217,6 +1217,9 @@ read_tmpl(mrb_state *mrb, struct tmpl *tmpl, enum pack_type *typep, int *sizep,
+   tlen = RSTRING_LEN(tmpl->str);
+ 
+  restart:
++  if (tmpl->idx >= tlen) {
++    mrb_raise(mrb, E_ARGUMENT_ERROR, "template string overflow");
++  }
+   t = tptr[tmpl->idx++];
+  alias:
+   switch (t) {

@@ -1,0 +1,13 @@
+diff --git a/libredwg/src/bits.c b/libredwg/src/bits.c
+index 29ba416..81ee9e6 100644
+--- a/libredwg/src/bits.c
++++ b/libredwg/src/bits.c
+@@ -189,7 +189,7 @@ bit_read_BB (Bit_Chain *dat)
+   else
+     {
+       result = (byte & 0x01) << 1;
+-      if (dat->byte < dat->size - 1)
++      if (dat->byte + 1 < dat->size)
+         {
+           byte = dat->chain[dat->byte + 1];
+           result |= (byte & 0x80) >> 7;

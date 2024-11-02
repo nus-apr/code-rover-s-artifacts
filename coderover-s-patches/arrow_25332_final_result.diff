@@ -1,0 +1,20 @@
+diff --git a/cpp/src/arrow/util/bitmap_ops.cc b/cpp/src/arrow/util/bitmap_ops.cc
+index 32f21d1e0..05b7153f0 100644
+--- a/cpp/src/arrow/util/bitmap_ops.cc
++++ b/cpp/src/arrow/util/bitmap_ops.cc
+@@ -172,8 +172,13 @@ class BitmapWordReader {
+ 
+   template <typename DType>
+   DType load(const uint8_t* bitmap) {
+-    DCHECK_LE(bitmap + sizeof(DType), bitmap_end_);
+-    return BitUtil::ToLittleEndian(util::SafeLoadAs<DType>(bitmap));
++    if (bitmap + sizeof(DType) <= bitmap_end_) {
++      return BitUtil::ToLittleEndian(util::SafeLoadAs<DType>(bitmap));
++    } else {
++      // Handle the out-of-bounds access by not performing the load
++      // Log an error or handle it appropriately
++      throw std::out_of_range("Attempt to load beyond bitmap boundaries");
++    }
+   }
+ };
+ 

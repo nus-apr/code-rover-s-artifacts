@@ -1,0 +1,15 @@
+diff --git a/Userland/Libraries/LibGfx/GIFLoader.cpp b/Userland/Libraries/LibGfx/GIFLoader.cpp
+index 4e69cc7fb5..d4c653f148 100644
+--- a/Userland/Libraries/LibGfx/GIFLoader.cpp
++++ b/Userland/Libraries/LibGfx/GIFLoader.cpp
+@@ -99,9 +99,7 @@ struct GIFLoadingContext {
+     u8 background_color_index { 0 };
+     NonnullOwnPtrVector<ImageDescriptor> images {};
+     size_t loops { 1 };
+-    RefPtr<Gfx::Bitmap> frame_buffer;
+-    size_t current_frame { 0 };
+-    RefPtr<Gfx::Bitmap> prev_frame_buffer;
++ Bitmap > prev_frame_buffer 
+ };
+ 
+ RefPtr<Gfx::Bitmap> load_gif(const StringView& path)

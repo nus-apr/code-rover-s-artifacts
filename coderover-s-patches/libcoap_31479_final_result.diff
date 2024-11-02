@@ -1,0 +1,39 @@
+diff --git a/src/pdu.c b/src/pdu.c
+index a4739441..72071d8c 100644
+--- a/src/pdu.c
++++ b/src/pdu.c
+@@ -1055,16 +1055,29 @@ coap_pdu_parse_opt(coap_pdu_t *pdu) {
+             ok = ok && write_prefix(&obp, &outbuflen, " ", 1);
+           }
+           tlen = opt - opt_last;
+-          while (tlen--) {
+-            ok = ok && write_char(&obp, &outbuflen, *opt_last, i);
+-            opt_last++;
++          if (tlen > outbuflen - 1) { // Check if tlen exceeds available space
++            tlen = outbuflen - 1; // Adjust tlen to prevent overflow
++          }
++          while (tlen > 0) {
++            if (write_char(&obp, &outbuflen, *opt_last, i)) {
++              opt_last++;
++              tlen--;
++            } else {
++              break; // Exit loop if write fails
++            }
+           }
+         }
+         if (length && *opt == COAP_PAYLOAD_START) {
+-          ok = ok && write_char(&obp, &outbuflen, *opt, i);
++          if (outbuflen > 1) { // Ensure space for character and null terminator
++            if (write_char(&obp, &outbuflen, *opt, i)) {
++              outbuflen--; // Decrement outbuflen for the character written
++            }
++          }
+         }
+         /* write_*() always leaves a spare byte to null terminate */
+-        *obp = '\000';
++        if (outbuflen > 0) { // Check if there is space to null terminate
++          *obp = '\000';
++        }
+         coap_log(LOG_DEBUG, "%s\n", outbuf);
+       }
+     }

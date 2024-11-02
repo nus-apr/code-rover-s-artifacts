@@ -1,0 +1,13 @@
+diff --git a/3rdParty/LightPcapNg/LightPcapNg/src/light_alloc.c b/3rdParty/LightPcapNg/LightPcapNg/src/light_alloc.c
+index e8abb79f..edadce78 100644
+--- a/3rdParty/LightPcapNg/LightPcapNg/src/light_alloc.c
++++ b/3rdParty/LightPcapNg/LightPcapNg/src/light_alloc.c
+@@ -75,7 +75,5 @@ void light_free_option(light_option option)
+ }
+ 
+ void light_free_block(light_pcapng pcapng)
+-{
+-	free(pcapng->block_body);
+-	free(pcapng);
++ = 0 ; 
+ }

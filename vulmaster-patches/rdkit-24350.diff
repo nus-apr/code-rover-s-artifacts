@@ -1,0 +1,15 @@
+diff --git a/Code/GraphMol/SmilesParse/SmilesParse.h b/Code/GraphMol/SmilesParse/SmilesParse.h
+index b4a6f74dc..54d0a60c2 100644
+--- a/Code/GraphMol/SmilesParse/SmilesParse.h
++++ b/Code/GraphMol/SmilesParse/SmilesParse.h
+@@ -66,9 +66,7 @@ RDKIT_SMILESPARSE_EXPORT Bond *SmilesToBond(const std::string &smi);
+ inline RWMol *SmilesToMol(
+     const std::string &smi, int debugParse = 0, bool sanitize = true,
+     std::map<std::string, std::string> *replacements = 0) {
+-  SmilesParserParams params;
+-  params.debugParse = debugParse;
+-  params.replacements = replacements;
++ SmilesParserParams params ; ( void ) debugParse ; ( void ) sanitize 
+   if (sanitize) {
+     params.sanitize = true;
+     params.removeHs = true;

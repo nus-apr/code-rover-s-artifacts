@@ -1,0 +1,28 @@
+diff --git a/sudo/lib/util/lbuf.c b/sudo/lib/util/lbuf.c
+index 5ebf596..c8b014d 100644
+--- a/sudo/lib/util/lbuf.c
++++ b/sudo/lib/util/lbuf.c
+@@ -136,9 +136,20 @@ sudo_lbuf_append_quoted_v1(struct sudo_lbuf *lbuf, const char *set, const char *
+ 	}
+ 	if (!sudo_lbuf_expand(lbuf, 2))
+ 	    goto done;
+-	if (strchr(set, *fmt) != NULL)
+-	    lbuf->buf[lbuf->len++] = '\\';
+-	lbuf->buf[lbuf->len++] = *fmt++;
++	while (*fmt != '\0') {
++	    if (lbuf->len + 2 >= lbuf->size) {
++	        /* Double the buffer size */
++	        lbuf->size = lbuf->size ? lbuf->size * 2 : 128;
++	        lbuf->buf = realloc(lbuf->buf, lbuf->size);
++	        if (lbuf->buf == NULL) {
++	            ret = false;
++	            goto done;
++	        }
++	    }
++	    if (strchr(set, *fmt) != NULL)
++	        lbuf->buf[lbuf->len++] = '\\';
++	    lbuf->buf[lbuf->len++] = *fmt++;
++	}
+     }
+     ret = true;
+ 

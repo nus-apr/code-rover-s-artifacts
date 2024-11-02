@@ -1,0 +1,12 @@
+diff --git a/ghostpdl/devices/vector/gdevpsfm.c b/ghostpdl/devices/vector/gdevpsfm.c
+index 70b86cd..44eee46 100644
+--- a/ghostpdl/devices/vector/gdevpsfm.c
++++ b/ghostpdl/devices/vector/gdevpsfm.c
+@@ -288,6 +288,7 @@ psf_write_cmap(gs_memory_t *mem,
+ #define MAX_RANGES 100
+         gx_code_space_range_t ranges[MAX_RANGES];
+         int code, count = 0;
++        memset(ranges, 0, sizeof(ranges)); // Initialize the ranges array to prevent garbage values
+ 
+         for (gs_cmap_ranges_enum_init(pcmap, &renum);
+              (code = gs_cmap_enum_next_range(&renum)) == 0; ) {

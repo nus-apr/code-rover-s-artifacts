@@ -1,0 +1,30 @@
+diff --git a/src/librawspeed/decompressors/FujiDecompressor.cpp b/src/librawspeed/decompressors/FujiDecompressor.cpp
+index 604e3be0..b9eff7ab 100644
+--- a/src/librawspeed/decompressors/FujiDecompressor.cpp
++++ b/src/librawspeed/decompressors/FujiDecompressor.cpp
+@@ -171,6 +171,9 @@ void FujiDecompressor::copy_line(fuji_compressed_block* info,
+   }
+ 
+   for (int row_count = 0; row_count < FujiStrip::lineHeight(); row_count++) {
++    if (strip.width() <= 0 || strip.offsetX() < 0 || strip.offsetY(cur_line) < 0) {
++      throw std::runtime_error("Invalid FujiStrip dimensions or offsets.");
++    }
+     auto* const raw_block_data = reinterpret_cast<ushort16*>(
+         mRaw->getData(strip.offsetX(), strip.offsetY(cur_line) + row_count));
+ 
+diff --git a/src/librawspeed/decompressors/FujiDecompressor.h b/src/librawspeed/decompressors/FujiDecompressor.h
+index 1955e903..a4e88991 100644
+--- a/src/librawspeed/decompressors/FujiDecompressor.h
++++ b/src/librawspeed/decompressors/FujiDecompressor.h
+@@ -82,6 +82,11 @@ public:
+ 
+     // how many horizontal pixels does this block encode?
+     int width() const {
++      // Validate block size and blocks in row
++      if (h.block_size <= 0 || h.blocks_in_row <= 0) {
++        throw std::runtime_error("Invalid block size or blocks in row.");
++      }
++
+       // if this is not the last block, we are good.
+       if ((n + 1) != h.blocks_in_row)
+         return h.block_size;

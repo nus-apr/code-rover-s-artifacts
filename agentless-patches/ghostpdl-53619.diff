@@ -1,0 +1,13 @@
+diff --git a/ghostpdl/base/stream.c b/ghostpdl/base/stream.c
+index d416d8a..3317dc6 100644
+--- a/ghostpdl/base/stream.c
++++ b/ghostpdl/base/stream.c
+@@ -601,7 +601,7 @@ sputs(register stream * s, const byte * str, uint wlen, uint * pn)
+             if (count > 0) {
+                 if (count > len)
+                     count = len;
+-                memcpy(s->cursor.w.ptr + 1, str, count);
++                memcpy(s->cursor.w.ptr, str, count);
+                 s->cursor.w.ptr += count;
+                 str += count;
+                 len -= count;

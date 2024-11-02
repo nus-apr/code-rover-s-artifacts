@@ -1,0 +1,14 @@
+diff --git a/open62541/src/ua_types_encoding_json.c b/open62541/src/ua_types_encoding_json.c
+index 66824c0..e8b3e83 100644
+--- a/open62541/src/ua_types_encoding_json.c
++++ b/open62541/src/ua_types_encoding_json.c
+@@ -2366,6 +2366,9 @@ jumpOverRec(CtxJson *ctx, ParseCtx *parseCtx,
+ static status
+ jumpOverObject(CtxJson *ctx, ParseCtx *parseCtx, size_t *resultIndex) {
+     UA_UInt16 oldIndex = parseCtx->index; /* Save index for later restore */
++    if(parseCtx->index == 0) {
++        parseCtx->index = 0; /* Initialize index if not set */
++    }
+     UA_UInt16 depth = 0;
+     jumpOverRec(ctx, parseCtx, resultIndex, depth);
+     *resultIndex = parseCtx->index;

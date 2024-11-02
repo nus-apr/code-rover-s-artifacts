@@ -1,0 +1,14 @@
+diff --git a/gpac/src/media_tools/av_parsers.c b/gpac/src/media_tools/av_parsers.c
+index ff45a1b..b620490 100644
+--- a/gpac/src/media_tools/av_parsers.c
++++ b/gpac/src/media_tools/av_parsers.c
+@@ -7130,6 +7130,9 @@ void hevc_pred_weight_table(GF_BitStream *bs, HEVCState *hevc, HEVCSliceInfo *si
+ 	u32 ChromaArrayType = sps->separate_colour_plane_flag ? 0 : sps->chroma_format_idc;
+ 
+ 	num_ref_idx = num_ref_idx_l0_active;
++	if (num_ref_idx > 20) {
++		num_ref_idx = 20; // Ensure num_ref_idx does not exceed the array bounds
++	}
+ 
+ 	gf_bs_read_ue_log(bs, "luma_log2_weight_denom");
+ 	if (ChromaArrayType != 0)

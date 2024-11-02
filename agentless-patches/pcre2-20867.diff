@@ -1,0 +1,12 @@
+diff --git a/pcre2/src/pcre2_fuzzsupport.c b/pcre2/src/pcre2_fuzzsupport.c
+index c97744f..2145bfc 100644
+--- a/pcre2/src/pcre2_fuzzsupport.c
++++ b/pcre2/src/pcre2_fuzzsupport.c
+@@ -61,6 +61,7 @@ uint32_t match_options;
+ pcre2_match_data *match_data = NULL;
+ pcre2_match_context *match_context = NULL;
+ size_t match_size;
++#define DFA_WORKSPACE_COUNT 1000
+ int dfa_workspace[DFA_WORKSPACE_COUNT];
+ int r1, r2;
+ int i;

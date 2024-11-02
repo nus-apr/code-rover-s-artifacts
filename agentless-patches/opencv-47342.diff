@@ -1,0 +1,14 @@
+diff --git a/opencv/3rdparty/openjpeg/openjp2/jp2.c b/opencv/3rdparty/openjpeg/openjp2/jp2.c
+index 45dabcc..0507120 100644
+--- a/opencv/3rdparty/openjpeg/openjp2/jp2.c
++++ b/opencv/3rdparty/openjpeg/openjp2/jp2.c
+@@ -1108,7 +1108,8 @@ static OPJ_BOOL opj_jp2_apply_pclr(opj_image_t *image,
+         if (cmap[i].mtyp == 0) {
+             dst = new_comps[i].data;
+             assert(dst);
+-            for (j = 0; j < max; ++j) {
++            size_t dst_size = new_comps[i].w * new_comps[i].h;
++            for (j = 0; j < max && j < dst_size; ++j) {
+                 dst[j] = src[j];
+             }
+         } else {

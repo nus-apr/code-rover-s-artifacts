@@ -1,0 +1,41 @@
+diff --git a/src/core/api/ip6_api.cpp b/src/core/api/ip6_api.cpp
+index 524a32a2f..5f2290a75 100644
+--- a/src/core/api/ip6_api.cpp
++++ b/src/core/api/ip6_api.cpp
+@@ -51,7 +51,12 @@ otError otIp6SetEnabled(otInstance *aInstance, bool aEnabled)
+     if (aEnabled)
+     {
+ #if OPENTHREAD_ENABLE_RAW_LINK_API
+-        VerifyOrExit(!instance.GetLinkRaw().IsEnabled(), error = OT_ERROR_INVALID_STATE);
++    if (!instance.GetLinkRaw().IsValid())
++    {
++        error = OT_ERROR_INVALID_STATE;
++        ExitNow();
++    }
++    VerifyOrExit(!instance.GetLinkRaw().IsEnabled(), error = OT_ERROR_INVALID_STATE);
+ #endif // OPENTHREAD_ENABLE_RAW_LINK_API
+         error = instance.GetThreadNetif().Up();
+     }
+diff --git a/src/core/mac/link_raw.hpp b/src/core/mac/link_raw.hpp
+index 791e97208..36b44c20b 100644
+--- a/src/core/mac/link_raw.hpp
++++ b/src/core/mac/link_raw.hpp
+@@ -80,7 +80,17 @@ public:
+      * @returns true if enabled, false otherwise.
+      *
+      */
+-    bool IsEnabled(void) const { return mEnabled; }
++bool IsEnabled(void) const 
++{ 
++    return IsValid() && mEnabled; 
++}
++
++bool IsValid(void) const
++{
++    // Implement the actual logic to check if the LinkRaw object is properly initialized
++    // For example, check if certain critical member variables are set
++    return mEnabled; // Assuming mEnabled is a critical member that indicates initialization
++}
+ 
+     /**
+      * This method enables/disables the raw link-layer.

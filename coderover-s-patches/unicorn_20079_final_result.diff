@@ -1,0 +1,48 @@
+diff --git a/qemu/tcg/optimize.c b/qemu/tcg/optimize.c
+index d525f15b..f6161488 100644
+--- a/qemu/tcg/optimize.c
++++ b/qemu/tcg/optimize.c
+@@ -111,17 +111,27 @@ static TCGArg find_better_copy(TCGContext *s, TCGArg temp)
+ 
+     /* Search for a global first. */
+     for (i = temps[temp].next_copy ; i != temp ; i = temps[i].next_copy) {
++        if (i < 0 || i >= s->nb_temps) {
++            fprintf(stderr, "Warning: Invalid index in temps array: %d\n", i);
++            return temp; // Return original temp on error
++        }
+         if (i < (unsigned int)s->nb_globals) {
+             return i;
+         }
+     }
+ 
+     /* If it is a temp, search for a temp local. */
+-    if (!s->temps[temp].temp_local) {
+-        for (i = temps[temp].next_copy ; i != temp ; i = temps[i].next_copy) {
+-            if (s->temps[i].temp_local) {
+-                return i;
+-            }
++    if (temp < 0 || temp >= s->nb_temps || !s->temps[temp].temp_local) {
++        fprintf(stderr, "Warning: Invalid temp or temp_local state: %d\n", temp);
++        return temp; // Return original temp on error
++    }
++    for (i = temps[temp].next_copy ; i != temp ; i = temps[i].next_copy) {
++        if (i < 0 || i >= s->nb_temps) {
++            fprintf(stderr, "Warning: Invalid index in temps array: %d\n", i);
++            return temp; // Return original temp on error
++        }
++        if (s->temps[i].temp_local) {
++            return i;
+         }
+     }
+ 
+@@ -571,6 +581,10 @@ static TCGArg *tcg_constant_folding(TCGContext *s, uint16_t *tcg_opc_ptr,
+ 
+         /* Do copy propagation */
+         for (i = nb_oargs; i < nb_oargs + nb_iargs; i++) {
++            if (args[i] < 0 || args[i] >= s->nb_temps) {
++                fprintf(stderr, "Warning: Invalid index in args array: %d\n", args[i]);
++                continue; // Skip invalid indices
++            }
+             if (temps[args[i]].state == TCG_TEMP_COPY) {
+                 args[i] = find_better_copy(s, args[i]);
+             }

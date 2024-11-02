@@ -1,0 +1,19 @@
+diff --git a/src/H5Faccum.c b/src/H5Faccum.c
+index 5e39215560..46de11e8d9 100644
+--- a/src/H5Faccum.c
++++ b/src/H5Faccum.c
+@@ -892,10 +892,13 @@ H5F__accum_free(H5F_shared_t *f_sh, H5FD_mem_t H5_ATTR_UNUSED type, haddr_t addr
+ 
+                 /* Calculate the size of the overlap with the accumulator, etc. */
+                 H5_CHECKED_ASSIGN(overlap_size, size_t, (addr + size) - accum->loc, haddr_t);
++                if (overlap_size > accum->size)
++                    overlap_size = accum->size;
+                 new_accum_size = accum->size - overlap_size;
+ 
+                 /* Move the accumulator buffer information to eliminate the freed block */
+-                HDmemmove(accum->buf, accum->buf + overlap_size, new_accum_size);
++                if (overlap_size <= accum->size)
++                    HDmemmove(accum->buf, accum->buf + overlap_size, new_accum_size);
+ 
+                 /* Adjust the accumulator information */
+                 accum->loc += overlap_size;

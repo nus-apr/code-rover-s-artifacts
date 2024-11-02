@@ -1,0 +1,27 @@
+diff --git a/src/core/strvector.c b/src/core/strvector.c
+index 59d984627..aadf15de7 100644
+--- a/src/core/strvector.c
++++ b/src/core/strvector.c
+@@ -133,6 +133,7 @@ void igraph_strvector_destroy(igraph_strvector_t *sv) {
+ const char *igraph_strvector_get(const igraph_strvector_t *sv, igraph_integer_t idx) {
+     IGRAPH_ASSERT(sv != NULL);
+     IGRAPH_ASSERT(sv->stor_begin != NULL);
++    IGRAPH_ASSERT(idx >= 0 && idx < sv->stor_end - sv->stor_begin);
+     IGRAPH_ASSERT(sv->stor_begin[idx] != NULL);
+     return sv->stor_begin[idx];
+ }
+diff --git a/src/io/pajek.c b/src/io/pajek.c
+index 1d7d72c3e..899aa399f 100644
+--- a/src/io/pajek.c
++++ b/src/io/pajek.c
+@@ -194,7 +194,9 @@ igraph_error_t igraph_read_graph_pajek(igraph_t *graph, FILE *instream) {
+     context.errmsg[0] = '\0';
+     context.igraph_errno = IGRAPH_SUCCESS;
+ 
+-    igraph_pajek_yylex_init_extra(&context, &context.scanner);
++    if (igraph_pajek_yylex_init_extra(&context, &context.scanner) != 0) {
++        IGRAPH_ERROR("Failed to initialize lexer.", IGRAPH_PARSEERROR);
++    }
+     IGRAPH_FINALLY(igraph_pajek_yylex_destroy_wrapper, context.scanner);
+ 
+     igraph_pajek_yyset_in(instream, context.scanner);

@@ -1,0 +1,13 @@
+diff --git a/decoder/ih264d_sei.c b/decoder/ih264d_sei.c
+index 079f036..8d40161 100644
+--- a/decoder/ih264d_sei.c
++++ b/decoder/ih264d_sei.c
+@@ -1006,7 +1006,7 @@ WORD32 ih264d_parse_sei_payload(dec_bit_stream_t *ps_bitstrm,
+             break;
+ 
+         case SEI_FILM_GRAIN_CHARACTERISTICS:
+-            i4_status = ih264d_parse_fgc(ps_bitstrm, ps_dec, ui4_payload_size);
++ ) ) { i4_status = ERROR_EOB_GETBITS_T ; break 
+ 
+             break;
+         default:

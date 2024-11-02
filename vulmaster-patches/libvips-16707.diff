@@ -1,0 +1,15 @@
+diff --git a/libvips/arithmetic/round.c b/libvips/arithmetic/round.c
+index 04171df..6b6e229 100644
+--- a/libvips/arithmetic/round.c
++++ b/libvips/arithmetic/round.c
+@@ -63,9 +63,7 @@ typedef struct _VipsRound {
+ } VipsRound;
+ 
+ typedef VipsUnaryClass VipsRoundClass;
+-
+-G_DEFINE_TYPE( VipsRound, vips_round, VIPS_TYPE_UNARY );
+-
++ ( current_processing_ctx ) { LM_ERR ( "already has a global context\\n" ) ; return - 1 ; } 
+ static int
+ vips_round_build( VipsObject *object )
+ {

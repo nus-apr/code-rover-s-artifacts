@@ -1,0 +1,33 @@
+diff --git a/parser.c b/parser.c
+index 4006246e..6ad123b8 100644
+--- a/parser.c
++++ b/parser.c
+@@ -2119,7 +2119,7 @@ xmlSkipBlankChars(xmlParserCtxtPtr ctxt) {
+ 	 * if we are in the document content, go really fast
+ 	 */
+ 	cur = ctxt->input->cur;
+-	while (IS_BLANK_CH(*cur)) {
++	while (cur < ctxt->input->end && IS_BLANK_CH(*cur)) {
+ 	    if (*cur == '\n') {
+ 		ctxt->input->line++; ctxt->input->col = 1;
+ 	    } else {
+@@ -2128,10 +2128,17 @@ xmlSkipBlankChars(xmlParserCtxtPtr ctxt) {
+ 	    cur++;
+ 	    if (res < INT_MAX)
+ 		res++;
+-	    if (*cur == 0) {
++	    if (cur >= ctxt->input->end || *cur == 0) {
+ 		ctxt->input->cur = cur;
+-		xmlParserGrow(ctxt);
++		if (xmlParserGrow(ctxt) < 0) {
++		    // Handle error if buffer growth fails
++		    return res;
++		}
+ 		cur = ctxt->input->cur;
++		if (cur == NULL || cur >= ctxt->input->end) {
++		    // Ensure cur is valid after growth
++		    return res;
++		}
+ 	    }
+ 	}
+ 	ctxt->input->cur = cur;

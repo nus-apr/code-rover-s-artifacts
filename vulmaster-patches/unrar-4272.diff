@@ -1,0 +1,15 @@
+diff --git a/options.cpp b/options.cpp
+index b53edc6..8276412 100644
+--- a/options.cpp
++++ b/options.cpp
+@@ -2,9 +2,7 @@
+ 
+ RAROptions::RAROptions()
+ {
+-  Init();
+-}
+-
++ ) ) { return true 
+ 
+ RAROptions::~RAROptions()
+ {

@@ -1,0 +1,29 @@
+diff --git a/array.hpp b/array.hpp
+index 20d258d..931c7fd 100644
+--- a/array.hpp
++++ b/array.hpp
+@@ -129,6 +129,9 @@ template <class T> void Array<T>::Add(size_t Items)
+       NewBuffer=(T *)realloc(Buffer,NewSize*sizeof(T));
+       if (NewBuffer==NULL)
+         ErrHandler.MemoryError();
++      else if (NewSize > AllocSize) { // Initialize newly allocated memory
++        memset(NewBuffer + AllocSize, 0, (NewSize - AllocSize) * sizeof(T));
++      }
+     }
+     Buffer=NewBuffer;
+     AllocSize=NewSize;
+diff --git a/unicode.cpp b/unicode.cpp
+index b426082..001badb 100644
+--- a/unicode.cpp
++++ b/unicode.cpp
+@@ -20,7 +20,9 @@ static const uint MappedStringMark=0xFFFE;
+ bool WideToChar(const wchar *Src,char *Dest,size_t DestSize)
+ {
+   bool RetCode=true;
+-  *Dest=0; // Set 'Dest' to zero just in case the conversion will fail.
++  if (DestSize > 0) {
++    memset(Dest, 0, DestSize * sizeof(wchar)); // Initialize the entire buffer to zero.
++  }
+ 
+ #ifdef _WIN_ALL
+   if (WideCharToMultiByte(CP_ACP,0,Src,-1,Dest,(int)DestSize,NULL,NULL)==0)

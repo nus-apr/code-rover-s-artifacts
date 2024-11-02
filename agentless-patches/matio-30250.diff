@@ -1,0 +1,28 @@
+diff --git a/matio/src/mat73.c b/matio/src/mat73.c
+index e2b1a0a..eb9deb0 100644
+--- a/matio/src/mat73.c
++++ b/matio/src/mat73.c
+@@ -2344,7 +2344,10 @@ Mat_VarRead73(mat_t *mat,matvar_t *matvar)
+             size_t nelems = 1;
+             matvar->data_size = Mat_SizeOfClass(matvar->class_type);
+             err = SafeMulDims(matvar, &nelems);
+-            err |= SafeMul(&matvar->nbytes, nelems, matvar->data_size);
++            if (SafeMul(&matvar->nbytes, nelems, matvar->data_size)) {
++                Mat_Critical("Integer multiplication overflow");
++                return 1;
++            }
+             if ( err ) {
+                 Mat_Critical("Integer multiplication overflow");
+                 return err;
+@@ -2384,7 +2387,10 @@ Mat_VarRead73(mat_t *mat,matvar_t *matvar)
+             size_t nelems = 1;
+             matvar->data_size = Mat_SizeOf(matvar->data_type);
+             err = SafeMulDims(matvar, &nelems);
+-            err |= SafeMul(&matvar->nbytes, nelems, matvar->data_size);
++            if (SafeMul(&matvar->nbytes, nelems, matvar->data_size)) {
++                Mat_Critical("Integer multiplication overflow");
++                return 1;
++            }
+             if ( err ) {
+                 Mat_Critical("Integer multiplication overflow");
+                 return err;

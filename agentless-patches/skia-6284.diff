@@ -1,0 +1,13 @@
+diff --git a/skia/src/android/SkAnimatedImage.cpp b/skia/src/android/SkAnimatedImage.cpp
+index 5efb096..a93fc93 100644
+--- a/skia/src/android/SkAnimatedImage.cpp
++++ b/skia/src/android/SkAnimatedImage.cpp
+@@ -162,7 +162,7 @@ int SkAnimatedImage::decodeNextFrame() {
+     bool animationEnded = false;
+     int frameToDecode = this->computeNextFrame(fActiveFrame.fIndex, &animationEnded);
+ 
+-    SkCodec::FrameInfo frameInfo;
++    SkCodec::FrameInfo frameInfo = {};
+     if (fCodec->codec()->getFrameInfo(frameToDecode, &frameInfo)) {
+         if (!frameInfo.fFullyReceived) {
+             SkCodecPrintf("Frame %i not fully received\n", frameToDecode);

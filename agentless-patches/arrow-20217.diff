@@ -1,0 +1,20 @@
+diff --git a/arrow/cpp/src/arrow/type.cc b/arrow/cpp/src/arrow/type.cc
+index 477ec3a..2476193 100644
+--- a/arrow/cpp/src/arrow/type.cc
++++ b/arrow/cpp/src/arrow/type.cc
+@@ -351,9 +351,12 @@ UnionType::UnionType(const std::vector<std::shared_ptr<Field>>& fields,
+       mode_(mode),
+       type_codes_(type_codes),
+       child_ids_(kMaxTypeCode + 1, kInvalidChildId) {
+-  DCHECK_LE(fields.size(), type_codes.size()) << "union field with unknown type id";
+-  DCHECK_GE(fields.size(), type_codes.size())
+-      << "type id provided without corresponding union field";
++  if (fields.size() > type_codes.size()) {
++    throw std::invalid_argument("union field with unknown type id");
++  }
++  if (fields.size() < type_codes.size()) {
++    throw std::invalid_argument("type id provided without corresponding union field");
++  }
+   children_ = fields;
+   for (int child_id = 0; child_id < static_cast<int>(type_codes_.size()); ++child_id) {
+     const auto type_code = type_codes_[child_id];

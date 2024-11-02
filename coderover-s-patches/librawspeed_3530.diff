@@ -1,0 +1,42 @@
+diff --git a/src/librawspeed/decompressors/SamsungV2Decompressor.cpp b/src/librawspeed/decompressors/SamsungV2Decompressor.cpp
+index ee1f872e..798d50f1 100644
+--- a/src/librawspeed/decompressors/SamsungV2Decompressor.cpp
++++ b/src/librawspeed/decompressors/SamsungV2Decompressor.cpp
+@@ -138,19 +138,24 @@ void SamsungV2Decompressor::decompress() {
+         int32 doAverage = motionDoAverage[motion];
+ 
+         for (uint32 i = 0; i < 16; i++) {
+-          ushort16* refpixel;
+-          if ((row + i) & 0x1) // Red or blue pixels use same color two lines up
+-            refpixel = img_up2 + i + slideOffset;
+-          else // Green pixel N uses Green pixel N from row above (top left or
+-               // top right)
+-            refpixel = img_up + i + slideOffset + (((i % 2) != 0) ? -1 : 1);
+-
+-          // In some cases we use as reference interpolation of this pixel and
+-          // the next
+-          if (doAverage)
+-            img[i] = (*refpixel + *(refpixel + 2) + 1) >> 1;
+-          else
+-            img[i] = *refpixel;
++           ushort16* refpixel;
++           if ((row + i) & 0x1) // Red or blue pixels use same color two lines up
++             refpixel = img_up2 + i + slideOffset;
++           else // Green pixel N uses Green pixel N from row above (top left or
++                // top right)
++             refpixel = img_up + i + slideOffset + (((i % 2) != 0) ? -1 : 1);
++
++           // Ensure refpixel and refpixel + 2 are within valid bounds
++           if (refpixel < img_up || refpixel + 2 >= img_up + width) {
++             ThrowRDE("Reference pixel out of bounds");
++           }
++
++           // In some cases we use as reference interpolation of this pixel and
++           // the next
++           if (doAverage)
++             img[i] = (*refpixel + *(refpixel + 2) + 1) >> 1;
++           else
++             img[i] = *refpixel;
+         }
+       }
+ 

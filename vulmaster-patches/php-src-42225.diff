@@ -1,0 +1,13 @@
+diff --git a/ext/opcache/jit/zend_jit_helpers.c b/ext/opcache/jit/zend_jit_helpers.c
+index 3653f9dc28..de52ac08da 100644
+--- a/ext/opcache/jit/zend_jit_helpers.c
++++ b/ext/opcache/jit/zend_jit_helpers.c
+@@ -1200,7 +1200,7 @@ static void ZEND_FASTCALL zend_jit_fast_concat_helper(zval *result, zval *op1, z
+ static void ZEND_FASTCALL zend_jit_fast_concat_tmp_helper(zval *result, zval *op1, zval *op2)
+ {
+ 	zend_string *op1_str = Z_STR_P(op1);
+-	size_t op1_len = ZSTR_LEN(op1_str);
++ parse_depth_counter_ ) { assert 
+ 	size_t op2_len = Z_STRLEN_P(op2);
+ 	size_t result_len = op1_len + op2_len;
+ 	zend_string *result_str;

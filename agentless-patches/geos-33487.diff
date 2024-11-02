@@ -1,0 +1,26 @@
+diff --git a/geos/src/operation/overlayng/OverlayMixedPoints.cpp b/geos/src/operation/overlayng/OverlayMixedPoints.cpp
+index 3732ab2..46f3403 100644
+--- a/geos/src/operation/overlayng/OverlayMixedPoints.cpp
++++ b/geos/src/operation/overlayng/OverlayMixedPoints.cpp
+@@ -236,13 +236,15 @@ OverlayMixedPoints::extractCoordinates(const Geometry* points, const PrecisionMo
+     std::unique_ptr<CoordinateArraySequence> coords(new CoordinateArraySequence());
+     std::size_t n = points->getNumGeometries();
+     for (std::size_t i = 0; i < n; i++) {
+-        const Point* point = static_cast<const Point*>(points->getGeometryN(i));
+-        if (point->isEmpty()) {
+-            continue;
++        const Geometry* geom = points->getGeometryN(i);
++        if (const Point* point = dynamic_cast<const Point*>(geom)) {
++            if (point->isEmpty()) {
++                continue;
++            }
++            Coordinate coord;
++            OverlayUtil::round(point, p_pm, coord);
++            coords->add(coord, true);
+         }
+-        Coordinate coord;
+-        OverlayUtil::round(point, p_pm, coord);
+-        coords->add(coord, true);
+     }
+     return coords;
+ }

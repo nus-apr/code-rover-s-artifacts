@@ -1,0 +1,28 @@
+diff --git a/src/bits.c b/src/bits.c
+index a7a8ca98..52399d47 100644
+--- a/src/bits.c
++++ b/src/bits.c
+@@ -494,6 +494,10 @@ bit_read_RD (Bit_Chain *dat)
+ 
+   //CHK_OVERFLOW_PLUS (8, __FUNCTION__, bit_nan ())
+   // TODO: big-endian
++  if (dat->byte + 8 > dat->size) {
++    // Handle error: not enough data to read a double
++    return bit_nan(); // or another appropriate error handling
++  }
+   for (i = 0; i < 8; i++)
+     byte[i] = bit_read_RC (dat);
+ 
+@@ -1233,6 +1237,12 @@ bit_read_H (Bit_Chain *restrict dat, Dwg_Handle *restrict handle)
+         }
+       handle->code = 0;
+       val = (BITCODE_RC *)&(handle->value);
++      if (dat->byte + handle->size > dat->size) {
++        loglevel = dat->opts & DWG_OPTS_LOGLEVEL;
++        LOG_WARN ("Invalid handle-reference, not enough data: " FORMAT_H,
++                  ARGS_H (*handle));
++        return DWG_ERR_INVALIDHANDLE;
++      }
+       for (int i = handle->size - 1; i >= 0; i--)
+         val[i] = bit_read_RC (dat);
+       return 0;

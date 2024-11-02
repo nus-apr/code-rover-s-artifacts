@@ -1,0 +1,15 @@
+diff --git a/src/readfile.c b/src/readfile.c
+index fd495c9..2bb3874 100644
+--- a/src/readfile.c
++++ b/src/readfile.c
+@@ -666,9 +666,7 @@ l_int32  format;
+  */
+ l_ok
+ findFileFormatBuffer(const l_uint8  *buf,
+-                     l_int32        *pformat)
+-{
+-l_uint16  twobytepw;
++, fbuflen, true 
+ 
+     PROCNAME("findFileFormatBuffer");
+ 

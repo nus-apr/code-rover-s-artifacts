@@ -1,0 +1,16 @@
+diff --git a/pcre2/src/pcre2_match.c b/pcre2/src/pcre2_match.c
+index ba14659..533fbfa 100644
+--- a/pcre2/src/pcre2_match.c
++++ b/pcre2/src/pcre2_match.c
+@@ -5790,9 +5790,9 @@ fprintf(stderr, "++ op=%d\n", *Fecode);
+       RMATCH(Fecode + 1 + 2 * IMM2_SIZE, RM37);
+       if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+       if (Lmax-- <= Lmin) RRETURN(MATCH_NOMATCH);
+-      Feptr++;
++      if (Feptr < mb->end_subject) Feptr++;
+ #ifdef SUPPORT_UNICODE
+-      if (utf) { FORWARDCHAR(Feptr); }
++      if (utf && Feptr < mb->end_subject) { FORWARDCHAR(Feptr); }
+ #endif
+       }
+     /* Control never reaches here */

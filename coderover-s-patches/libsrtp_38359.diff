@@ -1,0 +1,36 @@
+diff --git a/fuzzer/fuzzer.c b/fuzzer/fuzzer.c
+index 9c71ecf..d2ac835 100644
+--- a/fuzzer/fuzzer.c
++++ b/fuzzer/fuzzer.c
+@@ -385,8 +385,12 @@ next:
+     *size = size_orig;
+ 
+     /* Allocate array of pointers */
+-    ret = fuzz_alloc_succeed(*num_master_keys * sizeof(srtp_master_key_t *),
+-                             false);
++    if (*num_master_keys > 0) {
++        ret = fuzz_alloc_succeed(*num_master_keys * sizeof(srtp_master_key_t *),
++                                 false);
++    } else {
++        return NULL; // Return NULL if no master keys are extracted
++    }
+ 
+     /* Second pass -- perform the actual extractions */
+     for (i = 0; i < *num_master_keys; i++) {
+diff --git a/srtp/srtp.c b/srtp/srtp.c
+index c7f6bb9..376d7d1 100644
+--- a/srtp/srtp.c
++++ b/srtp/srtp.c
+@@ -962,7 +962,11 @@ srtp_err_status_t srtp_stream_init_keys(srtp_stream_ctx_t *srtp,
+      * the legacy CTR mode KDF, which uses a 112 bit master SALT.
+      */
+     memset(tmp_key, 0x0, MAX_SRTP_KEY_LEN);
+-    memcpy(tmp_key, key, input_keylen);
++    if (input_keylen <= MAX_SRTP_KEY_LEN) {
++        memcpy(tmp_key, key, input_keylen);
++    } else {
++        return srtp_err_status_bad_param; // Return an error code for invalid key length
++    }
+ 
+ /* initialize KDF state     */
+ #if defined(OPENSSL) && defined(OPENSSL_KDF)

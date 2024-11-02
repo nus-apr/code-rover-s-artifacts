@@ -1,0 +1,15 @@
+diff --git a/libyara/ahocorasick.c b/libyara/ahocorasick.c
+index c06d72c6..c662e593 100644
+--- a/libyara/ahocorasick.c
++++ b/libyara/ahocorasick.c
+@@ -202,9 +202,7 @@ static int _yr_ac_state_destroy(YR_AC_STATE* state)
+     _yr_ac_state_destroy(child_state);
+     child_state = next_child_state;
+   }
+-
+-  yr_free(state);
+-
++ ) { static atomic_t 
+   return ERROR_SUCCESS;
+ }
+ 

@@ -1,0 +1,51 @@
+diff --git a/Code/GraphMol/SmilesParse/SmilesParse.cpp b/Code/GraphMol/SmilesParse/SmilesParse.cpp
+index 55909c589..b80647144 100644
+--- a/Code/GraphMol/SmilesParse/SmilesParse.cpp
++++ b/Code/GraphMol/SmilesParse/SmilesParse.cpp
+@@ -176,25 +176,29 @@ std::string labelRecursivePatterns(const std::string &sma) {
+     } else if (sma[pos] == '(') {
+       state.push_back(BRANCH);
+     } else if (sma[pos] == ')') {
+-      SmaState currState = state.back();
+-      state.pop_back();
+-      if (currState == RECURSE) {
+-        unsigned int dollarPos = startRecurse.back();
+-        startRecurse.pop_back();
+-        if (pos + 1 >= sma.size() || sma[pos + 1] != '_') {
+-          std::string recurs = sma.substr(dollarPos, pos - dollarPos + 1);
+-          std::string label;
+-          if (patterns.find(recurs) != patterns.end()) {
+-            // seen this one before, add the label
+-            label = patterns[recurs];
+-          } else {
+-            label = std::to_string(patterns.size() + 100);
+-            patterns[recurs] = label;
++      if (!state.empty()) {
++        SmaState currState = state.back();
++        state.pop_back();
++        if (currState == RECURSE) {
++          if (!startRecurse.empty()) {
++            unsigned int dollarPos = startRecurse.back();
++            startRecurse.pop_back();
++            if (pos + 1 >= sma.size() || sma[pos + 1] != '_') {
++              std::string recurs = sma.substr(dollarPos, pos - dollarPos + 1);
++              std::string label;
++              if (patterns.find(recurs) != patterns.end()) {
++                // seen this one before, add the label
++                label = patterns[recurs];
++              } else {
++                label = std::to_string(patterns.size() + 100);
++                patterns[recurs] = label;
++              }
++              res += "_" + label;
++            }
+           }
+-          res += "_" + label;
++        } else if (currState == BRANCH) {
++          // no need to do anything here.
+         }
+-      } else if (currState == BRANCH) {
+-        // no need to do anything here.
+       }
+     }
+     ++pos;

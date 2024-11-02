@@ -1,0 +1,26 @@
+diff --git a/modules/demux/wav.c b/modules/demux/wav.c
+index 4b0623412f..9377cf3e92 100644
+--- a/modules/demux/wav.c
++++ b/modules/demux/wav.c
+@@ -498,8 +498,19 @@ static int ChunkParseFmt( demux_t *p_demux, uint32_t i_size )
+             p_sys->fmt.i_extra = 0;
+             goto error;
+         }
+-        memcpy( p_sys->fmt.p_extra, (uint8_t *)p_wf + sizeof( WAVEFORMATEX ) + i_extended,
+-                p_sys->fmt.i_extra );
++        if (i_size >= sizeof(WAVEFORMATEX) + i_extended + p_sys->fmt.i_extra)
++        {
++            memcpy( p_sys->fmt.p_extra, (uint8_t *)p_wf + sizeof( WAVEFORMATEX ) + i_extended,
++                    p_sys->fmt.i_extra );
++        }
++        else
++        {
++            msg_Err( p_demux, "extra data size exceeds available buffer size" );
++            free(p_sys->fmt.p_extra);
++            p_sys->fmt.p_extra = NULL;
++            p_sys->fmt.i_extra = 0;
++            goto error;
++        }
+     }
+ 
+     msg_Dbg( p_demux, "format: 0x%4.4x, fourcc: %4.4s, channels: %d, "

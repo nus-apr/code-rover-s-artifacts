@@ -1,0 +1,22 @@
+diff --git a/libass/libass/ass_utils.h b/libass/libass/ass_utils.h
+index 0110c65..81c1c95 100644
+--- a/libass/libass/ass_utils.h
++++ b/libass/libass/ass_utils.h
+@@ -186,14 +186,9 @@ static inline int double_to_d22(double x)
+ static inline uint32_t fnv_32a_buf(const void *buf, size_t len, uint32_t hval)
+ {
+     const uint8_t *bp = buf;
+-    size_t n = (len + 3) / 4;
+-
+-    switch (len % 4) {
+-    case 0: do { hval ^= *bp++; hval *= FNV1_32A_PRIME; //-fallthrough
+-    case 3:      hval ^= *bp++; hval *= FNV1_32A_PRIME; //-fallthrough
+-    case 2:      hval ^= *bp++; hval *= FNV1_32A_PRIME; //-fallthrough
+-    case 1:      hval ^= *bp++; hval *= FNV1_32A_PRIME;
+-               } while (--n > 0);
++    for (size_t i = 0; i < len; i++) {
++        hval ^= bp[i];
++        hval *= FNV1_32A_PRIME;
+     }
+ 
+     return hval;

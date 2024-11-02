@@ -1,0 +1,13 @@
+diff --git a/arrow/cpp/src/arrow/util/bitmap_writer.h b/arrow/cpp/src/arrow/util/bitmap_writer.h
+index aadf3b7..4aceae8 100644
+--- a/arrow/cpp/src/arrow/util/bitmap_writer.h
++++ b/arrow/cpp/src/arrow/util/bitmap_writer.h
+@@ -162,7 +162,7 @@ class FirstTimeBitmapWriter {
+ 
+   void Finish() {
+     // Store current byte if we didn't went go bitmap storage
+-    if (length_ > 0 && (bit_mask_ != 0x01 || position_ < length_)) {
++    if (length_ > 0 && byte_offset_ < length_ && (bit_mask_ != 0x01 || position_ < length_)) {
+       bitmap_[byte_offset_] = current_byte_;
+     }
+   }

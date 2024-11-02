@@ -1,0 +1,14 @@
+diff --git a/relic/src/dv/relic_dv_util.c b/relic/src/dv/relic_dv_util.c
+index 61ed35b..3d92511 100644
+--- a/relic/src/dv/relic_dv_util.c
++++ b/relic/src/dv/relic_dv_util.c
+@@ -123,6 +123,9 @@ void dv_rshd(dig_t *c, const dig_t *a, int size, int digits) {
+ 	dig_t *bot;
+ 	int i;
+ 
++	if (digits > size) {
++		digits = size;
++	}
+ 	top = a + digits;
+ 	bot = c;
+ 

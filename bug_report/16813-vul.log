@@ -1,0 +1,43 @@
+INFO: Seed: 2278546343
+INFO: Loaded 1 modules   (1942 inline 8-bit counters): 1942 [0x827c970, 0x827d106), 
+INFO: Loaded 1 PC tables (1942 PCs): 1942 [0x8229e14,0x822dac4), 
+/out/mpeg2_dec_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+AddressSanitizerAddressSanitizer:DEADLYSIGNAL
+:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address 0x0007bc00 (pc 0xe991a7d6 bp 0xdeafb008 sp 0xdeafabc8 T27)
+==13==The signal is caused by a WRITE memory access.
+SCARINESS: 30 (wild-addr-write)
+    #0 0xe991a7d5  (/lib32/libc.so.6+0x1247d5)
+    #1 0x8168648 in __asan_memcpy /src/llvm/projects/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3
+    #2 0x81be12f in ideint_weave_blk /src/libmpeg2/common/ideint_utils.c:197:9
+    #3 0x81bd2d3 in ideint_process /src/libmpeg2/common/ideint.c:367:21
+    #4 0x81bc12e in impeg2d_deinterlace /src/libmpeg2/decoder/impeg2d_deinterlace.c:256:11
+    #5 0x81d67cf in impeg2d_dec_pic_data_thread /src/libmpeg2/decoder/impeg2d_dec_hdr.c:978:25
+    #6 0x8174952 in __asan::AsanThread::ThreadStart(unsigned long long, __sanitizer::atomic_uintptr_t*) /src/llvm/projects/compiler-rt/lib/asan/asan_thread.cpp:262:25
+    #7 0x8153537 in asan_thread_start(void*) /src/llvm/projects/compiler-rt/lib/asan/asan_interceptors.cpp:200:13
+    #8 0xe99dc269 in start_thread /build/glibc-S7Ft5T/glibc-2.23/nptl/pthread_create.c:333
+    #9 0xe98db52d in clone (/lib32/libc.so.6+0xe552d)
+
+DEDUP_TOKEN: __asan_memcpy--ideint_weave_blk
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV (/lib32/libc.so.6+0x1247d5) 
+Thread T27 created by T0 here:
+    #0 0x815342c in pthread_create /src/llvm/projects/compiler-rt/lib/asan/asan_interceptors.cpp:209:3
+    #1 0x81d24ab in ithread_create /src/libmpeg2/common/ithread.c:73:12
+    #2 0x81d83ca in impeg2d_dec_pic_data /src/libmpeg2/decoder/impeg2d_dec_hdr.c:1427:13
+    #3 0x81dc54a in impeg2d_process_video_bit_stream /src/libmpeg2/decoder/impeg2d_dec_hdr.c:1805:17
+    #4 0x81afac2 in impeg2d_dec_frm /src/libmpeg2/decoder/impeg2d_decoder.c:226:19
+    #5 0x81ad2a4 in impeg2d_api_entity /src/libmpeg2/decoder/impeg2d_api_main.c:3488:17
+    #6 0x81a64b2 in impeg2d_api_function /src/libmpeg2/decoder/impeg2d_api_main.c:1411:25
+    #7 0x81a09f9 in Codec::decodeFrame(unsigned char const*, unsigned int, unsigned int*) /src/libmpeg2/fuzzer/mpeg2_dec_fuzzer.cpp:362:9
+    #8 0x81a1274 in LLVMFuzzerTestOneInput /src/libmpeg2/fuzzer/mpeg2_dec_fuzzer.cpp:408:18
+    #9 0x80a39d6 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned int) /src/llvm/projects/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:554:15
+    #10 0x808fcd3 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned int) /src/llvm/projects/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #11 0x80953e8 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned int)) /src/llvm/projects/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:775:9
+    #12 0x80b9b27 in main /src/llvm/projects/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #13 0xe980e646 in __libc_start_main (/lib32/libc.so.6+0x18646)
+
+DEDUP_TOKEN: pthread_create--ithread_create--impeg2d_dec_pic_data
+==13==ABORTING

@@ -1,0 +1,13 @@
+diff --git a/libspectre/spectre-document.c b/libspectre/spectre-document.c
+index 6dde48b..aa40e0a 100644
+--- a/libspectre/spectre-document.c
++++ b/libspectre/spectre-document.c
+@@ -348,7 +348,7 @@ spectre_document_render_full (SpectreDocument      *document,
+ 		return;
+ 	}
+ 		
+-	spectre_page_render (page, rc, page_data, row_length);
++ { if ( 
+ 	document->status = spectre_page_status (page);
+ 
+ 	spectre_page_free (page);

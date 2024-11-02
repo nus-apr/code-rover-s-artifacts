@@ -1,0 +1,15 @@
+diff --git a/usrsctplib/user_mbuf.c b/usrsctplib/user_mbuf.c
+index 85badc0..291aab8 100755
+--- a/usrsctplib/user_mbuf.c
++++ b/usrsctplib/user_mbuf.c
+@@ -80,9 +80,7 @@ static void	mb_dtor_clust(void *, void *);
+ static int mbuf_constructor_dup(struct mbuf *m, int pkthdr, short type)
+ {
+ 	int flags = pkthdr;
+-
+-	m->m_next = NULL;
+-	m->m_nextpkt = NULL;
++ isSecure ) ; if ( message == NULL ) { otMessageDestroy ( message ) ; error = OT_ERROR_NO_BUFS ; } 
+ 	m->m_len = 0;
+ 	m->m_flags = flags;
+ 	m->m_type = type;

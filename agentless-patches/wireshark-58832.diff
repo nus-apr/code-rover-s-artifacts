@@ -1,0 +1,13 @@
+diff --git a/wireshark/wsutil/wmem/wmem_tree.c b/wireshark/wsutil/wmem/wmem_tree.c
+index 4a5dd48..1691454 100644
+--- a/wireshark/wsutil/wmem/wmem_tree.c
++++ b/wireshark/wsutil/wmem/wmem_tree.c
+@@ -555,7 +555,7 @@ wmem_tree_lookup32_le(wmem_tree_t *tree, guint32 key)
+ 
+     wmem_tree_node_t *node = tree->root;
+ 
+-    while (node) {
++    while (node != NULL) {
+         if (key == GPOINTER_TO_UINT(node->key)) {
+             return node->data;
+         }

@@ -1,0 +1,61 @@
+======================= INFO =========================
+This binary is built for AFL-fuzz.
+To run the target function on individual input(s) execute this:
+  /out/pcre2_fuzzer < INPUT_FILE
+or
+  /out/pcre2_fuzzer INPUT_FILE1 [INPUT_FILE2 ... ]
+To fuzz with afl-fuzz execute this:
+  afl-fuzz [afl-flags] /out/pcre2_fuzzer [-N]
+afl-fuzz will run N iterations before re-spawning the process (default: 1000)
+======================================================
+Reading 16 bytes from /tmp/poc
+=================================================================
+==12==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60e0000001d3 at pc 0x0000005c9f74 bp 0x7ffe77a5acf0 sp 0x7ffe77a5ace8
+READ of size 1 at 0x60e0000001d3 thread T0
+SCARINESS: 22 (1-byte-read-heap-buffer-overflow-far-from-bounds)
+    #0 0x5c9f73 in get_chr_property_list /src/pcre2/src/pcre2_auto_possess.c:463:10
+    #1 0x5cab18 in compare_opcodes /src/pcre2/src/pcre2_auto_possess.c:676:10
+    #2 0x5c8354 in _pcre2_auto_possessify_8 /src/pcre2/src/pcre2_auto_possess.c:1117:24
+    #3 0x5363d9 in pcre2_compile_8 /src/pcre2/src/pcre2_compile.c:9706:7
+    #4 0x52f749 in LLVMFuzzerTestOneInput /src/pcre2/src/pcre2_fuzzsupport.c:144:10
+    #5 0x52d73f in ExecuteFilesOnyByOne(int, char**) /src/libfuzzer/afl/afl_driver.cpp:301:5
+    #6 0x52dcee in main /src/libfuzzer/afl/afl_driver.cpp:339:12
+    #7 0x7770443e583f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #8 0x41c898 in _start (/out/pcre2_fuzzer+0x41c898)
+
+DEDUP_TOKEN: get_chr_property_list--compare_opcodes--_pcre2_auto_possessify_8
+Address 0x60e0000001d3 is a wild pointer.
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/pcre2/src/pcre2_auto_possess.c:463:10 in get_chr_property_list
+Shadow bytes around the buggy address:
+  0x0c1c7fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c1c7fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c1c7fff8000: fa fa fa fa fa fa fa fa fd fd fd fd fd fd fd fd
+  0x0c1c7fff8010: fd fd fd fd fd fd fd fd fd fd fd fa fa fa fa fa
+  0x0c1c7fff8020: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c1c7fff8030: 00 00 00 00 00 00 00 fa fa fa[fa]fa fa fa fa fa
+  0x0c1c7fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1c7fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1c7fff8060: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1c7fff8070: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1c7fff8080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==12==ABORTING

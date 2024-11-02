@@ -1,0 +1,15 @@
+diff --git a/serenity/Libraries/LibTTF/Font.cpp b/serenity/Libraries/LibTTF/Font.cpp
+index 25d7866..7bcb5fc 100644
+--- a/serenity/Libraries/LibTTF/Font.cpp
++++ b/serenity/Libraries/LibTTF/Font.cpp
+@@ -260,6 +260,10 @@ RefPtr<Font> Font::load_from_offset(ByteBuffer&& buffer, u32 offset)
+     Optional<Cmap> opt_cmap = {};
+     Optional<Loca> opt_loca = {};
+ 
++    if (buffer.size() < offset + (u32)Offsets::NumTables + sizeof(u16)) {
++        dbg() << "Font file too small";
++        return nullptr;
++    }
+     auto num_tables = be_u16(buffer.offset_pointer(offset + (u32)Offsets::NumTables));
+     if (buffer.size() < offset + (u32)Sizes::OffsetTable + num_tables * (u32)Sizes::TableRecord) {
+         dbg() << "Font file too small";

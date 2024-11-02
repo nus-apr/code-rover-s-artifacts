@@ -1,0 +1,15 @@
+diff --git a/harfbuzz/src/hb-machinery.hh b/harfbuzz/src/hb-machinery.hh
+index a8a527f..9efe5e7 100644
+--- a/harfbuzz/src/hb-machinery.hh
++++ b/harfbuzz/src/hb-machinery.hh
+@@ -724,8 +724,8 @@ struct BEInt<Type, 2>
+ #if (defined(__GNUC__) && __GNUC__ >= 5) || defined(__clang__)
+     /* Spoon-feed the compiler a big-endian integer with alignment 1.
+      * https://github.com/harfbuzz/harfbuzz/pull/1398 */
+-    struct __attribute__((packed)) packed_uint16_t { uint16_t v; };
+-    return __builtin_bswap16 (((packed_uint16_t *) this)->v);
++    struct __attribute__((packed)) packed_uint16_t { uint8_t v[2]; };
++    return (v[0] << 8) | v[1];
+ #endif
+     return (v[0] <<  8)
+          + (v[1]      );

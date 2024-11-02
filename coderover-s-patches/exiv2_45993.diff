@@ -1,0 +1,36 @@
+diff --git a/src/jp2image.cpp b/src/jp2image.cpp
+index 7c977fc88..d30ed1732 100644
+--- a/src/jp2image.cpp
++++ b/src/jp2image.cpp
+@@ -180,10 +180,13 @@ void Jp2Image::readMetadata() {
+           throw Error(ErrorCode::kerCorruptedMetadata);
+         }
+         boxFileTypeFound = true;
+-        std::vector<byte> boxData(box.length - boxHSize);
+-        io_->readOrThrow(boxData.data(), boxData.size(), ErrorCode::kerCorruptedMetadata);
+-        if (!Internal::isValidBoxFileType(boxData))
+-          throw Error(ErrorCode::kerCorruptedMetadata);
++if (box.length < boxHSize + 8) {
++  throw Error(ErrorCode::kerCorruptedMetadata);
++}
++std::vector<byte> boxData(box.length - boxHSize);
++io_->readOrThrow(boxData.data(), boxData.size(), ErrorCode::kerCorruptedMetadata);
++if (!Internal::isValidBoxFileType(boxData))
++  throw Error(ErrorCode::kerCorruptedMetadata);
+         break;
+       }
+       case kJp2BoxTypeHeader: {
+diff --git a/src/types.cpp b/src/types.cpp
+index 1b04c2247..41ff67a4b 100644
+--- a/src/types.cpp
++++ b/src/types.cpp
+@@ -282,6 +282,9 @@ uint16_t getUShort(const byte* buf, ByteOrder byteOrder) {
+ }
+ 
+ uint32_t getULong(const byte* buf, ByteOrder byteOrder) {
++  if (!buf) {
++    throw std::invalid_argument("Buffer is null");
++  }
+   if (byteOrder == littleEndian) {
+     return buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
+   }

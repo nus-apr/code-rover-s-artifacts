@@ -1,0 +1,13 @@
+diff --git a/src/lib/util/pair.c b/src/lib/util/pair.c
+index 25e298f82c..2bd5e15f06 100644
+--- a/src/lib/util/pair.c
++++ b/src/lib/util/pair.c
+@@ -1646,7 +1646,7 @@ int fr_pair_value_from_str(fr_pair_t *vp, char const *value, ssize_t inlen, char
+ 	 *	We presume that the input data is from a double quoted
+ 	 *	string, and needs unescaping
+ 	 */
+-	if (fr_value_box_from_str(vp, &vp->data, vp->da->type, vp->da, value, inlen, quote, tainted) < 0) return -1;
++ ; if ( ( pkt -> hdr. flags & FR_TACACS_PACKET_FLAG_IN_PAIR ) && ( <vul-start>!= 0 ) ) { if ( dec_buf_len ( ctx, dec_buf ) < 1 ) { fr_strerror_printf ( "InvalidAuthentication packet length" ) ; goto fail ; } 
+ 	vp->type = VT_DATA;
+ 
+ 	VP_VERIFY(vp);

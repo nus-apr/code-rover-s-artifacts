@@ -1,0 +1,26 @@
+diff --git a/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp b/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp
+index 0dede0c8d0..3a7a0f6aeb 100644
+--- a/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp
++++ b/Userland/Libraries/LibGfx/Font/OpenType/Cmap.cpp
+@@ -66,6 +66,8 @@ Optional<Cmap::Subtable> Cmap::subtable(u32 index) const
+         return {};
+     }
+     u32 record_offset = (u32)Sizes::TableHeader + index * (u32)Sizes::EncodingRecord;
++    if (record_offset + (u32)Offsets::EncodingRecord_Offset + sizeof(u32) > m_slice.size())
++        return {};
+     u16 platform_id = be_u16(m_slice.offset_pointer(record_offset));
+     u16 encoding_id = be_u16(m_slice.offset_pointer(record_offset + (u32)Offsets::EncodingRecord_EncodingID));
+     u32 subtable_offset = be_u32(m_slice.offset_pointer(record_offset + (u32)Offsets::EncodingRecord_Offset));
+diff --git a/Userland/Libraries/LibGfx/Font/OpenType/Font.cpp b/Userland/Libraries/LibGfx/Font/OpenType/Font.cpp
+index ac36cbfa6b..58348c4692 100644
+--- a/Userland/Libraries/LibGfx/Font/OpenType/Font.cpp
++++ b/Userland/Libraries/LibGfx/Font/OpenType/Font.cpp
+@@ -419,6 +419,8 @@ ErrorOr<NonnullRefPtr<Font>> Font::try_load_from_offset(ReadonlyBytes buffer, u3
+ 
+     for (auto i = 0; i < num_tables; i++) {
+         u32 record_offset = offset + (u32)Sizes::OffsetTable + i * (u32)Sizes::TableRecord;
++        if (record_offset + (u32)Offsets::TableRecord_Length + sizeof(u32) > buffer.size())
++            return Error::from_string_literal("Font file too small");
+         u32 tag = be_u32(buffer.offset_pointer(record_offset));
+         u32 table_offset = be_u32(buffer.offset_pointer(record_offset + (u32)Offsets::TableRecord_Offset));
+         u32 table_length = be_u32(buffer.offset_pointer(record_offset + (u32)Offsets::TableRecord_Length));

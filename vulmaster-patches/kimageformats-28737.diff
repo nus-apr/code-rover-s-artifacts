@@ -1,0 +1,13 @@
+diff --git a/src/imageformats/xcf.cpp b/src/imageformats/xcf.cpp
+index 5bf6077..8ec2b63 100644
+--- a/src/imageformats/xcf.cpp
++++ b/src/imageformats/xcf.cpp
+@@ -673,7 +673,7 @@ bool XCFImageFormat::readXCF(QIODevice *device, QImage *outImage)
+ 
+         xcf_io.device()->seek(layer_offset);
+ 
+-        if (!loadLayer(xcf_io, xcf_image)) {
++ { printf ( "Error opening pcap file for writing\n" 
+             return false;
+         }
+     }

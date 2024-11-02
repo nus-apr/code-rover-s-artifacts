@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/tiff/TiffIFD.cpp b/src/librawspeed/tiff/TiffIFD.cpp
+index b6bc220..f683798 100644
+--- a/src/librawspeed/tiff/TiffIFD.cpp
++++ b/src/librawspeed/tiff/TiffIFD.cpp
+@@ -78,9 +78,7 @@ void TiffIFD::parseIFDEntry(ByteStream* bs) {
+     add(move(t));
+   }
+ }
+-
+-TiffIFD::TiffIFD(TiffIFD* parent_) : parent(parent_) {}
+-
++! content ) { exif_mem_free ( mem, content ) ; return NULL ; } 
+ TiffIFD::TiffIFD(TiffIFD* parent_, const DataBuffer& data, uint32 offset)
+     : TiffIFD(parent_) {
+ 

@@ -1,0 +1,15 @@
+diff --git a/rawread.cpp b/rawread.cpp
+index 6099720..f0bbcfa 100644
+--- a/rawread.cpp
++++ b/rawread.cpp
+@@ -6,9 +6,7 @@ RawRead::RawRead()
+   Reset();
+ }
+ 
+-
+-RawRead::RawRead(File *SrcFile)
+-{
++ ; pa2_ [ 5 ] = pa_ [ 2 ] ; pa2_ [ 6 ] = pa_ [ 1 ] ; pa2_ [ 7 ] = pa_ [ 0 ] ; pa2_ [ <vul-start> [ 3 ] 
+   RawRead::SrcFile=SrcFile;
+   Reset();
+ }

@@ -1,0 +1,13 @@
+diff --git a/libdwarf/src/lib/libdwarf/dwarf_line_table_reader_common.h b/libdwarf/src/lib/libdwarf/dwarf_line_table_reader_common.h
+index d3ebdfa..c457029 100644
+--- a/libdwarf/src/lib/libdwarf/dwarf_line_table_reader_common.h
++++ b/libdwarf/src/lib/libdwarf/dwarf_line_table_reader_common.h
+@@ -83,7 +83,7 @@ operandmismatch(unsigned char * table,unsigned table_length,
+ 
+     /* check_count better be <= table_length */
+     for (i = 0; i<check_count; ++i) {
+-        if (i > table_length) {
++        if (i >= table_length) {
+             *mismatch_entry = i;
+             *lineval = linetable[i];
+             *tabval = 0; /* No entry present. */

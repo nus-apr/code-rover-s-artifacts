@@ -1,0 +1,14 @@
+diff --git a/rdkit/Code/GraphMol/RWMol.cpp b/rdkit/Code/GraphMol/RWMol.cpp
+index cc1d0a3..f6176c8 100644
+--- a/rdkit/Code/GraphMol/RWMol.cpp
++++ b/rdkit/Code/GraphMol/RWMol.cpp
+@@ -142,8 +142,8 @@ void RWMol::replaceAtom(unsigned int idx, Atom *atom_pin, bool,
+   }
+ 
+   const auto orig_p = d_graph[vd];
+-  delete orig_p;
+   d_graph[vd] = atom_p;
++  delete orig_p;
+ 
+   // handle bookmarks
+   for (auto &ab : d_atomBookmarks) {

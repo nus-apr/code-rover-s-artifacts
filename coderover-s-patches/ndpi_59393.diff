@@ -1,0 +1,33 @@
+diff --git a/src/lib/ndpi_main.c b/src/lib/ndpi_main.c
+index e3eb4a8c..cf72882f 100644
+--- a/src/lib/ndpi_main.c
++++ b/src/lib/ndpi_main.c
+@@ -8580,7 +8580,7 @@ u_int16_t ndpi_match_host_subprotocol(struct ndpi_detection_module_struct *ndpi_
+   }
+ 
+   /* Add punycode check */
+-  if(ndpi_check_punycode_string(string_to_match, string_to_match_len)) {
++  if(string_to_match_len >= 4 && ndpi_check_punycode_string(string_to_match, string_to_match_len)) {
+     char str[64] = { '\0' };
+ 
+     strncpy(str, string_to_match, ndpi_min(string_to_match_len, sizeof(str)-1));
+diff --git a/src/lib/ndpi_utils.c b/src/lib/ndpi_utils.c
+index 8020ea54..166d0bbf 100644
+--- a/src/lib/ndpi_utils.c
++++ b/src/lib/ndpi_utils.c
+@@ -91,13 +91,14 @@ _Static_assert(sizeof(struct ndpi_str_hash) == sizeof(struct ndpi_str_hash_priva
+ int ndpi_check_punycode_string(char * buffer , int len) {
+   int i = 0;
+ 
+-  while(i++ < len - 3) {
++  while(i < len - 3) {
+     if((buffer[i] == 'x')
+        && (buffer[i+1] == 'n')
+        && (buffer[i+2] == '-')
+        && (buffer[i+3] == '-'))
+       // is a punycode string
+       return(1);
++    i++;
+   }
+ 
+   // not a punycode string

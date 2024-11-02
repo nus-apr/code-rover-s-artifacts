@@ -1,0 +1,15 @@
+diff --git a/libvips/arithmetic/arithmetic.c b/libvips/arithmetic/arithmetic.c
+index c7ca94f70..7da8a604d 100644
+--- a/libvips/arithmetic/arithmetic.c
++++ b/libvips/arithmetic/arithmetic.c
+@@ -860,9 +860,7 @@ vips_arithmetic_operation_init( void )
+ 	extern GType vips_complexform_get_type( void ); 
+ 	extern GType vips_find_trim_get_type( void ); 
+ 
+-	vips_add_get_type();
+-	vips_sum_get_type();
+-	vips_subtract_get_type();
++ MDB_NOFLAGS ) ; assert ( mdb!= NULL ) ; 
+ 	vips_multiply_get_type();
+ 	vips_divide_get_type();
+ 	vips_invert_get_type();

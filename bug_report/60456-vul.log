@@ -1,0 +1,69 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2278829734
+INFO: Loaded 1 modules   (35450 inline 8-bit counters): 35450 [0xaa5c48, 0xaae6c2), 
+INFO: Loaded 1 PC tables (35450 PCs): 35450 [0xaae6c8,0xb38e68), 
+/out/FuzzTarget: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x606000004e60 at pc 0x0000007c782c bp 0x7ffcab3362b0 sp 0x7ffcab3362a8
+READ of size 2 at 0x606000004e60 thread T0
+SCARINESS: 14 (2-byte-read-heap-buffer-overflow)
+    #0 0x7c782b in pcpp::SSLHandshakeMessage::getMessageLength() const /src/PcapPlusPlus/Packet++/src/SSLHandshake.cpp:1280:49
+    #1 0x70870a in pcpp::SSLHandshakeLayer::SSLHandshakeLayer(unsigned char*, unsigned long, pcpp::Layer*, pcpp::Packet*) /src/PcapPlusPlus/Packet++/src/SSLLayer.cpp:140:22
+    #2 0x706940 in pcpp::SSLLayer::createSSLMessage(unsigned char*, unsigned long, pcpp::Layer*, pcpp::Packet*) /src/PcapPlusPlus/Packet++/src/SSLLayer.cpp:53:15
+    #3 0x6098f0 in pcpp::TcpLayer::parseNextLayer() /src/PcapPlusPlus/Packet++/src/TcpLayer.cpp:364:17
+    #4 0x5f017b in pcpp::Packet::setRawPacket(pcpp::RawPacket*, bool, unsigned long, pcpp::OsiModelLayer) /src/PcapPlusPlus/Packet++/src/Packet.cpp:81:13
+    #5 0x59e1a9 in LLVMFuzzerTestOneInput /src/PcapPlusPlus/Tests/Fuzzers/FuzzTarget.cpp:68:16
+    #6 0x46f693 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #7 0x45adf2 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #8 0x46069c in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #9 0x489bd2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #10 0x76d50c736082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #11 0x450fbd in _start (/out/FuzzTarget+0x450fbd)
+
+DEDUP_TOKEN: pcpp::SSLHandshakeMessage::getMessageLength() const--pcpp::SSLHandshakeLayer::SSLHandshakeLayer(unsigned char*, unsigned long, pcpp::Layer*, pcpp::Packet*)--pcpp::SSLLayer::createSSLMessage(unsigned char*, unsigned long, pcpp::Layer*, pcpp::Packet*)
+0x606000004e60 is located 0 bytes to the right of 64-byte region [0x606000004e20,0x606000004e60)
+allocated by thread T0 here:
+    #0 0x59b77d in operator new[](unsigned long) /src/llvm-project/compiler-rt/lib/asan/asan_new_delete.cpp:98:3
+    #1 0x5a6bf6 in pcpp::PcapFileReaderDevice::getNextPacket(pcpp::RawPacket&) /src/PcapPlusPlus/Pcap++/src/PcapFileDevice.cpp:307:27
+    #2 0x59e0c1 in LLVMFuzzerTestOneInput /src/PcapPlusPlus/Tests/Fuzzers/FuzzTarget.cpp:59:14
+    #3 0x46f693 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #4 0x45adf2 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #5 0x46069c in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #6 0x489bd2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #7 0x76d50c736082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+
+DEDUP_TOKEN: operator new[](unsigned long)--pcpp::PcapFileReaderDevice::getNextPacket(pcpp::RawPacket&)--LLVMFuzzerTestOneInput
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/PcapPlusPlus/Packet++/src/SSLHandshake.cpp:1280:49 in pcpp::SSLHandshakeMessage::getMessageLength() const
+Shadow bytes around the buggy address:
+  0x0c0c7fff8970: 00 00 00 00 00 00 00 00 fa fa fa fa 00 00 00 00
+  0x0c0c7fff8980: 00 00 00 00 fa fa fa fa 00 00 00 00 00 00 00 00
+  0x0c0c7fff8990: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
+  0x0c0c7fff89a0: 00 00 00 00 00 00 00 00 fa fa fa fa 00 00 00 00
+  0x0c0c7fff89b0: 00 00 00 00 fa fa fa fa 00 00 00 00 00 00 00 00
+=>0x0c0c7fff89c0: fa fa fa fa 00 00 00 00 00 00 00 00[fa]fa fa fa
+  0x0c0c7fff89d0: 00 00 00 00 00 00 00 fa fa fa fa fa 00 00 00 00
+  0x0c0c7fff89e0: 00 00 00 fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c0c7fff89f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c0c7fff8a00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c0c7fff8a10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

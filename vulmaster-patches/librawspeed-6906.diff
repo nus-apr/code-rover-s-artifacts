@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/common/Point.h b/src/librawspeed/common/Point.h
+index 2f3e885..dd853d3 100644
+--- a/src/librawspeed/common/Point.h
++++ b/src/librawspeed/common/Point.h
+@@ -81,9 +81,7 @@ public:
+     return {x < rhs.x ? x : rhs.x, y < rhs.y ? y : rhs.y};
+   }
+ 
+-  int x = 0;
+-  int y = 0;
+-};
++ size ) ; 
+ 
+ /* Helper class for managing a rectangle in 2D space. */
+ class iRectangle2D {

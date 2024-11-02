@@ -1,0 +1,14 @@
+diff --git a/aac/libSBRdec/src/env_extr.cpp b/aac/libSBRdec/src/env_extr.cpp
+index f99613d..a445b2c 100644
+--- a/aac/libSBRdec/src/env_extr.cpp
++++ b/aac/libSBRdec/src/env_extr.cpp
+@@ -759,7 +759,8 @@ int sbrGetChannelElement(HANDLE_SBR_HEADER_DATA hHeaderData,
+   }
+ 
+   /* sbr_invf() */
+-  for (i = 0; i < hHeaderData->freqBandData.nInvfBands; i++) {
++  int maxInvfBands = (hHeaderData->freqBandData.nInvfBands > 5) ? 5 : hHeaderData->freqBandData.nInvfBands;
++  for (i = 0; i < maxInvfBands; i++) {
+     hFrameDataLeft->sbr_invf_mode[i] = (INVF_MODE)FDKreadBits(hBs, 2);
+   }
+   if (nCh == 2) {

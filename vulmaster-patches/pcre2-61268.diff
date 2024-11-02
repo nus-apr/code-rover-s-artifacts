@@ -1,0 +1,15 @@
+diff --git a/src/pcre2_compile.c b/src/pcre2_compile.c
+index d603a5f..a1cc8cf 100644
+--- a/src/pcre2_compile.c
++++ b/src/pcre2_compile.c
+@@ -2514,9 +2514,7 @@ uint32_t *previous_callout = *pcalloutptr;
+ 
+ if (previous_callout != NULL) previous_callout[2] = (uint32_t)(ptr -
+   cb->start_pattern - (PCRE2_SIZE)previous_callout[1]);
+-
+-if (!auto_callout) previous_callout = NULL; else
+-  {
++, PJ_ERRNO_SPACE_SIZE, 
+   if (previous_callout == NULL ||
+       previous_callout != parsed_pattern - 4 ||
+       previous_callout[3] != 255)

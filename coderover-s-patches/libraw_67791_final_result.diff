@@ -1,0 +1,72 @@
+diff --git a/src/metadata/fuji.cpp b/src/metadata/fuji.cpp
+index 30e64c2e..833fb75a 100644
+--- a/src/metadata/fuji.cpp
++++ b/src/metadata/fuji.cpp
+@@ -225,20 +225,42 @@ void LibRaw::parseAdobeRAFMakernote()
+ 
+     PrivateOrder = PrivateMknBuf.sget2(0);
+     unsigned s, l;
+-    s = ifd_start = PrivateMknBuf.sget4(2)+6;
+-    l = ifd_len = PrivateMknBuf.sget4(ifd_start);
++    if (PrivateMknLength >= 6) {
++        s = ifd_start = PrivateMknBuf.sget4(2)+6;
++    } else {
++        // Handle error or return safely
++        return;
++    }
++    if (PrivateMknLength >= ifd_start + 4) {
++        l = ifd_len = PrivateMknBuf.sget4(ifd_start);
++    } else {
++        // Handle error or return safely
++        return;
++    }
+ 
+-	if (!PrivateMknBuf.sget4(ifd_start+ifd_len+4))
+-      FujiShotSelect = 0;
++    if (PrivateMknLength >= ifd_start + ifd_len + 8) {
++        if (!PrivateMknBuf.sget4(ifd_start+ifd_len+4))
++            FujiShotSelect = 0;
++    } else {
++        // Handle error or return safely
++        FujiShotSelect = 0;
++    }
+ 
+     if ((FujiShotSelect == 1) && (PrivateMknLength > ifd_len*2)) {
+-      ifd_start += (ifd_len+4);
+-      ifd_len = PrivateMknBuf.sget4(ifd_start);
+-      if ((ifd_start+ifd_len) > PrivateMknLength) {
+-        ifd_start = s;
+-        ifd_len = l;
+-        FujiShotSelect = 0;
+-      }
++        ifd_start += (ifd_len+4);
++        if (PrivateMknLength >= ifd_start + 4) {
++            ifd_len = PrivateMknBuf.sget4(ifd_start);
++            if ((ifd_start+ifd_len) > PrivateMknLength) {
++                ifd_start = s;
++                ifd_len = l;
++                FujiShotSelect = 0;
++            }
++        } else {
++            // Handle error or return safely
++            ifd_start = s;
++            ifd_len = l;
++            FujiShotSelect = 0;
++        }
+     } else FujiShotSelect = 0;
+ 
+     PrivateEntries = PrivateMknBuf.sget4(ifd_start + 4);
+diff --git a/src/utils/utils_libraw.cpp b/src/utils/utils_libraw.cpp
+index dc81d0dd..6ed9dff4 100644
+--- a/src/utils/utils_libraw.cpp
++++ b/src/utils/utils_libraw.cpp
+@@ -700,7 +700,8 @@ unsigned char checked_buffer_t::operator[](int idx)
+ }
+ unsigned checked_buffer_t::sget4(int offset)
+ {
+-  checkoffset(offset + 4);
++  checkoffset(offset); // Ensure offset is within bounds
++  checkoffset(offset + 3); // Ensure there are at least 4 bytes available
+   return libraw_sget4_static(_order, _data + offset);
+ }
+ 

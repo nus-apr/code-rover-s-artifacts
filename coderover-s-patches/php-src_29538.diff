@@ -1,0 +1,15 @@
+diff --git a/ext/hash/hash_xxhash.c b/ext/hash/hash_xxhash.c
+index 28d9d11af7..73f8cdc688 100644
+--- a/ext/hash/hash_xxhash.c
++++ b/ext/hash/hash_xxhash.c
+@@ -108,7 +108,9 @@ PHP_HASH_API void PHP_XXH64Init(PHP_XXH64_CTX *ctx, HashTable *args)
+ 
+ PHP_HASH_API void PHP_XXH64Update(PHP_XXH64_CTX *ctx, const unsigned char *in, size_t len)
+ {
+-	XXH64_update(&ctx->s, in, len);
++    if (len > 0 && in != NULL) { // Ensure input is not NULL and length is positive
++        XXH64_update(&ctx->s, in, len);
++    }
+ }
+ 
+ PHP_HASH_API void PHP_XXH64Final(unsigned char digest[8], PHP_XXH64_CTX *ctx)

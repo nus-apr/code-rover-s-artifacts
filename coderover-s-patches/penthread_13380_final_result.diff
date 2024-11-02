@@ -1,0 +1,52 @@
+diff --git a/src/core/common/message.cpp b/src/core/common/message.cpp
+index 6eafd3228..cca3cf4c0 100644
+--- a/src/core/common/message.cpp
++++ b/src/core/common/message.cpp
+@@ -927,6 +927,12 @@ otError MessageQueue::Dequeue(Message &aMessage)
+ 
+     VerifyOrExit(aMessage.GetMessageQueue() == this, error = OT_ERROR_NOT_FOUND);
+ 
++    // Ensure the message is valid before removing from the list
++    if (aMessage.GetPriorityQueue() == nullptr)
++    {
++        // Handle the error case, possibly log an error or return an error code
++        return OT_ERROR_INVALID_ARGS;
++    }
+     RemoveFromList(MessageInfo::kListInterface, aMessage);
+     aMessage.GetMessagePool()->GetAllMessagesQueue()->RemoveFromList(MessageInfo::kListAll, aMessage);
+ 
+@@ -1018,6 +1024,12 @@ void PriorityQueue::AddToList(uint8_t aList, Message &aMessage)
+     Message *tail;
+     Message *next;
+ 
++    // Ensure the message is valid and part of a valid queue
++    if (aMessage.GetPriorityQueue() == nullptr)
++    {
++        // Handle the error case, possibly log an error or return
++        return;
++    }
+     priority = aMessage.GetPriority();
+ 
+     tail = FindFirstNonNullTail(priority);
+diff --git a/src/core/common/message.hpp b/src/core/common/message.hpp
+index 1649411e7..d824422e9 100644
+--- a/src/core/common/message.hpp
++++ b/src/core/common/message.hpp
+@@ -353,7 +353,16 @@ public:
+      * @returns The priority level associated with this message.
+      *
+      */
+-    uint8_t GetPriority(void) const { return mBuffer.mHead.mInfo.mPriority; }
++    uint8_t GetPriority(void) const 
++    { 
++        // Check if the message is valid
++        if (mBuffer.mHead.mInfo.mPriority == 0xFF) // Assuming 0xFF is an invalid priority
++        {
++            // Handle the error case, possibly log an error or return a default priority
++            return 0; // Return a default priority value
++        }
++        return mBuffer.mHead.mInfo.mPriority; 
++    }
+ 
+     /**
+      * This method sets the messages priority.

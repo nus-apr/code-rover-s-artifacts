@@ -1,0 +1,32 @@
+diff --git a/epan/crypt/airpdcap.c b/epan/crypt/airpdcap.c
+index 2b8c291235..11fd722be6 100644
+--- a/epan/crypt/airpdcap.c
++++ b/epan/crypt/airpdcap.c
+@@ -2259,12 +2259,22 @@ AirPDcapTDLSDeriveKey(
+     gcry_mac_write(cmac_handle, initiator, AIRPDCAP_MAC_LEN);
+     gcry_mac_write(cmac_handle, responder, AIRPDCAP_MAC_LEN);
+     gcry_mac_write(cmac_handle, &seq_num, 1);
+-    gcry_mac_write(cmac_handle, &data[offset_link], data[offset_link + 1] + 2);
+-    gcry_mac_write(cmac_handle, &data[offset_rsne], data[offset_rsne + 1] + 2);
+-    gcry_mac_write(cmac_handle, &data[offset_timeout], data[offset_timeout + 1] + 2);
+-    gcry_mac_write(cmac_handle, &data[offset_fte], 4);
++    if (offset_link + 1 < offset_fte && offset_link + data[offset_link + 1] + 2 <= offset_fte) {
++        gcry_mac_write(cmac_handle, &data[offset_link], data[offset_link + 1] + 2);
++    }
++    if (offset_rsne + 1 < offset_fte && offset_rsne + data[offset_rsne + 1] + 2 <= offset_fte) {
++        gcry_mac_write(cmac_handle, &data[offset_rsne], data[offset_rsne + 1] + 2);
++    }
++    if (offset_timeout + 1 < offset_fte && offset_timeout + data[offset_timeout + 1] + 2 <= offset_fte) {
++        gcry_mac_write(cmac_handle, &data[offset_timeout], data[offset_timeout + 1] + 2);
++    }
++    if (offset_fte + 4 <= offset_fte) {
++        gcry_mac_write(cmac_handle, &data[offset_fte], 4);
++    }
+     gcry_mac_write(cmac_handle, zeros, 16);
+-    gcry_mac_write(cmac_handle, &data[offset_fte + 20], data[offset_fte + 1] + 2 - 20);
++    if (offset_fte + 20 < offset_fte && offset_fte + data[offset_fte + 1] + 2 - 20 <= offset_fte) {
++        gcry_mac_write(cmac_handle, &data[offset_fte + 20], data[offset_fte + 1] + 2 - 20);
++    }
+     gcry_mac_read(cmac_handle, mic, &cmac_len);
+     if (memcmp(mic, &data[offset_fte + 4], 16)) {
+         AIRPDCAP_DEBUG_PRINT_LINE("AirPDcapTDLSDeriveKey", "MIC verification failed", AIRPDCAP_DEBUG_LEVEL_3);

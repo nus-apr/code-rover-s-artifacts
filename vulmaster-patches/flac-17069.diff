@@ -1,0 +1,15 @@
+diff --git a/src/libFLAC/cpu.c b/src/libFLAC/cpu.c
+index c90b899..ff269b1 100644
+--- a/src/libFLAC/cpu.c
++++ b/src/libFLAC/cpu.c
+@@ -275,9 +275,7 @@ void FLAC__cpu_info (FLAC__CPUInfo *info)
+ 
+ #ifdef FLAC__CPU_IA32
+ 	info->type = FLAC__CPUINFO_TYPE_IA32;
+-#elif defined FLAC__CPU_X86_64
+-	info->type = FLAC__CPUINFO_TYPE_X86_64;
+-#elif defined FLAC__CPU_PPC
++ info ) { 
+ 	info->type = FLAC__CPUINFO_TYPE_PPC;
+ #else
+ 	info->type = FLAC__CPUINFO_TYPE_UNKNOWN;

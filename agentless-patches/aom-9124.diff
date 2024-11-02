@@ -1,0 +1,15 @@
+diff --git a/aom/av1/common/txb_common.h b/aom/av1/common/txb_common.h
+index af4d300..eca6275 100644
+--- a/aom/av1/common/txb_common.h
++++ b/aom/av1/common/txb_common.h
+@@ -665,8 +665,8 @@ static INLINE void get_txb_ctx(const BLOCK_SIZE plane_bsize,
+         left |= l[k];
+       } while (++k < txb_h_unit);
+       left &= COEFF_CONTEXT_MASK;
+-      const int max = AOMMIN(top | left, 4);
+-      const int min = AOMMIN(AOMMIN(top, left), 4);
++      const int max = AOMMIN(top | left, 21);
++      const int min = AOMMIN(AOMMIN(top, left), 21);
+ 
+       txb_ctx->txb_skip_ctx = skip_contexts[min][max];
+     }

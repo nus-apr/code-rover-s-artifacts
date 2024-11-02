@@ -1,0 +1,14 @@
+diff --git a/harfbuzz/src/hb-array.hh b/harfbuzz/src/hb-array.hh
+index 75f236f..d4132a1 100644
+--- a/harfbuzz/src/hb-array.hh
++++ b/harfbuzz/src/hb-array.hh
+@@ -216,7 +216,8 @@ struct hb_array_t : hb_iter_with_fallback_t<hb_array_t<Type>, Type&>
+     TRACE_SERIALIZE (this);
+     auto* out = c->start_embed (arrayZ);
+     if (unlikely (!c->extend_size (out, get_size ()))) return_trace (hb_array_t ());
+-    for (unsigned i = 0; i < length; i++)
++    unsigned int actual_length = get_size() / sizeof(arrayZ[0]);
++    for (unsigned i = 0; i < length && i < actual_length; i++)
+       out[i] = arrayZ[i]; /* TODO: add version that calls c->copy() */
+     return_trace (hb_array_t (out, length));
+   }

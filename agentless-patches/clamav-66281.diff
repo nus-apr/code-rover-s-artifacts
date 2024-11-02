@@ -1,0 +1,13 @@
+diff --git a/clamav/libclamav/pdfng.c b/clamav/libclamav/pdfng.c
+index 6d5872e..fe61ef3 100644
+--- a/clamav/libclamav/pdfng.c
++++ b/clamav/libclamav/pdfng.c
+@@ -695,7 +695,7 @@ char *pdf_parse_string(struct pdf_struct *pdf, struct pdf_obj *obj, const char *
+     if (p2 >= objstart + objsize)
+         return NULL;
+ 
+-    len = (size_t)(p2 - p1) + 1;
++    len = (size_t)(p2 - p1);
+ 
+     res = pdf_finalize_string(pdf, obj, p1, len);
+     if (!res) {

@@ -1,0 +1,13 @@
+diff --git a/mruby/src/string.c b/mruby/src/string.c
+index 00d5d34..c416774 100644
+--- a/mruby/src/string.c
++++ b/mruby/src/string.c
+@@ -615,7 +615,7 @@ mrb_memsearch_ss(const unsigned char *xs, long m, const unsigned char *ys, long
+   bitint *s0 = (bitint*)(ys);
+   bitint *s1 = (bitint*)(ys+m-1);
+ 
+-  for (mrb_int i=0; i < n; i+=sizeof(bitint), s0++, s1++) {
++  for (mrb_int i=0; i <= n - m; i+=sizeof(bitint), s0++, s1++) {
+     const bitint eq = (*s0 ^ first) | (*s1 ^ last);
+     bitint zeros = ((~eq & MASK2) + MASK1) & (~eq & MASK3);
+     size_t j = 0;

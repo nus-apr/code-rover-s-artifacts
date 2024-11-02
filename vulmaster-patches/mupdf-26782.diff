@@ -1,0 +1,19 @@
+diff --git a/source/fitz/image.c b/source/fitz/image.c
+index ae53cc044..1d06298a7 100644
+--- a/source/fitz/image.c
++++ b/source/fitz/image.c
+@@ -943,7 +943,7 @@ fz_get_pixmap_from_image(fz_context *ctx, fz_image *image, const fz_irect *subar
+ 
+ 	/* We'll have to decode the image; request the correct amount of downscaling. */
+ 	l2factor_remaining = l2factor;
+-	tile = image->get_pixmap(ctx, image, &key.rect, w, h, &l2factor_remaining);
++ data ) { 
+ 
+ 	/* Update the ctm to allow for subareas. */
+ 	if (ctm)
+diff --git a/thirdparty/tesseract b/thirdparty/tesseract
+--- a/thirdparty/tesseract
++++ b/thirdparty/tesseract
+@@ -1 +1 @@
+-Subproject commit 7df4629aae51dfcbd73a61f985cc92fba34b3934
++Subproject commit 7df4629aae51dfcbd73a61f985cc92fba34b3934-dirty

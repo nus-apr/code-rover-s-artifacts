@@ -1,0 +1,78 @@
+======================= INFO =========================
+This binary is built for AFL-fuzz.
+To run the target function on individual input(s) execute this:
+  /out/fuzz_mdb < INPUT_FILE
+or
+  /out/fuzz_mdb INPUT_FILE1 [INPUT_FILE2 ... ]
+To fuzz with afl-fuzz execute this:
+  afl-fuzz [afl-flags] /out/fuzz_mdb [-N]
+afl-fuzz will run N iterations before re-spawning the process (default: 1000)
+======================================================
+Reading 4568 bytes from /tmp/poc
+offset 69393186816 is beyond EOF
+Oops! didn't get a full page at 33883392
+Warning: defaulting to brute force read
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: row_size = 0.
+warning: row_size = 0.
+warning: row_size = 0.
+warning: row_size = 0.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: row_size = 0.
+warning: row_size = 0.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+warning: mdb_find_row failed.
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address 0x625100000113 (pc 0x0000004e5654 bp 0x7ffc65762740 sp 0x7ffc657626e0 T0)
+==13==The signal is caused by a READ memory access.
+SCARINESS: 20 (wild-addr-read)
+    #0 0x4e5654 in mdb_crack_row3 /src/mdbtools/src/libmdb/write.c:149:24
+    #1 0x4e531c in mdb_crack_row /src/mdbtools/src/libmdb/write.c:219:14
+    #2 0x4d3d4b in mdb_read_row /src/mdbtools/src/libmdb/data.c:334:15
+    #3 0x4d4d39 in mdb_fetch_row /src/mdbtools/src/libmdb/data.c:482:8
+    #4 0x4cce5a in mdb_read_catalog /src/mdbtools/src/libmdb/catalog.c:121:9
+    #5 0x4cc156 in LLVMFuzzerTestOneInput /src/mdbtools/src/fuzz/fuzz_mdb.c:6:9
+    #6 0x4f0b0e in ExecuteFilesOnyByOne /src/libfuzzer/afl/afl_driver.cpp:207:5
+    #7 0x4f0b0e in main /src/libfuzzer/afl/afl_driver.cpp:244:12
+    #8 0x72814ca2183f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #9 0x41e5f8 in _start (/out/fuzz_mdb+0x41e5f8)
+
+DEDUP_TOKEN: mdb_crack_row3--mdb_crack_row--mdb_read_row
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /src/mdbtools/src/libmdb/write.c:149:24 in mdb_crack_row3
+==13==ABORTING

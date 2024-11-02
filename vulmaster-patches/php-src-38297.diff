@@ -1,0 +1,15 @@
+diff --git a/src/regcomp.c b/src/regcomp.c
+index d80551d..b8f9cf0 100644
+--- a/src/regcomp.c
++++ b/src/regcomp.c
+@@ -7704,9 +7704,7 @@ onig_initialize(OnigEncoding encodings[], int n)
+ 
+   if (onig_inited != 0)
+     return 0;
+-
+-  onigenc_init();
+-
++       static int 
+   onig_inited = 1;
+ 
+   for (i = 0; i < n; i++) {

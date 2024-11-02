@@ -1,0 +1,17 @@
+diff --git a/fuzz/fuzz_element.cpp b/fuzz/fuzz_element.cpp
+index f6b0f9ab..1c3c89e6 100644
+--- a/fuzz/fuzz_element.cpp
++++ b/fuzz/fuzz_element.cpp
+@@ -116,8 +116,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+       CASE2(28, .at(index));
+       CASE2(29, .at_key(str));
+       CASE2(30, .at_key_case_insensitive(str));
+-      case 31: { NulOStream os;
+-        simdjson_unused auto dumpstatus = elem.dump_raw_tape(os);} ;break;
++      case 31: { 
++        std::ostringstream os; // Use std::ostringstream for guaranteed initialization
++        simdjson_unused auto dumpstatus = elem.dump_raw_tape(os);
++      } ;break;
+     default:
+       return 0;
+     }

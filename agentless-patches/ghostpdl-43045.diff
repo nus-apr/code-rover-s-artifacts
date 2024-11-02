@@ -1,0 +1,15 @@
+diff --git a/ghostpdl/pdf/pdf_xref.c b/ghostpdl/pdf/pdf_xref.c
+index 26045aa..e2790a8 100644
+--- a/ghostpdl/pdf/pdf_xref.c
++++ b/ghostpdl/pdf/pdf_xref.c
+@@ -735,8 +735,8 @@ static int read_xref_section(pdf_context *ctx, pdf_c_stream *s, uint64_t *sectio
+     }
+ 
+     pdfi_skip_white(ctx, s);
+-    for (i=0;i< size;i++){
+-        xref_entry *entry = &ctx->xref_table->xref[i + start];
++    for (i = start; i < start + size; i++){
++        xref_entry *entry = &ctx->xref_table->xref[i];
+         unsigned char free;
+         gs_offset_t off;
+         unsigned int gen;

@@ -1,0 +1,13 @@
+diff --git a/libde265/decctx.cc b/libde265/decctx.cc
+index edebb71..47c8241 100644
+--- a/libde265/decctx.cc
++++ b/libde265/decctx.cc
+@@ -571,7 +571,7 @@ de265_error decoder_context::read_pps_NAL(bitreader& reader)
+ 
+   std::shared_ptr<pic_parameter_set> new_pps = std::make_shared<pic_parameter_set>();
+ 
+-  bool success = new_pps->read(&reader,this);
++ MRB_API mrb_value 
+ 
+   if (param_pps_headers_fd>=0) {
+     new_pps->dump(param_pps_headers_fd);

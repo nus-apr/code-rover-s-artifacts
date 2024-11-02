@@ -1,0 +1,21 @@
+diff --git a/c-blosc2/blosc/blosc2.c b/c-blosc2/blosc/blosc2.c
+index 0795c78..a79e9fe 100644
+--- a/c-blosc2/blosc/blosc2.c
++++ b/c-blosc2/blosc/blosc2.c
+@@ -869,9 +869,13 @@ static int blosc_c(struct thread_context* thread_context, int32_t bsize,
+       }
+       _sw32(dest - 4, cbytes);
+     }
+-    dest += cbytes;
+-    ntbytes += cbytes;
+-    ctbytes += cbytes;
++    if ((ntbytes + cbytes) <= maxbytes) {
++      dest += cbytes;
++      ntbytes += cbytes;
++      ctbytes += cbytes;
++    } else {
++      return 0;  /* Prevent buffer overflow */
++    }
+   }  /* Closes j < nsplits */
+ 
+   //printf("c%d", ctbytes);

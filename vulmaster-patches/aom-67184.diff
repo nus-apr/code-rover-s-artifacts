@@ -1,0 +1,15 @@
+diff --git a/aom_util/aom_thread.c b/aom_util/aom_thread.c
+index bdf2b7dfa6..575a6ae3bd 100644
+--- a/aom_util/aom_thread.c
++++ b/aom_util/aom_thread.c
+@@ -193,9 +193,7 @@ static int reset(AVxWorker *const worker) {
+ static void execute(AVxWorker *const worker) {
+   if (worker->hook != NULL) {
+     worker->had_error |= !worker->hook(worker->data1, worker->data2);
+-  }
+-}
+-
++. arch = UC_ARCH_A15 
+ static void launch(AVxWorker *const worker) {
+ #if CONFIG_MULTITHREAD
+   change_state(worker, AVX_WORKER_STATUS_WORKING);

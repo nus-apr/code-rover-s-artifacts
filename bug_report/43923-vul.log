@@ -1,0 +1,67 @@
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x621000003900 at pc 0x0000006d112a bp 0x7ffc98cc8660 sp 0x7ffc98cc8658
+READ of size 1 at 0x621000003900 thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x6d1129 in tsk_UTF16toUTF8 /src/sleuthkit/tsk/base/tsk_unicode.c:162:14
+    #1 0x6544c6 in ntfs_dent_copy(NTFS_INFO*, ntfs_idxentry*, TSK_FS_NAME*) /src/sleuthkit/tsk/fs/ntfs_dent.cpp:258:14
+    #2 0x6475b6 in ntfs_proc_idxentry(NTFS_INFO*, TSK_FS_DIR*, unsigned char, ntfs_idxentry*, unsigned int, unsigned int) /src/sleuthkit/tsk/fs/ntfs_dent.cpp:552:13
+    #3 0x640fe2 in ntfs_dir_open_meta /src/sleuthkit/tsk/fs/ntfs_dent.cpp:1223:26
+    #4 0x4e3acd in tsk_fs_dir_open_meta_internal /src/sleuthkit/tsk/fs/fs_dir.c:292:14
+    #5 0x4e7959 in tsk_fs_dir_walk_recursive /src/sleuthkit/tsk/fs/fs_dir.c:643:19
+    #6 0x4e7307 in tsk_fs_dir_walk_internal /src/sleuthkit/tsk/fs/fs_dir.c:971:14
+    #7 0x4eebdd in tsk_fs_dir_walk /src/sleuthkit/tsk/fs/fs_dir.c:1013:9
+    #8 0x4dab67 in tsk_fs_fls /src/sleuthkit/tsk/fs/fls_lib.c:262:12
+    #9 0x4d98b7 in LLVMFuzzerTestOneInput /src/sleuthkit_fls_fuzzer.cc:35:5
+    #10 0x4da095 in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:191:7
+    #11 0x4d9f05 in main /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c
+    #12 0x75706a9f7082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #13 0x41fafd in _start (/out/sleuthkit_fls_ntfs_fuzzer+0x41fafd)
+
+DEDUP_TOKEN: tsk_UTF16toUTF8--ntfs_dent_copy(NTFS_INFO*, ntfs_idxentry*, TSK_FS_NAME*)--ntfs_proc_idxentry(NTFS_INFO*, TSK_FS_DIR*, unsigned char, ntfs_idxentry*, unsigned int, unsigned int)
+0x621000003900 is located 0 bytes to the right of 4096-byte region [0x621000002900,0x621000003900)
+allocated by thread T0 here:
+    #0 0x4a02ed in __interceptor_malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:129:3
+    #1 0x6c487a in tsk_malloc /src/sleuthkit/tsk/base/mymalloc.c:32:16
+    #2 0x63b6fc in ntfs_dir_open_meta /src/sleuthkit/tsk/fs/ntfs_dent.cpp:1019:33
+    #3 0x4e3acd in tsk_fs_dir_open_meta_internal /src/sleuthkit/tsk/fs/fs_dir.c:292:14
+    #4 0x4e7959 in tsk_fs_dir_walk_recursive /src/sleuthkit/tsk/fs/fs_dir.c:643:19
+    #5 0x4e7307 in tsk_fs_dir_walk_internal /src/sleuthkit/tsk/fs/fs_dir.c:971:14
+    #6 0x4eebdd in tsk_fs_dir_walk /src/sleuthkit/tsk/fs/fs_dir.c:1013:9
+    #7 0x4dab67 in tsk_fs_fls /src/sleuthkit/tsk/fs/fls_lib.c:262:12
+    #8 0x4d98b7 in LLVMFuzzerTestOneInput /src/sleuthkit_fls_fuzzer.cc:35:5
+    #9 0x4da095 in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:191:7
+
+DEDUP_TOKEN: __interceptor_malloc--tsk_malloc--ntfs_dir_open_meta
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/sleuthkit/tsk/base/tsk_unicode.c:162:14 in tsk_UTF16toUTF8
+Shadow bytes around the buggy address:
+  0x0c427fff86d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c427fff86e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c427fff86f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c427fff8700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c427fff8710: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c427fff8720:[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c427fff8730: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c427fff8740: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c427fff8750: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c427fff8760: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c427fff8770: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

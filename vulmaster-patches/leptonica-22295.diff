@@ -1,0 +1,15 @@
+diff --git a/src/readfile.c b/src/readfile.c
+index 07ba5cd..0d1364a 100644
+--- a/src/readfile.c
++++ b/src/readfile.c
+@@ -838,9 +838,7 @@ l_int32  format;
+  */
+ PIX *
+ pixReadMem(const l_uint8  *data,
+-           size_t          size)
+-{
+-l_int32   format, valid;
++ ; dest [ 3 ] = pa_ [ 3 ] ; dest [ <vul-start> pa_ [ 1 
+ PIX      *pix;
+ PIXCMAP  *cmap;
+ 

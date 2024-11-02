@@ -1,0 +1,46 @@
+diff --git a/source/m3_compile.c b/source/m3_compile.c
+index 6a7b62f..645d0e6 100644
+--- a/source/m3_compile.c
++++ b/source/m3_compile.c
+@@ -2198,23 +2198,35 @@ M3Result  Compile_BlockStatements  (IM3Compilation o)
+     {                                                                   emit_stack_dump (o);
+         m3opcode_t opcode;
+         o->lastOpcodeStart = o->wasm;
+-_       (Read_opcode (& opcode, & o->wasm, o->wasmEnd));                log_opcode (o, opcode);
++        M3Result readResult = Read_opcode(&opcode, &o->wasm, o->wasmEnd);
++        if (readResult != m3Err_none) {
++            return readResult;
++        }
++        log_opcode(o, opcode);
+ 
+         IM3OpInfo opinfo = GetOpInfo(opcode);
+-        _throwif (m3Err_unknownOpcode, opinfo == NULL);
++        if (opinfo == NULL) {
++            return m3Err_unknownOpcode;
++        }
+ 
+         if (opinfo->compiler) {
+-_           ((* opinfo->compiler) (o, opcode))
++            M3Result compileResult = (*opinfo->compiler)(o, opcode);
++            if (compileResult != m3Err_none) {
++                return compileResult;
++            }
+         } else {
+-_           (Compile_Operator (o, opcode));
++            M3Result operatorResult = Compile_Operator(o, opcode);
++            if (operatorResult != m3Err_none) {
++                return operatorResult;
++            }
+         }
+ 
+         o->previousOpcode = opcode;                             //                      m3logif (stack, dump_type_stack (o))
+ 
+         if (o->stackIndex > d_m3MaxFunctionStackHeight)         // TODO: is this only place to check?
+-            _throw (m3Err_functionStackOverflow);
++            return m3Err_functionStackOverflow;
+ 
+-        if (opcode == c_waOp_end or opcode == c_waOp_else)
++        if (opcode == c_waOp_end || opcode == c_waOp_else)
+             break;
+     }
+     

@@ -1,0 +1,15 @@
+diff --git a/Magick++/lib/Exception.cpp b/Magick++/lib/Exception.cpp
+index 0dcf2b0a8..004cd9374 100644
+--- a/Magick++/lib/Exception.cpp
++++ b/Magick++/lib/Exception.cpp
+@@ -833,9 +833,7 @@ MagickPPExport void Magick::throwException(ExceptionInfo *exception_,
+ 
+   size_t
+     index;
+-
+-  std::string
+-    message;
++ MagickFalse ) ; 
+ 
+   // Just return if there is no reported error
+   if (exception_->severity == MagickCore::UndefinedException)

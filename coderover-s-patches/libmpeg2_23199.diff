@@ -1,0 +1,82 @@
+diff --git a/common/ideint.c b/common/ideint.c
+index 24e4e72..646d1e4 100644
+--- a/common/ideint.c
++++ b/common/ideint.c
+@@ -264,18 +264,30 @@ IDEINT_ERROR_T ideint_process(void *pv_ctxt,
+             pu1_prv = ps_prv_fld->apu1_buf[i];
+             pu1_prv += (ps_prv_fld->ai4_strd[i] * row << 2);
+ 
+-            if(ps_ctxt->s_params.i4_cur_fld_top)
+-            {
+-                pu1_top = ps_cur_fld->apu1_buf[i];
+-                pu1_bot = ps_nxt_fld->apu1_buf[i];
+-            }
+-            else
+-            {
+-                pu1_top = ps_nxt_fld->apu1_buf[i];
+-                pu1_bot = ps_cur_fld->apu1_buf[i];
+-            }
+-            pu1_top += (cur_strd * row << 2);
+-            pu1_bot += (cur_strd * row << 2);
++    if(ps_ctxt->s_params.i4_cur_fld_top)
++    {
++        if (ps_cur_fld->apu1_buf[i] == NULL || ps_nxt_fld->apu1_buf[i] == NULL)
++        {
++            return IDEINT_INVALID_CTXT; // Return error if any buffer is null
++        }
++        pu1_top = ps_cur_fld->apu1_buf[i];
++        pu1_bot = ps_nxt_fld->apu1_buf[i];
++    }
++    else
++    {
++        if (ps_nxt_fld->apu1_buf[i] == NULL || ps_cur_fld->apu1_buf[i] == NULL)
++        {
++            return IDEINT_INVALID_CTXT; // Return error if any buffer is null
++        }
++        pu1_top = ps_nxt_fld->apu1_buf[i];
++        pu1_bot = ps_cur_fld->apu1_buf[i];
++    }
++    if ((cur_strd * row << 2) >= ps_cur_fld->ai4_ht[i] || (cur_strd * row << 2) >= ps_nxt_fld->ai4_ht[i])
++    {
++        return IDEINT_INVALID_CTXT; // Return error if offset exceeds buffer height
++    }
++    pu1_top += (cur_strd * row << 2);
++    pu1_bot += (cur_strd * row << 2);
+ 
+             for(col = 0; col < num_blks_x; col++)
+             {
+diff --git a/common/ideint_utils.c b/common/ideint_utils.c
+index bdd3268..dcbece0 100644
+--- a/common/ideint_utils.c
++++ b/common/ideint_utils.c
+@@ -194,6 +194,14 @@ WORD32 ideint_weave_blk(UWORD8 *pu1_top,
+ 
+     for(j = 0; j < ht; j += 2)
+     {
++        if (pu1_dst == NULL || pu1_top == NULL || pu1_bot == NULL)
++        {
++            return -1; // Return error if any pointer is null
++        }
++        if (wd > dst_strd || wd > src_strd)
++        {
++            return -1; // Return error if width exceeds stride
++        }
+         memcpy(pu1_dst, pu1_top, wd);
+         pu1_dst += dst_strd;
+         pu1_top += src_strd;
+diff --git a/decoder/impeg2d_deinterlace.c b/decoder/impeg2d_deinterlace.c
+index 89e5c1a..1c68092 100644
+--- a/decoder/impeg2d_deinterlace.c
++++ b/decoder/impeg2d_deinterlace.c
+@@ -186,8 +186,10 @@ WORD32 impeg2d_deinterlace(dec_state_t *ps_dec,
+     UWORD8 *pu1_dst_y, *pu1_dst_u, *pu1_dst_v;
+     ideint_params_t s_params;
+ 
+-    if((NULL == ps_src_pic) || (NULL == ps_src_pic->pu1_y) || (0 == num_rows))
++    if((NULL == ps_src_pic) || (NULL == ps_src_pic->pu1_y) || (NULL == ps_dec) || (0 == num_rows))
+         return -1;
++    if (start_row + num_rows > ps_dec->u2_vertical_size)
++        return -1; // Return error if rows exceed vertical size
+ 
+     s_params.e_arch = impeg2d_get_arch(ps_dec->e_processor_arch);
+     s_params.e_soc = ICV_SOC_GENERIC;

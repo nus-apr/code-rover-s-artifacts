@@ -1,0 +1,20 @@
+diff --git a/imagemagick/coders/dcm.c b/imagemagick/coders/dcm.c
+index 89e94b4..e1075cf 100644
+--- a/imagemagick/coders/dcm.c
++++ b/imagemagick/coders/dcm.c
+@@ -4137,6 +4137,7 @@ static Image *ReadDCMImage(const ImageInfo *image_info,ExceptionInfo *exception)
+               image->colormap[i].blue=(MagickRealType) index;
+             }
+           if (map.gray != (int *) NULL)
++          {
+             for (i=0; i < (ssize_t) colors; i++)
+             {
+               index=map.gray[i];
+@@ -4147,6 +4148,7 @@ static Image *ReadDCMImage(const ImageInfo *image_info,ExceptionInfo *exception)
+               image->colormap[i].green=(MagickRealType) index;
+               image->colormap[i].blue=(MagickRealType) index;
+             }
++          }
+         }
+       if (image->compression == RLECompression)
+         {

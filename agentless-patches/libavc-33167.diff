@@ -1,0 +1,13 @@
+diff --git a/libavc/decoder/ih264d_utils.c b/libavc/decoder/ih264d_utils.c
+index 93c8164..0ff5fc5 100644
+--- a/libavc/decoder/ih264d_utils.c
++++ b/libavc/decoder/ih264d_utils.c
+@@ -2079,7 +2079,7 @@ WORD16 ih264d_allocate_dynamic_bufs(dec_struct_t * ps_dec)
+     num_entries = ((2 * num_entries) + 1);
+     num_entries *= 2;
+ 
+-    size = num_entries * sizeof(void *);
++    size = num_entries * sizeof(void *) + 4; // Add extra space to prevent overflow
+     size += PAD_MAP_IDX_POC * sizeof(void *);
+     size *= u4_total_mbs;
+     size += sizeof(dec_slice_struct_t) * u4_total_mbs;

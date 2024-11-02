@@ -1,0 +1,45 @@
+diff --git a/src/libopensc/card-authentic.c b/src/libopensc/card-authentic.c
+index f0ee6757..a66015a9 100644
+--- a/src/libopensc/card-authentic.c
++++ b/src/libopensc/card-authentic.c
+@@ -186,6 +186,9 @@ authentic_get_tagged_data(struct sc_context *ctx, unsigned char *in, size_t in_l
+ 
+ 	for (offs = 0; offs < in_len; )   {
+ 		if ((*(in + offs) == 0x7F) || (*(in + offs) == 0x5F))   {
++			if (offs + 1 >= in_len) {
++				LOG_FUNC_RETURN(ctx, SC_ERROR_INVALID_ARGUMENTS);
++			}
+ 			tag = *(in + offs) * 0x100 + *(in + offs + 1);
+ 			tag_len = 2;
+ 		}
+@@ -194,9 +197,17 @@ authentic_get_tagged_data(struct sc_context *ctx, unsigned char *in, size_t in_l
+ 			tag_len = 1;
+ 		}
+ 
++		if (offs + tag_len >= in_len) {
++			LOG_FUNC_RETURN(ctx, SC_ERROR_INVALID_ARGUMENTS);
++		}
++
+ 		size_len = authentic_parse_size(in + offs + tag_len, &size);
+ 		LOG_TEST_RET(ctx, size_len, "parse error: invalid size data");
+ 
++		if (offs + tag_len + size_len + size > in_len) {
++			LOG_FUNC_RETURN(ctx, SC_ERROR_INVALID_ARGUMENTS);
++		}
++
+ 		if (tag == in_tag)   {
+ 			*out = in + offs + tag_len + size_len;
+ 			*out_len = size;
+@@ -287,7 +298,11 @@ authentic_parse_credential_data(struct sc_context *ctx, struct sc_pin_cmd_data *
+ 
+ 	rv = authentic_get_tagged_data(ctx, blob, blob_len, AUTHENTIC_TAG_CREDENTIAL_TRYLIMIT, &data, &data_len);
+ 	LOG_TEST_RET(ctx, rv, "cannot get try limit");
+-	pin_cmd->pin1.max_tries = *data;
++	if (data_len > 0) {
++		pin_cmd->pin1.max_tries = *data;
++	} else {
++		LOG_FUNC_RETURN(ctx, SC_ERROR_INVALID_ARGUMENTS);
++	}
+ 
+ 	rv = authentic_get_tagged_data(ctx, blob, blob_len, AUTHENTIC_TAG_DOCP_MECH, &data, &data_len);
+ 	LOG_TEST_RET(ctx, rv, "cannot get PIN type");

@@ -1,0 +1,13 @@
+diff --git a/libssh/src/messages.c b/libssh/src/messages.c
+index 8c1cff4..9b9292a 100644
+--- a/libssh/src/messages.c
++++ b/libssh/src/messages.c
+@@ -777,7 +777,7 @@ SSH_PACKET_CALLBACK(ssh_packet_userauth_request){
+ 
+     msg->auth_request.method = SSH_AUTH_METHOD_PUBLICKEY;
+     SAFE_FREE(method);
+-    rc = ssh_buffer_unpack(packet, "bSS",
++    rc = ssh_buffer_unpack(packet, "BSS",
+             &has_sign,
+             &algo,
+             &pubkey_blob

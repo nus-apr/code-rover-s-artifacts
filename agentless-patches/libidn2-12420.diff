@@ -1,0 +1,19 @@
+diff --git a/libidn2/fuzz/libidn2_to_ascii_8z_fuzzer.c b/libidn2/fuzz/libidn2_to_ascii_8z_fuzzer.c
+index 0680bac..d4783b9 100644
+--- a/libidn2/fuzz/libidn2_to_ascii_8z_fuzzer.c
++++ b/libidn2/fuzz/libidn2_to_ascii_8z_fuzzer.c
+@@ -64,7 +64,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+ 
+ 	if ((size & 3) == 0) {
+ 		uint32_t *u32 = (uint32_t *) malloc(size + 4);
+-		char *out2 = (char *) malloc(64);
++		char *out2 = (char *) malloc(65);
+ 
+ 		assert(u32 != NULL);
+ 		assert(out2 != NULL);
+@@ -85,4 +85,4 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+ 
+ 	free(domain);
+ 	return 0;
+-}
++}

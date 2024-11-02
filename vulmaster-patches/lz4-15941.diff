@@ -1,0 +1,10 @@
+diff --git a/lib/lz4hc.h b/lib/lz4hc.h
+index 44e35bb..044f672 100644
+--- a/lib/lz4hc.h
++++ b/lib/lz4hc.h
+@@ -435,4 +435,4 @@ LZ4LIB_STATIC_API void LZ4_attach_HC_dictionary(
+ #endif
+ 
+ #endif   /* LZ4_HC_SLO_098092834 */
+-#endif   /* LZ4_HC_STATIC_LINKING_ONLY */
++ ; frame. mLength = size ; frame. <vul-start> mChannel = 11 

@@ -1,0 +1,60 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index b4d16e45..4146cdc9 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -2397,8 +2397,13 @@ int _blosc_getitem(blosc2_context* context, const void* src, int32_t srcsize,
+ /* Specific routine optimized for decompression a small number of
+    items out of a compressed chunk.  Public non-contextual API. */
+ int blosc_getitem(const void* src, int start, int nitems, void* dest) {
++  if (src == NULL || dest == NULL) {
++    fprintf(stderr, "Error: source or destination pointer is null.\n");
++    return -1;
++  }
+   uint8_t* _src = (uint8_t*)(src);
+   blosc2_context context;
++  memset(&context, 0, sizeof(blosc2_context));  // Properly initialize context
+   int result;
+ 
+   uint8_t version = _src[BLOSC2_CHUNK_VERSION];                        /* blosc format version */
+@@ -2407,6 +2412,16 @@ int blosc_getitem(const void* src, int start, int nitems, void* dest) {
+     return -1;
+   }
+ 
++  // Initialize context with necessary values
++  context.typesize = (uint8_t)_src[BLOSC2_CHUNK_TYPESIZE];
++  int32_t nbytes = *((int32_t*)(_src + BLOSC2_CHUNK_NBYTES));
++
++  // Check bounds to prevent out-of-bounds access
++  if (start < 0 || nitems < 0 || (start + nitems) * context.typesize > nbytes) {
++    fprintf(stderr, "Error: out-of-bounds access in blosc_getitem.\n");
++    return -1;
++  }
++
+   /* Minimally populate the context */
+   memset(&context, 0, sizeof(blosc2_context));
+   context.src = src;
+diff --git a/blosc/frame.c b/blosc/frame.c
+index 4c77108a..4790de10 100644
+--- a/blosc/frame.c
++++ b/blosc/frame.c
+@@ -1297,12 +1297,19 @@ int64_t get_coffset(blosc2_frame* frame, int32_t header_len, int64_t cbytes, int
+     return -3;
+   }
+ 
++  // Ensure nchunk is within valid range
++  int32_t nchunks = *((int32_t*)(coffsets + BLOSC2_CHUNK_NBYTES));
++  if (nchunk < 0 || nchunk >= nchunks) {
++    fprintf(stderr, "Error: nchunk is out of bounds.\n");
++    return -4;
++  }
++
+   int rc = blosc_getitem(coffsets, nchunk, 1, &offset);
+   if (rc < 0) {
+     size_t nbytes_, cbytes_, blocksize_;
+     blosc_cbuffer_sizes(coffsets, &nbytes_, &cbytes_, &blocksize_);
+     fprintf(stderr, "Error: problems retrieving a chunk offset");
+-    return -4;
++    return -5;
+   }
+   return offset;
+ }

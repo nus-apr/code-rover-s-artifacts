@@ -1,0 +1,13 @@
+diff --git a/ghostpdl/base/stream.c b/ghostpdl/base/stream.c
+index d416d8a..70dc140 100644
+--- a/ghostpdl/base/stream.c
++++ b/ghostpdl/base/stream.c
+@@ -996,7 +996,7 @@ stream_move(stream_cursor_read * pr, stream_cursor_write * pw)
+         count = rcount, status = 0;
+     else
+         count = wcount, status = 1;
+-    memmove(pw->ptr + 1, pr->ptr + 1, count);
++    memmove(pw->ptr, pr->ptr, count);
+     pr->ptr += count;
+     pw->ptr += count;
+     return status;

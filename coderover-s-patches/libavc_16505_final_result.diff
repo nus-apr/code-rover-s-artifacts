@@ -1,0 +1,46 @@
+diff --git a/decoder/ih264d_thread_compute_bs.c b/decoder/ih264d_thread_compute_bs.c
+index 951cef4..05e744c 100644
+--- a/decoder/ih264d_thread_compute_bs.c
++++ b/decoder/ih264d_thread_compute_bs.c
+@@ -155,16 +155,33 @@ void ih264d_compute_bs_non_mbaff_thread(dec_struct_t * ps_dec,
+             WORD8 * p1_refleft0 = (ps_cur_mv_pred + 3)->i1_ref_frame;
+ 
+ 
+-            ppv_top_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refTop0[0]];
+-            ppv_top_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refTop0[1]];
++            // Ensure pointers and indices are valid before accessing
++            if (ppv_top_mv_pred_addr && ppv_left_mv_pred_addr &&
++                apv_map_ref_idx_to_poc && pu4_map_ref_idx_to_poc_l1) {
+ 
+-            ppv_left_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
+-            ppv_top_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
+-            ppv_left_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
+-            ppv_top_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
++                if (p1_refTop0 && p1_refTop0[0] >= 0 && p1_refTop0[0] < ps_dec->u1_ref_idxl0_active_minus1 + 1) {
++                    ppv_top_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refTop0[0]];
++                }
++                if (p1_refTop0 && p1_refTop0[1] >= 0 && p1_refTop0[1] < ps_dec->u1_ref_idxl0_active_minus1 + 1) {
++                    ppv_top_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refTop0[1]];
++                }
+ 
+-            ppv_left_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refleft0[0]];
+-            ppv_left_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refleft0[1]];
++                if (p1_refTop1 && p1_refTop1[0] >= 0 && p1_refTop1[0] < ps_dec->u1_ref_idxl0_active_minus1 + 1) {
++                    ppv_left_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
++                    ppv_top_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
++                }
++                if (p1_refTop1 && p1_refTop1[1] >= 0 && p1_refTop1[1] < ps_dec->u1_ref_idxl0_active_minus1 + 1) {
++                    ppv_left_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
++                    ppv_top_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
++                }
++
++                if (p1_refleft0 && p1_refleft0[0] >= 0 && p1_refleft0[0] < ps_dec->u1_ref_idxl0_active_minus1 + 1) {
++                    ppv_left_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refleft0[0]];
++                }
++                if (p1_refleft0 && p1_refleft0[1] >= 0 && p1_refleft0[1] < ps_dec->u1_ref_idxl0_active_minus1 + 1) {
++                    ppv_left_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refleft0[1]];
++                }
++            }
+             //}
+             /* Storing the leftMbtype for next Mb */
+             ps_dec->deblk_left_mb[1].u1_mb_type = ps_cur_mb_params->u1_mb_type;

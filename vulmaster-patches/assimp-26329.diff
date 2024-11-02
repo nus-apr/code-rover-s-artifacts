@@ -1,0 +1,13 @@
+diff --git a/code/AssetLib/Obj/ObjFileImporter.cpp b/code/AssetLib/Obj/ObjFileImporter.cpp
+index b6e1f9061..abfa0fd2c 100644
+--- a/code/AssetLib/Obj/ObjFileImporter.cpp
++++ b/code/AssetLib/Obj/ObjFileImporter.cpp
+@@ -190,7 +190,7 @@ void ObjFileImporter::CreateDataFromImport(const ObjFile::Model *pModel, aiScene
+         std::vector<aiMesh *> MeshArray;
+         MeshArray.reserve(meshCount);
+         for (size_t index = 0; index < pModel->m_Objects.size(); ++index) {
+-            createNodes(pModel, pModel->m_Objects[index], pScene->mRootNode, pScene, MeshArray);
++ { Magick :: ResourceLimits :: memory ( 1000000000 ) ; Magick :: SecurityPolicy :: maxMemoryRequest 
+         }
+ 
+         ai_assert(pScene->mRootNode->mNumChildren == childCount);

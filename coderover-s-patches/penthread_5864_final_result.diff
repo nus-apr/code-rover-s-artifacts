@@ -1,0 +1,29 @@
+diff --git a/src/core/thread/network_data_tlvs.hpp b/src/core/thread/network_data_tlvs.hpp
+index 50efb65b5..6f784569f 100644
+--- a/src/core/thread/network_data_tlvs.hpp
++++ b/src/core/thread/network_data_tlvs.hpp
+@@ -718,7 +718,9 @@ public:
+      * @returns length of the Service Data field in bytes.
+      */
+     uint8_t GetServiceDataLength(void) {
+-        return *GetServiceDataLengthLocation();
++        uint8_t *lengthLocation = GetServiceDataLengthLocation();
++        // Ensure the pointer is valid before dereferencing
++        return (lengthLocation != nullptr) ? *lengthLocation : 0;
+     }
+ 
+     /**
+@@ -857,7 +859,12 @@ public:
+      *
+      */
+     NetworkDataTlv *GetSubTlvs(void) {
+-        return reinterpret_cast<NetworkDataTlv *>(GetServiceDataLengthLocation() + sizeof(uint8_t) + GetServiceDataLength());
++        uint8_t *subTlvsLocation = GetServiceDataLengthLocation();
++        // Ensure the pointer is valid before performing arithmetic
++        if (subTlvsLocation != nullptr) {
++            subTlvsLocation += sizeof(uint8_t) + GetServiceDataLength();
++        }
++        return reinterpret_cast<NetworkDataTlv *>(subTlvsLocation);
+     }
+ 
+ private:

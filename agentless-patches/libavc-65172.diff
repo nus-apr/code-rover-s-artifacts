@@ -1,0 +1,45 @@
+diff --git a/libavc/decoder/svc/isvcd_compute_bs.c b/libavc/decoder/svc/isvcd_compute_bs.c
+index 128746d..db16571 100644
+--- a/libavc/decoder/svc/isvcd_compute_bs.c
++++ b/libavc/decoder/svc/isvcd_compute_bs.c
+@@ -498,16 +498,32 @@ void isvcd_compute_bs_non_mbaff_target_lyr_no_inter_layer(svc_dec_lyr_struct_t *
+             void **ppv_left_mv_pred_addr = ps_dec->ps_left_mvpred_addr[!u1_pingpong][1].u4_add;
+             WORD8 *p1_refleft0 = (ps_cur_mv_pred + 3)->i1_ref_frame;
+ 
+-            ppv_top_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refTop0[0]];
+-            ppv_top_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refTop0[1]];
++            if (ppv_top_mv_pred_addr && apv_map_ref_idx_to_poc) {
++                ppv_top_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refTop0[0]];
++            }
++            if (ppv_top_mv_pred_addr && pu4_map_ref_idx_to_poc_l1) {
++                ppv_top_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refTop0[1]];
++            }
+ 
+-            ppv_left_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
+-            ppv_top_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
+-            ppv_left_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
+-            ppv_top_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
++            if (ppv_left_mv_pred_addr && apv_map_ref_idx_to_poc) {
++                ppv_left_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
++            }
++            if (ppv_top_mv_pred_addr && apv_map_ref_idx_to_poc) {
++                ppv_top_mv_pred_addr[2] = apv_map_ref_idx_to_poc[p1_refTop1[0]];
++            }
++            if (ppv_left_mv_pred_addr && pu4_map_ref_idx_to_poc_l1) {
++                ppv_left_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
++            }
++            if (ppv_top_mv_pred_addr && pu4_map_ref_idx_to_poc_l1) {
++                ppv_top_mv_pred_addr[3] = pu4_map_ref_idx_to_poc_l1[p1_refTop1[1]];
++            }
+ 
+-            ppv_left_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refleft0[0]];
+-            ppv_left_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refleft0[1]];
++            if (ppv_left_mv_pred_addr && apv_map_ref_idx_to_poc) {
++                ppv_left_mv_pred_addr[0] = apv_map_ref_idx_to_poc[p1_refleft0[0]];
++            }
++            if (ppv_left_mv_pred_addr && pu4_map_ref_idx_to_poc_l1) {
++                ppv_left_mv_pred_addr[1] = pu4_map_ref_idx_to_poc_l1[p1_refleft0[1]];
++            }
+ 
+             /* Storing the leftMbtype for next Mb */
+             ps_dec->deblk_left_mb[1].u1_mb_type = ps_cur_mb_params->u1_mb_type;

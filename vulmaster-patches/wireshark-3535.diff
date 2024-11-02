@@ -1,0 +1,27 @@
+diff --git a/configure.ac b/configure.ac
+index f71c7c7..dcb1354 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -934,7 +934,6 @@ AC_SUBST(CFLAGS_SSE42)
+ # See: http://sourceware.org/bugzilla/show_bug.cgi?id=13979
+ #
+ # Note: FORTIFY_SOURCE is only effective for gcc optimization level > 0 (-O1, etc)
+-AC_WIRESHARK_GCC_FORTIFY_SOURCE_CHECK
+ 
+ #
+ # If the compiler supports GCC-style flags, enable a barrier "stop on
+diff --git a/epan/dissectors/packet-dcerpc-eventlog.c b/epan/dissectors/packet-dcerpc-eventlog.c
+index 8449718..e2be90a 100644
+--- a/epan/dissectors/packet-dcerpc-eventlog.c
++++ b/epan/dissectors/packet-dcerpc-eventlog.c
+@@ -2364,9 +2364,7 @@ void proto_register_dcerpc_eventlog(void)
+ 		&ett_eventlog_eventlog_Record,
+ 		&ett_eventlog_eventlog_ChangeUnknown0,
+ 	};
+-
+-	proto_dcerpc_eventlog = proto_register_protocol("Event Logger", "EVENTLOG", "eventlog");
+-	proto_register_field_array(proto_dcerpc_eventlog, hf, array_length (hf));
++ ) { return type_cast 
+ 	proto_register_subtree_array(ett, array_length(ett));
+ }
+ 

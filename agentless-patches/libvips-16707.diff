@@ -1,0 +1,180 @@
+diff --git a/libvips/libvips/foreign/foreign.c b/libvips/libvips/foreign/foreign.c
+index e754b7e..dd65e98 100644
+--- a/libvips/libvips/foreign/foreign.c
++++ b/libvips/libvips/foreign/foreign.c
+@@ -1198,10 +1198,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 		VipsImage *out;
+ 
+ 		if( vips_LabQ2sRGB( in, &out, NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}
+@@ -1213,10 +1213,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 		VipsImage *out;
+ 
+ 		if( vips_rad2float( in, &out, NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}
+@@ -1233,7 +1233,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 		}
+@@ -1253,10 +1253,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 		if( vips_icc_import( in, &out, 
+ 			"pcs", VIPS_PCS_XYZ,
+ 			NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}
+@@ -1284,10 +1284,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 			interpretation = VIPS_INTERPRETATION_RGB16;
+ 
+ 		if( vips_colourspace( in, &out, interpretation, NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}
+@@ -1311,10 +1311,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 			interpretation = VIPS_INTERPRETATION_RGB16;
+ 
+ 		if( vips_colourspace( in, &out, interpretation, NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}
+@@ -1341,7 +1341,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 		}
+@@ -1369,7 +1369,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 		}
+@@ -1386,7 +1386,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 		}
+@@ -1398,7 +1398,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 		}
+@@ -1431,7 +1431,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 		}
+@@ -1442,7 +1442,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 
+@@ -1453,7 +1453,7 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 				g_object_unref( in );
+ 				return( -1 );
+ 			}
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 
+ 			in = out;
+ 		}
+@@ -1465,10 +1465,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 		VipsImage *out;
+ 
+ 		if( vips_cast( in, &out, format[in->BandFmt], NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}
+@@ -1484,10 +1484,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 		VipsImage *out;
+ 
+ 		if( vips_Lab2LabQ( in, &out, NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}
+@@ -1495,10 +1495,10 @@ vips__foreign_convert_saveable( VipsImage *in, VipsImage **ready,
+ 		VipsImage *out;
+ 
+ 		if( vips_float2rad( in, &out, NULL ) ) {
+-			g_object_unref( in );
++			if (in) g_object_unref( in );
+ 			return( -1 );
+ 		}
+-		g_object_unref( in );
++		if (in) g_object_unref( in );
+ 
+ 		in = out;
+ 	}

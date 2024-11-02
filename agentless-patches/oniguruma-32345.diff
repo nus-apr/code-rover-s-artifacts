@@ -1,0 +1,13 @@
+diff --git a/oniguruma/src/utf8.c b/oniguruma/src/utf8.c
+index ce24cac..505fd5c 100644
+--- a/oniguruma/src/utf8.c
++++ b/oniguruma/src/utf8.c
+@@ -249,7 +249,7 @@ left_adjust_char_head(const UChar* start, const UChar* s)
+   if (s <= start) return (UChar* )s;
+   p = s;
+ 
+-  while (!utf8_islead(*p) && p > start) p--;
++  while (p > start && !utf8_islead(*p)) p--;
+   return (UChar* )p;
+ }
+ 

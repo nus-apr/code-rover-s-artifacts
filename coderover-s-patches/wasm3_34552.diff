@@ -1,0 +1,27 @@
+diff --git a/source/m3_compile.c b/source/m3_compile.c
+index 11b26a8..8726c03 100644
+--- a/source/m3_compile.c
++++ b/source/m3_compile.c
+@@ -318,8 +318,11 @@ void DeallocateSlot (IM3Compilation o, i16 i_slot, u8 i_type)
+ {                                                                                       d_m3Assert (i_slot >= o->slotFirstDynamicIndex);
+                                                                                         d_m3Assert (i_slot < o->slotMaxAllocatedIndexPlusOne);
+     for (u16 i = 0; i < GetTypeNumSlots (i_type); ++i, ++i_slot)
+-    {                                                                                   d_m3Assert (o->m3Slots [i_slot]);
+-        -- o->m3Slots [i_slot];
++    {                                                                                   
++        if (i_slot >= o->slotFirstDynamicIndex && i_slot < o->slotMaxAllocatedIndexPlusOne && IsSlotAllocated(o, i_slot))
++        {
++            -- o->m3Slots [i_slot];
++        }
+     }
+ }
+ 
+@@ -501,7 +504,7 @@ M3Result  Pop  (IM3Compilation o)
+             u32 regSelect = IsFpRegisterSlotAlias (slot);
+             DeallocateRegister (o, regSelect);
+         }
+-        else if (slot >= o->slotFirstDynamicIndex)
++        else if (slot >= o->slotFirstDynamicIndex && slot < o->slotMaxAllocatedIndexPlusOne && IsSlotAllocated(o, slot))
+         {
+             DeallocateSlot (o, slot, type);
+         }

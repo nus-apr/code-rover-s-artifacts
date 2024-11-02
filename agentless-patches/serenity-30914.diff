@@ -1,0 +1,20 @@
+diff --git a/serenity/AK/Format.cpp b/serenity/AK/Format.cpp
+index 0c6d626..94a5e66 100644
+--- a/serenity/AK/Format.cpp
++++ b/serenity/AK/Format.cpp
+@@ -101,8 +101,13 @@ size_t TypeErasedParameter::to_size() const
+ {
+     i64 svalue;
+ 
+-    if (type == TypeErasedParameter::Type::UInt8)
+-        svalue = *reinterpret_cast<const u8*>(value);
++    if (type == TypeErasedParameter::Type::UInt8) {
++        if (value) {
++            svalue = *reinterpret_cast<const u8*>(value);
++        } else {
++            svalue = 0; // Default or handle error appropriately
++        }
++    }
+     else if (type == TypeErasedParameter::Type::UInt16)
+         svalue = *reinterpret_cast<const u16*>(value);
+     else if (type == TypeErasedParameter::Type::UInt32)

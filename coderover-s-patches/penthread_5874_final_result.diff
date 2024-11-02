@@ -1,0 +1,27 @@
+diff --git a/src/core/thread/network_data_tlvs.hpp b/src/core/thread/network_data_tlvs.hpp
+index 50efb65b5..870a7df77 100644
+--- a/src/core/thread/network_data_tlvs.hpp
++++ b/src/core/thread/network_data_tlvs.hpp
+@@ -857,7 +857,21 @@ public:
+      *
+      */
+     NetworkDataTlv *GetSubTlvs(void) {
+-        return reinterpret_cast<NetworkDataTlv *>(GetServiceDataLengthLocation() + sizeof(uint8_t) + GetServiceDataLength());
++        uint8_t *serviceDataLengthLocation = GetServiceDataLengthLocation();
++        uint8_t serviceDataLength = GetServiceDataLength();
++        uint8_t *subTlvsLocation = serviceDataLengthLocation + sizeof(uint8_t) + serviceDataLength;
++
++        // Assuming 'this' is a TLV structure with a known size
++        uint8_t *tlvEnd = reinterpret_cast<uint8_t *>(this) + sizeof(*this);
++
++        // Validate the size of the TLV structure
++        if (serviceDataLengthLocation < reinterpret_cast<uint8_t *>(this) || 
++            subTlvsLocation > tlvEnd) {
++            // Handle error: return nullptr or handle as appropriate
++            return nullptr;
++        }
++
++        return reinterpret_cast<NetworkDataTlv *>(subTlvsLocation);
+     }
+ 
+ private:

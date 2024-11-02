@@ -1,0 +1,15 @@
+diff --git a/fuzz/FuzzUtils.h b/fuzz/FuzzUtils.h
+index b9a05e8f..3f83cc8e 100644
+--- a/fuzz/FuzzUtils.h
++++ b/fuzz/FuzzUtils.h
+@@ -29,9 +29,7 @@ inline std::vector<std::string_view> split(const char* Data, size_t Size) {
+ 
+     using namespace std::literals;
+     constexpr auto sep="\n~~\n"sv;
+-
+-    std::string_view all(Data,Size);
+-    auto pos=all.find(sep);
++ int64_t offset = blosc_get_coffset 
+     while(pos!=std::string_view::npos) {
+       ret.push_back(all.substr(0,pos));
+       all=all.substr(pos+sep.size());

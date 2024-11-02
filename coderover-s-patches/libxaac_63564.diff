@@ -1,0 +1,34 @@
+diff --git a/decoder/ixheaacd_mps_smoothing.c b/decoder/ixheaacd_mps_smoothing.c
+index f4f5628..d9d17b7 100644
+--- a/decoder/ixheaacd_mps_smoothing.c
++++ b/decoder/ixheaacd_mps_smoothing.c
+@@ -675,17 +675,19 @@ VOID ixheaacd_smooth_m1m2(ia_heaac_mps_state_struct *pstr_mps_state) {
+             WORD32 *ptr2 = ptr1;
+             m2_decor_real_prev += res_bands;
+ 
+-            param_r = &m2_param->m2_decor_real[idx][0][res_bands];
+-            for (pb = res_bands; pb < num_parameter_bands; pb++) {
+-              if (smooth_band_arr[0][pb]) {
+-                WORD64 acc;
+-                acc = (WORD64)((WORD64)(ptr2[pb]) * (WORD64)*delta_ptr +
+-                               (WORD64)(*m2_decor_real_prev) *
+-                                   (WORD64)*one_minus_delta_ptr);
+-                acc >>= 15;
+-                ptr2[pb] = (WORD32)acc;
++            if (idx < MAX_PARAMETER_SETS && res_bands < num_parameter_bands) { // Ensure idx and res_bands are within bounds
++              param_r = &m2_param->m2_decor_real[idx][0][res_bands];
++              for (pb = res_bands; pb < num_parameter_bands; pb++) {
++                if (pb < MAX_PARAMETER_BANDS && smooth_band_arr[0][pb]) { // Ensure pb is within bounds
++                  WORD64 acc;
++                  acc = (WORD64)((WORD64)(ptr2[pb]) * (WORD64)*delta_ptr +
++                                 (WORD64)(*m2_decor_real_prev) *
++                                     (WORD64)*one_minus_delta_ptr);
++                  acc >>= 15;
++                  ptr2[pb] = (WORD32)acc;
++                }
++                m2_decor_real_prev++;
+               }
+-              m2_decor_real_prev++;
+             }
+             ptr2 += MAX_PARAMETER_BANDS;
+ 

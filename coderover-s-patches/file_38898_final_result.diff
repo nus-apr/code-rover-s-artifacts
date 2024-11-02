@@ -1,0 +1,19 @@
+diff --git a/src/cdf.c b/src/cdf.c
+index 114f8fa3..897e0000 100644
+--- a/src/cdf.c
++++ b/src/cdf.c
+@@ -1077,12 +1077,12 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
+ 			{
+ 				uint32_t l;
+ 
+-				if (o4 + sizeof(uint32_t) > left)
++				if (o4 >= left || sizeof(uint32_t) > left - o4 || o4 + sizeof(uint32_t) > left)
+ 					goto out;
+ 
+ 				l = CDF_GETUINT32(q, slen);
+ 				o4 += sizeof(uint32_t);
+-				if (o4 + l > left)
++				if (o4 >= left || l > left - o4 || o4 + l > left)
+ 					goto out;
+ 
+ 				inp[i].pi_str.s_len = l;

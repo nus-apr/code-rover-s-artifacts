@@ -1,0 +1,39 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2235497326
+INFO: Loaded 1 modules   (244865 inline 8-bit counters): 244865 [0x3ff1150, 0x402cdd1), 
+INFO: Loaded 1 PC tables (244865 PCs): 244865 [0x402cdd8,0x43e95e8), 
+/out/jpegsave_buffer_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==12==ERROR: AddressSanitizer: SEGV on unknown address (pc 0x0000025eba42 bp 0x7ffd861a08a0 sp 0x7ffd861a0100 T0)
+==12==The signal is caused by a READ memory access.
+==12==Hint: this fault was caused by a dereference of a high value address (see register values below).  Disassemble the provided pc to learn which register was used.
+SCARINESS: 20 (wild-addr-read)
+    #0 0x25eba42 in LoadBE32 /src/libjxl/lib/jxl/base/byte_order.h:62:3
+    #1 0x25eba42 in ParseBoxHeader /src/libjxl/lib/jxl/decode.cc:1785:15
+    #2 0x25eba42 in HandleBoxes(JxlDecoderStruct*) /src/libjxl/lib/jxl/decode.cc:1950:11
+    #3 0x25e763f in JxlDecoderProcessInput /src/libjxl/lib/jxl/decode.cc:2269:29
+    #4 0x6abdb0 in vips_foreign_load_jxl_process /src/libvips/build/../libvips/foreign/jxlload.c:377:19
+    #5 0x6abdb0 in vips_foreign_load_jxl_header /src/libvips/build/../libvips/foreign/jxlload.c:519:21
+    #6 0x664fc9 in vips_foreign_load_build /src/libvips/build/../libvips/foreign/foreign.c:1099:3
+    #7 0x6abb02 in vips_foreign_load_jxl_build /src/libvips/build/../libvips/foreign/jxlload.c:177:6
+    #8 0x6adeeb in vips_foreign_load_jxl_buffer_build /src/libvips/build/../libvips/foreign/jxlload.c:823:6
+    #9 0x577044 in vips_object_build /src/libvips/build/../libvips/iofuncs/object.c:367:6
+    #10 0x8730a2 in vips_cache_operation_buildp /src/libvips/build/../libvips/iofuncs/cache.c:910:7
+    #11 0x5aa3ed in vips_call_required_optional /src/libvips/build/../libvips/iofuncs/operation.c:914:6
+    #12 0x5ad2bf in vips_call_by_name /src/libvips/build/../libvips/iofuncs/operation.c:954:11
+    #13 0x5ad68a in vips_call_split_option_string /src/libvips/build/../libvips/iofuncs/operation.c:1073:11
+    #14 0x58c1a7 in vips_image_new_from_buffer /src/libvips/build/../libvips/iofuncs/image.c:2169:11
+    #15 0x5629fe in LLVMFuzzerTestOneInput /src/libvips/fuzz/jpegsave_buffer_fuzzer.cc:20:16
+    #16 0x45ac23 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #17 0x4468b2 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #18 0x44c0fc in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #19 0x474cf2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #20 0x76baa6070082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #21 0x4250dd in _start (/out/jpegsave_buffer_fuzzer+0x4250dd)
+
+DEDUP_TOKEN: LoadBE32--ParseBoxHeader--HandleBoxes(JxlDecoderStruct*)
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /src/libjxl/lib/jxl/base/byte_order.h:62:3 in LoadBE32
+==12==ABORTING

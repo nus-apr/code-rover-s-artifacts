@@ -1,0 +1,21 @@
+diff --git a/kimageformats/src/imageformats/xcf.cpp b/kimageformats/src/imageformats/xcf.cpp
+index ce63f4e..7991156 100644
+--- a/kimageformats/src/imageformats/xcf.cpp
++++ b/kimageformats/src/imageformats/xcf.cpp
+@@ -2388,10 +2388,12 @@ void XCFImageFormat::mergeLayerIntoImage(XCFImage &xcf_image)
+             // Shortcut for common case
+             if (merge == mergeRGBToRGB && layer.apply_mask != 1
+                     && layer.mode == NORMAL_MODE) {
+-                QPainter painter(&image);
+-                painter.setOpacity(layer.opacity / 255.0);
+-                painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+-                painter.drawImage(x + layer.x_offset, y + layer.y_offset, layer.image_tiles[j][i]);
++                if (!image.isNull() && image.width() > 0 && image.height() > 0) {
++                    QPainter painter(&image);
++                    painter.setOpacity(layer.opacity / 255.0);
++                    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
++                    painter.drawImage(x + layer.x_offset, y + layer.y_offset, layer.image_tiles[j][i]);
++                }
+                 continue;
+             }
+ 

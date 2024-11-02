@@ -1,0 +1,21 @@
+diff --git a/src/hb-ot-layout-gsub-table.hh b/src/hb-ot-layout-gsub-table.hh
+index 55696c5ac..e39407187 100644
+--- a/src/hb-ot-layout-gsub-table.hh
++++ b/src/hb-ot-layout-gsub-table.hh
+@@ -777,10 +777,14 @@ struct LigatureSubstFormat1
+     unsigned int count = ligatureSet.len;
+     for (hb_auto_t<Coverage::Iter> iter (this+coverage); iter.more (); iter.next ())
+     {
+-      if (unlikely (iter.get_coverage () >= count))
++      unsigned int coverage_index = iter.get_coverage();
++      if (unlikely (coverage_index >= count))
+         break; /* Work around malicious fonts. https://github.com/harfbuzz/harfbuzz/issues/363 */
+       if (c->glyphs->has (iter.get_glyph ()))
+-	(this+ligatureSet[iter.get_coverage ()]).closure (c);
++      {
++        if (coverage_index < ligatureSet.len) // Additional check to ensure index is within bounds
++          (this+ligatureSet[coverage_index]).closure (c);
++      }
+     }
+   }
+ 

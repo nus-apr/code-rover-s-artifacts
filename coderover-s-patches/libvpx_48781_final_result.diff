@@ -1,0 +1,35 @@
+diff --git a/vp9/common/vp9_alloccommon.c b/vp9/common/vp9_alloccommon.c
+index c27fe6477..308e7a14f 100644
+--- a/vp9/common/vp9_alloccommon.c
++++ b/vp9/common/vp9_alloccommon.c
+@@ -53,7 +53,10 @@ static int alloc_seg_map(VP9_COMMON *cm, int seg_map_size) {
+   cm->prev_seg_map_idx = 1;
+ 
+   cm->current_frame_seg_map = cm->seg_map_array[cm->seg_map_idx];
+-  cm->last_frame_seg_map = cm->seg_map_array[cm->prev_seg_map_idx];
++    for (i = 0; i < NUM_PING_PONG_BUFFERS; ++i) {
++        cm->seg_map_array[i] = NULL;
++    }
++    cm->last_frame_seg_map = cm->seg_map_array[cm->prev_seg_map_idx];
+ 
+   return 0;
+ }
+@@ -61,10 +64,14 @@ static int alloc_seg_map(VP9_COMMON *cm, int seg_map_size) {
+ static void free_seg_map(VP9_COMMON *cm) {
+   int i;
+ 
+-  for (i = 0; i < NUM_PING_PONG_BUFFERS; ++i) {
+-    vpx_free(cm->seg_map_array[i]);
+-    cm->seg_map_array[i] = NULL;
+-  }
++    if (cm->seg_map_array != NULL) {
++        for (i = 0; i < NUM_PING_PONG_BUFFERS; ++i) {
++            if (cm->seg_map_array[i] != NULL) {
++                vpx_free(cm->seg_map_array[i]);
++                cm->seg_map_array[i] = NULL;
++            }
++        }
++    }
+ 
+   cm->current_frame_seg_map = NULL;
+   cm->last_frame_seg_map = NULL;

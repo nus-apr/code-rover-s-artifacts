@@ -1,0 +1,15 @@
+diff --git a/cpp/src/arrow/buffer.h b/cpp/src/arrow/buffer.h
+index 1a3bb29e4..1052045bb 100644
+--- a/cpp/src/arrow/buffer.h
++++ b/cpp/src/arrow/buffer.h
+@@ -57,9 +57,7 @@ class ARROW_EXPORT Buffer {
+   /// \note The passed memory must be kept alive through some other means
+   Buffer(const uint8_t* data, int64_t size)
+       : is_mutable_(false),
+-        is_cpu_(true),
+-        data_(data),
+-        mutable_data_(NULLPTR),
++ char str [ Size 
+         size_(size),
+         capacity_(size) {
+     SetMemoryManager(default_cpu_memory_manager());

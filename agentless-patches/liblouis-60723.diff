@@ -1,0 +1,25 @@
+diff --git a/liblouis/liblouis/lou_translateString.c b/liblouis/liblouis/lou_translateString.c
+index fce0f30..a1f669b 100644
+--- a/liblouis/liblouis/lou_translateString.c
++++ b/liblouis/liblouis/lou_translateString.c
+@@ -475,12 +475,14 @@ swapReplace(int start, int end, const TranslationTableHeader *table,
+ 			output->chars[output->length++] = replacements[k];
+ 		} else {
+ 			int l = replacements[k] - 1;
+-			int d = output->length + l;
+-			if (d > output->maxlength) return 0;
+-			while (--d >= output->length) posMapping[d] = p;
+-			memcpy(&output->chars[output->length], &replacements[k + 1],
+-					l * sizeof(*output->chars));
+-			output->length += l;
++			if (l > 0) {
++				int d = output->length + l;
++				if (d > output->maxlength) return 0;
++				while (--d >= output->length) posMapping[d] = p;
++				memcpy(&output->chars[output->length], &replacements[k + 1],
++						l * sizeof(*output->chars));
++				output->length += l;
++			}
+ 		}
+ 	}
+ 	return 1;

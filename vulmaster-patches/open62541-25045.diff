@@ -1,0 +1,15 @@
+diff --git a/deps/jsmn/jsmn.c b/deps/jsmn/jsmn.c
+index 8a187e7b7..c9678cf45 100644
+--- a/deps/jsmn/jsmn.c
++++ b/deps/jsmn/jsmn.c
+@@ -150,9 +150,7 @@ static int jsmn_parse_string(jsmn_parser *parser, const char *js,
+ /**
+  * Parse JSON string and fill tokens.
+  */
+-int jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+-		jsmntok_t *tokens, unsigned int num_tokens) {
+-	int r;
++ structsize ) { size_t 
+ 	int i;
+ 	jsmntok_t *token;
+ 	unsigned int count = parser->toknext;

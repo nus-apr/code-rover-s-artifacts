@@ -1,0 +1,29 @@
+diff --git a/src/oplist.c b/src/oplist.c
+index b3b782f..b5a9c72 100644
+--- a/src/oplist.c
++++ b/src/oplist.c
+@@ -705,12 +705,12 @@ static int node_from_openstep(parse_ctx ctx, plist_t *plist)
+                 if (*ctx->pos == '\\') {
+                     num_escapes++;
+                 }
+-                if ((*ctx->pos == c) && (*(ctx->pos-1) != '\\')) {
++                if ((*ctx->pos == c) && (ctx->pos > ctx->start) && (*(ctx->pos-1) != '\\')) {
+                     break;
+                 }
+                 ctx->pos++;
+             }
+-            if (*ctx->pos != c) {
++            if (ctx->pos >= ctx->end || *ctx->pos != c) {
+                 plist_free_data(data);
+                 PLIST_OSTEP_ERR("Missing closing quote (%c) at offset %ld\n", c, ctx->pos - ctx->start);
+                 ctx->err++;
+@@ -841,6 +841,9 @@ PLIST_API int plist_from_openstep(const char *plist_ostep, uint32_t length, plis
+         return PLIST_ERR_INVALID_ARG;
+     }
+ 
++    if (!plist_ostep) {
++        return PLIST_ERR_INVALID_ARG;
++    }
+     struct _parse_ctx ctx = { plist_ostep, plist_ostep, plist_ostep + length, 0 };
+ 
+     int err = node_from_openstep(&ctx, plist);

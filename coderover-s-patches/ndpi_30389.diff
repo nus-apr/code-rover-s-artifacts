@@ -1,0 +1,31 @@
+diff --git a/src/lib/protocols/http.c b/src/lib/protocols/http.c
+index 983a53b1..f4aae810 100644
+--- a/src/lib/protocols/http.c
++++ b/src/lib/protocols/http.c
+@@ -347,8 +347,9 @@ int http_process_user_agent(struct ndpi_detection_module_struct *ndpi_struct,
+ 
+     flow->http.user_agent = ndpi_malloc(len);
+     if(flow->http.user_agent) {
+-      strncpy(flow->http.user_agent, (char*)ua_ptr, ua_ptr_len);
+-      flow->http.user_agent[ua_ptr_len] = '\0';
++      int copy_len = (ua_ptr_len < len - 1) ? ua_ptr_len : len - 1;
++      strncpy(flow->http.user_agent, (char*)ua_ptr, copy_len);
++      flow->http.user_agent[copy_len] = '\0';
+ 
+       ndpi_check_user_agent(ndpi_struct, flow, flow->http.user_agent);
+     }
+diff --git a/src/lib/protocols/quic.c b/src/lib/protocols/quic.c
+index 2a4c7294..50d56877 100644
+--- a/src/lib/protocols/quic.c
++++ b/src/lib/protocols/quic.c
+@@ -1129,8 +1129,9 @@ static void process_chlo(struct ndpi_detection_module_struct *ndpi_struct,
+        (tag_offset_start + prev_offset + len < crypto_data_len)) {
+       NDPI_LOG_DBG2(ndpi_struct, "UA: [%.*s]\n", len, &crypto_data[tag_offset_start + prev_offset]);
+ 
++      uint32_t safe_len = (len < crypto_data_len - (tag_offset_start + prev_offset)) ? len : crypto_data_len - (tag_offset_start + prev_offset);
+       http_process_user_agent(ndpi_struct, flow,
+-                              &crypto_data[tag_offset_start + prev_offset], len);
++                              &crypto_data[tag_offset_start + prev_offset], safe_len);
+       ua_found = 1;
+       if (sni_found)
+         return;

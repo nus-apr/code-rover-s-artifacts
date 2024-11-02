@@ -1,0 +1,13 @@
+diff --git a/php-src/ext/hash/xxhash/xxhash.h b/php-src/ext/hash/xxhash/xxhash.h
+index 6daf5ec..c68c901 100644
+--- a/php-src/ext/hash/xxhash/xxhash.h
++++ b/php-src/ext/hash/xxhash/xxhash.h
+@@ -1997,7 +1997,7 @@ XXH64_update (XXH64_state_t* state, const void* input, size_t len)
+ 
+         state->total_len += len;
+ 
+-        if (state->memsize + len < 32) {  /* fill in tmp buffer */
++        if (state->memsize + len <= 32) {  /* fill in tmp buffer */
+             XXH_memcpy(((xxh_u8*)state->mem64) + state->memsize, input, len);
+             state->memsize += (xxh_u32)len;
+             return XXH_OK;

@@ -1,0 +1,15 @@
+diff --git a/libr/bin/format/coff/coff.c b/libr/bin/format/coff/coff.c
+index 84d3cce0c9..0ebbcafb5a 100644
+--- a/libr/bin/format/coff/coff.c
++++ b/libr/bin/format/coff/coff.c
+@@ -302,6 +302,10 @@ static bool r_bin_xcoff_init_ldhdr(RBinCoffObj *obj) {
+ static bool r_bin_xcoff_init_ldsyms(RBinCoffObj *obj) {
+ 	int ret;
+ 	size_t size;
++	if (obj->x_opt_hdr.o_snloader < 1 || obj->x_opt_hdr.o_snloader > obj->hdr.f_nscns) {
++		R_LOG_WARN("o_snloader index out of bounds");
++		return false;
++	}
+ 	ut64 offset = obj->scn_hdrs[obj->x_opt_hdr.o_snloader-1].s_scnptr + sizeof (struct xcoff32_ldhdr);
+ 	if (!obj->x_ldhdr.l_nsyms) {
+ 		return true;

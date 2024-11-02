@@ -1,0 +1,32 @@
+diff --git a/ssl/ssl_sess.c b/ssl/ssl_sess.c
+index 541f82a851..c18d7900c1 100644
+--- a/ssl/ssl_sess.c
++++ b/ssl/ssl_sess.c
+@@ -657,6 +657,7 @@ int ssl_get_prev_session(SSL *s, CLIENTHELLO_MSG *hello)
+  err:
+     if (ret != NULL) {
+         SSL_SESSION_free(ret);
++        ret = NULL; // Set ret to NULL after freeing
+         /* In TLSv1.3 s->session was already set to ret, so we NULL it out */
+         if (SSL_IS_TLS13(s))
+             s->session = NULL;
+@@ -827,6 +828,7 @@ void SSL_SESSION_free(SSL_SESSION *ss)
+     OPENSSL_free(ss->ticket_appdata);
+     CRYPTO_THREAD_lock_free(ss->lock);
+     OPENSSL_clear_free(ss, sizeof(*ss));
++    ss = NULL; // Set ss to NULL after freeing
+ }
+ 
+ int SSL_SESSION_up_ref(SSL_SESSION *ss)
+diff --git a/ssl/t1_lib.c b/ssl/t1_lib.c
+index b312a14fab..c670ac5b46 100644
+--- a/ssl/t1_lib.c
++++ b/ssl/t1_lib.c
+@@ -1384,6 +1384,7 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL *s, const unsigned char *etick,
+         /* Some additional consistency checks */
+         if (slen != 0) {
+             SSL_SESSION_free(sess);
++            sess = NULL; // Set sess to NULL after freeing
+             ret = SSL_TICKET_NO_DECRYPT;
+             goto end;
+         }

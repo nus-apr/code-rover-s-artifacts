@@ -1,0 +1,17 @@
+diff --git a/binutils/nm.c b/binutils/nm.c
+index c3c407af266..9e67bec67f4 100644
+--- a/binutils/nm.c
++++ b/binutils/nm.c
+@@ -843,7 +843,11 @@ filter_symbols (bfd *abfd, bool is_dynamic, void *minisyms,
+       if (keep)
+ 	{
+ 	  if (to != from)
+-	    memcpy (to, from, size);
++	    {
++	      if ((to + size) > ((bfd_byte *) minisyms + symcount * size))
++	        bfd_fatal ("Attempt to write beyond buffer end");
++	      memcpy (to, from, size);
++	    }
+ 	  to += size;
+ 	}
+     }

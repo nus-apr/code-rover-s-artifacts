@@ -1,0 +1,32 @@
+diff --git a/libarchive/libarchive/archive_read_support_format_rar5.c b/libarchive/libarchive/archive_read_support_format_rar5.c
+index addf180..f41d9cc 100644
+--- a/libarchive/libarchive/archive_read_support_format_rar5.c
++++ b/libarchive/libarchive/archive_read_support_format_rar5.c
+@@ -2019,13 +2019,25 @@ static int parse_tables(struct archive_read* a, struct rar5* rar,
+             if(value == 0) {
+                 /* We sometimes need to write the actual value of 15, so this
+                  * case handles that. */
+-                bit_length[w++] = ESCAPE;
++                if (w < HUFF_BC) {
++                    bit_length[w++] = ESCAPE;
++                } else {
++                    archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
++                            "Bit length array overflow");
++                    return ARCHIVE_FATAL;
++                }
+             } else {
+                 int k;
+ 
+                 /* Fill zeroes. */
+                 for(k = 0; k < value + 2; k++) {
+-                    bit_length[w++] = 0;
++                    if (w < HUFF_BC) {
++                        bit_length[w++] = 0;
++                    } else {
++                        archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
++                                "Bit length array overflow");
++                        return ARCHIVE_FATAL;
++                    }
+                 }
+             }
+         } else {

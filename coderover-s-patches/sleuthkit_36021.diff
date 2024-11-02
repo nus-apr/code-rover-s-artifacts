@@ -1,0 +1,50 @@
+diff --git a/tsk/fs/tsk_apfs.hpp b/tsk/fs/tsk_apfs.hpp
+index ab549ce43..60bf41129 100755
+--- a/tsk/fs/tsk_apfs.hpp
++++ b/tsk/fs/tsk_apfs.hpp
+@@ -136,10 +136,22 @@ class APFSBtreeNodeIterator {
+     if (this->_node->has_fixed_kv_size()) {
+       throw std::runtime_error("btree does not have variable sized keys");
+     }
++    if (_index >= _node->key_count()) {
++      // Prevent further iteration by setting _index to an invalid state
++      _index = _node->key_count();
++      return;
++    }
+     const auto &t = _node->_table_data.toc.variable[_index];
+     const auto key_data = _node->_table_data.koff + t.key_offset;
+     const auto val_data = _node->_table_data.voff - t.val_offset;
+ 
++    // Check that key_data and val_data are within valid memory bounds
++    if (key_data + t.key_length > _node->_table_data.voff ||
++        val_data + t.val_length > _node->_table_data.voff) {
++      _index = _node->key_count(); // Prevent further iteration
++      return;
++    }
++
+     memory_view key{key_data, t.key_length};
+ 
+     if (_node->is_leaf()) {
+@@ -159,10 +171,22 @@ class APFSBtreeNodeIterator {
+     if (!this->_node->has_fixed_kv_size()) {
+       throw std::runtime_error("btree does not have fixed sized keys");
+     }
++    if (_index >= _node->key_count()) {
++      // Prevent further iteration by setting _index to an invalid state
++      _index = _node->key_count();
++      return;
++    }
+     const auto &t = _node->_table_data.toc.fixed[_index];
+     const auto key_data = _node->_table_data.koff + t.key_offset;
+     const auto val_data = _node->_table_data.voff - t.val_offset;
+ 
++    // Check that key_data and val_data are within valid memory bounds
++    if (key_data + sizeof(typename Node::key_type) > _node->_table_data.voff ||
++        val_data + sizeof(typename Node::value_type) > _node->_table_data.voff) {
++      _index = _node->key_count(); // Prevent further iteration
++      return;
++    }
++
+     if (_node->is_leaf()) {
+       _val = {(typename Node::key_type)key_data,
+               (typename Node::value_type)val_data};

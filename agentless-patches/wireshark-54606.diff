@@ -1,0 +1,15 @@
+diff --git a/wireshark/epan/charsets.c b/wireshark/epan/charsets.c
+index e832602..363453c 100644
+--- a/wireshark/epan/charsets.c
++++ b/wireshark/epan/charsets.c
+@@ -109,6 +109,10 @@ utf_8_validate(const guint8 *start, gint length, const guint8 **end)
+ 
+     while (length > 0) {
+ 
++        if (length <= 0) {
++            break;
++        }
++
+         ch = *ptr;
+ 
+         if (ch < 0x80) {

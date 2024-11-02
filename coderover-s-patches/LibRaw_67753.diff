@@ -1,0 +1,34 @@
+diff --git a/src/metadata/fuji.cpp b/src/metadata/fuji.cpp
+index 30e64c2e..ca4e54ad 100644
+--- a/src/metadata/fuji.cpp
++++ b/src/metadata/fuji.cpp
+@@ -226,9 +226,13 @@ void LibRaw::parseAdobeRAFMakernote()
+     PrivateOrder = PrivateMknBuf.sget2(0);
+     unsigned s, l;
+     s = ifd_start = PrivateMknBuf.sget4(2)+6;
+-    l = ifd_len = PrivateMknBuf.sget4(ifd_start);
++    if (ifd_start + 4 <= PrivateMknLength) // Ensure ifd_start is within bounds
++        l = ifd_len = PrivateMknBuf.sget4(ifd_start);
++    else
++        return; // Exit if the calculated offset is out of bounds
+ 
+-	if (!PrivateMknBuf.sget4(ifd_start+ifd_len+4))
++    if (ifd_start + ifd_len + 8 <= PrivateMknLength) // Ensure the offset is within bounds
++        if (!PrivateMknBuf.sget4(ifd_start+ifd_len+4))
+       FujiShotSelect = 0;
+ 
+     if ((FujiShotSelect == 1) && (PrivateMknLength > ifd_len*2)) {
+diff --git a/src/utils/utils_libraw.cpp b/src/utils/utils_libraw.cpp
+index dc81d0dd..67abbf15 100644
+--- a/src/utils/utils_libraw.cpp
++++ b/src/utils/utils_libraw.cpp
+@@ -700,7 +700,8 @@ unsigned char checked_buffer_t::operator[](int idx)
+ }
+ unsigned checked_buffer_t::sget4(int offset)
+ {
+-  checkoffset(offset + 4);
++  checkoffset(offset);
++  checkoffset(offset + 3); // Ensure the entire 4-byte range is within bounds
+   return libraw_sget4_static(_order, _data + offset);
+ }
+ 

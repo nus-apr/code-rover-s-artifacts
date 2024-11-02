@@ -1,0 +1,18 @@
+diff --git a/libraw/src/libraw_datastream.cpp b/libraw/src/libraw_datastream.cpp
+index f771e07..93ebf07 100644
+--- a/libraw/src/libraw_datastream.cpp
++++ b/libraw/src/libraw_datastream.cpp
+@@ -364,7 +364,12 @@ int LibRaw_buffer_datastream::read(void *ptr, size_t sz, size_t nmemb)
+     to_read = streamsize - streampos;
+   if (to_read < 1)
+     return 0;
+-  memmove(ptr, buf + streampos, to_read);
++  if (ptr && to_read <= sz * nmemb) {
++    memmove(ptr, buf + streampos, to_read);
++  } else {
++    // Handle error: destination buffer is not large enough
++    return 0;
++  }
+   streampos += to_read;
+   return int((to_read + sz - 1) / (sz > 0 ? sz : 1));
+ }

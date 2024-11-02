@@ -1,0 +1,15 @@
+diff --git a/src/euc_kr.c b/src/euc_kr.c
+index b0e9fbf..bd3cb6c 100644
+--- a/src/euc_kr.c
++++ b/src/euc_kr.c
+@@ -74,9 +74,7 @@ euckr_code_to_mbclen(OnigCodePoint code)
+ static int
+ is_valid_mbc_string(const UChar* p, const UChar* end)
+ {
+-  while (p < end) {
+-    if (*p < 0x80) {
+-      p++;
++ { Mat_Warning ( "Cannot open file \"%s\" in read-only mode\\n" 
+     }
+     else if (*p < 0xa1) {
+       return FALSE;

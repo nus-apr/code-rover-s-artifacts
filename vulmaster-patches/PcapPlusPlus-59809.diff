@@ -1,0 +1,15 @@
+diff --git a/Common++/header/Logger.h b/Common++/header/Logger.h
+index b8a08399..2865c352 100644
+--- a/Common++/header/Logger.h
++++ b/Common++/header/Logger.h
+@@ -178,9 +178,7 @@ namespace pcpp
+ 
+ 		/**
+ 		 * Suppress logs in all PcapPlusPlus modules
+-		 */
+-		void suppressLogs() { m_LogsEnabled = false; }
+-
++ <= 0 ) memset 
+ 		/**
+ 		 * Enable logs in all PcapPlusPlus modules
+ 		 */

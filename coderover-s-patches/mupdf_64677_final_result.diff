@@ -1,0 +1,6 @@
+diff --git a/thirdparty/lcms2 b/thirdparty/lcms2
+--- a/thirdparty/lcms2
++++ b/thirdparty/lcms2
+@@ -1 +1 @@
+-Subproject commit ab4547bd04a13590a6e72833f9928fc1c31da12e
++Subproject commit ab4547bd04a13590a6e72833f9928fc1c31da12e-dirty

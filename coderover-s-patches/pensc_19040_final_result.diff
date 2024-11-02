@@ -1,0 +1,30 @@
+diff --git a/src/libopensc/card-coolkey.c b/src/libopensc/card-coolkey.c
+index 51bab689..53150a9c 100644
+--- a/src/libopensc/card-coolkey.c
++++ b/src/libopensc/card-coolkey.c
+@@ -340,15 +340,23 @@ coolkey_v1_get_attribute_len(const u8 *attr, size_t buf_len, size_t *len, int en
+ 	if (buf_len < sizeof(coolkey_attribute_header_t)) {
+ 		return SC_ERROR_CORRUPTED_DATA;
+ 	}
++	/* Ensure buffer is large enough before accessing attribute_data_type */
++	if (buf_len < sizeof(coolkey_attribute_header_t)) {
++		return SC_ERROR_CORRUPTED_DATA;
++	}
+ 	switch (attribute_head->attribute_data_type) {
+ 	case COOLKEY_ATTR_TYPE_STRING:
+-		if (buf_len < (sizeof(coolkey_attribute_header_t) +2)) {
+-			break;
++		if (buf_len < (sizeof(coolkey_attribute_header_t) + 2)) {
++			return SC_ERROR_CORRUPTED_DATA;
+ 		}
+ 		*len = bebytes2ushort(attr + sizeof(coolkey_attribute_header_t));
+ 		if (encoded_len) {
+ 			*len += 2;
+ 		}
++		/* Check if the buffer can accommodate the entire attribute data */
++		if (buf_len < sizeof(coolkey_attribute_header_t) + *len) {
++			return SC_ERROR_CORRUPTED_DATA;
++		}
+ 		return SC_SUCCESS;
+ 	case COOLKEY_ATTR_TYPE_BOOL_FALSE:
+ 	case COOLKEY_ATTR_TYPE_BOOL_TRUE:

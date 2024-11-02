@@ -1,0 +1,85 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2276518393
+INFO: Loaded 1 modules   (18664 inline 8-bit counters): 18664 [0xaf51f8, 0xaf9ae0), 
+INFO: Loaded 1 PC tables (18664 PCs): 18664 [0x7ea138,0x832fb8), 
+/out/sleuthkit_fls_hfs_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60d000000679 at pc 0x0000005965b8 bp 0x7fffd7328a80 sp 0x7fffd7328a78
+READ of size 1 at 0x60d000000679 thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x5965b7 in hfs_unicode_compare_int /src/sleuthkit/tsk/fs/hfs_unicompare.c:191:18
+    #1 0x595d52 in hfs_unicode_compare /src/sleuthkit/tsk/fs/hfs_unicompare.c:160:16
+    #2 0x56790e in hfs_cat_compare_keys /src/sleuthkit/tsk/fs/hfs.c:723:12
+    #3 0x57e896 in hfs_cat_get_record_offset_cb /src/sleuthkit/tsk/fs/hfs.c:1083:20
+    #4 0x568dad in hfs_cat_traverse /src/sleuthkit/tsk/fs/hfs.c:1015:21
+    #5 0x56d0a5 in hfs_cat_get_record_offset /src/sleuthkit/tsk/fs/hfs.c:1113:9
+    #6 0x56c251 in hfs_cat_file_lookup /src/sleuthkit/tsk/fs/hfs.c:1572:11
+    #7 0x56e303 in hfs_inode_lookup /src/sleuthkit/tsk/fs/hfs.c:2522:9
+    #8 0x560e3b in tsk_fs_file_open_meta /src/sleuthkit/tsk/fs/fs_file.c:128:9
+    #9 0x570799 in hfs_open /src/sleuthkit/tsk/fs/hfs.c:6706:12
+    #10 0x566fa0 in tsk_fs_open_img_decrypt /src/sleuthkit/tsk/fs/fs_open.c:214:16
+    #11 0x567175 in tsk_fs_open_img /src/sleuthkit/tsk/fs/fs_open.c:106:12
+    #12 0x558615 in LLVMFuzzerTestOneInput /src/sleuthkit_fls_fuzzer.cc:33:8
+    #13 0x45b313 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #14 0x445122 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #15 0x44af6a in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #16 0x476c52 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #17 0x7fa97938e83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #18 0x41fe08 in _start (/out/sleuthkit_fls_hfs_fuzzer+0x41fe08)
+
+DEDUP_TOKEN: hfs_unicode_compare_int--hfs_unicode_compare--hfs_cat_compare_keys
+0x60d000000679 is located 0 bytes to the right of 137-byte region [0x60d0000005f0,0x60d000000679)
+allocated by thread T0 here:
+    #0 0x524c4d in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:145:3
+    #1 0x6103c9 in tsk_malloc /src/sleuthkit/tsk/base/mymalloc.c:32:16
+    #2 0x567b27 in hfs_cat_traverse /src/sleuthkit/tsk/fs/hfs.c:751:26
+    #3 0x56d0a5 in hfs_cat_get_record_offset /src/sleuthkit/tsk/fs/hfs.c:1113:9
+    #4 0x56c251 in hfs_cat_file_lookup /src/sleuthkit/tsk/fs/hfs.c:1572:11
+    #5 0x56e303 in hfs_inode_lookup /src/sleuthkit/tsk/fs/hfs.c:2522:9
+    #6 0x560e3b in tsk_fs_file_open_meta /src/sleuthkit/tsk/fs/fs_file.c:128:9
+    #7 0x570799 in hfs_open /src/sleuthkit/tsk/fs/hfs.c:6706:12
+    #8 0x566fa0 in tsk_fs_open_img_decrypt /src/sleuthkit/tsk/fs/fs_open.c:214:16
+    #9 0x567175 in tsk_fs_open_img /src/sleuthkit/tsk/fs/fs_open.c:106:12
+    #10 0x558615 in LLVMFuzzerTestOneInput /src/sleuthkit_fls_fuzzer.cc:33:8
+    #11 0x45b313 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #12 0x445122 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #13 0x44af6a in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #14 0x476c52 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #15 0x7fa97938e83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: malloc--tsk_malloc--hfs_cat_traverse
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/sleuthkit/tsk/fs/hfs_unicompare.c:191:18 in hfs_unicode_compare_int
+Shadow bytes around the buggy address:
+  0x0c1a7fff8070: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c1a7fff8080: fd fd fa fa fa fa fa fa fa fa fd fd fd fd fd fd
+  0x0c1a7fff8090: fd fd fd fd fd fd fd fd fd fd fd fd fa fa fa fa
+  0x0c1a7fff80a0: fa fa fa fa fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c1a7fff80b0: fd fd fd fd fd fd fa fa fa fa fa fa fa fa 00 00
+=>0x0c1a7fff80c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00[01]
+  0x0c1a7fff80d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff80e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff80f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8110: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

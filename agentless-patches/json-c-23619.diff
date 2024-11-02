@@ -1,0 +1,13 @@
+diff --git a/json-c/json_tokener.c b/json-c/json_tokener.c
+index 8e00b69..ec01a41 100644
+--- a/json-c/json_tokener.c
++++ b/json-c/json_tokener.c
+@@ -116,7 +116,7 @@ enum json_tokener_error json_tokener_get_error(struct json_tokener *tok)
+ #define IS_HIGH_SURROGATE(uc) (((uc)&0xFC00) == 0xD800)
+ #define IS_LOW_SURROGATE(uc) (((uc)&0xFC00) == 0xDC00)
+ #define DECODE_SURROGATE_PAIR(hi, lo) ((((hi)&0x3FF) << 10) + ((lo)&0x3FF) + 0x10000)
+-static unsigned char utf8_replacement_char[3] = {0xEF, 0xBF, 0xBD};
++static unsigned char utf8_replacement_char[4] = {0xEF, 0xBF, 0xBD, 0x00};
+ 
+ struct json_tokener *json_tokener_new_ex(int depth)
+ {

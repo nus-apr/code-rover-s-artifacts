@@ -1,0 +1,41 @@
+diff --git a/src/flb_unescape.c b/src/flb_unescape.c
+index 1215963f2..e4e60492f 100644
+--- a/src/flb_unescape.c
++++ b/src/flb_unescape.c
+@@ -133,10 +133,14 @@ int flb_unescape_string_utf8(const char *in_buf, int sz, char *out_buf)
+     int esc_in = 0;
+     int esc_out = 0;
+ 
+-    while (*in_buf && count_in < sz) {
+-        next = in_buf + 1;
++    while (count_in < sz) {
++        if (count_in + 1 < sz) {
++            next = in_buf + 1;
++        } else {
++            next = NULL;
++        }
+ 
+-        if (*in_buf == '\\') {
++        if (*in_buf == '\\' && next) {
+             esc_in = 2;
+             switch (*next) {
+             case '"':
+@@ -170,7 +174,7 @@ int flb_unescape_string_utf8(const char *in_buf, int sz, char *out_buf)
+                 esc_in = u8_read_escape_sequence((in_buf + 1), &ch) + 1;
+             }
+         }
+-        else {
++         else {
+             ch = (uint32_t) *in_buf;
+             esc_in = 1;
+         }
+@@ -196,9 +200,6 @@ int flb_unescape_string_utf8(const char *in_buf, int sz, char *out_buf)
+         }
+         count_out += esc_out;
+     }
+-    if (count_in < sz) {
+-        flb_error("Not at boundary but still NULL terminating : %d - '%s'", sz, in_buf);
+-    }
+     out_buf[count_out] = '\0';
+     return count_out;
+ }

@@ -1,0 +1,15 @@
+diff --git a/include/valijson/utils/file_utils.hpp b/include/valijson/utils/file_utils.hpp
+index 92757cf..d301ba7 100644
+--- a/include/valijson/utils/file_utils.hpp
++++ b/include/valijson/utils/file_utils.hpp
+@@ -16,9 +16,7 @@ namespace utils {
+  */
+ inline bool loadFile(const std::string &path, std::string &dest)
+ {
+-    // Open file for reading
+-    std::ifstream file(path.c_str());
+-    if (!file.is_open()) {
++ ele_idx ) ; if ( error == IA_NO_ERROR ) { pstr_output_config -> i_out_bytes = 0 ; return error ; } } 
+         return false;
+     }
+ 

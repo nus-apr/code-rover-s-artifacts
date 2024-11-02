@@ -1,0 +1,22 @@
+diff --git a/src/decoders/kodak_decoders.cpp b/src/decoders/kodak_decoders.cpp
+index 2ffa54e1..43e25719 100644
+--- a/src/decoders/kodak_decoders.cpp
++++ b/src/decoders/kodak_decoders.cpp
+@@ -266,8 +266,15 @@ void LibRaw::kodak_c330_load_raw()
+       for (col = 0; col < width; col++)
+       {
+           y = pixel[col * 2];
+-          cb = pixel[(col * 2 & -4) | 1] - 128;
+-          cr = pixel[(col * 2 & -4) | 3] - 128;
++           if (((col * 2 & -4) | 1) < raw_width * 2)
++               cb = pixel[(col * 2 & -4) | 1] - 128;
++           else
++               cb = 0; // or handle error appropriately
++
++           if (((col * 2 & -4) | 3) < raw_width * 2)
++               cr = pixel[(col * 2 & -4) | 3] - 128;
++           else
++               cr = 0; // or handle error appropriately
+           rgb[1] = y - ((cb + cr + 2) >> 2);
+           rgb[2] = rgb[1] + cb;
+           rgb[0] = rgb[1] + cr;

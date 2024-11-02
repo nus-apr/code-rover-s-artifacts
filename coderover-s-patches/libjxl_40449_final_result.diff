@@ -1,0 +1,21 @@
+diff --git a/lib/jxl/decode.cc b/lib/jxl/decode.cc
+index 9c98459e..9ab556c5 100644
+--- a/lib/jxl/decode.cc
++++ b/lib/jxl/decode.cc
+@@ -1637,7 +1637,9 @@ JxlDecoderStatus JxlDecoderProcessInput(JxlDecoder* dec) {
+           size_t produced = next_out - orig_next_out;
+           dec->recon_out_buffer_pos += produced;
+           if (box_result == JXL_DEC_BOX_NEED_MORE_OUTPUT) {
+-            metadata.resize(metadata.size() * 2);
++            if (dec->recon_out_buffer_pos + avail_out > metadata.size()) {
++              metadata.resize(metadata.size() * 2);
++            }
+           } else if (box_result == JXL_DEC_NEED_MORE_INPUT) {
+             break;  // box stage handling below will handle this instead
+           } else if (box_result == JXL_DEC_SUCCESS) {
+diff --git a/third_party/brotli b/third_party/brotli
+--- a/third_party/brotli
++++ b/third_party/brotli
+@@ -1 +1 @@
+-Subproject commit 35ef5c554d888bef217d449346067de05e269b30
++Subproject commit 35ef5c554d888bef217d449346067de05e269b30-dirty

@@ -1,0 +1,13 @@
+diff --git a/libpcap/bpf_filter.c b/libpcap/bpf_filter.c
+index 72509ff..b9b8033 100644
+--- a/libpcap/bpf_filter.c
++++ b/libpcap/bpf_filter.c
+@@ -96,7 +96,7 @@ pcap_filter_with_aux_data(const struct bpf_insn *pc, const u_char *p,
+ {
+ 	register uint32_t A, X;
+ 	register bpf_u_int32 k;
+-	uint32_t mem[BPF_MEMWORDS];
++	uint32_t mem[BPF_MEMWORDS] = {0};
+ 
+ 	if (pc == 0)
+ 		/*

@@ -1,0 +1,41 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index 588a0983..e00bd419 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -1488,7 +1488,7 @@ static int blosc_d(
+           (context->blosc2_flags & 0x08u) && !context->special_type);
+   if (is_lazy) {
+     // The chunk is on disk, so just lazily load the block
+-    if (context->schunk == NULL) {
++    if (context == NULL || context->schunk == NULL) {
+       BLOSC_TRACE_ERROR("Lazy chunk needs an associated super-chunk.");
+       return BLOSC2_ERROR_INVALID_PARAM;
+     }
+@@ -1496,6 +1496,10 @@ static int blosc_d(
+       BLOSC_TRACE_ERROR("Lazy chunk needs an associated frame.");
+       return BLOSC2_ERROR_INVALID_PARAM;
+     }
++    if (context->schunk->frame == NULL) {
++      BLOSC_TRACE_ERROR("Lazy chunk needs an associated frame.");
++      return BLOSC2_ERROR_INVALID_PARAM;
++    }
+     blosc2_frame_s* frame = (blosc2_frame_s*)context->schunk->frame;
+     char* urlpath = frame->urlpath;
+     size_t trailer_offset = BLOSC_EXTENDED_HEADER_LENGTH + context->nblocks * sizeof(int32_t);
+diff --git a/plugins/codecs/zfp/blosc2-zfp.c b/plugins/codecs/zfp/blosc2-zfp.c
+index 3acdce9a..9d005aaa 100644
+--- a/plugins/codecs/zfp/blosc2-zfp.c
++++ b/plugins/codecs/zfp/blosc2-zfp.c
+@@ -702,8 +702,11 @@ int zfp_getcell(void *thread_context, const uint8_t *block, int32_t cbytes, uint
+     bool meta = false;
+     int8_t ndim = ZFP_MAX_DIM + 1;
+     int32_t blockmeta[ZFP_MAX_DIM];
+-    if (context->schunk->blockshape == NULL) {
++    if (context == NULL || context->schunk == NULL || context->schunk->blockshape == NULL) {
+         // blockshape is not filled yet.  Use the Caterva layer to populate it.
++        if (context == NULL || context->schunk == NULL || context->schunk->metalayers == NULL) {
++            return -1; // Error: Invalid context or schunk
++        }
+         for (int nmetalayer = 0; nmetalayer < context->schunk->nmetalayers; nmetalayer++) {
+             if (strcmp("caterva", context->schunk->metalayers[nmetalayer]->name) == 0) {
+                 meta = true;

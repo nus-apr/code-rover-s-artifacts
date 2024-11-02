@@ -1,0 +1,13 @@
+diff --git a/wasm3/source/m3_compile.c b/wasm3/source/m3_compile.c
+index e1c0f25..11c9f3b 100644
+--- a/wasm3/source/m3_compile.c
++++ b/wasm3/source/m3_compile.c
+@@ -501,7 +501,7 @@ M3Result  Pop  (IM3Compilation o)
+             u32 regSelect = IsFpRegisterSlotAlias (slot);
+             DeallocateRegister (o, regSelect);
+         }
+-        else if (slot >= o->slotFirstDynamicIndex)
++        else if (slot >= o->slotFirstDynamicIndex && slot < o->slotMaxAllocatedIndexPlusOne)
+         {
+             DeallocateSlot (o, slot, type);
+         }

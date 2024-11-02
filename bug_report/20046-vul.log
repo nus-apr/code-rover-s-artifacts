@@ -1,0 +1,114 @@
+/out/llvm-isel-fuzzer: Injected args: -mtriple=wasm32 -O2
+INFO: Seed: 2329909532
+INFO: Loaded 1 modules   (1613983 inline 8-bit counters): 1613983 [0xf0b7288, 0xf241327), 
+INFO: Loaded 1 PC tables (1613983 PCs): 1613983 [0xf241328,0x10ae1d18), 
+/out/llvm-isel-fuzzer--wasm32-O2: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-use-after-free on address 0x606000007488 at pc 0x000005e7a23a bp 0x7fff8f26c1b0 sp 0x7fff8f26c1a8
+READ of size 8 at 0x606000007488 thread T0
+SCARINESS: 51 (8-byte-read-heap-use-after-free)
+    #0 0x5e7a239 in getPointer /src/llvm-project/llvm/include/llvm/ADT/PointerIntPair.h:59:58
+    #1 0x5e7a239 in getPrev /src/llvm-project/llvm/include/llvm/ADT/ilist_node_base.h:42:61
+    #2 0x5e7a239 in getPrev /src/llvm-project/llvm/include/llvm/ADT/ilist_node.h:70:59
+    #3 0x5e7a239 in empty /src/llvm-project/llvm/include/llvm/ADT/ilist_node.h:248:45
+    #4 0x5e7a239 in empty /src/llvm-project/llvm/include/llvm/ADT/simple_ilist.h:131:55
+    #5 0x5e7a239 in llvm::BasicBlock::getTerminator() const /src/llvm-project/llvm/lib/IR/BasicBlock.cpp:145:16
+    #6 0x4bd5300 in getTerminator /src/llvm-project/llvm/include/llvm/IR/BasicBlock.h:124:48
+    #7 0x4bd5300 in computeKnownBitsFromOperator(llvm::Operator const*, llvm::KnownBits&, unsigned int, (anonymous namespace)::Query const&) /src/llvm-project/llvm/lib/Analysis/ValueTracking.cpp:1528:45
+    #8 0x4b78baa in computeKnownBits(llvm::Value const*, llvm::KnownBits&, unsigned int, (anonymous namespace)::Query const&) /src/llvm-project/llvm/lib/Analysis/ValueTracking.cpp:1807:5
+    #9 0x4b79fca in computeKnownBits /src/llvm-project/llvm/lib/Analysis/ValueTracking.cpp:1702:3
+    #10 0x4b79fca in llvm::computeKnownBits(llvm::Value const*, llvm::DataLayout const&, unsigned int, llvm::AssumptionCache*, llvm::Instruction const*, llvm::DominatorTree const*, llvm::OptimizationRemarkEmitter*, bool) /src/llvm-project/llvm/lib/Analysis/ValueTracking.cpp:187:10
+    #11 0x475c0ed in llvm::SimplifyInstruction(llvm::Instruction*, llvm::SimplifyQuery const&, llvm::OptimizationRemarkEmitter*) /src/llvm-project/llvm/lib/Analysis/InstructionSimplify.cpp:5486:23
+    #12 0x5a1129c in (anonymous namespace)::CodeGenPrepare::optimizeInst(llvm::Instruction*, bool&) /src/llvm-project/llvm/lib/CodeGen/CodeGenPrepare.cpp:7050:20
+    #13 0x59f5853 in optimizeBlock /src/llvm-project/llvm/lib/CodeGen/CodeGenPrepare.cpp:7211:19
+    #14 0x59f5853 in (anonymous namespace)::CodeGenPrepare::runOnFunction(llvm::Function&) /src/llvm-project/llvm/lib/CodeGen/CodeGenPrepare.cpp:488:21
+    #15 0x61edcde in llvm::FPPassManager::runOnFunction(llvm::Function&) /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1481:27
+    #16 0x61eeba0 in llvm::FPPassManager::runOnModule(llvm::Module&) /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1517:16
+    #17 0x61efe46 in runOnModule /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1582:27
+    #18 0x61efe46 in llvm::legacy::PassManagerImpl::run(llvm::Module&) /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1694:44
+    #19 0x7a532a in LLVMFuzzerTestOneInput /src/llvm-project/llvm/tools/llvm-isel-fuzzer/llvm-isel-fuzzer.cpp:102:6
+    #20 0x69e541 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:556:15
+    #21 0x689061 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #22 0x68ed1e in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:774:9
+    #23 0x6b8c42 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #24 0x7f5a3c39d83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #25 0x6624d8 in _start (/out/llvm-isel-fuzzer--wasm32-O2+0x6624d8)
+
+DEDUP_TOKEN: getPointer--getPrev--getPrev
+0x606000007488 is located 40 bytes inside of 64-byte region [0x606000007460,0x6060000074a0)
+freed by thread T0 here:
+    #0 0x79676d in operator delete(void*) /src/llvm-project/compiler-rt/lib/asan/asan_new_delete.cpp:160:3
+    #1 0x5e79c64 in deleteNode /src/llvm-project/llvm/include/llvm/ADT/ilist.h:41:39
+    #2 0x5e79c64 in erase /src/llvm-project/llvm/include/llvm/ADT/ilist.h:266:5
+    #3 0x5e79c64 in llvm::BasicBlock::eraseFromParent() /src/llvm-project/llvm/lib/IR/BasicBlock.cpp:122:43
+    #4 0x8ccaec5 in llvm::MergeBlockIntoPredecessor(llvm::BasicBlock*, llvm::DomTreeUpdater*, llvm::LoopInfo*, llvm::MemorySSAUpdater*, llvm::MemoryDependenceResults*, bool) /src/llvm-project/llvm/lib/Transforms/Utils/BasicBlockUtils.cpp:311:9
+    #5 0x59f1af2 in eliminateMostlyEmptyBlock /src/llvm-project/llvm/lib/CodeGen/CodeGenPrepare.cpp:843:7
+    #6 0x59f1af2 in eliminateMostlyEmptyBlocks /src/llvm-project/llvm/lib/CodeGen/CodeGenPrepare.cpp:667:5
+    #7 0x59f1af2 in (anonymous namespace)::CodeGenPrepare::runOnFunction(llvm::Function&) /src/llvm-project/llvm/lib/CodeGen/CodeGenPrepare.cpp:471:21
+    #8 0x61edcde in llvm::FPPassManager::runOnFunction(llvm::Function&) /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1481:27
+    #9 0x61eeba0 in llvm::FPPassManager::runOnModule(llvm::Module&) /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1517:16
+    #10 0x61efe46 in runOnModule /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1582:27
+    #11 0x61efe46 in llvm::legacy::PassManagerImpl::run(llvm::Module&) /src/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1694:44
+    #12 0x7a532a in LLVMFuzzerTestOneInput /src/llvm-project/llvm/tools/llvm-isel-fuzzer/llvm-isel-fuzzer.cpp:102:6
+    #13 0x69e541 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:556:15
+    #14 0x689061 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #15 0x68ed1e in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:774:9
+    #16 0x6b8c42 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #17 0x7f5a3c39d83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: operator delete(void*)--deleteNode--erase
+previously allocated by thread T0 here:
+    #0 0x795f0d in operator new(unsigned long) /src/llvm-project/compiler-rt/lib/asan/asan_new_delete.cpp:99:3
+    #1 0x96e34f3 in Create /src/llvm-project/llvm/include/llvm/IR/BasicBlock.h:102:12
+    #2 0x96e34f3 in (anonymous namespace)::BitcodeReader::parseFunctionBody(llvm::Function*) /src/llvm-project/llvm/lib/Bitcode/Reader/BitcodeReader.cpp:3803:28
+    #3 0x96c4917 in (anonymous namespace)::BitcodeReader::materialize(llvm::GlobalValue*) /src/llvm-project/llvm/lib/Bitcode/Reader/BitcodeReader.cpp:5256:19
+    #4 0x96c7478 in (anonymous namespace)::BitcodeReader::materializeModule() /src/llvm-project/llvm/lib/Bitcode/Reader/BitcodeReader.cpp:5311:21
+    #5 0x6291ca5 in llvm::Module::materializeAll() /src/llvm-project/llvm/lib/IR/Module.cpp:421:13
+    #6 0x969eff8 in llvm::BitcodeModule::getModuleImpl(llvm::LLVMContext&, bool, bool, bool) /src/llvm-project/llvm/lib/Bitcode/Reader/BitcodeReader.cpp:6485:24
+    #7 0x96b4c85 in parseModule /src/llvm-project/llvm/lib/Bitcode/Reader/BitcodeReader.cpp:6665:10
+    #8 0x96b4c85 in llvm::parseBitcodeFile(llvm::MemoryBufferRef, llvm::LLVMContext&) /src/llvm-project/llvm/lib/Bitcode/Reader/BitcodeReader.cpp:6676:14
+    #9 0x643f38b in llvm::parseModule(unsigned char const*, unsigned long, llvm::LLVMContext&) /src/llvm-project/llvm/lib/FuzzMutate/FuzzerCLI.cpp:181:12
+    #10 0x6440816 in llvm::parseAndVerify(unsigned char const*, unsigned long, llvm::LLVMContext&) /src/llvm-project/llvm/lib/FuzzMutate/FuzzerCLI.cpp:203:12
+    #11 0x7a46ee in LLVMFuzzerTestOneInput /src/llvm-project/llvm/tools/llvm-isel-fuzzer/llvm-isel-fuzzer.cpp:86:12
+    #12 0x69e541 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:556:15
+    #13 0x689061 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:292:6
+    #14 0x68ed1e in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:774:9
+    #15 0x6b8c42 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:19:10
+    #16 0x7f5a3c39d83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: operator new(unsigned long)--Create--(anonymous namespace)::BitcodeReader::parseFunctionBody(llvm::Function*)
+SUMMARY: AddressSanitizer: heap-use-after-free /src/llvm-project/llvm/include/llvm/ADT/PointerIntPair.h:59:58 in getPointer
+Shadow bytes around the buggy address:
+  0x0c0c7fff8e40: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
+  0x0c0c7fff8e50: 00 00 00 00 00 00 00 00 fa fa fa fa fd fd fd fd
+  0x0c0c7fff8e60: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fa
+  0x0c0c7fff8e70: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
+  0x0c0c7fff8e80: 00 00 00 00 00 00 00 00 fa fa fa fa fd fd fd fd
+=>0x0c0c7fff8e90: fd[fd]fd fd fa fa fa fa fd fd fd fd fd fd fd fd
+  0x0c0c7fff8ea0: fa fa fa fa 00 00 00 00 00 00 00 00 fa fa fa fa
+  0x0c0c7fff8eb0: 00 00 00 00 00 00 00 00 fa fa fa fa fd fd fd fd
+  0x0c0c7fff8ec0: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fd
+  0x0c0c7fff8ed0: fa fa fa fa 00 00 00 00 00 00 00 fa fa fa fa fa
+  0x0c0c7fff8ee0: fd fd fd fd fd fd fd fa fa fa fa fa fd fd fd fd
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

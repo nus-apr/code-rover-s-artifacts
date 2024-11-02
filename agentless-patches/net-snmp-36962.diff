@@ -1,0 +1,13 @@
+diff --git a/net-snmp/snmplib/parse.c b/net-snmp/snmplib/parse.c
+index c4f7b02..afc36df 100644
+--- a/net-snmp/snmplib/parse.c
++++ b/net-snmp/snmplib/parse.c
+@@ -1951,7 +1951,7 @@ parse_objectid(FILE * fp, char *name)
+     register int    count;
+     register struct subid_s *op, *nop;
+     int             length;
+-    struct subid_s  loid[32];
++    struct subid_s  loid[64];
+     struct node    *np, *root = NULL, *oldnp = NULL;
+     struct tree    *tp;
+ 

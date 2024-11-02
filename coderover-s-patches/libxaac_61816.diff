@@ -1,0 +1,26 @@
+diff --git a/decoder/ixheaacd_mps_res_pns_js_thumb.c b/decoder/ixheaacd_mps_res_pns_js_thumb.c
+index f7301a8..b09bc0e 100644
+--- a/decoder/ixheaacd_mps_res_pns_js_thumb.c
++++ b/decoder/ixheaacd_mps_res_pns_js_thumb.c
+@@ -60,11 +60,16 @@ VOID ixheaacd_res_tns_decode_coeffs_32x16(const ia_mps_dec_residual_filter_struc
+     offset = offset << 1;
+   }
+   tmp1 = filter->order;
+-  do {
+-    WORD8 temp = *p_coeff++;
+-    *aptr++ = tns_coeff_ptr[temp + offset];
+-    tmp1--;
+-  } while (tmp1 != 0);
++    do {
++        WORD8 temp = *p_coeff++;
++        if (temp + offset < sizeof(aac_tables_ptr->res_block_tables_ptr->tns_coeff3_16) / sizeof(WORD16)) {
++            *aptr++ = tns_coeff_ptr[temp + offset];
++        } else {
++            // Handle the error case, e.g., set a default value or skip
++            *aptr++ = 0; // or some other appropriate default/error handling
++        }
++        tmp1--;
++    } while (tmp1 != 0);
+ }
+ 
+ VOID ixheaacd_res_ctns_apply(ia_mps_dec_residual_channel_info_struct *p_aac_decoder_channel_info,

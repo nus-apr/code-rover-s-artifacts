@@ -1,0 +1,12 @@
+diff --git a/usrsctp/usrsctplib/user_mbuf.c b/usrsctp/usrsctplib/user_mbuf.c
+index c8e0d99..c23685b 100644
+--- a/usrsctp/usrsctplib/user_mbuf.c
++++ b/usrsctp/usrsctplib/user_mbuf.c
+@@ -142,6 +142,7 @@ m_get(int how, short type)
+ 		mbuf_constructor_dup(mret, 0, type);
+ #endif
+ 
++		memset(mret, 0, sizeof(struct mbuf));
+ 	}
+ 	return mret;
+ }

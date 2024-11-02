@@ -1,0 +1,25 @@
+diff --git a/qopen.cpp b/qopen.cpp
+index 789e5c0..ac04d37 100644
+--- a/qopen.cpp
++++ b/qopen.cpp
+@@ -107,13 +107,18 @@ bool QuickOpen::Read(void *Data,size_t Size,size_t &Result)
+     return false;
+   // Find next suitable cached block.
+   while (LastReadHeaderPos+LastReadHeader.Size()<=SeekPos)
++  {
+     if (!ReadNext())
++    {
++      Loaded = false; // Ensure Loaded is false if ReadNext fails
+       break;
+-  if (!Loaded)
++    }
++  }
++  if (!Loaded || Arc == nullptr) // Check if Arc is valid
+   {
+     // If something wrong happened, let's set the correct file pointer
+     // and stop further quick open processing.
+-    if (UnsyncSeekPos)
++    if (UnsyncSeekPos && Arc != nullptr)
+       Arc->File::Seek(SeekPos,SEEK_SET);
+     return false;
+   }

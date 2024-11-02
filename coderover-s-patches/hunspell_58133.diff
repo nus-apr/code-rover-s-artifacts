@@ -1,0 +1,40 @@
+diff --git a/src/hunspell/hashmgr.cxx b/src/hunspell/hashmgr.cxx
+index 8fc1085..7dccef1 100644
+--- a/src/hunspell/hashmgr.cxx
++++ b/src/hunspell/hashmgr.cxx
+@@ -97,7 +97,10 @@ HashMgr::HashMgr(const char* tpath, const char* apath, const char* key)
+   if (ec) {
+     /* error condition - what should we do here */
+     HUNSPELL_WARNING(stderr, "Hash Manager Error : %d\n", ec);
+-    free_table();
++    if (!table_freed) { // Ensure free_table is only called if necessary
++      free_table();
++      table_freed = true;
++    }
+     //keep table size to 1 to fix possible division with zero
+     tableptr.resize(1, nullptr);
+   }
+@@ -125,7 +128,10 @@ void HashMgr::free_table() {
+ }
+ 
+ HashMgr::~HashMgr() {
+-  free_table();
++  if (!table_freed) { // Check if table has already been freed
++    free_table();
++    table_freed = true;
++  }
+ 
+   for (size_t j = 0, numaliasf = aliasf.size(); j < numaliasf; ++j)
+     delete[] aliasf[j];
+diff --git a/src/hunspell/hashmgr.hxx b/src/hunspell/hashmgr.hxx
+index 3e910f0..0351983 100644
+--- a/src/hunspell/hashmgr.hxx
++++ b/src/hunspell/hashmgr.hxx
+@@ -152,6 +152,7 @@ class HashMgr {
+   int remove_forbidden_flag(const std::string& word);
+   void free_table();
+   void free_flag(unsigned short* astr, short alen);
++  bool table_freed; // Flag to track if table has been freed
+ };
+ 
+ #endif

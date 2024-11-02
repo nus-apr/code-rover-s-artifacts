@@ -1,0 +1,43 @@
+diff --git a/src/core/SkArenaAlloc.cpp b/src/core/SkArenaAlloc.cpp
+index 450f0dac6e..e430b8ecd4 100644
+--- a/src/core/SkArenaAlloc.cpp
++++ b/src/core/SkArenaAlloc.cpp
+@@ -61,6 +61,9 @@ void SkArenaAlloc::installFooter(FooterAction* action, uint32_t padding) {
+     Footer encodedFooter = (actionInt << 6) | padding;
+     memmove(fCursor, &encodedFooter, sizeof(Footer));
+     fCursor += sizeof(Footer);
++    if (fCursor > fEnd) {
++        SK_ABORT("Cursor exceeded allocated memory.");
++    }
+     fDtorCursor = fCursor;
+ }
+ 
+@@ -166,6 +169,10 @@ restart:
+ 
+     if ((ptrdiff_t)totalSize > fEnd - objStart) {
+         this->ensureSpace(totalSize, alignment);
++        // Validate that the new allocation is within bounds
++        if ((ptrdiff_t)totalSize > fEnd - objStart) {
++            SK_ABORT("Insufficient space after ensureSpace.");
++        }
+         goto restart;
+     }
+ 
+diff --git a/src/core/SkArenaAlloc.h b/src/core/SkArenaAlloc.h
+index 2f23382ac1..ca8e98bad1 100644
+--- a/src/core/SkArenaAlloc.h
++++ b/src/core/SkArenaAlloc.h
+@@ -162,8 +162,12 @@ private:
+             SK_ABORT("The total size of allocation overflowed uintptr_t.");
+         }
+         if (totalSize > static_cast<uintptr_t>(fEnd - fCursor)) {
+-            this->ensureSpace(size, alignment);
++            this->ensureSpace(totalSize, alignment);
+             alignedOffset = (~reinterpret_cast<uintptr_t>(fCursor) + 1) & mask;
++            totalSize = size + alignedOffset;
++            if (totalSize > static_cast<uintptr_t>(fEnd - fCursor)) {
++                SK_ABORT("Insufficient space after ensureSpace.");
++            }
+         }
+         return fCursor + alignedOffset;
+     }

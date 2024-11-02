@@ -1,0 +1,89 @@
+diff --git a/libsepol/src/optimize.c b/libsepol/src/optimize.c
+index 6826155c..32778589 100644
+--- a/libsepol/src/optimize.c
++++ b/libsepol/src/optimize.c
+@@ -208,24 +208,26 @@ static int is_avrule_redundant(avtab_ptr_t entry, avtab_t *tab,
+ 
+ 	d1 = &entry->datum;
+ 
+-	for (i = 0; i < type_map[s_idx].count; i++) {
+-		st = type_map[s_idx].types[i];
+-		key.source_type = st + 1;
++	if (type_map && s_idx < type_map->count && t_idx < type_map->count) {
++		for (i = 0; i < type_map[s_idx].count; i++) {
++			st = type_map[s_idx].types[i];
++			key.source_type = st + 1;
+ 
+-		for (k = 0; k < type_map[t_idx].count; k++) {
+-			tt = type_map[t_idx].types[k];
++			for (k = 0; k < type_map[t_idx].count; k++) {
++				tt = type_map[t_idx].types[k];
+ 
+-			if (not_cond && s_idx == st && t_idx == tt)
+-				continue;
++				if (not_cond && s_idx == st && t_idx == tt)
++					continue;
+ 
+-			key.target_type = tt + 1;
++				key.target_type = tt + 1;
+ 
+-			d2 = avtab_search(tab, &key);
+-			if (!d2)
+-				continue;
++				d2 = avtab_search(tab, &key);
++				if (!d2)
++					continue;
+ 
+-			if (process_avtab_datum(key.specified, d1, d2))
+-				return 1;
++				if (process_avtab_datum(key.specified, d1, d2))
++					return 1;
++			}
+ 		}
+ 	}
+ 	return 0;
+@@ -259,26 +261,28 @@ static int is_cond_rule_redundant(avtab_ptr_t e1, cond_av_list_t *list,
+ 	c1 = e1->key.target_class;
+ 	k1 = e1->key.specified;
+ 
+-	for (; list; list = list->next) {
+-		avtab_ptr_t e2 = list->node;
++	if (type_map && s1 < type_map->count && t1 < type_map->count) {
++		for (; list; list = list->next) {
++			avtab_ptr_t e2 = list->node;
+ 
+-		s2 = e2->key.source_type - 1;
+-		t2 = e2->key.target_type - 1;
+-		c2 = e2->key.target_class;
+-		k2 = e2->key.specified;
++			s2 = e2->key.source_type - 1;
++			t2 = e2->key.target_type - 1;
++			c2 = e2->key.target_class;
++			k2 = e2->key.specified;
+ 
+-		if (k1 != k2 || c1 != c2)
+-			continue;
++			if (k1 != k2 || c1 != c2)
++				continue;
+ 
+-		if (s1 == s2 && t1 == t2)
+-			continue;
+-		if (!type_vec_contains(&type_map[s1], s2))
+-			continue;
+-		if (!type_vec_contains(&type_map[t1], t2))
+-			continue;
++			if (s1 == s2 && t1 == t2)
++				continue;
++			if (!type_vec_contains(&type_map[s1], s2))
++				continue;
++			if (!type_vec_contains(&type_map[t1], t2))
++				continue;
+ 
+-		if (process_avtab_datum(k1, &e1->datum, &e2->datum))
+-			return 1;
++			if (process_avtab_datum(k1, &e1->datum, &e2->datum))
++				return 1;
++		}
+ 	}
+ 	return 0;
+ }

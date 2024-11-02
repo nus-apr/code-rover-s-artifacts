@@ -1,0 +1,13 @@
+diff --git a/p11-kit/p11-kit/rpc-server.c b/p11-kit/p11-kit/rpc-server.c
+index bd1c7ce..f901415 100644
+--- a/p11-kit/p11-kit/rpc-server.c
++++ b/p11-kit/p11-kit/rpc-server.c
+@@ -322,7 +322,7 @@ proto_read_attribute_array (p11_rpc_message *msg,
+ 		if (temp.ulValueLen != ((CK_ULONG)-1)) {
+ 			size_t offset2 = msg->parsed;
+ 			attrs[i].pValue = p11_rpc_message_alloc_extra (msg, temp.ulValueLen);
+-			if (!p11_rpc_buffer_get_attribute (msg->input, &offset2, &attrs[i])) {
++			if (attrs[i].pValue && !p11_rpc_buffer_get_attribute (msg->input, &offset2, &attrs[i])) {
+ 				msg->parsed = offset2;
+ 				return PARSE_ERROR;
+ 			}

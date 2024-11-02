@@ -1,0 +1,20 @@
+diff --git a/c-blosc2/blosc/frame.c b/c-blosc2/blosc/frame.c
+index 149dc35..89680a2 100644
+--- a/c-blosc2/blosc/frame.c
++++ b/c-blosc2/blosc/frame.c
+@@ -1387,10 +1387,14 @@ static int get_vlmeta_from_trailer(blosc2_frame_s* frame, blosc2_schunk* schunk,
+     if (content_len < 0) {
+       return BLOSC2_ERROR_DATA;
+     }
++    if (content_len < 0) {
++      free(trailer);
++      return BLOSC2_ERROR_DATA;
++    }
+     metalayer->content_len = content_len;
+ 
+     // Finally, read the content
+-    if (trailer_len < offset + 1 + 4 + content_len) {
++    if (trailer_len < offset + 1 + 4 + (size_t)content_len) {
+       return BLOSC2_ERROR_READ_BUFFER;
+     }
+     char* content = malloc((size_t)content_len);

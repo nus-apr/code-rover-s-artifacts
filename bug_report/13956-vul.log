@@ -1,0 +1,70 @@
+INFO: Seed: 2210325973
+INFO: Loaded 1 modules   (8140 inline 8-bit counters): 8140 [0x9af190, 0x9b115c), 
+INFO: Loaded 1 PC tables (8140 PCs): 8140 [0x70b0b0,0x72ad70), 
+/out/elf_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==12==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60d000000332 at pc 0x00000052a44f bp 0x7ffc77df07a0 sp 0x7ffc77df0798
+READ of size 1 at 0x60d000000332 thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x52a44e in str_table_entry /src/yara/libyara/modules/elf.c:92:7
+    #1 0x52fa7a in parse_elf_header_64_be /src/yara/libyara/modules/elf.c:411:1
+    #2 0x533afd in elf__load /src/yara/libyara/modules/elf.c:767:13
+    #3 0x505334 in yr_modules_load /src/yara/libyara/modules.c:175:16
+    #4 0x572a95 in yr_execute_code /src/yara/libyara/exec.c:973:18
+    #5 0x50f178 in yr_scanner_scan_mem_blocks /src/yara/libyara/scanner.c:435:3
+    #6 0x50bba3 in yr_rules_scan_mem_blocks /src/yara/libyara/rules.c:217:12
+    #7 0x50be02 in yr_rules_scan_mem /src/yara/libyara/rules.c:267:10
+    #8 0x4f4862 in LLVMFuzzerTestOneInput /src/yara/tests/oss-fuzz/elf_fuzzer.cc:69:3
+    #9 0x5ea061 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/libfuzzer/FuzzerLoop.cpp:529:15
+    #10 0x5a999f in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/libfuzzer/FuzzerDriver.cpp:286:6
+    #11 0x5b5673 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/libfuzzer/FuzzerDriver.cpp:715:9
+    #12 0x5a8ff7 in main /src/libfuzzer/FuzzerMain.cpp:19:10
+    #13 0x7c7507dd383f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #14 0x41db68 in _start (/out/elf_fuzzer+0x41db68)
+
+DEDUP_TOKEN: str_table_entry--parse_elf_header_64_be--elf__load
+0x60d000000332 is located 0 bytes to the right of 130-byte region [0x60d0000002b0,0x60d000000332)
+allocated by thread T0 here:
+    #0 0x4f1348 in operator new[](unsigned long) /src/llvm/projects/compiler-rt/lib/asan/asan_new_delete.cc:108
+    #1 0x5e9e5c in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/libfuzzer/FuzzerLoop.cpp:516:23
+    #2 0x5a999f in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/libfuzzer/FuzzerDriver.cpp:286:6
+    #3 0x5b5673 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/libfuzzer/FuzzerDriver.cpp:715:9
+    #4 0x5a8ff7 in main /src/libfuzzer/FuzzerMain.cpp:19:10
+    #5 0x7c7507dd383f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: operator new[](unsigned long)--fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long)--fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/yara/libyara/modules/elf.c:92:7 in str_table_entry
+Shadow bytes around the buggy address:
+  0x0c1a7fff8010: 00 00 00 00 00 00 00 00 00 00 fa fa fa fa fa fa
+  0x0c1a7fff8020: fa fa fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+  0x0c1a7fff8030: fd fd fd fa fa fa fa fa fa fa fa fa 00 00 00 00
+  0x0c1a7fff8040: 00 00 00 00 00 00 00 00 00 00 00 00 02 fa fa fa
+  0x0c1a7fff8050: fa fa fa fa fa fa 00 00 00 00 00 00 00 00 00 00
+=>0x0c1a7fff8060: 00 00 00 00 00 00[02]fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c1a7fff8080: 00 fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8090: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff80a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff80b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==12==ABORTING

@@ -1,0 +1,15 @@
+diff --git a/include/ast/section.h b/include/ast/section.h
+index 77e054a2..f68dcd8f 100644
+--- a/include/ast/section.h
++++ b/include/ast/section.h
+@@ -30,9 +30,7 @@ public:
+   void setContentSize(uint64_t Size) noexcept { ContentSize = Size; }
+ 
+   /// Getter and setter of start offset in source.
+-  uint64_t getStartOffset() const noexcept { return StartOffset; }
+-  void setStartOffset(uint64_t Off) noexcept { StartOffset = Off; }
+-
++ ; fp -> 
+ protected:
+   /// Content size of this section.
+   uint64_t ContentSize = 0;

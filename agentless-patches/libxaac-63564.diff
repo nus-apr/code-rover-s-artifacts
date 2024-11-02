@@ -1,0 +1,13 @@
+diff --git a/libxaac/decoder/ixheaacd_mps_smoothing.c b/libxaac/decoder/ixheaacd_mps_smoothing.c
+index a203e65..8ac4f5f 100644
+--- a/libxaac/decoder/ixheaacd_mps_smoothing.c
++++ b/libxaac/decoder/ixheaacd_mps_smoothing.c
+@@ -676,7 +676,7 @@ VOID ixheaacd_smooth_m1m2(ia_heaac_mps_state_struct *pstr_mps_state) {
+             m2_decor_real_prev += res_bands;
+ 
+             param_r = &m2_param->m2_decor_real[idx][0][res_bands];
+-            for (pb = res_bands; pb < num_parameter_bands; pb++) {
++            for (pb = res_bands; pb < num_parameter_bands && pb < 28; pb++) {
+               if (smooth_band_arr[0][pb]) {
+                 WORD64 acc;
+                 acc = (WORD64)((WORD64)(ptr2[pb]) * (WORD64)*delta_ptr +

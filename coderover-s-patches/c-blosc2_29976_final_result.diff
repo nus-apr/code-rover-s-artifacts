@@ -1,0 +1,54 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index 35a85145..2bc5d0ff 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -2619,6 +2619,10 @@ int blosc_getitem(const void* src, int start, int nitems, void* dest) {
+   blosc2_context context;
+   int result;
+ 
++  // Ensure the _src array is large enough to access BLOSC2_CHUNK_VERSION
++  if (src == NULL || BLOSC2_CHUNK_VERSION >= nitems) {
++    return -1; // Invalid input or out of bounds
++  }
+   uint8_t version = _src[BLOSC2_CHUNK_VERSION];                        /* blosc format version */
+   if (version > BLOSC_VERSION_FORMAT) {
+     /* Version from future */
+diff --git a/blosc/frame.c b/blosc/frame.c
+index a87d691e..285c6dde 100644
+--- a/blosc/frame.c
++++ b/blosc/frame.c
+@@ -935,15 +935,34 @@ uint8_t* get_coffsets(blosc2_frame *frame, int32_t header_len, int64_t cbytes, i
+   }
+   FILE* fp = NULL;
+   uint8_t* coffsets = malloc((size_t)coffsets_cbytes);
++  if (coffsets == NULL) {
++    BLOSC_TRACE_ERROR("Memory allocation failed for coffsets.");
++    return NULL;
++  }
+   if (frame->eframe) {
+     char* eframe_name = malloc(strlen(frame->urlpath) + strlen("/chunks.b2frame") + 1);
++    if (eframe_name == NULL) {
++      BLOSC_TRACE_ERROR("Memory allocation failed for eframe_name.");
++      free(coffsets);
++      return NULL;
++    }
+     sprintf(eframe_name, "%s/chunks.b2frame", frame->urlpath);
+     fp = fopen(eframe_name, "rb");
+     free(eframe_name);
++    if (fp == NULL) {
++      BLOSC_TRACE_ERROR("Failed to open eframe file.");
++      free(coffsets);
++      return NULL;
++    }
+     fseek(fp, header_len + 0, SEEK_SET);
+   }
+   else {
+     fp = fopen(frame->urlpath, "rb");
++    if (fp == NULL) {
++      BLOSC_TRACE_ERROR("Failed to open frame file.");
++      free(coffsets);
++      return NULL;
++    }
+     fseek(fp, header_len + cbytes, SEEK_SET);
+   }
+   size_t rbytes = fread(coffsets, 1, (size_t)coffsets_cbytes, fp);

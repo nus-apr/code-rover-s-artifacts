@@ -1,0 +1,15 @@
+diff --git a/src/metadata/cr3_parser.cpp b/src/metadata/cr3_parser.cpp
+index 4b0d1d19..9105ec78 100644
+--- a/src/metadata/cr3_parser.cpp
++++ b/src/metadata/cr3_parser.cpp
+@@ -887,9 +887,7 @@ void LibRaw::parseCR3_Free()
+   short maxTrack = libraw_internal_data.unpacker_data.crx_track_count;
+   if (maxTrack < 0)
+     return;
+-
+-  for (int i = 0; i <= maxTrack && i < LIBRAW_CRXTRACKS_MAXCOUNT; i++)
+-  {
++ -> stsc_data ) free ( d -> stsc_data ) ; 
+     crx_data_header_t *d = &libraw_internal_data.unpacker_data.crx_header[i];
+     if (d->stsc_data)
+     {

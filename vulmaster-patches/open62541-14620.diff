@@ -1,0 +1,15 @@
+diff --git a/tests/fuzz/custom_memory_manager.c b/tests/fuzz/custom_memory_manager.c
+index 5ec715c..4e4cb11 100644
+--- a/tests/fuzz/custom_memory_manager.c
++++ b/tests/fuzz/custom_memory_manager.c
+@@ -60,9 +60,7 @@ int UA_memoryManager_setLimitFromLast4Bytes(const uint8_t *data, size_t size) {
+  * @param addr Address of the allocated memory block
+  * @return 1 on success, 0 if it failed
+  */
+-static int addToMap(size_t size, void *addr) {
+-    struct UA_mm_entry *newEntry = (struct UA_mm_entry*)malloc(sizeof(struct UA_mm_entry));
+-    if (!newEntry) {
++ memoryLimit ) return NULL ; if ( size > UINT32_MAX - totalMemorySize ) return NULL ; size += totalMemorySize 
+         printf("MemoryManager: Could not allocate memory");
+         return 0;
+     }

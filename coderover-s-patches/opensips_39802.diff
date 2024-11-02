@@ -1,0 +1,19 @@
+diff --git a/parser/parse_hname2.c b/parser/parse_hname2.c
+index f0f6ced0a..5042515a7 100644
+--- a/parser/parse_hname2.c
++++ b/parser/parse_hname2.c
+@@ -247,10 +247,10 @@ char* parse_hname2(char* begin, char* end, struct hdr_field* hdr)
+ 			case ' ' :
+ 			case '\t':
+ 				hdr->name.len = p - hdr->name.s;
+-				p = skip_ws(p+1, end);
+-				if (*p != ':')
+-					goto error;
+-				return (p+1);
++                    p = skip_ws(p+1, end);
++                    if (p >= end || *p != ':')
++                        goto error;
++                    return (p+1);
+ 		}
+ 		p++;
+ 	}

@@ -1,0 +1,13 @@
+diff --git a/ghostpdl/pdf/pdf_array.c b/ghostpdl/pdf/pdf_array.c
+index 10ee7ce..2ae5ee8 100644
+--- a/ghostpdl/pdf/pdf_array.c
++++ b/ghostpdl/pdf/pdf_array.c
+@@ -31,7 +31,7 @@ void pdfi_free_array(pdf_obj *o)
+     int i;
+ 
+     for (i=0;i < a->size;i++) {
+-        if (a->values[i] != NULL)
++        if (a->values[i] != NULL && a->values[i]->refcnt > 0)
+             pdfi_countdown(a->values[i]);
+     }
+     gs_free_object(OBJ_MEMORY(a), a->values, "pdf interpreter free array contents");

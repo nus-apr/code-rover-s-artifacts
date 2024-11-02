@@ -1,0 +1,60 @@
+diff --git a/decoder/ihevcd_nal.c b/decoder/ihevcd_nal.c
+index d00050d..4adf289 100644
+--- a/decoder/ihevcd_nal.c
++++ b/decoder/ihevcd_nal.c
+@@ -403,7 +403,13 @@ IHEVCD_ERROR_T ihevcd_nal_unit(codec_t *ps_codec)
+                 if((s_nal.i1_nal_unit_type != NAL_RASL_N && s_nal.i1_nal_unit_type != NAL_RASL_R) ||
+                                 ps_codec->i4_rasl_output_flag ||
+                                 ps_codec->i4_slice_error)
++                {
+                     ret = ihevcd_parse_slice_data(ps_codec);
++                    if (ret != (IHEVCD_ERROR_T)IHEVCD_SUCCESS) {
++                        ps_codec->i4_slice_error = 1; // Set error flag on failure
++                        ps_codec->s_parse.i4_end_of_frame = 1; // Ensure end of frame is set
++                    }
++                }
+             }
+             break;
+ 
+diff --git a/decoder/ihevcd_parse_slice.c b/decoder/ihevcd_parse_slice.c
+index aedfbe7..fe167ef 100644
+--- a/decoder/ihevcd_parse_slice.c
++++ b/decoder/ihevcd_parse_slice.c
+@@ -2693,9 +2693,16 @@ IHEVCD_ERROR_T ihevcd_parse_slice_data(codec_t *ps_codec)
+         }
+         else
+         {
+-            sao_t *ps_sao = ps_codec->s_parse.ps_pic_sao +
+-                            ps_codec->s_parse.i4_ctb_x +
+-                            ps_codec->s_parse.i4_ctb_y * ps_sps->i2_pic_wd_in_ctb;
++            WORD32 sao_index = ps_codec->s_parse.i4_ctb_x +
++                               ps_codec->s_parse.i4_ctb_y * ps_sps->i2_pic_wd_in_ctb;
++
++            if (sao_index >= ps_sps->i4_pic_size_in_ctb || sao_index < 0) {
++                ps_codec->i4_slice_error = 1; // Set error flag
++                ps_codec->s_parse.i4_end_of_frame = 1; // Ensure end of frame is set
++                return IHEVCD_INVALID_PARAMETER; // Early exit on error
++            }
++
++            sao_t *ps_sao = ps_codec->s_parse.ps_pic_sao + sao_index;
+ 
+             /* Default values */
+             ps_sao->b3_y_type_idx = 0;
+diff --git a/fuzzer/hevc_dec_fuzzer.cpp b/fuzzer/hevc_dec_fuzzer.cpp
+index be70ef5..df5d3c3 100644
+--- a/fuzzer/hevc_dec_fuzzer.cpp
++++ b/fuzzer/hevc_dec_fuzzer.cpp
+@@ -49,8 +49,11 @@ enum {
+ const static int kSupportedColorFormats = NELEMENTS(supportedColorFormats);
+ const static int kMaxCores = 4;
+ void *iv_aligned_malloc(void *ctxt, WORD32 alignment, WORD32 size) {
+-  (void)ctxt;
+-  return memalign(alignment, size);
++    (void)ctxt;
++    if (size <= 0) {
++        return NULL; // Return NULL for invalid size
++    }
++    return memalign(alignment, size);
+ }
+ 
+ void iv_aligned_free(void *ctxt, void *buf) {

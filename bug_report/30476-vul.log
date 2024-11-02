@@ -1,0 +1,84 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2239413866
+INFO: Loaded 1 modules   (206247 inline 8-bit counters): 206247 [0x24706d0, 0x24a2c77), 
+INFO: Loaded 1 PC tables (206247 PCs): 206247 [0x24a2c78,0x27c86e8), 
+/out/skruntimeeffect: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: use-after-poison on address 0x631000000978 at pc 0x0000008a759e bp 0x7ffde20a75d0 sp 0x7ffde20a75c8
+READ of size 8 at 0x631000000978 thread T0
+SCARINESS: 33 (8-byte-read-use-after-poison)
+    #0 0x8a759d in std::__1::unique_ptr<SkSL::Expression, std::__1::default_delete<SkSL::Expression> >::get() const /usr/local/bin/../include/c++/v1/memory:1631:19
+    #1 0xa46c2b in SkSL::Variable::initialValue() const /src/skia/out/Fuzz/../../src/sksl/ir/SkSLVariable.cpp:15:49
+    #2 0x8a3ccf in SkSL::ProgramUsage::get(SkSL::Variable const&) const /src/skia/out/Fuzz/../../src/sksl/SkSLAnalysis.cpp:380:36
+    #3 0x8a3e7d in SkSL::ProgramUsage::isDead(SkSL::Variable const&) const /src/skia/out/Fuzz/../../src/sksl/SkSLAnalysis.cpp:390:35
+    #4 0x8d662b in SkSL::is_dead(SkSL::Expression const&, SkSL::ProgramUsage*) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp:562:27
+    #5 0x8d6548 in SkSL::is_dead(SkSL::Expression const&, SkSL::ProgramUsage*) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp
+    #6 0x8bec39 in SkSL::dead_assignment(SkSL::BinaryExpression const&, SkSL::ProgramUsage*) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp:594:12
+    #7 0x8bb749 in SkSL::Compiler::simplifyExpression(SkTHashMap<SkSL::Variable const*, std::__1::unique_ptr<SkSL::Expression, std::__1::default_delete<SkSL::Expression> >*, SkGoodHash>&, SkSL::BasicBlock&, std::__1::__wrap_iter<SkSL::BasicBlock::Node*>*, SkSL::Compiler::OptimizationContext*) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp:889:17
+    #8 0x8c3e59 in SkSL::Compiler::scanCFG(SkSL::FunctionDefinition&, SkSL::ProgramUsage*) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp:1682:27
+    #9 0x8c674c in SkSL::Compiler::optimize(SkSL::Program&) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp:1836:38
+    #10 0x8c59d6 in SkSL::Compiler::convertProgram(SkSL::Program::Kind, SkSL::String, SkSL::Program::Settings const&, std::__1::vector<std::__1::unique_ptr<SkSL::ExternalFunction, std::__1::default_delete<SkSL::ExternalFunction> >, std::__1::allocator<std::__1::unique_ptr<SkSL::ExternalFunction, std::__1::default_delete<SkSL::ExternalFunction> > > > const*) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp:1784:45
+    #11 0x756aeb in SkRuntimeEffect::Make(SkString) /src/skia/out/Fuzz/../../src/core/SkRuntimeEffect.cpp:152:30
+    #12 0x56bc47 in FuzzSkRuntimeEffect_Once(sk_sp<SkData>) /src/skia/out/Fuzz/../../fuzz/oss_fuzz/FuzzSkRuntimeEffect.cpp:39:43
+    #13 0x56b99c in FuzzSkRuntimeEffect(sk_sp<SkData>) /src/skia/out/Fuzz/../../fuzz/oss_fuzz/FuzzSkRuntimeEffect.cpp:68:19
+    #14 0x56c0d1 in LLVMFuzzerTestOneInput /src/skia/out/Fuzz/../../fuzz/oss_fuzz/FuzzSkRuntimeEffect.cpp:83:5
+    #15 0x48c0e1 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #16 0x476042 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #17 0x47c396 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #18 0x4a5542 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #19 0x777c1d1b783f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #20 0x450de8 in _start (/out/skruntimeeffect+0x450de8)
+
+DEDUP_TOKEN: std::__1::unique_ptr<SkSL::Expression, std::__1::default_delete<SkSL::Expression> >::get() const--SkSL::Variable::initialValue() const--SkSL::ProgramUsage::get(SkSL::Variable const&) const
+0x631000000978 is located 376 bytes inside of 65536-byte region [0x631000000800,0x631000010800)
+allocated by thread T0 here:
+    #0 0x568fbd in operator new(unsigned long) /src/llvm-project/compiler-rt/lib/asan/asan_new_delete.cpp:99:3
+    #1 0xaa05f2 in GrMemoryPool::Make(unsigned long, unsigned long) /src/skia/out/Fuzz/../../src/gpu/GrMemoryPool.cpp:29:17
+    #2 0x9e1668 in SkSL::Pool::Create() /src/skia/out/Fuzz/../../src/sksl/SkSLPool.cpp:68:22
+    #3 0x8c5802 in SkSL::Compiler::convertProgram(SkSL::Program::Kind, SkSL::String, SkSL::Program::Settings const&, std::__1::vector<std::__1::unique_ptr<SkSL::ExternalFunction, std::__1::default_delete<SkSL::ExternalFunction> >, std::__1::allocator<std::__1::unique_ptr<SkSL::ExternalFunction, std::__1::default_delete<SkSL::ExternalFunction> > > > const*) /src/skia/out/Fuzz/../../src/sksl/SkSLCompiler.cpp:1765:34
+    #4 0x756aeb in SkRuntimeEffect::Make(SkString) /src/skia/out/Fuzz/../../src/core/SkRuntimeEffect.cpp:152:30
+    #5 0x56bc47 in FuzzSkRuntimeEffect_Once(sk_sp<SkData>) /src/skia/out/Fuzz/../../fuzz/oss_fuzz/FuzzSkRuntimeEffect.cpp:39:43
+    #6 0x56b99c in FuzzSkRuntimeEffect(sk_sp<SkData>) /src/skia/out/Fuzz/../../fuzz/oss_fuzz/FuzzSkRuntimeEffect.cpp:68:19
+    #7 0x56c0d1 in LLVMFuzzerTestOneInput /src/skia/out/Fuzz/../../fuzz/oss_fuzz/FuzzSkRuntimeEffect.cpp:83:5
+    #8 0x48c0e1 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #9 0x476042 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #10 0x47c396 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #11 0x4a5542 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #12 0x777c1d1b783f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: operator new(unsigned long)--GrMemoryPool::Make(unsigned long, unsigned long)--SkSL::Pool::Create()
+SUMMARY: AddressSanitizer: use-after-poison /usr/local/bin/../include/c++/v1/memory:1631:19 in std::__1::unique_ptr<SkSL::Expression, std::__1::default_delete<SkSL::Expression> >::get() const
+Shadow bytes around the buggy address:
+  0x0c627fff80d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c627fff80e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c627fff80f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c627fff8100: 00 00 00 00 00 00 00 04 00 00 00 00 00 00 00 00
+  0x0c627fff8110: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 04
+=>0x0c627fff8120: 00 00 00 00 00 00 00 00 f7 f7 f7 f7 f7 f7 f7[f7]
+  0x0c627fff8130: f7 f7 f7 f7 f7 f7 00 04 00 00 00 00 00 00 00 00
+  0x0c627fff8140: 00 00 00 00 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c627fff8150: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c627fff8160: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+  0x0c627fff8170: f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7 f7
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

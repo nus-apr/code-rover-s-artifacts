@@ -1,0 +1,43 @@
+diff --git a/src/H5Dcompact.c b/src/H5Dcompact.c
+index 4a8fa0d61c..319100856b 100644
+--- a/src/H5Dcompact.c
++++ b/src/H5Dcompact.c
+@@ -330,11 +330,16 @@ H5D__compact_readvv(const H5D_io_info_t *io_info, const H5D_dset_io_info_t *dset
+             HGOTO_ERROR(H5E_IO, H5E_WRITEERROR, FAIL, "vectorized memcpy failed");
+     }
+     else {
+-        /* Use the vectorized memory copy routine to do actual work */
+-        if ((ret_value = H5VM_memcpyvv(dset_info->buf.vp, mem_max_nseq, mem_curr_seq, mem_size_arr,
+-                                       mem_offset_arr, dset_info->store->compact.buf, dset_max_nseq,
+-                                       dset_curr_seq, dset_size_arr, dset_offset_arr)) < 0)
+-            HGOTO_ERROR(H5E_IO, H5E_WRITEERROR, FAIL, "vectorized memcpy failed");
++    /* Validate sequence parameters before calling H5VM_memcpyvv */
++    if (*mem_curr_seq >= mem_max_nseq || *dset_curr_seq >= dset_max_nseq) {
++        HGOTO_ERROR(H5E_IO, H5E_WRITEERROR, FAIL, "invalid sequence parameters");
++    }
++
++    /* Use the vectorized memory copy routine to do actual work */
++    if ((ret_value = H5VM_memcpyvv(dset_info->buf.vp, mem_max_nseq, mem_curr_seq, mem_size_arr,
++                                   mem_offset_arr, dset_info->store->compact.buf, dset_max_nseq,
++                                   dset_curr_seq, dset_size_arr, dset_offset_arr)) < 0)
++        HGOTO_ERROR(H5E_IO, H5E_WRITEERROR, FAIL, "vectorized memcpy failed");
+     }
+ 
+ done:
+diff --git a/src/H5VM.c b/src/H5VM.c
+index 6bdf0792b0..b3c79d07be 100644
+--- a/src/H5VM.c
++++ b/src/H5VM.c
+@@ -1364,6 +1364,12 @@ H5VM_memcpyvv(void *_dst, size_t dst_max_nseq, size_t *dst_curr_seq, size_t dst_
+     tmp_dst_len = *dst_len_ptr;
+     tmp_src_len = *src_len_ptr;
+ 
++    /* Ensure lengths do not exceed remaining sequence lengths */
++    if (tmp_dst_len > (size_t)(max_dst_off_ptr - dst_off_ptr))
++        tmp_dst_len = (size_t)(max_dst_off_ptr - dst_off_ptr);
++    if (tmp_src_len > (size_t)(max_src_off_ptr - src_off_ptr))
++        tmp_src_len = (size_t)(max_src_off_ptr - src_off_ptr);
++
+     /* Compute maximum offset pointer values */
+     max_dst_off_ptr = dst_off_arr + dst_max_nseq;
+     max_src_off_ptr = src_off_arr + src_max_nseq;

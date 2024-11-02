@@ -1,0 +1,13 @@
+diff --git a/ulinks.cpp b/ulinks.cpp
+index ad2d9cc..7b36ce8 100644
+--- a/ulinks.cpp
++++ b/ulinks.cpp
+@@ -63,7 +63,7 @@ bool ExtractUnixLink30(CommandData *Cmd,ComprDataIO &DataIO,Archive &Arc,const w
+     if (!DataIO.UnpHash.Cmp(&Arc.FileHead.FileHash,Arc.FileHead.UseHashKey ? Arc.FileHead.HashKey:NULL))
+       return true;
+ 
+-    wchar TargetW[NM];
++    wchar TargetW[NM] = {0}; // Initialize TargetW to ensure it starts with zeroes.
+     CharToWide(Target,TargetW,ASIZE(TargetW));
+     // Check for *TargetW==0 to catch CharToWide failure.
+     // Use Arc.FileHead.FileName instead of LinkName, since LinkName

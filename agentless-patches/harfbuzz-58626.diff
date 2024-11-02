@@ -1,0 +1,18 @@
+diff --git a/harfbuzz/src/OT/Layout/GDEF/GDEF.hh b/harfbuzz/src/OT/Layout/GDEF/GDEF.hh
+index 159a364..43ea068 100644
+--- a/harfbuzz/src/OT/Layout/GDEF/GDEF.hh
++++ b/harfbuzz/src/OT/Layout/GDEF/GDEF.hh
+@@ -868,9 +868,10 @@ struct GDEF
+       if (glyph_props_cache.get (glyph, &v))
+         return v;
+ 
+-      v = table->get_glyph_props (glyph);
+-      if (likely (table)) // Don't try setting if we are the null instance!
+-	glyph_props_cache.set (glyph, v);
++      if (likely (table)) { // Don't try setting if we are the null instance!
++        v = table->get_glyph_props (glyph);
++        glyph_props_cache.set (glyph, v);
++      }
+ 
+       return v;
+     }

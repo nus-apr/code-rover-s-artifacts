@@ -1,0 +1,13 @@
+diff --git a/libavcodec/hevc_refs.c b/libavcodec/hevc_refs.c
+index fc1385c..d90341d 100644
+--- a/libavcodec/hevc_refs.c
++++ b/libavcodec/hevc_refs.c
+@@ -448,7 +448,7 @@ static int add_candidate_ref(HEVCContext *s, RefPicList *list,
+             return AVERROR(ENOMEM);
+     }
+ 
+-    list->list[list->nb_refs] = ref->poc;
++ < 0 ) { av_log ( s -> avctx, AV_LOG_ERROR, "Error constructing the frame RPS.\n" ) ; goto fail ; } 
+     list->ref[list->nb_refs]  = ref;
+     list->nb_refs++;
+ 

@@ -1,0 +1,25 @@
+diff --git a/src/H5Ochunk.c b/src/H5Ochunk.c
+index c37a2a6fe9..3a9a143a30 100644
+--- a/src/H5Ochunk.c
++++ b/src/H5Ochunk.c
+@@ -91,6 +91,9 @@ H5O__chunk_add(H5F_t *f, H5O_t *oh, unsigned idx, unsigned cont_chunkno)
+     HDassert(f);
+     HDassert(oh);
+     HDassert(idx < oh->nchunks);
++    if (idx >= oh->nchunks || oh->chunk == NULL) {
++        HGOTO_ERROR(H5E_OHDR, H5E_BADVALUE, NULL, "chunk index out of bounds or chunk array is NULL");
++    }
+     HDassert(idx > 0);
+ 
+     /* Allocate space for the object header data structure */
+@@ -182,6 +185,10 @@ H5O__chunk_protect(H5F_t *f, H5O_t *oh, unsigned idx)
+         HDmemset(&chk_udata, 0, sizeof(chk_udata));
+         chk_udata.oh      = oh;
+         chk_udata.chunkno = idx;
++        /* Ensure idx is within bounds before accessing oh->chunk */
++        if (idx >= oh->nchunks) {
++            HGOTO_ERROR(H5E_OHDR, H5E_BADVALUE, NULL, "chunk index out of bounds");
++        }
+         chk_udata.size    = oh->chunk[idx].size;
+ 
+         /* Get the chunk proxy */

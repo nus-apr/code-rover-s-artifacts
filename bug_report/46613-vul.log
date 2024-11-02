@@ -1,0 +1,86 @@
+INFO: found LLVMFuzzerCustomMutator (0x83c960). Disabling -len_control by default.
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2201739728
+INFO: Loaded 1 modules   (101293 inline 8-bit counters): 101293 [0x1965f20, 0x197eacd), 
+INFO: Loaded 1 PC tables (101293 PCs): 101293 [0x197ead0,0x1b0a5a0), 
+/out/cryptofuzz-sp-math-all: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x61900029cba8 at pc 0x0000005569e7 bp 0x7ffd6de8c5a0 sp 0x7ffd6de8bd68
+READ of size 1056 at 0x61900029cba8 thread T0
+SCARINESS: 26 (multi-byte-read-heap-buffer-overflow)
+    #0 0x5569e6 in __asan_memcpy /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3
+    #1 0x9f1b92 in sp_copy /src/wolfssl-sp-math-all/wolfcrypt/src/sp_int.c:2381:9
+    #2 0x8d5b02 in cryptofuzz::module::wolfCrypt_bignum::Bignum::read_radix(sp_int*, char const*, unsigned long) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:41:10
+    #3 0x8d5a2a in cryptofuzz::module::wolfCrypt_bignum::Bignum::read_radix(sp_int*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned long) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:17:12
+    #4 0x8d67fd in cryptofuzz::module::wolfCrypt_bignum::Bignum::Set(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:165:9
+    #5 0x8d6a2b in cryptofuzz::module::wolfCrypt_bignum::Bignum::Set(cryptofuzz::Bignum) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:176:5
+    #6 0x8d7e07 in cryptofuzz::module::wolfCrypt_bignum::Bignum::ToBin(fuzzing::datasource::Datasource&, cryptofuzz::Bignum, std::__1::optional<unsigned long>) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:321:5
+    #7 0x8a011b in cryptofuzz::module::wolfCrypt::OpDH_Derive(cryptofuzz::operation::DH_Derive&) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/module.cpp:3152:5
+    #8 0x680e0d in cryptofuzz::ExecutorBase<cryptofuzz::Bignum, cryptofuzz::operation::DH_Derive>::callModule(std::__1::shared_ptr<cryptofuzz::Module>, cryptofuzz::operation::DH_Derive&) const /src/cryptofuzz-sp-math-all/executor.cpp:731:20
+    #9 0x61a4b5 in cryptofuzz::ExecutorBase<cryptofuzz::Bignum, cryptofuzz::operation::DH_Derive>::Run(fuzzing::datasource::Datasource&, unsigned char const*, unsigned long) const /src/cryptofuzz-sp-math-all/executor.cpp:1668:47
+    #10 0x58c36c in cryptofuzz::Driver::Run(unsigned char const*, unsigned long) const /src/cryptofuzz-sp-math-all/driver.cpp:191:35
+    #11 0x77f31c in LLVMFuzzerTestOneInput /src/cryptofuzz-sp-math-all/entry.cpp:491:13
+    #12 0x48d2d3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #13 0x478842 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #14 0x47e57e in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #15 0x4a8182 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #16 0x70a17d89f83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #17 0x453858 in _start (/out/cryptofuzz-sp-math-all+0x453858)
+
+DEDUP_TOKEN: __asan_memcpy--sp_copy--cryptofuzz::module::wolfCrypt_bignum::Bignum::read_radix(sp_int*, char const*, unsigned long)
+0x61900029cba8 is located 0 bytes to the right of 1064-byte region [0x61900029c780,0x61900029cba8)
+allocated by thread T0 here:
+    #0 0x55762d in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:145:3
+    #1 0x7510ae in cryptofuzz::util::malloc(unsigned long) /src/cryptofuzz-sp-math-all/util.cpp:454:46
+    #2 0x8d5a68 in cryptofuzz::module::wolfCrypt_bignum::Bignum::read_radix(sp_int*, char const*, unsigned long) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:28:27
+    #3 0x8d5a2a in cryptofuzz::module::wolfCrypt_bignum::Bignum::read_radix(sp_int*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned long) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:17:12
+    #4 0x8d67fd in cryptofuzz::module::wolfCrypt_bignum::Bignum::Set(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:165:9
+    #5 0x8d6a2b in cryptofuzz::module::wolfCrypt_bignum::Bignum::Set(cryptofuzz::Bignum) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:176:5
+    #6 0x8d7e07 in cryptofuzz::module::wolfCrypt_bignum::Bignum::ToBin(fuzzing::datasource::Datasource&, cryptofuzz::Bignum, std::__1::optional<unsigned long>) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/bn_helper.cpp:321:5
+    #7 0x8a011b in cryptofuzz::module::wolfCrypt::OpDH_Derive(cryptofuzz::operation::DH_Derive&) /src/cryptofuzz-sp-math-all/modules/wolfcrypt/module.cpp:3152:5
+    #8 0x680e0d in cryptofuzz::ExecutorBase<cryptofuzz::Bignum, cryptofuzz::operation::DH_Derive>::callModule(std::__1::shared_ptr<cryptofuzz::Module>, cryptofuzz::operation::DH_Derive&) const /src/cryptofuzz-sp-math-all/executor.cpp:731:20
+    #9 0x61a4b5 in cryptofuzz::ExecutorBase<cryptofuzz::Bignum, cryptofuzz::operation::DH_Derive>::Run(fuzzing::datasource::Datasource&, unsigned char const*, unsigned long) const /src/cryptofuzz-sp-math-all/executor.cpp:1668:47
+    #10 0x58c36c in cryptofuzz::Driver::Run(unsigned char const*, unsigned long) const /src/cryptofuzz-sp-math-all/driver.cpp:191:35
+    #11 0x77f31c in LLVMFuzzerTestOneInput /src/cryptofuzz-sp-math-all/entry.cpp:491:13
+    #12 0x48d2d3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:599:15
+    #13 0x478842 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:323:6
+    #14 0x47e57e in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:856:9
+    #15 0x4a8182 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #16 0x70a17d89f83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+
+DEDUP_TOKEN: malloc--cryptofuzz::util::malloc(unsigned long)--cryptofuzz::module::wolfCrypt_bignum::Bignum::read_radix(sp_int*, char const*, unsigned long)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/llvm-project/compiler-rt/lib/asan/asan_interceptors_memintrinsics.cpp:22:3 in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x0c328004b920: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c328004b930: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c328004b940: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c328004b950: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c328004b960: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c328004b970: 00 00 00 00 00[fa]fa fa fa fa fa fa fa fa fa fa
+  0x0c328004b980: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c328004b990: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c328004b9a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c328004b9b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c328004b9c0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

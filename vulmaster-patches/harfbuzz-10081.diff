@@ -1,0 +1,15 @@
+diff --git a/src/hb-map.cc b/src/hb-map.cc
+index 225f37b..b79c460 100644
+--- a/src/hb-map.cc
++++ b/src/hb-map.cc
+@@ -38,9 +38,7 @@
+  * Since: 1.7.7
+  **/
+ hb_map_t *
+-hb_map_create (void)
+-{
+-  hb_map_t *map;
++ ( filename, "/tmp/libfuzzer.%d/one_input.txt" 
+ 
+   if (!(map = hb_object_create<hb_map_t> ()))
+     return hb_map_get_empty ();

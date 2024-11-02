@@ -1,0 +1,62 @@
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x768ee27801c1 at pc 0x0000008601ee bp 0x7ffe72114b30 sp 0x7ffe72114b28
+READ of size 1 at 0x768ee27801c1 thread T0
+SCARINESS: 37 (1-byte-read-stack-buffer-overflow-far-from-bounds)
+    #0 0x8601ed in authentic_get_tagged_data /src/opensc/src/libopensc/card-authentic.c:188:8
+    #1 0x86d17a in authentic_parse_credential_data /src/opensc/src/libopensc/card-authentic.c:288:7
+    #2 0x8671b2 in authentic_pin_get_policy /src/opensc/src/libopensc/card-authentic.c:1519:7
+    #3 0x846a52 in authentic_pin_cmd /src/opensc/src/libopensc/card-authentic.c:1648:8
+    #4 0xbcd548 in sc_pin_cmd /src/opensc/src/libopensc/sec.c:212:7
+    #5 0xa563dc in sc_pkcs15emu_din_66291_init /src/opensc/src/libopensc/pkcs15-din-66291.c:69:23
+    #6 0xa55716 in sc_pkcs15emu_din_66291_init_ex /src/opensc/src/libopensc/pkcs15-din-66291.c:244:23
+    #7 0x58447f in sc_pkcs15_bind_synthetic /src/opensc/src/libopensc/pkcs15-syn.c:133:8
+    #8 0x521bc0 in sc_pkcs15_bind /src/opensc/src/libopensc/pkcs15.c:1290:8
+    #9 0x4d70b0 in LLVMFuzzerTestOneInput /src/opensc/src/tests/fuzzing/fuzz_pkcs15_encode.c:47:2
+    #10 0x4da135 in ExecuteFilesOnyByOne /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c:191:7
+    #11 0x4d9fa5 in main /src/aflplusplus/utils/aflpp_driver/aflpp_driver.c
+    #12 0x768ee33ce082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #13 0x41fe2d in _start (/out/fuzz_pkcs15_encode+0x41fe2d)
+
+DEDUP_TOKEN: authentic_get_tagged_data--authentic_parse_credential_data--authentic_pin_get_policy
+Address 0x768ee27801c1 is located in stack of thread T0 at offset 449 in frame
+    #0 0x8665ef in authentic_pin_get_policy /src/opensc/src/libopensc/card-authentic.c:1491
+
+DEDUP_TOKEN: authentic_pin_get_policy
+  This frame has 2 object(s):
+    [32, 136) 'apdu' (line 1493)
+    [176, 432) 'rbuf' (line 1494) <== Memory access at offset 449 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/opensc/src/libopensc/card-authentic.c:188:8 in authentic_get_tagged_data
+Shadow bytes around the buggy address:
+  0x0ed25c4e7fe0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0ed25c4e7ff0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0ed25c4e8000: f1 f1 f1 f1 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0ed25c4e8010: 00 f2 f2 f2 f2 f2 00 00 00 00 00 00 00 00 00 00
+  0x0ed25c4e8020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0ed25c4e8030: 00 00 00 00 00 00 f3 f3[f3]f3 f3 f3 f3 f3 f3 f3
+  0x0ed25c4e8040: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0ed25c4e8050: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0ed25c4e8060: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0ed25c4e8070: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0ed25c4e8080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

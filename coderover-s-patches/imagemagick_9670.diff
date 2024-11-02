@@ -1,0 +1,26 @@
+diff --git a/libde265/decctx.h b/libde265/decctx.h
+index c1acdcef..86018a55 100644
+--- a/libde265/decctx.h
++++ b/libde265/decctx.h
+@@ -298,7 +298,7 @@ class decoder_context : public base_context {
+ 
+   void reset();
+ 
+-  bool has_sps(int id) const { return (bool)sps[id]; }
++  bool has_sps(int id) const { return id >= 0 && id < 16 && (bool)sps[id]; }
+   bool has_pps(int id) const { return (bool)pps[id]; }
+ 
+   std::shared_ptr<const seq_parameter_set> get_shared_sps(int id) { return sps[id]; }
+diff --git a/libde265/pps.cc b/libde265/pps.cc
+index 4f05484f..fac197e6 100644
+--- a/libde265/pps.cc
++++ b/libde265/pps.cc
+@@ -307,7 +307,7 @@ bool pic_parameter_set::read(bitreader* br, decoder_context* ctx)
+   num_ref_idx_l1_default_active++;
+ 
+ 
+-  if (!ctx->has_sps(seq_parameter_set_id)) {
++  if (seq_parameter_set_id < 0 || seq_parameter_set_id >= 16 || !ctx->has_sps(seq_parameter_set_id)) {
+     ctx->add_warning(DE265_WARNING_NONEXISTING_SPS_REFERENCED, false);
+     return false;
+   }

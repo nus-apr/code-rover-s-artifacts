@@ -1,0 +1,43 @@
+diff --git a/src/libopensc/card-piv.c b/src/libopensc/card-piv.c
+index 6e5e1166..ecc77052 100644
+--- a/src/libopensc/card-piv.c
++++ b/src/libopensc/card-piv.c
+@@ -1061,14 +1061,14 @@ piv_cache_internal_data(sc_card_t *card, int enumtag)
+ 		tag = sc_asn1_find_tag(card->ctx, body, bodylen, 0x71, &taglen);
+ 		/* 800-72-1 not clear if this is 80 or 01 Sent comment to NIST for 800-72-2 */
+ 		/* 800-73-3 says it is 01, keep dual test so old cards still work */
+-		if (tag && (((*tag) & 0x80) || ((*tag) & 0x01)))
++		if (tag && taglen > 0 && (((*tag) & 0x80) || ((*tag) & 0x01)))
+ 			compressed = 1;
+ 
+ 		tag = sc_asn1_find_tag(card->ctx, body, bodylen, 0x70, &taglen);
+-		if (tag == NULL)
++		if (tag == NULL || taglen > bodylen)
+ 			LOG_FUNC_RETURN(card->ctx, SC_ERROR_OBJECT_NOT_VALID);
+ 
+-		if (taglen == 0)
++		if (taglen == 0 || taglen > bodylen)
+ 			LOG_FUNC_RETURN(card->ctx, SC_ERROR_FILE_NOT_FOUND);
+ 
+ 		if(compressed) {
+@@ -1087,11 +1087,16 @@ piv_cache_internal_data(sc_card_t *card, int enumtag)
+ #endif
+ 		}
+ 		else {
+-			if (!(priv->obj_cache[enumtag].internal_obj_data = malloc(taglen)))
+-				LOG_FUNC_RETURN(card->ctx, SC_ERROR_OUT_OF_MEMORY);
++			if (taglen > 0 && taglen <= bodylen) {
++				priv->obj_cache[enumtag].internal_obj_data = malloc(taglen);
++				if (priv->obj_cache[enumtag].internal_obj_data == NULL)
++					LOG_FUNC_RETURN(card->ctx, SC_ERROR_OUT_OF_MEMORY);
+ 
+-			memcpy(priv->obj_cache[enumtag].internal_obj_data, tag, taglen);
+-			priv->obj_cache[enumtag].internal_obj_len = taglen;
++				memcpy(priv->obj_cache[enumtag].internal_obj_data, tag, taglen);
++				priv->obj_cache[enumtag].internal_obj_len = taglen;
++			} else {
++				LOG_FUNC_RETURN(card->ctx, SC_ERROR_OBJECT_NOT_VALID);
++			}
+ 		}
+ 
+ 	/* convert pub key to internal */

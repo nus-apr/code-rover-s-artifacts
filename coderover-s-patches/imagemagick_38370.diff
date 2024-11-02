@@ -1,0 +1,222 @@
+diff --git a/coders/bytebuffer-private.h b/coders/bytebuffer-private.h
+index fe5f00cc6..d1651589c 100644
+--- a/coders/bytebuffer-private.h
++++ b/coders/bytebuffer-private.h
+@@ -57,7 +57,8 @@ static inline int ReadMagickByteBuffer(MagickByteBuffer *buffer)
+     result;
+ 
+   result=PeekMagickByteBuffer(buffer);
+-  buffer->offset++;
++  if (buffer->offset < (ssize_t) sizeof(buffer->data) - 1)
++    buffer->offset++;
+   return(result);
+ }
+ 
+diff --git a/coders/pdf.c b/coders/pdf.c
+index f381051da..a0d5773b2 100644
+--- a/coders/pdf.c
++++ b/coders/pdf.c
+@@ -235,23 +235,25 @@ static void ReadPDFInfo(const ImageInfo *image_info,Image *image,
+   buffer.image=image;
+   for (c=ReadMagickByteBuffer(&buffer); c != EOF; c=ReadMagickByteBuffer(&buffer))
+   {
++    if (buffer.offset >= buffer.count)
++      break;
+     switch(c)
+     {
+       case '%':
+       {
+         if (*version == '\0')
++        {
++          i=0;
++          for (c=ReadMagickByteBuffer(&buffer); c != EOF; c=ReadMagickByteBuffer(&buffer))
+           {
+-            i=0;
+-            for (c=ReadMagickByteBuffer(&buffer); c != EOF; c=ReadMagickByteBuffer(&buffer))
+-            {
+-              if ((c == '\r') || (c == '\n') || ((i+1) == MagickPathExtent))
+-                break;
+-              version[i++]=(char) c;
+-            }
+-            version[i]='\0';
+-            if (c == EOF)
++            if (buffer.offset >= buffer.count || (c == '\r') || (c == '\n') || ((i+1) == MagickPathExtent))
+               break;
++            version[i++]=(char) c;
+           }
++          version[i]='\0';
++          if (c == EOF)
++            break;
++        }
+         continue;
+       }
+       case '<':
+@@ -267,95 +269,95 @@ static void ReadPDFInfo(const ImageInfo *image_info,Image *image,
+     if (c == EOF)
+       break;
+     if (CompareMagickByteBuffer(&buffer,PDFRotate,strlen(PDFRotate)) != MagickFalse)
+-      {
+-        p=GetMagickByteBufferDatum(&buffer);
+-        (void) sscanf(p,PDFRotate" %lf",&pdf_info->angle);
+-      }
++    {
++      p=GetMagickByteBufferDatum(&buffer);
++      (void) sscanf(p,PDFRotate" %lf",&pdf_info->angle);
++    }
+     if (pdf_info->cmyk == MagickFalse)
++    {
++      if ((CompareMagickByteBuffer(&buffer,DefaultCMYK,strlen(DefaultCMYK)) != MagickFalse) ||
++          (CompareMagickByteBuffer(&buffer,DeviceCMYK,strlen(DeviceCMYK)) != MagickFalse) ||
++          (CompareMagickByteBuffer(&buffer,CMYKProcessColor,strlen(CMYKProcessColor)) != MagickFalse))
+       {
+-        if ((CompareMagickByteBuffer(&buffer,DefaultCMYK,strlen(DefaultCMYK)) != MagickFalse) ||
+-            (CompareMagickByteBuffer(&buffer,DeviceCMYK,strlen(DeviceCMYK)) != MagickFalse) ||
+-            (CompareMagickByteBuffer(&buffer,CMYKProcessColor,strlen(CMYKProcessColor)) != MagickFalse))
+-          {
+-            pdf_info->cmyk=MagickTrue;
+-            continue;
+-          }
++        pdf_info->cmyk=MagickTrue;
++        continue;
+       }
++    }
+     if (CompareMagickByteBuffer(&buffer,SpotColor,strlen(SpotColor)) != MagickFalse)
+-      {
+-        char
+-          name[MagickPathExtent],
+-          property[MagickPathExtent],
+-          *value;
++    {
++      char
++        name[MagickPathExtent],
++        property[MagickPathExtent],
++        *value;
+ 
+-        /*
+-          Note spot names.
+-        */
+-        (void) FormatLocaleString(property,MagickPathExtent,
+-          "pdf:SpotColor-%.20g",(double) spotcolor++);
+-        i=0;
+-        SkipMagickByteBuffer(&buffer,strlen(SpotColor)+1);
+-        for (c=ReadMagickByteBuffer(&buffer); c != EOF; c=ReadMagickByteBuffer(&buffer))
+-        {
+-          if ((isspace((int) ((unsigned char) c)) != 0) || (c == '/') || ((i+1) == MagickPathExtent))
+-            break;
+-          name[i++]=(char) c;
+-        }
+-        name[i]='\0';
+-        value=ConstantString(name);
+-        (void) SubstituteString(&value,"#20"," ");
+-        if (*value != '\0')
+-          (void) SetImageProperty(image,property,value,exception);
+-        value=DestroyString(value);
+-        continue;
++      /*
++        Note spot names.
++      */
++      (void) FormatLocaleString(property,MagickPathExtent,
++        "pdf:SpotColor-%.20g",(double) spotcolor++);
++      i=0;
++      SkipMagickByteBuffer(&buffer,strlen(SpotColor)+1);
++      for (c=ReadMagickByteBuffer(&buffer); c != EOF; c=ReadMagickByteBuffer(&buffer))
++      {
++        if (buffer.offset >= buffer.count || (isspace((int) ((unsigned char) c)) != 0) || (c == '/') || ((i+1) == MagickPathExtent))
++          break;
++        name[i++]=(char) c;
+       }
++      name[i]='\0';
++      value=ConstantString(name);
++      (void) SubstituteString(&value,"#20"," ");
++      if (*value != '\0')
++        (void) SetImageProperty(image,property,value,exception);
++      value=DestroyString(value);
++      continue;
++    }
+     if (image_info->page != (char *) NULL)
+       continue;
+     count=0;
+     if (pdf_info->cropbox != MagickFalse)
++    {
++      if (CompareMagickByteBuffer(&buffer,CropBox,strlen(CropBox)) != MagickFalse)
+       {
+-        if (CompareMagickByteBuffer(&buffer,CropBox,strlen(CropBox)) != MagickFalse)
+-          {
+-            /*
+-              Note region defined by crop box.
+-            */
+-            p=GetMagickByteBufferDatum(&buffer);
+-            count=(ssize_t) sscanf(p,"CropBox [%lf %lf %lf %lf",&bounds.x1,
+-              &bounds.y1,&bounds.x2,&bounds.y2);
+-            if (count != 4)
+-              count=(ssize_t) sscanf(p,"CropBox[%lf %lf %lf %lf",&bounds.x1,
+-                &bounds.y1,&bounds.x2,&bounds.y2);
+-          }
++        /*
++          Note region defined by crop box.
++        */
++        p=GetMagickByteBufferDatum(&buffer);
++        count=(ssize_t) sscanf(p,"CropBox [%lf %lf %lf %lf",&bounds.x1,
++          &bounds.y1,&bounds.x2,&bounds.y2);
++        if (count != 4)
++          count=(ssize_t) sscanf(p,"CropBox[%lf %lf %lf %lf",&bounds.x1,
++            &bounds.y1,&bounds.x2,&bounds.y2);
+       }
++    }
+     else
+       if (pdf_info->trimbox != MagickFalse)
++      {
++        if (CompareMagickByteBuffer(&buffer,TrimBox,strlen(TrimBox)) != MagickFalse)
+         {
+-          if (CompareMagickByteBuffer(&buffer,TrimBox,strlen(TrimBox)) != MagickFalse)
+-            {
+-              /*
+-                Note region defined by trim box.
+-              */
+-              p=GetMagickByteBufferDatum(&buffer);
+-              count=(ssize_t) sscanf(p,"TrimBox [%lf %lf %lf %lf",&bounds.x1,
+-                &bounds.y1,&bounds.x2,&bounds.y2);
+-              if (count != 4)
+-                count=(ssize_t) sscanf(p,"TrimBox[%lf %lf %lf %lf",&bounds.x1,
+-                  &bounds.y1,&bounds.x2,&bounds.y2);
+-            }
+-        }
+-      else
+-        if (CompareMagickByteBuffer(&buffer,MediaBox,strlen(MediaBox)) != MagickFalse)
+-          {
+-            /*
+-              Note region defined by media box.
+-            */
+-            p=GetMagickByteBufferDatum(&buffer);
+-            count=(ssize_t) sscanf(p,"MediaBox [%lf %lf %lf %lf",&bounds.x1,
++          /*
++            Note region defined by trim box.
++          */
++          p=GetMagickByteBufferDatum(&buffer);
++          count=(ssize_t) sscanf(p,"TrimBox [%lf %lf %lf %lf",&bounds.x1,
++            &bounds.y1,&bounds.x2,&bounds.y2);
++          if (count != 4)
++            count=(ssize_t) sscanf(p,"TrimBox[%lf %lf %lf %lf",&bounds.x1,
+               &bounds.y1,&bounds.x2,&bounds.y2);
+-            if (count != 4)
+-              count=(ssize_t) sscanf(p,"MediaBox[%lf %lf %lf %lf",&bounds.x1,
+-                &bounds.y1,&bounds.x2,&bounds.y2);
+-          }
++        }
++      }
++    else
++      if (CompareMagickByteBuffer(&buffer,MediaBox,strlen(MediaBox)) != MagickFalse)
++      {
++        /*
++          Note region defined by media box.
++        */
++        p=GetMagickByteBufferDatum(&buffer);
++        count=(ssize_t) sscanf(p,"MediaBox [%lf %lf %lf %lf",&bounds.x1,
++          &bounds.y1,&bounds.x2,&bounds.y2);
++        if (count != 4)
++          count=(ssize_t) sscanf(p,"MediaBox[%lf %lf %lf %lf",&bounds.x1,
++            &bounds.y1,&bounds.x2,&bounds.y2);
++      }
+     if (count != 4)
+       continue;
+     if ((fabs(bounds.x2-bounds.x1) <= fabs(pdf_info->bounds.x2-pdf_info->bounds.x1)) ||

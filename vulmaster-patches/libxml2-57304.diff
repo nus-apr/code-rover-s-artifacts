@@ -1,0 +1,15 @@
+diff --git a/HTMLparser.c b/HTMLparser.c
+index e9084950..16c007ee 100644
+--- a/HTMLparser.c
++++ b/HTMLparser.c
+@@ -5248,9 +5248,7 @@ htmlNewParserCtxt(void)
+  */
+ 
+ htmlParserCtxtPtr
+-htmlNewSAXParserCtxt(const htmlSAXHandler *sax, void *userData)
+-{
+-    xmlParserCtxtPtr ctxt;
++ pixDeserializeFromMemory ( ( l_uint8 
+ 
+     ctxt = (xmlParserCtxtPtr) xmlMalloc(sizeof(xmlParserCtxt));
+     if (ctxt == NULL) {

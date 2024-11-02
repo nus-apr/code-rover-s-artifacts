@@ -1,0 +1,46 @@
+diff --git a/code/AssetLib/Obj/ObjFileImporter.cpp b/code/AssetLib/Obj/ObjFileImporter.cpp
+index b6e1f9061..8a741a22d 100644
+--- a/code/AssetLib/Obj/ObjFileImporter.cpp
++++ b/code/AssetLib/Obj/ObjFileImporter.cpp
+@@ -463,7 +463,7 @@ void ObjFileImporter::createVertexArray(const ObjFile::Model *pModel,
+             }
+ 
+             // Copy all vertex colors
+-            if (!pModel->m_VertexColors.empty()) {
++            if (!pModel->m_VertexColors.empty() && vertex < pModel->m_VertexColors.size()) {
+                 const aiVector3D &color = pModel->m_VertexColors[vertex];
+                 pMesh->mColors[0][newIndex] = aiColor4D(color.x, color.y, color.z, 1.0);
+             }
+diff --git a/code/AssetLib/Obj/ObjFileParser.cpp b/code/AssetLib/Obj/ObjFileParser.cpp
+index a8039ae23..d4cddefbe 100644
+--- a/code/AssetLib/Obj/ObjFileParser.cpp
++++ b/code/AssetLib/Obj/ObjFileParser.cpp
+@@ -176,7 +176,9 @@ void ObjFileParser::parseFile(IOStreamBuffer<char> &streamBuffer) {
+         {
+             std::string name;
+ 
+-            getNameNoSpace(m_DataIt, m_DataItEnd, name);
++            if (m_DataIt != m_DataItEnd) {
++                getNameNoSpace(m_DataIt, m_DataItEnd, name);
++            }
+ 
+             size_t nextSpace = name.find(' ');
+             if (nextSpace != std::string::npos)
+diff --git a/code/AssetLib/Obj/ObjTools.h b/code/AssetLib/Obj/ObjTools.h
+index 16bcee5c4..55a71b7fd 100644
+--- a/code/AssetLib/Obj/ObjTools.h
++++ b/code/AssetLib/Obj/ObjTools.h
+@@ -173,11 +173,11 @@ inline char_t getNameNoSpace(char_t it, char_t end, std::string &name) {
+     }
+ 
+     char *pStart = &(*it);
+-    while (!isEndOfBuffer(it, end) && !IsLineEnd(*it) && !IsSpaceOrNewLine(*it)) {
++    while (it != end && !isEndOfBuffer(it, end) && !IsLineEnd(*it) && !IsSpaceOrNewLine(*it)) {
+         ++it;
+     }
+ 
+-    while (isEndOfBuffer(it, end) || IsLineEnd(*it) || IsSpaceOrNewLine(*it)) {
++    while (it != end && (isEndOfBuffer(it, end) || IsLineEnd(*it) || IsSpaceOrNewLine(*it))) {
+         --it;
+     }
+     ++it;

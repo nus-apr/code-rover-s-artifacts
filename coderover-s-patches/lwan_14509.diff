@@ -1,0 +1,22 @@
+diff --git a/src/lib/lwan-request.c b/src/lib/lwan-request.c
+index 68932143..a6d99ba5 100644
+--- a/src/lib/lwan-request.c
++++ b/src/lib/lwan-request.c
+@@ -146,6 +146,8 @@ strsep_char(char *strp, char delim)
+         return NULL;
+ 
+     ptr = strchr(strp, delim);
++    if (UNLIKELY(!ptr || ptr == strp))
++        return NULL;
+     if (UNLIKELY(!ptr))
+         return NULL;
+ 
+@@ -166,6 +168,8 @@ parse_proxy_protocol_v1(struct lwan_request *request, char *buffer)
+         return NULL;
+     *end = '\0';
+     size = (unsigned int) (end + 2 - buffer);
++    if (size > line_size)
++        return NULL;
+ 
+     protocol = buffer + sizeof("PROXY ") - 1;
+     src_addr = strsep_char(protocol, ' ');

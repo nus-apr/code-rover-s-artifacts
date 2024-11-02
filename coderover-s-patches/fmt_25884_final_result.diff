@@ -1,0 +1,15 @@
+diff --git a/include/fmt/core.h b/include/fmt/core.h
+index caef2335..9594ec70 100644
+--- a/include/fmt/core.h
++++ b/include/fmt/core.h
+@@ -725,7 +725,9 @@ template <typename T> class buffer {
+   }
+ 
+   void push_back(const T& value) {
+-    try_reserve(size_ + 1);
++    if (size_ + 1 > capacity_) {
++      try_reserve(size_ + 1);
++    }
+     ptr_[size_++] = value;
+   }
+ 

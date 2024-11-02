@@ -1,0 +1,24 @@
+diff --git a/src/libopensc/card-idprime.c b/src/libopensc/card-idprime.c
+index e805da15..39eec3ba 100644
+--- a/src/libopensc/card-idprime.c
++++ b/src/libopensc/card-idprime.c
+@@ -449,6 +449,7 @@ static int idprime_get_token_name(sc_card_t* card, char** tname)
+ 	r = iso_ops->read_binary(card, 2, (unsigned char *)*tname, buf[1], 0);
+ 	if (r < 1) {
+ 		free(*tname);
++		*tname = NULL;
+ 		LOG_FUNC_RETURN(card->ctx, r);
+ 	}
+ 
+diff --git a/src/libopensc/pkcs15.c b/src/libopensc/pkcs15.c
+index c58c34fd..974b9c74 100644
+--- a/src/libopensc/pkcs15.c
++++ b/src/libopensc/pkcs15.c
+@@ -751,6 +751,7 @@ sc_pkcs15_free_tokeninfo(struct sc_pkcs15_tokeninfo *tokeninfo)
+ 		free(tokeninfo->seInfo);
+ 	}
+ 	free(tokeninfo);
++	tokeninfo = NULL;
+ }
+ 
+ 

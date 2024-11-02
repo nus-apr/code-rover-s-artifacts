@@ -1,0 +1,15 @@
+diff --git a/htslib/cram/cram_io.c b/htslib/cram/cram_io.c
+index 1169992..2deb258 100644
+--- a/htslib/cram/cram_io.c
++++ b/htslib/cram/cram_io.c
+@@ -786,6 +786,10 @@ static int64_t sint7_get_32(char **cp, const char *endp, int *err) {
+ 
+ static int64_t uint7_get_64(char **cp, const char *endp, int *err) {
+     uint64_t val;
++    if ((const uint8_t *)(*cp) >= (const uint8_t *)endp) {
++        if (err) *err = 1;
++        return 0;
++    }
+     int nb = var_get_u64((uint8_t *)(*cp), (const uint8_t *)endp, &val);
+     (*cp) += nb;
+     if (!nb && err) *err = 1;

@@ -1,0 +1,45 @@
+diff --git a/lib/jxl/dec_modular.cc b/lib/jxl/dec_modular.cc
+index 8ca1fac2..0c560c1c 100644
+--- a/lib/jxl/dec_modular.cc
++++ b/lib/jxl/dec_modular.cc
+@@ -629,6 +629,12 @@ Status ModularFrameDecoder::DecodeQuantTable(
+     size_t required_size_x, size_t required_size_y, BitReader* br,
+     QuantEncoding* encoding, size_t idx,
+     ModularFrameDecoder* modular_frame_decoder) {
++  if (!br || !encoding) {
++    return JXL_FAILURE("Null pointer received");
++  }
++  if (required_size_x == 0 || required_size_y == 0) {
++    return JXL_FAILURE("Invalid quantization table size");
++  }
+   JXL_RETURN_IF_ERROR(F16Coder::Read(br, &encoding->qraw.qtable_den));
+   if (encoding->qraw.qtable_den < kAlmostZero) {
+     // qtable[] values are already checked for <= 0 so the denominator may not
+diff --git a/lib/jxl/quant_weights.cc b/lib/jxl/quant_weights.cc
+index 399a559a..f19c391a 100644
+--- a/lib/jxl/quant_weights.cc
++++ b/lib/jxl/quant_weights.cc
+@@ -136,14 +136,20 @@ Status GetQuantWeights(
+ }
+ 
+ Status DecodeDctParams(BitReader* br, DctQuantWeightParams* params) {
++  if (!br || !params) {
++    return JXL_FAILURE("Null pointer received");
++  }
+   params->num_distance_bands =
+       br->ReadFixedBits<DctQuantWeightParams::kLog2MaxDistanceBands>() + 1;
++  if (params->num_distance_bands > DctQuantWeightParams::kMaxDistanceBands) {
++    return JXL_FAILURE("Number of distance bands exceeds maximum allowed");
++  }
+   for (size_t c = 0; c < 3; c++) {
+     for (size_t i = 0; i < params->num_distance_bands; i++) {
+       JXL_RETURN_IF_ERROR(F16Coder::Read(br, &params->distance_bands[c][i]));
+-    }
+-    if (params->distance_bands[c][0] < kAlmostZero) {
+-      return JXL_FAILURE("Distance band seed is too small");
++      if (params->distance_bands[c][i] < kAlmostZero) {
++        return JXL_FAILURE("Distance band value is too small");
++      }
+     }
+     params->distance_bands[c][0] *= 64.0f;
+   }

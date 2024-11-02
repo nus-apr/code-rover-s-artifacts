@@ -1,0 +1,17 @@
+diff --git a/libjpeg-turbo/jdcoefct.c b/libjpeg-turbo/jdcoefct.c
+index 480829c..4d31c41 100644
+--- a/libjpeg-turbo/jdcoefct.c
++++ b/libjpeg-turbo/jdcoefct.c
+@@ -787,8 +787,10 @@ decompress_smooth_data(j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
+         DC11 = DC12;  DC12 = DC13;  DC13 = DC14;  DC14 = DC15;
+         DC16 = DC17;  DC17 = DC18;  DC18 = DC19;  DC19 = DC20;
+         DC21 = DC22;  DC22 = DC23;  DC23 = DC24;  DC24 = DC25;
+-        buffer_ptr++, prev_block_row++, next_block_row++,
+-          prev_prev_block_row++, next_next_block_row++;
++        if (block_num < last_block_column) {
++          buffer_ptr++, prev_block_row++, next_block_row++,
++            prev_prev_block_row++, next_next_block_row++;
++        }
+         output_col += compptr->_DCT_scaled_size;
+       }
+       output_ptr += compptr->_DCT_scaled_size;

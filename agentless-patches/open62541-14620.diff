@@ -1,0 +1,13 @@
+diff --git a/open62541/src/ua_types_encoding_json.c b/open62541/src/ua_types_encoding_json.c
+index 0f27860..96bf7f7 100644
+--- a/open62541/src/ua_types_encoding_json.c
++++ b/open62541/src/ua_types_encoding_json.c
+@@ -3300,7 +3300,7 @@ UA_decodeJson(const UA_ByteString *src, void *dst, const UA_DataType *type) {
+     /* Set up the context */
+     CtxJson ctx;
+     ParseCtx parseCtx;
+-    parseCtx.tokenArray = (jsmntok_t*)UA_malloc(sizeof(jsmntok_t) * TOKENCOUNT);
++    parseCtx.tokenArray = (jsmntok_t*)UA_calloc(TOKENCOUNT, sizeof(jsmntok_t));
+     if(!parseCtx.tokenArray)
+         return UA_STATUSCODE_BADOUTOFMEMORY;
+     

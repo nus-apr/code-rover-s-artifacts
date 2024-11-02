@@ -1,0 +1,13 @@
+diff --git a/imagemagick/Magick++/lib/Image.cpp b/imagemagick/Magick++/lib/Image.cpp
+index ab8af71..c654e49 100644
+--- a/imagemagick/Magick++/lib/Image.cpp
++++ b/imagemagick/Magick++/lib/Image.cpp
+@@ -4925,7 +4925,7 @@ void Magick::Image::write(Blob *blob_,const std::string &magick_)
+   data=ImagesToBlob(constImageInfo(),image(),&length,exceptionInfo);
+   if (length > 0)
+     blob_->updateNoCopy(data,length,Blob::MallocAllocator);
+-  else
++  else if (data != nullptr)
+     data=RelinquishMagickMemory(data);
+   ThrowImageException;
+ }

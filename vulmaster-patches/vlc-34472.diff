@@ -1,0 +1,15 @@
+diff --git a/lib/core.c b/lib/core.c
+index 3bd3292e24..87236430d8 100644
+--- a/lib/core.c
++++ b/lib/core.c
+@@ -42,9 +42,7 @@ libvlc_instance_t * libvlc_new( int argc, const char *const *argv )
+     libvlc_instance_t *p_new = malloc (sizeof (*p_new));
+     if (unlikely(p_new == NULL))
+         return NULL;
+-
+-    const char *my_argv[argc + 2];
+-    my_argv[0] = "libvlc"; /* dummy arg0, skipped by getopt() et al */
++ ( slst, word 
+     for( int i = 0; i < argc; i++ )
+          my_argv[i + 1] = argv[i];
+     my_argv[argc + 1] = NULL; /* C calling conventions require a NULL */

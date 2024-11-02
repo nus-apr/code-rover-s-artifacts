@@ -1,0 +1,62 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/FuzzRSAKeyParsing
+we were offered 11 bytes of input
+Not a sequence: 34
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60200000003c at pc 0x0000004f661c bp 0x7ffe453850b0 sp 0x7ffe453850a8
+READ of size 1 at 0x60200000003c thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x4f661b in Crypto::der_decode_integer(unsigned char const*, unsigned long, Crypto::UnsignedBigInteger&) /src/serenity/Meta/Lagom/build/../../../Userland/Libraries/LibCrypto/ASN1/DER.h:44:10
+    #1 0x4f01b8 in Crypto::der_decode_sequence(unsigned char const*, unsigned long, Crypto::ASN1::List*, unsigned long, bool) /src/serenity/Meta/Lagom/build/../../../Userland/Libraries/LibCrypto/ASN1/DER.h:323:18
+    #2 0x4f140d in Crypto::der_decode_sequence_many<4ul>::operator bool() /src/serenity/Meta/Lagom/build/../../../Userland/Libraries/LibCrypto/ASN1/DER.h:426:16
+    #3 0x4ef1be in Crypto::PK::RSA::parse_rsa_key(AK::Span<unsigned char const>) /src/serenity/Userland/Libraries/LibCrypto/PK/RSA.cpp:96:14
+    #4 0x4ec922 in LLVMFuzzerTestOneInput /src/serenity/Meta/Lagom/build/../Fuzzers/FuzzRSAKeyParsing.cpp:34:5
+    #5 0x4e2afb in main (/out/FuzzRSAKeyParsing+0x4e2afb)
+    #6 0x736fe234783f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #7 0x433978 in _start (/out/FuzzRSAKeyParsing+0x433978)
+
+DEDUP_TOKEN: Crypto::der_decode_integer(unsigned char const*, unsigned long, Crypto::UnsignedBigInteger&)--Crypto::der_decode_sequence(unsigned char const*, unsigned long, Crypto::ASN1::List*, unsigned long, bool)--Crypto::der_decode_sequence_many<4ul>::operator bool()
+0x60200000003c is located 1 bytes to the right of 11-byte region [0x602000000030,0x60200000003b)
+allocated by thread T0 here:
+    #0 0x4ae85d in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:145:3
+    #1 0x4ed891 in AK::ByteBufferImpl::ByteBufferImpl(void const*, unsigned long) /src/serenity/Meta/Lagom/build/../../../AK/ByteBuffer.h:274:35
+    #2 0x4ed70a in AK::ByteBufferImpl::copy(void const*, unsigned long) /src/serenity/Meta/Lagom/build/../../../AK/ByteBuffer.h:313:25
+    #3 0x4ecb04 in AK::ByteBuffer::copy(void const*, unsigned long) /src/serenity/Meta/Lagom/build/../../../AK/ByteBuffer.h:126:79
+    #4 0x4ec8fc in LLVMFuzzerTestOneInput /src/serenity/Meta/Lagom/build/../Fuzzers/FuzzRSAKeyParsing.cpp:33:27
+    #5 0x4e2afb in main (/out/FuzzRSAKeyParsing+0x4e2afb)
+
+DEDUP_TOKEN: malloc--AK::ByteBufferImpl::ByteBufferImpl(void const*, unsigned long)--AK::ByteBufferImpl::copy(void const*, unsigned long)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/serenity/Meta/Lagom/build/../../../Userland/Libraries/LibCrypto/ASN1/DER.h:44:10 in Crypto::der_decode_integer(unsigned char const*, unsigned long, Crypto::UnsignedBigInteger&)
+Shadow bytes around the buggy address:
+  0x0c047fff7fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c047fff8000: fa fa 00 07 fa fa 00[03]fa fa fa fa fa fa fa fa
+  0x0c047fff8010: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8020: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==13==ABORTING

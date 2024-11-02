@@ -1,0 +1,27 @@
+diff --git a/src/h3lib/lib/algos.c b/src/h3lib/lib/algos.c
+index cf5f1d8e..4af288d5 100644
+--- a/src/h3lib/lib/algos.c
++++ b/src/h3lib/lib/algos.c
+@@ -346,12 +346,17 @@ H3Index h3NeighborRotations(H3Index origin, Direction dir, int *rotations) {
+         } else {
+             Direction oldDigit = H3_GET_INDEX_DIGIT(out, r + 1);
+             Direction nextDir;
+-            if (isResolutionClassIII(r + 1)) {
+-                H3_SET_INDEX_DIGIT(out, r + 1, NEW_DIGIT_II[oldDigit][dir]);
+-                nextDir = NEW_ADJUSTMENT_II[oldDigit][dir];
++            if (oldDigit < NUM_DIGITS && dir < NUM_DIGITS) {
++                if (isResolutionClassIII(r + 1)) {
++                    H3_SET_INDEX_DIGIT(out, r + 1, NEW_DIGIT_II[oldDigit][dir]);
++                    nextDir = NEW_ADJUSTMENT_II[oldDigit][dir];
++                } else {
++                    H3_SET_INDEX_DIGIT(out, r + 1, NEW_DIGIT_III[oldDigit][dir]);
++                    nextDir = NEW_ADJUSTMENT_III[oldDigit][dir];
++                }
+             } else {
+-                H3_SET_INDEX_DIGIT(out, r + 1, NEW_DIGIT_III[oldDigit][dir]);
+-                nextDir = NEW_ADJUSTMENT_III[oldDigit][dir];
++                // Handle invalid digit case, potentially setting nextDir to an invalid state
++                return H3_NULL;
+             }
+ 
+             if (nextDir != CENTER_DIGIT) {

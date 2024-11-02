@@ -1,0 +1,56 @@
+diff --git a/src/flb_config_map.c b/src/flb_config_map.c
+index 6d00bf12b..59751d40e 100644
+--- a/src/flb_config_map.c
++++ b/src/flb_config_map.c
+@@ -350,12 +350,14 @@ static void destroy_map_val(int type, struct flb_config_map_val *value)
+ {
+     if (type == FLB_CONFIG_MAP_STR && value->val.str) {
+         flb_sds_destroy(value->val.str);
++        value->val.str = NULL;  // Prevent double-free
+     }
+     else if ((type >= FLB_CONFIG_MAP_CLIST &&
+               type <= FLB_CONFIG_MAP_SLIST_4) &&
+              value->val.list) {
+         flb_slist_destroy(value->val.list);
+         flb_free(value->val.list);
++        value->val.list = NULL;  // Prevent double-free
+     }
+ }
+ 
+@@ -385,11 +387,15 @@ void flb_config_map_destroy(struct mk_list *list)
+         else {
+             destroy_map_val(map->type, &map->value);
+         }
+-        if (map->def_value) {
+-            flb_sds_destroy(map->def_value);
+-        }
++    if (map->def_value) {
++        flb_sds_destroy(map->def_value);
++        map->def_value = NULL;  // Prevent double-free
++    }
++    if (map->name) {
+         flb_sds_destroy(map->name);
+-        flb_free(map);
++        map->name = NULL;  // Prevent double-free
++    }
++    flb_free(map);
+     }
+     flb_free(list);
+ }
+diff --git a/src/flb_kv.c b/src/flb_kv.c
+index 9271753d8..89f7c0c22 100644
+--- a/src/flb_kv.c
++++ b/src/flb_kv.c
+@@ -81,10 +81,12 @@ void flb_kv_item_destroy(struct flb_kv *kv)
+ {
+     if (kv->key) {
+         flb_sds_destroy(kv->key);
++        kv->key = NULL;  // Prevent double-free
+     }
+ 
+     if (kv->val) {
+         flb_sds_destroy(kv->val);
++        kv->val = NULL;  // Prevent double-free
+     }
+ 
+     mk_list_del(&kv->_head);

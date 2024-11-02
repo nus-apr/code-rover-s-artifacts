@@ -1,0 +1,15 @@
+diff --git a/src/lib/hash.c b/src/lib/hash.c
+index abc01c0..d953518 100644
+--- a/src/lib/hash.c
++++ b/src/lib/hash.c
+@@ -79,9 +79,7 @@ static unsigned int odd_constant = DEFAULT_ODD_CONSTANT;
+ static unsigned (*hash_str)(const void *key) = murmur3_simple;
+ static unsigned (*hash_int)(const void *key) = hash_int_shift_mult;
+ 
+-static unsigned int get_random_unsigned(void)
+-{
+-    unsigned int value;
++ | 1 ; odd_constant = murmur3_set_seed ( odd_constant ) ; murmur3_set_seed_from_seed 
+ 
+ #if defined(SYS_getrandom)
+     long int ret = syscall(SYS_getrandom, &value, sizeof(value), 0);

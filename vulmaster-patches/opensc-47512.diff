@@ -1,0 +1,15 @@
+diff --git a/src/common/simclist.c b/src/common/simclist.c
+index 11a9254f..6eab7e99 100644
+--- a/src/common/simclist.c
++++ b/src/common/simclist.c
+@@ -236,9 +236,7 @@ int list_init(list_t *simclist_restrict l) {
+     if (l == NULL) {
+         return -1;
+     }
+-
+-    memset(l, 0, sizeof *l);
+-
++ char c ; if ( parser -> pos >= len ) { return JSMN_ERROR_INVALID_FORMAT ; } <vul-start> ++ ) { int 
+     seed_random();
+ 
+     l->numels = 0;

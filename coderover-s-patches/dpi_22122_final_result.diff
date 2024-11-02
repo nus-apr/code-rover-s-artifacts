@@ -1,0 +1,43 @@
+diff --git a/example/reader_util.c b/example/reader_util.c
+index 142e0ebe..bf1cda84 100644
+--- a/example/reader_util.c
++++ b/example/reader_util.c
+@@ -1109,16 +1109,34 @@ void process_ndpi_collected_info(struct ndpi_workflow * workflow, struct ndpi_fl
+       flow->ssh_tls.sha1_cert_fingerprint_set = 1;
+     }
+ 
+-    if(flow->ndpi_flow->protos.stun_ssl.ssl.alpn) {
+-      if((flow->ssh_tls.tls_alpn = ndpi_strdup(flow->ndpi_flow->protos.stun_ssl.ssl.alpn)) != NULL)
++    if(flow->ndpi_flow && flow->ndpi_flow->protos.stun_ssl.ssl.alpn) {
++      flow->ssh_tls.tls_alpn = ndpi_strdup(flow->ndpi_flow->protos.stun_ssl.ssl.alpn);
++      if(flow->ssh_tls.tls_alpn != NULL) {
+         correct_csv_data_field(flow->ssh_tls.tls_alpn);
++      } else {
++        // Handle memory allocation failure
++        fprintf(stderr, "Memory allocation failed for tls_alpn\n");
++        return; // or appropriate error handling
++      }
+     }
+ 
+-    if(flow->ndpi_flow->protos.stun_ssl.ssl.issuerDN)
++    if(flow->ndpi_flow && flow->ndpi_flow->protos.stun_ssl.ssl.issuerDN) {
+       flow->ssh_tls.tls_issuerDN = strdup(flow->ndpi_flow->protos.stun_ssl.ssl.issuerDN);
++      if(flow->ssh_tls.tls_issuerDN == NULL) {
++        // Handle memory allocation failure
++        fprintf(stderr, "Memory allocation failed for tls_issuerDN\n");
++        return; // or appropriate error handling
++      }
++    }
+     
+-    if(flow->ndpi_flow->protos.stun_ssl.ssl.subjectDN)
++    if(flow->ndpi_flow && flow->ndpi_flow->protos.stun_ssl.ssl.subjectDN) {
+       flow->ssh_tls.tls_subjectDN = strdup(flow->ndpi_flow->protos.stun_ssl.ssl.subjectDN);
++      if(flow->ssh_tls.tls_subjectDN == NULL) {
++        // Handle memory allocation failure
++        fprintf(stderr, "Memory allocation failed for tls_subjectDN\n");
++        return; // or appropriate error handling
++      }
++    }
+     
+     if(flow->ssh_tls.tls_supported_versions) {
+       if((flow->ssh_tls.tls_supported_versions = ndpi_strdup(flow->ndpi_flow->protos.stun_ssl.ssl.tls_supported_versions)) != NULL)

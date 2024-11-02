@@ -1,0 +1,25 @@
+diff --git a/src/android/SkAnimatedImage.cpp b/src/android/SkAnimatedImage.cpp
+index 2b63f035b2..04d0c88692 100644
+--- a/src/android/SkAnimatedImage.cpp
++++ b/src/android/SkAnimatedImage.cpp
+@@ -162,7 +162,7 @@ int SkAnimatedImage::decodeNextFrame() {
+     bool animationEnded = false;
+     int frameToDecode = this->computeNextFrame(fActiveFrame.fIndex, &animationEnded);
+ 
+-    SkCodec::FrameInfo frameInfo;
++    SkCodec::FrameInfo frameInfo = {};
+     if (fCodec->codec()->getFrameInfo(frameToDecode, &frameInfo)) {
+         if (!frameInfo.fFullyReceived) {
+             SkCodecPrintf("Frame %i not fully received\n", frameToDecode);
+@@ -181,6 +181,11 @@ int SkAnimatedImage::decodeNextFrame() {
+             frameInfo.fFullyReceived = true;
+             fCurrentFrameDuration = kFinished;
+         } else {
++            // Initialize frameInfo with default values to avoid uninitialized use
++            frameInfo.fRequiredFrame = SkCodec::kNone;
++            frameInfo.fAlphaType = fCodec->getInfo().alphaType();
++            frameInfo.fDuration = 0;
++            frameInfo.fFullyReceived = false;
+             SkCodecPrintf("Error getting frameInfo for frame %i\n",
+                           frameToDecode);
+             return this->finish();

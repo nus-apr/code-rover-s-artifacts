@@ -1,0 +1,29 @@
+diff --git a/AK/URLParser.cpp b/AK/URLParser.cpp
+index 4318bf5dc7..808954bfb5 100644
+--- a/AK/URLParser.cpp
++++ b/AK/URLParser.cpp
+@@ -213,15 +213,19 @@ URL URLParser::parse(Badge<URL>, const StringView& raw_input, URL const* base_ur
+     if (start_index >= end_index)
+         return {};
+ 
+-    auto processed_input = raw_input.substring_view(start_index, end_index - start_index);
++    String processed_input = raw_input.substring_view(start_index, end_index - start_index).to_string();
+ 
+     // NOTE: This replaces all tab and newline characters with nothing.
+     if (processed_input.contains("\t") || processed_input.contains("\n")) {
+         report_validation_error();
+-        String processed_input_string(processed_input);
+-        processed_input_string.replace("\t", "", true);
+-        processed_input_string.replace("\n", "", true);
+-        processed_input = processed_input_string;
++        processed_input.replace("\t", "", true);
++        processed_input.replace("\n", "", true);
++    }
++
++    // Validate that processed_input is valid UTF-8 before using Utf8View
++    if (!Utf8View(processed_input).validate()) {
++        report_validation_error();
++        return {};
+     }
+ 
+     State state = State::SchemeStart;

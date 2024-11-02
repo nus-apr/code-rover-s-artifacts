@@ -1,0 +1,13 @@
+diff --git a/glog/src/demangle.cc b/glog/src/demangle.cc
+index ac31169..493375a 100644
+--- a/glog/src/demangle.cc
++++ b/glog/src/demangle.cc
+@@ -159,7 +159,7 @@ static void InitState(State *state, const char *mangled,
+ // at "mangled_cur" position.  It is assumed that "one_char_token" does
+ // not contain '\0'.
+ static bool ParseOneCharToken(State *state, const char one_char_token) {
+-  if (state->mangled_cur[0] == one_char_token) {
++  if (state->mangled_cur[0] != '\0' && state->mangled_cur[0] == one_char_token) {
+     ++state->mangled_cur;
+     return true;
+   }

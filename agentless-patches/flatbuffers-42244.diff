@@ -1,0 +1,13 @@
+diff --git a/flatbuffers/include/flatbuffers/util.h b/flatbuffers/include/flatbuffers/util.h
+index 6fde54b..f997e1c 100644
+--- a/flatbuffers/include/flatbuffers/util.h
++++ b/flatbuffers/include/flatbuffers/util.h
+@@ -576,7 +576,7 @@ inline bool EscapeString(const char *s, size_t length, std::string *_text,
+                          bool allow_non_utf8, bool natural_utf8) {
+   std::string &text = *_text;
+   text += "\"";
+-  for (uoffset_t i = 0; i < length; i++) {
++  for (uoffset_t i = 0; i < length && s[i] != '\0'; i++) {
+     char c = s[i];
+     switch (c) {
+       case '\n': text += "\\n"; break;

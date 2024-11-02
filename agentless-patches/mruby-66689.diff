@@ -1,0 +1,13 @@
+diff --git a/mruby/src/string.c b/mruby/src/string.c
+index 7b8d0df..b9bb32a 100644
+--- a/mruby/src/string.c
++++ b/mruby/src/string.c
+@@ -643,7 +643,7 @@ memsearch_swar(const char *xs, long m, const char *ys, long n)
+     for (;p<e;) {
+       size_t len = e-p;
+       p = (const char*)memchr(p, *xs, len);
+-      if (p == NULL || len < m) break;
++      if (p == NULL || (e - p) < m) break;
+       if (memcmp(p+1, xs+1, m-1) == 0) return (mrb_int)(p - ys);
+       p++;
+     }

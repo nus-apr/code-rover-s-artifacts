@@ -1,0 +1,72 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2256862680
+INFO: Loaded 4 modules   (21548 inline 8-bit counters): 20086 [0x76a160f92410, 0x76a160f97286), 1032 [0x76a160b65400, 0x76a160b65808), 53 [0x5f0600, 0x5f0635), 377 [0x76a15fddc718, 0x76a15fddc891), 
+INFO: Loaded 4 PC tables (21548 PCs): 20086 [0x76a160f97288,0x76a160fe59e8), 1032 [0x76a160b65808,0x76a160b69888), 53 [0x5f0638,0x5f0988), 377 [0x76a15fddc898,0x76a15fdde028), 
+/out/fuzzer_dhcpv6: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x6020000000c1 at pc 0x76a15f989aa8 bp 0x7ffc065d10b0 sp 0x7ffc065d10a8
+READ of size 1 at 0x6020000000c1 thread T0
+SCARINESS: 12 (1-byte-read-heap-buffer-overflow)
+    #0 0x76a15f989aa7 in decode_rfc /src/freeradius-server/src/protocols/radius/decode.c:434:25
+    #1 0x76a160cc1db1 in __covrec_96BAF8414CA131E6 /src/freeradius-server/src/lib/util/decode.c:188:10
+    #2 0x76a15f9877d1 in decode_digest_attributes /src/freeradius-server/src/protocols/radius/decode.c:612:9
+    #3 0x76a15f986ace in __covrec_F4365BCAA29A249Eu /src/freeradius-server/src/protocols/radius/decode.c:2035:11
+    #4 0x76a15f988ab3 in __covrec_A27909132EEB2784u /src/freeradius-server/src/protocols/radius/decode.c:2091:10
+    #5 0x76a160b3e2a0 in decode_value /src/freeradius-server/src/protocols/dhcpv6/decode.c:203:11
+    #6 0x76a160b3c795 in decode_option /src/freeradius-server/src/protocols/dhcpv6/decode.c:404:10
+    #7 0x76a160b3c09a in fr_dhcpv6_decode_option /src/freeradius-server/src/protocols/dhcpv6/decode.c:433:9
+    #8 0x76a160b38342 in __covrec_277C889727F3B96A /src/freeradius-server/src/protocols/dhcpv6/base.c:669:10
+    #9 0x76a160b3d4cf in fr_dhcpv6_decode_proto /src/freeradius-server/src/protocols/dhcpv6/decode.c:507:9
+    #10 0x56af80 in LLVMFuzzerTestOneInput /src/freeradius-server/src/bin/fuzzer.c:253:2
+    #11 0x43dfb3 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:611:15
+    #12 0x429712 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #13 0x42efbc in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #14 0x4584f2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #15 0x76a1603de082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+    #16 0x41f8cd in _start (/out/fuzzer_dhcpv6+0x41f8cd)
+
+DEDUP_TOKEN: decode_rfc--__covrec_96BAF8414CA131E6--decode_digest_attributes
+0x6020000000c1 is located 1 bytes to the right of 16-byte region [0x6020000000b0,0x6020000000c0)
+allocated by thread T0 here:
+    #0 0x52f146 in malloc /src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:69:3
+    #1 0x4adb47 in operator new(unsigned long) cxa_noexception.cpp
+    #2 0x429712 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #3 0x42efbc in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:860:9
+    #4 0x4584f2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #5 0x76a1603de082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 87b331c034a6458c64ce09c03939e947212e18ce)
+
+DEDUP_TOKEN: malloc--operator new(unsigned long)--fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long)
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/freeradius-server/src/protocols/radius/decode.c:434:25 in decode_rfc
+Shadow bytes around the buggy address:
+  0x0c047fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff8000: fa fa 00 00 fa fa 00 fa fa fa 00 fa fa fa 00 fa
+=>0x0c047fff8010: fa fa 00 00 fa fa 00 00[fa]fa fa fa fa fa fa fa
+  0x0c047fff8020: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8060: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

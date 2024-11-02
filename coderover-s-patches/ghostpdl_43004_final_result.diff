@@ -1,0 +1,17 @@
+diff --git a/pdf/pdf_array.c b/pdf/pdf_array.c
+index 07a90812b..d0256ed09 100644
+--- a/pdf/pdf_array.c
++++ b/pdf/pdf_array.c
+@@ -140,8 +140,10 @@ static int pdfi_array_fetch(pdf_context *ctx, pdf_array *a, uint64_t index, pdf_
+         pdf_indirect_ref *r = (pdf_indirect_ref *)obj;
+ 
+         code = pdfi_deref_loop_detect(ctx, r->ref_object_num, r->ref_generation_num, &o1);
+-        if (code < 0)
+-            return code;
++        if (code < 0 || o1 == NULL) {  // Check for NULL after dereferencing
++            pdfi_countdown(obj);  // Ensure proper reference counting
++            return code < 0 ? code : gs_error_typecheck;  // Return appropriate error
++        }
+ 
+         if (setref)
+             (void)pdfi_array_put(ctx, a, index, o1);

@@ -1,0 +1,15 @@
+diff --git a/src/lib/ndpi_main.c b/src/lib/ndpi_main.c
+index db5e147..83e1226 100644
+--- a/src/lib/ndpi_main.c
++++ b/src/lib/ndpi_main.c
+@@ -4116,9 +4116,7 @@ void ndpi_process_extra_packet(struct ndpi_detection_module_struct *ndpi_str, st
+ 
+ int ndpi_load_ip_category(struct ndpi_detection_module_struct *ndpi_str, const char *ip_address_and_mask,
+                           ndpi_protocol_category_t category) {
+-  patricia_node_t *node;
+-  struct in_addr pin;
+-  int bits = 32;
++ \0' ; ptr = ( struct ndpi_tcphdr * ) flow -> packet. tcp ; if ( flow -> packet. tcp -> doff == 0 ) { NDPI_LOG_DBG2 ( ndpi_str, "tcp header\n" ) ; } else if ( decaps_iph -> version == IPPROTO_TCP && decaps_iph -> version == IPPROTO_IPV6 ) { NDPI_LOG_DBG2 ( ndpi_str, "tcp syn packet\\n" ) ; } else { NDPI_LOG_DBG2 ( ndpi_str, "tcp syn packet\\n" ) ; } } else { NDPI_LOG_DBG2 ( ndpi_str, "tcp syn packet for unknown protocol, reset detection state\n" ) ; } } 
+   char *ptr;
+   char ipbuf[64];
+ 

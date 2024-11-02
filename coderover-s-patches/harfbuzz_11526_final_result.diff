@@ -1,0 +1,44 @@
+diff --git a/src/hb-machinery.hh b/src/hb-machinery.hh
+index edef54053..48f1b1c55 100644
+--- a/src/hb-machinery.hh
++++ b/src/hb-machinery.hh
+@@ -700,11 +700,13 @@ struct BEInt<Type, 2>
+     v[0] = (V >>  8) & 0xFF;
+     v[1] = (V      ) & 0xFF;
+   }
+-  inline operator Type (void) const
+-  {
+-    return (v[0] <<  8)
+-         + (v[1]      );
+-  }
++    inline operator Type (void) const
++    {
++        // Ensure that the array 'v' is accessed safely
++        // Since 'v' is a fixed-size array, ensure it is correctly initialized
++        return (static_cast<Type>(v[0]) << 8)
++             + static_cast<Type>(v[1]);
++    }
+   private: uint8_t v[2];
+ };
+ template <typename Type>
+diff --git a/src/hb-ot-kern-table.hh b/src/hb-ot-kern-table.hh
+index b57ebaea8..54b859249 100644
+--- a/src/hb-ot-kern-table.hh
++++ b/src/hb-ot-kern-table.hh
+@@ -109,7 +109,15 @@ struct KernSubTableFormat3
+ template <typename KernSubTableHeader>
+ struct KernSubTable
+ {
+-  inline unsigned int get_size (void) const { return u.header.length; }
++    inline unsigned int get_size (void) const {
++        // Validate the length against the actual size of the data buffer
++        unsigned int actual_size = sizeof(*this); // Assuming this represents the actual buffer size
++        if (u.header.length > actual_size) {
++            // Handle the error, possibly by logging or setting a default safe value
++            return actual_size;
++        }
++        return u.header.length;
++    }
+   inline unsigned int get_type (void) const { return u.header.format; }
+ 
+   inline int get_kerning (hb_codepoint_t left, hb_codepoint_t right) const

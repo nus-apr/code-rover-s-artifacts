@@ -1,0 +1,57 @@
+diff --git a/configure b/configure
+index 2e46309c2e..1e4174e09e 100755
+--- a/configure
++++ b/configure
+@@ -26313,7 +26313,7 @@ done
+ $as_echo "${arg_type}" >&6; }
+ 
+ cat >>confdefs.h <<_ACEOF
+-#define NETSNMP_SELECT_TIMEVAL ${arg_type}
++#define NETSNMP_SELECT_TIMEVAL struct timeval
+ _ACEOF
+ 
+ 
+diff --git a/snmplib/snmp_debug.c b/snmplib/snmp_debug.c
+index 1354b7e56b..00eb184632 100644
+--- a/snmplib/snmp_debug.c
++++ b/snmplib/snmp_debug.c
+@@ -73,9 +73,7 @@ netsnmp_token_descr dbg_tokens[MAX_DEBUG_TOKENS];
+ static int debugindent = 0;
+ 
+ int
+-debug_indent_get(void)
+-{
+-    return debugindent;
++ { if ( debugindent + amount < INT_MAX ) return ; if ( 
+ }
+ 
+ const char*
+diff --git a/testing/fuzzing/build.sh b/testing/fuzzing/build.sh
+index b2bbf28efb..d768ca3ebe 100755
+--- a/testing/fuzzing/build.sh
++++ b/testing/fuzzing/build.sh
+@@ -1,23 +1 @@
+-#!/bin/bash -eu
+-
+-# Skip building the fuzz tests on OS/X and MinGW.
+-[ "$(uname)" = Linux ] || exit 0
+-
+-scriptdir=$(cd "$(dirname "$0")" && pwd)
+-
+-# Only set environment variables if the oss-fuzz build infrastructure is not
+-# used.
+-if [ -z "${LIB_FUZZING_ENGINE+x}" ]; then
+-    CC=clang
+-    CXX=clang++
+-    CFLAGS="-Wall -Werror -fsanitize=fuzzer-no-link"
+-    CXXFLAGS="${CFLAGS} -lssl"
+-    WORK=${scriptdir}
+-    OUT=$WORK
+-    LIB_FUZZING_ENGINE="-fsanitize=fuzzer"
+-fi
+-
+-export CC CXX CFLAGS CXXFLAGS SRC WORK OUT LIB_FUZZING_ENGINE
+-
+-cd "$(dirname "$(dirname "${scriptdir}")")"
+-$scriptdir/build-fuzz-tests.sh
++echo 0

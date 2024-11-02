@@ -1,0 +1,15 @@
+diff --git a/src/dsp/yuv.h b/src/dsp/yuv.h
+index c12be1d..8b5b6a1 100644
+--- a/src/dsp/yuv.h
++++ b/src/dsp/yuv.h
+@@ -199,9 +199,7 @@ static WEBP_INLINE int VP8RGBToU(int r, int g, int b, int rounding) {
+ }
+ 
+ static WEBP_INLINE int VP8RGBToV(int r, int g, int b, int rounding) {
+-  const int v = +28800 * r - 24116 * g - 4684 * b;
+-  return VP8ClipUV(v, rounding);
+-}
++ ; task -> 
+ 
+ #ifdef __cplusplus
+ }    // extern "C"

@@ -1,0 +1,561 @@
+warning: CRLF will be replaced by LF in third_party/mbedtls/repo/scripts/data_files/vs6-app-template.dsp.
+The file will have its original line endings in your working directory.
+warning: CRLF will be replaced by LF in third_party/mbedtls/repo/scripts/data_files/vs6-main-template.dsp.
+The file will have its original line endings in your working directory.
+warning: CRLF will be replaced by LF in third_party/mbedtls/repo/scripts/data_files/vs6-workspace-template.dsw.
+The file will have its original line endings in your working directory.
+warning: CRLF will be replaced by LF in third_party/mbedtls/repo/tests/data_files/bitstring-in-dn.pem.
+The file will have its original line endings in your working directory.
+diff --git a/tests/fuzz/ip6_send.cpp b/tests/fuzz/ip6_send.cpp
+index a28f8fe..428d895 100644
+--- a/tests/fuzz/ip6_send.cpp
++++ b/tests/fuzz/ip6_send.cpp
+@@ -60,9 +60,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+     otThreadSetEnabled(instance, true);
+     otThreadBecomeLeader(instance);
+ 
+-    settings.mLinkSecurityEnabled = (data[0] & 0x1) != 0;
+-    settings.mPriority            = OT_MESSAGE_PRIORITY_NORMAL;
+-
++ ; fp -> limit = & fp -> buffer [ buf_filled ] ; fp -> <vul-start> [ buf_filled ] 
+     message = otIp6NewMessage(instance, &settings);
+     VerifyOrExit(message != NULL, error = OT_ERROR_NO_BUFS);
+ 
+diff --git a/third_party/mbedtls/repo/scripts/data_files/vs6-app-template.dsp b/third_party/mbedtls/repo/scripts/data_files/vs6-app-template.dsp
+index 87dbea2..ff7c00e 100644
+--- a/third_party/mbedtls/repo/scripts/data_files/vs6-app-template.dsp
++++ b/third_party/mbedtls/repo/scripts/data_files/vs6-app-template.dsp
+@@ -1,101 +1,101 @@
+-# Microsoft Developer Studio Project File - Name="<APPNAME>" - Package Owner=<4>
+-# Microsoft Developer Studio Generated Build File, Format Version 6.00
+-# ** DO NOT EDIT **
+-
+-# TARGTYPE "Win32 (x86) Console Application" 0x0103
+-
+-CFG=<APPNAME> - Win32 Debug
+-!MESSAGE This is not a valid makefile. To build this project using NMAKE,
+-!MESSAGE use the Export Makefile command and run
+-!MESSAGE 
+-!MESSAGE NMAKE /f "<APPNAME>.mak".
+-!MESSAGE 
+-!MESSAGE You can specify a configuration when running NMAKE
+-!MESSAGE by defining the macro CFG on the command line. For example:
+-!MESSAGE 
+-!MESSAGE NMAKE /f "<APPNAME>.mak" CFG="<APPNAME> - Win32 Debug"
+-!MESSAGE 
+-!MESSAGE Possible choices for configuration are:
+-!MESSAGE 
+-!MESSAGE "<APPNAME> - Win32 Release" (based on "Win32 (x86) Console Application")
+-!MESSAGE "<APPNAME> - Win32 Debug" (based on "Win32 (x86) Console Application")
+-!MESSAGE 
+-
+-# Begin Project
+-# PROP AllowPerConfigDependencies 0
+-# PROP Scc_ProjName ""
+-# PROP Scc_LocalPath ""
+-CPP=cl.exe
+-RSC=rc.exe
+-
+-!IF  "$(CFG)" == "<APPNAME> - Win32 Release"
+-
+-# PROP BASE Use_MFC 0
+-# PROP BASE Use_Debug_Libraries 0
+-# PROP BASE Output_Dir ""
+-# PROP BASE Intermediate_Dir "temp"
+-# PROP BASE Target_Dir ""
+-# PROP Use_MFC 0
+-# PROP Use_Debug_Libraries 0
+-# PROP Output_Dir ""
+-# PROP Intermediate_Dir "temp"
+-# PROP Target_Dir ""
+-# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
+-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
+-# ADD BASE RSC /l 0x40c /d "NDEBUG"
+-# ADD RSC /l 0x40c /d "NDEBUG"
+-BSC32=bscmake.exe
+-# ADD BASE BSC32 /nologo
+-# ADD BSC32 /nologo
+-LINK32=link.exe
+-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
+-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
+-
+-!ELSEIF  "$(CFG)" == "<APPNAME> - Win32 Debug"
+-
+-# PROP BASE Use_MFC 0
+-# PROP BASE Use_Debug_Libraries 1
+-# PROP BASE Output_Dir ""
+-# PROP BASE Intermediate_Dir "temp"
+-# PROP BASE Target_Dir ""
+-# PROP Use_MFC 0
+-# PROP Use_Debug_Libraries 1
+-# PROP Output_Dir ""
+-# PROP Intermediate_Dir "temp"
+-# PROP Target_Dir ""
+-# ADD BASE CPP /nologo /W3 /Gm /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ  /c
+-# ADD CPP /nologo /W3 /Gm /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ  /c
+-# ADD BASE RSC /l 0x40c /d "_DEBUG"
+-# ADD RSC /l 0x40c /d "_DEBUG"
+-BSC32=bscmake.exe
+-# ADD BASE BSC32 /nologo
+-# ADD BSC32 /nologo
+-LINK32=link.exe
+-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
+-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
+-
+-!ENDIF 
+-
+-# Begin Target
+-
+-# Name "<APPNAME> - Win32 Release"
+-# Name "<APPNAME> - Win32 Debug"
+-# Begin Group "Source Files"
+-
+-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+-# Begin Source File
+-
+-SOURCE=..\..\programs\<PATHNAME>.c
+-# ADD CPP /I "../../include"
+-# End Source File
+-# End Group
+-# Begin Group "Header Files"
+-
+-# PROP Default_Filter "h;hpp;hxx;hm;inl"
+-# End Group
+-# Begin Group "Resource Files"
+-
+-# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+-# End Group
+-# End Target
+-# End Project
++# Microsoft Developer Studio Project File - Name="<APPNAME>" - Package Owner=<4>
++# Microsoft Developer Studio Generated Build File, Format Version 6.00
++# ** DO NOT EDIT **
++
++# TARGTYPE "Win32 (x86) Console Application" 0x0103
++
++CFG=<APPNAME> - Win32 Debug
++!MESSAGE This is not a valid makefile. To build this project using NMAKE,
++!MESSAGE use the Export Makefile command and run
++!MESSAGE 
++!MESSAGE NMAKE /f "<APPNAME>.mak".
++!MESSAGE 
++!MESSAGE You can specify a configuration when running NMAKE
++!MESSAGE by defining the macro CFG on the command line. For example:
++!MESSAGE 
++!MESSAGE NMAKE /f "<APPNAME>.mak" CFG="<APPNAME> - Win32 Debug"
++!MESSAGE 
++!MESSAGE Possible choices for configuration are:
++!MESSAGE 
++!MESSAGE "<APPNAME> - Win32 Release" (based on "Win32 (x86) Console Application")
++!MESSAGE "<APPNAME> - Win32 Debug" (based on "Win32 (x86) Console Application")
++!MESSAGE 
++
++# Begin Project
++# PROP AllowPerConfigDependencies 0
++# PROP Scc_ProjName ""
++# PROP Scc_LocalPath ""
++CPP=cl.exe
++RSC=rc.exe
++
++!IF  "$(CFG)" == "<APPNAME> - Win32 Release"
++
++# PROP BASE Use_MFC 0
++# PROP BASE Use_Debug_Libraries 0
++# PROP BASE Output_Dir ""
++# PROP BASE Intermediate_Dir "temp"
++# PROP BASE Target_Dir ""
++# PROP Use_MFC 0
++# PROP Use_Debug_Libraries 0
++# PROP Output_Dir ""
++# PROP Intermediate_Dir "temp"
++# PROP Target_Dir ""
++# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
++# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
++# ADD BASE RSC /l 0x40c /d "NDEBUG"
++# ADD RSC /l 0x40c /d "NDEBUG"
++BSC32=bscmake.exe
++# ADD BASE BSC32 /nologo
++# ADD BSC32 /nologo
++LINK32=link.exe
++# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
++# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
++
++!ELSEIF  "$(CFG)" == "<APPNAME> - Win32 Debug"
++
++# PROP BASE Use_MFC 0
++# PROP BASE Use_Debug_Libraries 1
++# PROP BASE Output_Dir ""
++# PROP BASE Intermediate_Dir "temp"
++# PROP BASE Target_Dir ""
++# PROP Use_MFC 0
++# PROP Use_Debug_Libraries 1
++# PROP Output_Dir ""
++# PROP Intermediate_Dir "temp"
++# PROP Target_Dir ""
++# ADD BASE CPP /nologo /W3 /Gm /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ  /c
++# ADD CPP /nologo /W3 /Gm /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ  /c
++# ADD BASE RSC /l 0x40c /d "_DEBUG"
++# ADD RSC /l 0x40c /d "_DEBUG"
++BSC32=bscmake.exe
++# ADD BASE BSC32 /nologo
++# ADD BSC32 /nologo
++LINK32=link.exe
++# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
++# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
++
++!ENDIF 
++
++# Begin Target
++
++# Name "<APPNAME> - Win32 Release"
++# Name "<APPNAME> - Win32 Debug"
++# Begin Group "Source Files"
++
++# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++# Begin Source File
++
++SOURCE=..\..\programs\<PATHNAME>.c
++# ADD CPP /I "../../include"
++# End Source File
++# End Group
++# Begin Group "Header Files"
++
++# PROP Default_Filter "h;hpp;hxx;hm;inl"
++# End Group
++# Begin Group "Resource Files"
++
++# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
++# End Group
++# End Target
++# End Project
+diff --git a/third_party/mbedtls/repo/scripts/data_files/vs6-main-template.dsp b/third_party/mbedtls/repo/scripts/data_files/vs6-main-template.dsp
+index dc728c4..3f4d5c4 100644
+--- a/third_party/mbedtls/repo/scripts/data_files/vs6-main-template.dsp
++++ b/third_party/mbedtls/repo/scripts/data_files/vs6-main-template.dsp
+@@ -1,94 +1,94 @@
+ # Microsoft Developer Studio Project File - Name="mbedtls" - Package Owner=<4>
+-# Microsoft Developer Studio Generated Build File, Format Version 6.00
+-# ** DO NOT EDIT **
+-
+-# TARGTYPE "Win32 (x86) Static Library" 0x0104
+-
++# Microsoft Developer Studio Generated Build File, Format Version 6.00
++# ** DO NOT EDIT **
++
++# TARGTYPE "Win32 (x86) Static Library" 0x0104
++
+ CFG=mbedtls - Win32 Debug
+-!MESSAGE This is not a valid makefile. To build this project using NMAKE,
+-!MESSAGE use the Export Makefile command and run
+-!MESSAGE 
++!MESSAGE This is not a valid makefile. To build this project using NMAKE,
++!MESSAGE use the Export Makefile command and run
++!MESSAGE 
+ !MESSAGE NMAKE /f "mbedtls.mak".
+-!MESSAGE 
+-!MESSAGE You can specify a configuration when running NMAKE
+-!MESSAGE by defining the macro CFG on the command line. For example:
+-!MESSAGE 
++!MESSAGE 
++!MESSAGE You can specify a configuration when running NMAKE
++!MESSAGE by defining the macro CFG on the command line. For example:
++!MESSAGE 
+ !MESSAGE NMAKE /f "mbedtls.mak" CFG="mbedtls - Win32 Debug"
+-!MESSAGE 
+-!MESSAGE Possible choices for configuration are:
+-!MESSAGE 
++!MESSAGE 
++!MESSAGE Possible choices for configuration are:
++!MESSAGE 
+ !MESSAGE "mbedtls - Win32 Release" (based on "Win32 (x86) Static Library")
+ !MESSAGE "mbedtls - Win32 Debug" (based on "Win32 (x86) Static Library")
+-!MESSAGE 
+-
+-# Begin Project
+-# PROP AllowPerConfigDependencies 0
+-# PROP Scc_ProjName ""
+-# PROP Scc_LocalPath ""
+-CPP=cl.exe
+-RSC=rc.exe
+-
++!MESSAGE 
++
++# Begin Project
++# PROP AllowPerConfigDependencies 0
++# PROP Scc_ProjName ""
++# PROP Scc_LocalPath ""
++CPP=cl.exe
++RSC=rc.exe
++
+ !IF  "$(CFG)" == "mbedtls - Win32 Release"
+-
+-# PROP BASE Use_MFC 0
+-# PROP BASE Use_Debug_Libraries 0
+-# PROP BASE Output_Dir ""
+-# PROP BASE Intermediate_Dir "temp"
+-# PROP BASE Target_Dir ""
+-# PROP Use_MFC 0
+-# PROP Use_Debug_Libraries 0
+-# PROP Output_Dir ""
+-# PROP Intermediate_Dir "temp"
+-# PROP Target_Dir ""
+-# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
+-# ADD CPP /nologo /W3 /GX /O2 /I "../../include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /YX /FD /c
+-# ADD BASE RSC /l 0x40c /d "NDEBUG"
+-# ADD RSC /l 0x40c /d "NDEBUG"
+-BSC32=bscmake.exe
+-# ADD BASE BSC32 /nologo
+-# ADD BSC32 /nologo
+-LIB32=link.exe -lib
+-# ADD BASE LIB32 /nologo
+-# ADD LIB32 /nologo
+-
++
++# PROP BASE Use_MFC 0
++# PROP BASE Use_Debug_Libraries 0
++# PROP BASE Output_Dir ""
++# PROP BASE Intermediate_Dir "temp"
++# PROP BASE Target_Dir ""
++# PROP Use_MFC 0
++# PROP Use_Debug_Libraries 0
++# PROP Output_Dir ""
++# PROP Intermediate_Dir "temp"
++# PROP Target_Dir ""
++# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
++# ADD CPP /nologo /W3 /GX /O2 /I "../../include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /YX /FD /c
++# ADD BASE RSC /l 0x40c /d "NDEBUG"
++# ADD RSC /l 0x40c /d "NDEBUG"
++BSC32=bscmake.exe
++# ADD BASE BSC32 /nologo
++# ADD BSC32 /nologo
++LIB32=link.exe -lib
++# ADD BASE LIB32 /nologo
++# ADD LIB32 /nologo
++
+ !ELSEIF  "$(CFG)" == "mbedtls - Win32 Debug"
+-
+-# PROP BASE Use_MFC 0
+-# PROP BASE Use_Debug_Libraries 1
+-# PROP BASE Output_Dir ""
+-# PROP BASE Intermediate_Dir "temp"
+-# PROP BASE Target_Dir ""
+-# PROP Use_MFC 0
+-# PROP Use_Debug_Libraries 1
+-# PROP Output_Dir ""
+-# PROP Intermediate_Dir "temp"
+-# PROP Target_Dir ""
+-# ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+-# ADD CPP /nologo /W3 /GX /Z7 /Od /I "../../include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+-# ADD BASE RSC /l 0x40c /d "_DEBUG"
+-# ADD RSC /l 0x40c /d "_DEBUG"
+-BSC32=bscmake.exe
+-# ADD BASE BSC32 /nologo
+-# ADD BSC32 /nologo
+-LIB32=link.exe -lib
+-# ADD BASE LIB32 /nologo
+-# ADD LIB32 /nologo
+-
+-!ENDIF
+-
+-# Begin Target
+-
++
++# PROP BASE Use_MFC 0
++# PROP BASE Use_Debug_Libraries 1
++# PROP BASE Output_Dir ""
++# PROP BASE Intermediate_Dir "temp"
++# PROP BASE Target_Dir ""
++# PROP Use_MFC 0
++# PROP Use_Debug_Libraries 1
++# PROP Output_Dir ""
++# PROP Intermediate_Dir "temp"
++# PROP Target_Dir ""
++# ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
++# ADD CPP /nologo /W3 /GX /Z7 /Od /I "../../include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
++# ADD BASE RSC /l 0x40c /d "_DEBUG"
++# ADD RSC /l 0x40c /d "_DEBUG"
++BSC32=bscmake.exe
++# ADD BASE BSC32 /nologo
++# ADD BSC32 /nologo
++LIB32=link.exe -lib
++# ADD BASE LIB32 /nologo
++# ADD LIB32 /nologo
++
++!ENDIF
++
++# Begin Target
++
+ # Name "mbedtls - Win32 Release"
+ # Name "mbedtls - Win32 Debug"
+-# Begin Group "Source Files"
+-
+-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+-SOURCE_ENTRIES
+-# End Group
+-# Begin Group "Header Files"
+-
+-# PROP Default_Filter "h;hpp;hxx;hm;inl"
+-HEADER_ENTRIES
+-# End Group
+-# End Target
+-# End Project
++# Begin Group "Source Files"
++
++# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
++SOURCE_ENTRIES
++# End Group
++# Begin Group "Header Files"
++
++# PROP Default_Filter "h;hpp;hxx;hm;inl"
++HEADER_ENTRIES
++# End Group
++# End Target
++# End Project
+diff --git a/third_party/mbedtls/repo/scripts/data_files/vs6-workspace-template.dsw b/third_party/mbedtls/repo/scripts/data_files/vs6-workspace-template.dsw
+index ef90098..9b2e262 100644
+--- a/third_party/mbedtls/repo/scripts/data_files/vs6-workspace-template.dsw
++++ b/third_party/mbedtls/repo/scripts/data_files/vs6-workspace-template.dsw
+@@ -1,18 +1,18 @@
+-Microsoft Developer Studio Workspace File, Format Version 6.00
+-# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+-
+-APP_ENTRIES
+-###############################################################################
+-
+-Global:
+-
+-Package=<5>
+-{{{
+-}}}
+-
+-Package=<3>
+-{{{
+-}}}
+-
+-###############################################################################
+-
++Microsoft Developer Studio Workspace File, Format Version 6.00
++# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
++
++APP_ENTRIES
++###############################################################################
++
++Global:
++
++Package=<5>
++{{{
++}}}
++
++Package=<3>
++{{{
++}}}
++
++###############################################################################
++
+diff --git a/third_party/mbedtls/repo/tests/data_files/bitstring-in-dn.pem b/third_party/mbedtls/repo/tests/data_files/bitstring-in-dn.pem
+index 1a98aa3..0808a06 100644
+--- a/third_party/mbedtls/repo/tests/data_files/bitstring-in-dn.pem
++++ b/third_party/mbedtls/repo/tests/data_files/bitstring-in-dn.pem
+@@ -1,51 +1,51 @@
+------BEGIN CERTIFICATE-----
+-MIIEATCCAumgAwIBAgIBAjANBgkqhkiG9w0BAQUFADBxMRMwEQYDVQQDDApUZXN0
+-IENBIDAxMREwDwYDVQQIDAhFY25pdm9ycDELMAkGA1UEBhMCWFgxHjAcBgkqhkiG
+-9w0BCQEWD3RjYUBleGFtcGxlLmNvbTEaMBgGA1UECgwRVGVzdCBDQSBBdXRob3Jp
+-dHkwHhcNMTUwMzExMTIwNjUxWhcNMjUwMzA4MTIwNjUxWjCBmzELMAkGA1UEBhMC
+-WFgxDDAKBgNVBAoMA3RjYTERMA8GA1UECAwIRWNuaXZvcnAxDDAKBgNVBAsMA1RD
+-QTEPMA0GA1UEAwwGQ2xpZW50MSEwHwYJKoZIhvcNAQkBFhJjbGllbnRAZXhhbXBs
+-ZS5jb20xEzARBgNVBAUTCjcxMDEwMTIyNTUxFDASBgNVBC0DCwA3MTAxMDEyMjU1
+-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnQS0JLb8Dqy8V2mszkWk
+-V8c/NPQcG3ivueXZHqOT9JTiPqrigGcLHtlmlaJ0aUUxix7q60aOds041TFyeknT
+-SUFYY4ppOhiP+fOpWKPv4ZMwhSI2XzcgYhQSNHV0lIG1we9RAAfumomDMq7oMJhb
+-EGf0ihibbwZXPUwBlm10GaB4K93PNY8Bz4ekBxzQ1WJkQ5LGsQnVZSuLnvp5dWSe
+-J2axxyY4hPXR30jzEyZvy4kv4nzAu5lqZ5XKLrRO4TKwZrtr+CCPVkPJRE36rWYt
+-tQaJEEpNOo0ZPpTtG6F8/tGh5r8jFx/f6wG+nyANJJ98kEP8i6TPjRrg+697mLcd
+-iQIDAQABo3kwdzAJBgNVHRMEAjAAMDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9j
+-cmwuZXhhbXBsZS5jb20vdGVzdF9jYV8wMS5jcmwwEwYDVR0lBAwwCgYIKwYBBQUH
+-AwIwHQYDVR0RBBYwFIESY2xpZW50QGV4YW1wbGUuY29tMA0GCSqGSIb3DQEBBQUA
+-A4IBAQBySELCnU8/PtGIG3dwhJENOSU5R7w8jpRXxHCuSBR+W6nuUCISz+z+EdF/
+-A7AOJDASuS+4gkrSSmQhGFpf7E5VbF8trVZhLAZrXqKMcUreKH6v0I8MAUXmIs3G
+-tqiBGf7pSYJN9DvVOOgANjdy6THuUzYv5qSvBZ4pNYEfHSlMNrV7niynd8dgPOML
+-pA7GUfv5k2mMkMbSD15pTMgcavrBKYgyqcvF1C3qghfoL5+i38H8sKzF8hy7wHtE
+-ESHtBq20RYA3m0UcA0e64GcanO2Ps/AQVBc7qMeHbqnqj3uUhtTkQcMUWnMgy1NR
+-5RbzoLMOxq7hoOCyIaQeM/wgxeGE
+------END CERTIFICATE-----
+------BEGIN RSA PRIVATE KEY-----
+-MIIEpAIBAAKCAQEAnQS0JLb8Dqy8V2mszkWkV8c/NPQcG3ivueXZHqOT9JTiPqri
+-gGcLHtlmlaJ0aUUxix7q60aOds041TFyeknTSUFYY4ppOhiP+fOpWKPv4ZMwhSI2
+-XzcgYhQSNHV0lIG1we9RAAfumomDMq7oMJhbEGf0ihibbwZXPUwBlm10GaB4K93P
+-NY8Bz4ekBxzQ1WJkQ5LGsQnVZSuLnvp5dWSeJ2axxyY4hPXR30jzEyZvy4kv4nzA
+-u5lqZ5XKLrRO4TKwZrtr+CCPVkPJRE36rWYttQaJEEpNOo0ZPpTtG6F8/tGh5r8j
+-Fx/f6wG+nyANJJ98kEP8i6TPjRrg+697mLcdiQIDAQABAoIBAF7i3MnjGmbz080v
+-OxJb23iAG54wdlvTjr3UPGTbjSmcXyxnsADQRFQcJHYAekCzY8EiqewL80OvuMx8
+-2SU1P81hA70Dg5tsBHWT3Z6HUwsKG6QYjKr1cUhTwLyazhyAVgogSN6v7GzO9M3I
+-DOBw8Xb0mz5oqGVre4S7TapN8n8ZG5oWm0XKGACXy0KbzY0KvWdkUzumFQ8X/ARE
+-FsWyu+O69EbMqZRUKu45SrcubsdVGjOwseZHkmp5V6pc6Q/OrTHZqXJtDva5UIRq
+-+Lof5scy9jiwwRnM/klvh23mz0ySU4YA3645m5KqyWR4YJCR1MnMANmXUSeYWfYz
+-19+R1gECgYEAzm83lI7eIhTH38H0/jFpf3R7vNjPX3TR5waa4EXsCxhTOpoL89mR
+-iNmzH0aOC4OR8rz/9PCnwmtH1lyQ4r/RokBmCp3pBxeWSlenFfV3rLCeEDo0Q/OL
+-SX5DL4IbZD0VmNDt606WS7AEv93GhpN03Anw6kgHQUm1l030PR9DYZECgYEAwrgO
+-/RyB/Ehw7smlysZb2sn1lvd6z8fg+pcu8ZNRKODaYCCOb8p1lnHrnIQdEmjhlmVp
+-HAEuJ5jxCb+lyruV+dlx+0W/p6lHtKr0iBHG8EFkHnjN6Y+59Qu0HfSm0pZw7Ftr
+-QcUDPuDJkTVUAvrZqciWlwzTWCC9KYXtasT+AHkCgYEAnP80dAUbpyvKvr/RxShr
+-JYW/PWZegChmIp+BViOXWvDLC3xwrqm+5yc59QVBrjwH2WYn+26zB0dzwPFxNyHP
+-GuiDMnvZ54zmve9foXGn7Gv+KjU53pvwSJqAGjeHAXr7W9c5uoVwBGv/kLPn8h1e
+-+KGO2X6iFeMq+cFNiNan9iECgYBj+oGnsKWFVeS2ls8LyMGNGzmAZF2opiZ8RHgU
+-DeIULS+zP8Qi3j92GdQyLxuGQlfiEvvfJzP9nOfWa5LC/4JIIUAHFo8LlT1+JHEe
+-FJKi9dBkXP7NN8DxcyruXpnxctFUarQttuytslmMt2cFiKuOI7I+qJUzoMu/sEZx
+-FeidcQKBgQCuralmtbl4nxjn3aR/ZgFTAKCL9WaJPh5hFJ9q4UuWxJdBX5z3Ey3/
+-70ehLKYPumjmZtXynzz4BTWj1W9X+tgj/499uzV6LdQERGjT6WVy8xR9RELWW0an
+-N9N1IAc4qTSjbI4EIMwMBSAoFfCux/jfDkG4g+RDnpV92sqxz2CtKg==
++-----BEGIN CERTIFICATE-----
++MIIEATCCAumgAwIBAgIBAjANBgkqhkiG9w0BAQUFADBxMRMwEQYDVQQDDApUZXN0
++IENBIDAxMREwDwYDVQQIDAhFY25pdm9ycDELMAkGA1UEBhMCWFgxHjAcBgkqhkiG
++9w0BCQEWD3RjYUBleGFtcGxlLmNvbTEaMBgGA1UECgwRVGVzdCBDQSBBdXRob3Jp
++dHkwHhcNMTUwMzExMTIwNjUxWhcNMjUwMzA4MTIwNjUxWjCBmzELMAkGA1UEBhMC
++WFgxDDAKBgNVBAoMA3RjYTERMA8GA1UECAwIRWNuaXZvcnAxDDAKBgNVBAsMA1RD
++QTEPMA0GA1UEAwwGQ2xpZW50MSEwHwYJKoZIhvcNAQkBFhJjbGllbnRAZXhhbXBs
++ZS5jb20xEzARBgNVBAUTCjcxMDEwMTIyNTUxFDASBgNVBC0DCwA3MTAxMDEyMjU1
++MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnQS0JLb8Dqy8V2mszkWk
++V8c/NPQcG3ivueXZHqOT9JTiPqrigGcLHtlmlaJ0aUUxix7q60aOds041TFyeknT
++SUFYY4ppOhiP+fOpWKPv4ZMwhSI2XzcgYhQSNHV0lIG1we9RAAfumomDMq7oMJhb
++EGf0ihibbwZXPUwBlm10GaB4K93PNY8Bz4ekBxzQ1WJkQ5LGsQnVZSuLnvp5dWSe
++J2axxyY4hPXR30jzEyZvy4kv4nzAu5lqZ5XKLrRO4TKwZrtr+CCPVkPJRE36rWYt
++tQaJEEpNOo0ZPpTtG6F8/tGh5r8jFx/f6wG+nyANJJ98kEP8i6TPjRrg+697mLcd
++iQIDAQABo3kwdzAJBgNVHRMEAjAAMDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9j
++cmwuZXhhbXBsZS5jb20vdGVzdF9jYV8wMS5jcmwwEwYDVR0lBAwwCgYIKwYBBQUH
++AwIwHQYDVR0RBBYwFIESY2xpZW50QGV4YW1wbGUuY29tMA0GCSqGSIb3DQEBBQUA
++A4IBAQBySELCnU8/PtGIG3dwhJENOSU5R7w8jpRXxHCuSBR+W6nuUCISz+z+EdF/
++A7AOJDASuS+4gkrSSmQhGFpf7E5VbF8trVZhLAZrXqKMcUreKH6v0I8MAUXmIs3G
++tqiBGf7pSYJN9DvVOOgANjdy6THuUzYv5qSvBZ4pNYEfHSlMNrV7niynd8dgPOML
++pA7GUfv5k2mMkMbSD15pTMgcavrBKYgyqcvF1C3qghfoL5+i38H8sKzF8hy7wHtE
++ESHtBq20RYA3m0UcA0e64GcanO2Ps/AQVBc7qMeHbqnqj3uUhtTkQcMUWnMgy1NR
++5RbzoLMOxq7hoOCyIaQeM/wgxeGE
++-----END CERTIFICATE-----
++-----BEGIN RSA PRIVATE KEY-----
++MIIEpAIBAAKCAQEAnQS0JLb8Dqy8V2mszkWkV8c/NPQcG3ivueXZHqOT9JTiPqri
++gGcLHtlmlaJ0aUUxix7q60aOds041TFyeknTSUFYY4ppOhiP+fOpWKPv4ZMwhSI2
++XzcgYhQSNHV0lIG1we9RAAfumomDMq7oMJhbEGf0ihibbwZXPUwBlm10GaB4K93P
++NY8Bz4ekBxzQ1WJkQ5LGsQnVZSuLnvp5dWSeJ2axxyY4hPXR30jzEyZvy4kv4nzA
++u5lqZ5XKLrRO4TKwZrtr+CCPVkPJRE36rWYttQaJEEpNOo0ZPpTtG6F8/tGh5r8j
++Fx/f6wG+nyANJJ98kEP8i6TPjRrg+697mLcdiQIDAQABAoIBAF7i3MnjGmbz080v
++OxJb23iAG54wdlvTjr3UPGTbjSmcXyxnsADQRFQcJHYAekCzY8EiqewL80OvuMx8
++2SU1P81hA70Dg5tsBHWT3Z6HUwsKG6QYjKr1cUhTwLyazhyAVgogSN6v7GzO9M3I
++DOBw8Xb0mz5oqGVre4S7TapN8n8ZG5oWm0XKGACXy0KbzY0KvWdkUzumFQ8X/ARE
++FsWyu+O69EbMqZRUKu45SrcubsdVGjOwseZHkmp5V6pc6Q/OrTHZqXJtDva5UIRq
+++Lof5scy9jiwwRnM/klvh23mz0ySU4YA3645m5KqyWR4YJCR1MnMANmXUSeYWfYz
++19+R1gECgYEAzm83lI7eIhTH38H0/jFpf3R7vNjPX3TR5waa4EXsCxhTOpoL89mR
++iNmzH0aOC4OR8rz/9PCnwmtH1lyQ4r/RokBmCp3pBxeWSlenFfV3rLCeEDo0Q/OL
++SX5DL4IbZD0VmNDt606WS7AEv93GhpN03Anw6kgHQUm1l030PR9DYZECgYEAwrgO
++/RyB/Ehw7smlysZb2sn1lvd6z8fg+pcu8ZNRKODaYCCOb8p1lnHrnIQdEmjhlmVp
++HAEuJ5jxCb+lyruV+dlx+0W/p6lHtKr0iBHG8EFkHnjN6Y+59Qu0HfSm0pZw7Ftr
++QcUDPuDJkTVUAvrZqciWlwzTWCC9KYXtasT+AHkCgYEAnP80dAUbpyvKvr/RxShr
++JYW/PWZegChmIp+BViOXWvDLC3xwrqm+5yc59QVBrjwH2WYn+26zB0dzwPFxNyHP
++GuiDMnvZ54zmve9foXGn7Gv+KjU53pvwSJqAGjeHAXr7W9c5uoVwBGv/kLPn8h1e
+++KGO2X6iFeMq+cFNiNan9iECgYBj+oGnsKWFVeS2ls8LyMGNGzmAZF2opiZ8RHgU
++DeIULS+zP8Qi3j92GdQyLxuGQlfiEvvfJzP9nOfWa5LC/4JIIUAHFo8LlT1+JHEe
++FJKi9dBkXP7NN8DxcyruXpnxctFUarQttuytslmMt2cFiKuOI7I+qJUzoMu/sEZx
++FeidcQKBgQCuralmtbl4nxjn3aR/ZgFTAKCL9WaJPh5hFJ9q4UuWxJdBX5z3Ey3/
++70ehLKYPumjmZtXynzz4BTWj1W9X+tgj/499uzV6LdQERGjT6WVy8xR9RELWW0an
++N9N1IAc4qTSjbI4EIMwMBSAoFfCux/jfDkG4g+RDnpV92sqxz2CtKg==
+ -----END RSA PRIVATE KEY-----
+\ No newline at end of file

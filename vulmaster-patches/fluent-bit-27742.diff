@@ -1,0 +1,15 @@
+diff --git a/include/fluent-bit/flb_mem.h b/include/fluent-bit/flb_mem.h
+index 23f419821..ac639e318 100644
+--- a/include/fluent-bit/flb_mem.h
++++ b/include/fluent-bit/flb_mem.h
+@@ -64,9 +64,7 @@ void *flb_malloc(const size_t size) {
+         return NULL;
+     }
+ 
+-    return aux;
+-}
+-
++ (! w ||! flb_worker_is_started ( w ) ) { return FLB_FALSE ; } if ( 
+ static inline ALLOCSZ_ATTR(1)
+ void *flb_calloc(size_t n, const size_t size) {
+     void *buf;

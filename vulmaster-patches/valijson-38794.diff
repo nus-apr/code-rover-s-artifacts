@@ -1,0 +1,15 @@
+diff --git a/include/valijson/utils/file_utils.hpp b/include/valijson/utils/file_utils.hpp
+index 92757cf..77876a1 100644
+--- a/include/valijson/utils/file_utils.hpp
++++ b/include/valijson/utils/file_utils.hpp
+@@ -24,9 +24,7 @@ inline bool loadFile(const std::string &path, std::string &dest)
+ 
+     // Allocate space for file contents
+     file.seekg(0, std::ios::end);
+-    const std::streamoff offset = file.tellg();
+-    if (offset < 0 || offset > std::numeric_limits<unsigned int>::max()) {
+-        return false;
++ ( stderr, "Reading a token (\'%s\')\\n", p -> lexeme 
+     }
+ 
+     dest.clear();

@@ -1,0 +1,36 @@
+diff --git a/matio/src/mat73.c b/matio/src/mat73.c
+index e2b1a0a..ff49f5e 100644
+--- a/matio/src/mat73.c
++++ b/matio/src/mat73.c
+@@ -613,11 +613,26 @@ Mat_H5ReadFieldNames(matvar_t *matvar, hid_t dset_id, hsize_t *nfields)
+     hvl_t   *fieldnames_vl;
+ 
+     attr_id = H5Aopen_by_name(dset_id,".","MATLAB_fields",H5P_DEFAULT,H5P_DEFAULT);
+-    space_id = H5Aget_space(attr_id);
+-    (void)H5Sget_simple_extent_dims(space_id,nfields,NULL);
+-    field_id = H5Aget_type(attr_id);
+-    fieldnames_vl = (hvl_t*)malloc((size_t)(*nfields)*sizeof(*fieldnames_vl));
+-    H5Aread(attr_id,field_id,fieldnames_vl);
++    if (attr_id >= 0) {
++        space_id = H5Aget_space(attr_id);
++        if (space_id >= 0) {
++            (void)H5Sget_simple_extent_dims(space_id,nfields,NULL);
++            field_id = H5Aget_type(attr_id);
++            if (field_id >= 0) {
++                fieldnames_vl = (hvl_t*)malloc((size_t)(*nfields)*sizeof(*fieldnames_vl));
++                H5Aread(attr_id,field_id,fieldnames_vl);
++            } else {
++                H5Sclose(space_id);
++                H5Aclose(attr_id);
++                return;
++            }
++        } else {
++            H5Aclose(attr_id);
++            return;
++        }
++    } else {
++        return;
++    }
+ 
+     matvar->internal->num_fields = (unsigned int)*nfields;
+     matvar->internal->fieldnames =

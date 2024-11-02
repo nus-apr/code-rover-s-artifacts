@@ -1,0 +1,27 @@
+diff --git a/src/der.c b/src/der.c
+index 85d6c453..ba69cda4 100644
+--- a/src/der.c
++++ b/src/der.c
+@@ -224,7 +224,7 @@ getlength(const uint8_t *c, size_t *p, size_t l)
+ static const char *
+ der_tag(char *buf, size_t len, uint32_t tag)
+ {
+-	if (tag < DER_TAG_LAST)
++	if (tag < sizeof(der__tag) / sizeof(der__tag[0]))
+ 		strlcpy(buf, der__tag[tag], len);
+ 	else
+ 		snprintf(buf, len, "%#x", tag);
+@@ -321,7 +321,12 @@ der_cmp(struct magic_set *ms, struct magic *m)
+ 		return -1;
+ 	}
+ 
+-	der_tag(buf, sizeof(buf), tag);
++	if (tag < sizeof(der__tag) / sizeof(der__tag[0])) {
++		der_tag(buf, sizeof(buf), tag);
++	} else {
++		DPRINTF(("%s: invalid tag\n", __func__));
++		return -1;
++	}
+ 	if ((ms->flags & MAGIC_DEBUG) != 0)
+ 		fprintf(stderr, "%s: tag %p got=%s exp=%s\n", __func__, b,
+ 		    buf, s);

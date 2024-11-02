@@ -1,0 +1,20 @@
+diff --git a/arrow/cpp/src/arrow/buffer.cc b/arrow/cpp/src/arrow/buffer.cc
+index dafb3e4..e654779 100644
+--- a/arrow/cpp/src/arrow/buffer.cc
++++ b/arrow/cpp/src/arrow/buffer.cc
+@@ -258,10 +258,12 @@ Result<std::shared_ptr<Buffer>> ConcatenateBuffers(
+   ARROW_ASSIGN_OR_RAISE(auto out, AllocateBuffer(out_length, pool));
+   auto out_data = out->mutable_data();
+   for (const auto& buffer : buffers) {
+-    std::memcpy(out_data, buffer->data(), buffer->size());
+-    out_data += buffer->size();
++    if (buffer->size() > 0) {
++      std::memcpy(out_data, buffer->data(), buffer->size());
++      out_data += buffer->size();
++    }
+   }
+   return std::move(out);
+ }
+ 
+-}  // namespace arrow
++}  // namespace arrow

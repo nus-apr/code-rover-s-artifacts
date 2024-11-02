@@ -1,0 +1,22 @@
+diff --git a/md4c/src/md4c.c b/md4c/src/md4c.c
+index e287b10..fd350fb 100644
+--- a/md4c/src/md4c.c
++++ b/md4c/src/md4c.c
+@@ -2318,13 +2318,13 @@ md_is_inline_link_spec(MD_CTX* ctx, const MD_LINE* lines, int n_lines,
+     /* Optional whitespace followed with final ')'. */
+     while(off < lines[line_index].end  &&  ISWHITESPACE(off))
+         off++;
+-    if(off >= lines[line_index].end  &&  ISNEWLINE(off)) {
+-        line_index++;
+-        if(line_index >= n_lines)
++    if(off >= lines[line_index].end) {
++        if(line_index + 1 >= n_lines || !ISNEWLINE(off))
+             return FALSE;
++        line_index++;
+         off = lines[line_index].beg;
+     }
+-    if(CH(off) != _T(')'))
++    if(off >= lines[line_index].end || CH(off) != _T(')'))
+         goto abort;
+     off++;
+ 

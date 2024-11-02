@@ -1,0 +1,40 @@
+diff --git a/src/h3lib/lib/baseCells.c b/src/h3lib/lib/baseCells.c
+index 57e64385..7791cbbb 100644
+--- a/src/h3lib/lib/baseCells.c
++++ b/src/h3lib/lib/baseCells.c
+@@ -898,6 +898,9 @@ bool _baseCellIsCwOffset(int baseCell, int testFace) {
+ /** @brief Return the neighboring base cell in the given direction.
+  */
+ int _getBaseCellNeighbor(int baseCell, Direction dir) {
++    if (dir < CENTER_DIGIT || dir >= NUM_DIGITS) {
++        return INVALID_BASE_CELL; // Handle invalid direction
++    }
+     return baseCellNeighbors[baseCell][dir];
+ }
+ 
+diff --git a/src/h3lib/lib/localij.c b/src/h3lib/lib/localij.c
+index 6e338c6d..91a73a7a 100644
+--- a/src/h3lib/lib/localij.c
++++ b/src/h3lib/lib/localij.c
+@@ -322,12 +322,15 @@ H3Error localIjkToCell(H3Index origin, const CoordIJK *ijk, H3Index *out) {
+             return E_FAILED;
+         }
+ 
+-        const Direction dir = _unitIjkToDigit(ijk);
+-        const int newBaseCell = _getBaseCellNeighbor(originBaseCell, dir);
+-        if (newBaseCell == INVALID_BASE_CELL) {
+-            // Moving in an invalid direction off a pentagon.
+-            return E_FAILED;
+-        }
++const Direction dir = _unitIjkToDigit(ijk);
++if (dir < CENTER_DIGIT || dir >= NUM_DIGITS) {
++    return E_FAILED; // Handle invalid direction
++}
++const int newBaseCell = _getBaseCellNeighbor(originBaseCell, dir);
++if (newBaseCell == INVALID_BASE_CELL) {
++    // Moving in an invalid direction off a pentagon.
++    return E_FAILED;
++}
+         H3_SET_BASE_CELL(*out, newBaseCell);
+         return E_SUCCESS;
+     }

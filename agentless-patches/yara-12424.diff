@@ -1,0 +1,67 @@
+diff --git a/yara/libyara/modules/dex.c b/yara/libyara/modules/dex.c
+index 3d1fb5c..c19dd02 100644
+--- a/yara/libyara/modules/dex.c
++++ b/yara/libyara/modules/dex.c
+@@ -217,28 +217,38 @@ end_declarations;
+ 
+ int32_t read_uleb128(
+     const uint8_t* pStream,
+-    uint32_t *size)
++    uint32_t *size,
++    size_t max_size)
+ {
+   const uint8_t* ptr = pStream;
++  size_t bytes_read = 0;
+ 
++  if (bytes_read >= max_size) return -1; // Error: buffer overflow
+   int32_t result = *(ptr++);
++  bytes_read++;
+   *size = *size + 1;
+ 
+   if (result > 0x7f)
+   {
++    if (bytes_read >= max_size) return -1; // Error: buffer overflow
+     int cur = *(ptr++);
++    bytes_read++;
+     *size = *size + 1;
+     result = (result & 0x7f) | ((cur & 0x7f) << 7);
+ 
+     if (cur > 0x7f)
+     {
++      if (bytes_read >= max_size) return -1; // Error: buffer overflow
+       cur = *(ptr++);
++      bytes_read++;
+       *size = *size + 1;
+       result |= (cur & 0x7f) << 14;
+ 
+       if (cur > 0x7f)
+       {
++        if (bytes_read >= max_size) return -1; // Error: buffer overflow
+         cur = *(ptr++);
++        bytes_read++;
+         *size = *size + 1;
+         result |= (cur & 0x7f) << 21;
+ 
+@@ -249,7 +259,9 @@ int32_t read_uleb128(
+            * range here, meaning we tolerate garbage in the
+            * high four-order bits.
+            */
++          if (bytes_read >= max_size) return -1; // Error: buffer overflow
+           cur = *(ptr++);
++          bytes_read++;
+           *size = *size + 1;
+           result |= cur << 28;
+         }
+@@ -367,10 +379,10 @@ uint32_t load_encoded_field(
+   encoded_field_t encoded_field;
+ 
+   encoded_field.field_idx_diff = (uint32_t) read_uleb128(
+-      (dex->data + start_offset + current_size), &current_size);
++      (dex->data + start_offset + current_size), &current_size, dex->data_size - start_offset);
+ 
+   encoded_field.access_flags = (uint32_t) read_uleb128(
+-      (dex->data + start_offset + current_size), &current_size);
++      (dex->data + start_offset + current_size), &current_size, dex->data_size - start_offset);
+ 
+   *previous_field_idx = encoded_field.field_idx_diff + *previous_field_idx;
+ 

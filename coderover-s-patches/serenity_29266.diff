@@ -1,0 +1,13 @@
+diff --git a/Libraries/LibJS/Heap/Heap.cpp b/Libraries/LibJS/Heap/Heap.cpp
+index 099daf4185..50c97d1f53 100644
+--- a/Libraries/LibJS/Heap/Heap.cpp
++++ b/Libraries/LibJS/Heap/Heap.cpp
+@@ -145,7 +145,7 @@ void Heap::gather_conservative_roots(HashTable<Cell*>& roots)
+     FlatPtr stack_reference = reinterpret_cast<FlatPtr>(&dummy);
+     auto& stack_info = m_vm.stack_info();
+ 
+-    for (FlatPtr stack_address = stack_reference; stack_address < stack_info.top(); stack_address += sizeof(FlatPtr)) {
++    for (FlatPtr stack_address = stack_reference; stack_address > stack_info.top(); stack_address -= sizeof(FlatPtr)) {
+         auto data = *reinterpret_cast<FlatPtr*>(stack_address);
+         possible_pointers.set(data);
+     }

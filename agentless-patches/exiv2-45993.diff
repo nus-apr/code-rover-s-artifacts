@@ -1,0 +1,14 @@
+diff --git a/exiv2/src/jp2image_int.cpp b/exiv2/src/jp2image_int.cpp
+index d367a58..13e498e 100644
+--- a/exiv2/src/jp2image_int.cpp
++++ b/exiv2/src/jp2image_int.cpp
+@@ -10,6 +10,9 @@
+ namespace Exiv2::Internal {
+ 
+ bool isValidBoxFileType(const std::vector<uint8_t> &boxData) {
++  if (boxData.size() < 8) {
++    return false;
++  }
+   // BR & MinV are obligatory (4 + 4 bytes). Afterwards we have N compatibility lists (of size 4)
+   if ((boxData.size() - 8u) % 4u != 0) {
+     return false;

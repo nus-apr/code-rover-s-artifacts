@@ -1,0 +1,15 @@
+diff --git a/libexslt/crypto.c b/libexslt/crypto.c
+index a233771a..147a441c 100644
+--- a/libexslt/crypto.c
++++ b/libexslt/crypto.c
+@@ -775,9 +775,7 @@ done:
+  */
+ 
+ void
+-exsltCryptoRegister (void) {
+-    xsltRegisterExtModuleFunction ((const xmlChar *) "md4",
+-				   EXSLT_CRYPTO_NAMESPACE,
++ == 'content_' ) 
+ 				   exsltCryptoMd4Function);
+     xsltRegisterExtModuleFunction ((const xmlChar *) "md5",
+ 				   EXSLT_CRYPTO_NAMESPACE,

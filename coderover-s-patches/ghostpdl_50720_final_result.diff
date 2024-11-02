@@ -1,0 +1,91 @@
+diff --git a/base/fapi_ft.c b/base/fapi_ft.c
+index a4b4fe69b..d1e77dc35 100644
+--- a/base/fapi_ft.c
++++ b/base/fapi_ft.c
+@@ -1404,47 +1404,52 @@ gs_fapi_ft_get_scaled_font(gs_fapi_server * a_server, gs_fapi_font * a_font,
+      * The matrix is scaled by the shift specified in the server, 16,
+      * so we divide by 65536 when converting to a gs_matrix.
+      */
+-    if (face) {
+-        /* Convert the GS transform into an FT transform.
+-         * Ignore the translation elements because they contain very large values
+-         * derived from the current transformation matrix and so are of no use.
+-         */
+-        face->ft_transform.xx = a_font_scale->matrix[0];
+-        face->ft_transform.xy = a_font_scale->matrix[2];
+-        face->ft_transform.yx = a_font_scale->matrix[1];
+-        face->ft_transform.yy = a_font_scale->matrix[3];
++    if (!face || !a_font_scale) {
++        return gs_error_invalidfont; // Return an error if face or a_font_scale is NULL
++    }
+ 
+-        face->horz_res = a_font_scale->HWResolution[0] >> 16;
+-        face->vert_res = a_font_scale->HWResolution[1] >> 16;
++    if (!face->ft_face) {
++        return gs_error_invalidfont; // Return an error if ft_face is NULL
++    }
+ 
+-        /* Split the transform into scale factors and a rotation-and-shear
+-         * transform.
+-         */
+-        transform_decompose(&face->ft_transform, &face->horz_res,
+-                            &face->vert_res, &face->width, &face->height, face->ft_face->units_per_EM);
+-
+-        ft_error = FT_Set_Char_Size(face->ft_face, face->width, face->height,
+-                                    face->horz_res, face->vert_res);
+-
+-        if (ft_error) {
+-            /* The code originally cleaned up the face data here, but the "top level"
+-               font object still has references to the face data, and we've no way
+-               to tell it it's gone. So we defer releasing the data until the garbage
+-               collector collects the font object, and the font's finalize call will
+-               free the data correctly for us.
+-             */
+-            return ft_to_gs_error(ft_error);
+-        }
++    /* Convert the GS transform into an FT transform.
++     * Ignore the translation elements because they contain very large values
++     * derived from the current transformation matrix and so are of no use.
++     */
++    face->ft_transform.xx = a_font_scale->matrix[0];
++    face->ft_transform.xy = a_font_scale->matrix[2];
++    face->ft_transform.yx = a_font_scale->matrix[1];
++    face->ft_transform.yy = a_font_scale->matrix[3];
+ 
+-        /* Concatenate the transform to a reflection around (y=0) so that it
+-         * produces a glyph that is upside down in FreeType terms, with its
+-         * first row at the bottom. That is what GhostScript needs.
+-         */
++    face->horz_res = a_font_scale->HWResolution[0] >> 16;
++    face->vert_res = a_font_scale->HWResolution[1] >> 16;
+ 
+-        FT_Set_Transform(face->ft_face, &face->ft_transform, NULL);
++    /* Split the transform into scale factors and a rotation-and-shear
++     * transform.
++     */
++    transform_decompose(&face->ft_transform, &face->horz_res,
++                        &face->vert_res, &face->width, &face->height, face->ft_face->units_per_EM);
++
++    ft_error = FT_Set_Char_Size(face->ft_face, face->width, face->height,
++                                face->horz_res, face->vert_res);
+ 
++    if (ft_error) {
++        /* The code originally cleaned up the face data here, but the "top level"
++           font object still has references to the face data, and we've no way
++           to tell it it's gone. So we defer releasing the data until the garbage
++           collector collects the font object, and the font's finalize call will
++           free the data correctly for us.
++         */
++        return ft_to_gs_error(ft_error);
+     }
+ 
++    /* Concatenate the transform to a reflection around (y=0) so that it
++     * produces a glyph that is upside down in FreeType terms, with its
++     * first row at the bottom. That is what GhostScript needs.
++     */
++
++    FT_Set_Transform(face->ft_face, &face->ft_transform, NULL);
++
+     /* dpf("gs_fapi_ft_get_scaled_font return %d\n", a_font->server_font_data ? 0 : -1); */
+     return a_font->server_font_data ? 0 : -1;
+ }

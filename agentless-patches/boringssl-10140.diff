@@ -1,0 +1,13 @@
+diff --git a/boringssl/crypto/pem/pem_lib.c b/boringssl/crypto/pem/pem_lib.c
+index 6260147..e27a12e 100644
+--- a/boringssl/crypto/pem/pem_lib.c
++++ b/boringssl/crypto/pem/pem_lib.c
+@@ -607,7 +607,7 @@ int PEM_read_bio(BIO *bp, char **name, char **header, unsigned char **data,
+ {
+     EVP_ENCODE_CTX ctx;
+     int end = 0, i, k, bl = 0, hl = 0, nohead = 0;
+-    char buf[256];
++    char buf[256] = {0};
+     BUF_MEM *nameB;
+     BUF_MEM *headerB;
+     BUF_MEM *dataB, *tmpB;

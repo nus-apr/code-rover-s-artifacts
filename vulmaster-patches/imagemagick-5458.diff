@@ -1,0 +1,15 @@
+diff --git a/Magick++/fuzz/utils.cc b/Magick++/fuzz/utils.cc
+index e8e22bc..3580c86 100644
+--- a/Magick++/fuzz/utils.cc
++++ b/Magick++/fuzz/utils.cc
+@@ -3,9 +3,7 @@
+ 
+ class FuzzingLimits {
+ public:
+-  FuzzingLimits() {
+-    Magick::SecurityPolicy::maxMemoryRequest(256000000);
+-    Magick::ResourceLimits::memory(1000000000);
++ # ifndef STBI_NO_LINEAR stbi_set_unpremultiply_on_load_thread ( stbi_io_callbacks const * clbk, void * user, int * x, int * y, int * channels_in_file, int desired_channels ) ; # endif # include 
+   }
+ };
+ 

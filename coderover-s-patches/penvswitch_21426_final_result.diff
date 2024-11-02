@@ -1,0 +1,13 @@
+diff --git a/lib/odp-util.c b/lib/odp-util.c
+index b66d266cc..f4d8a3242 100644
+--- a/lib/odp-util.c
++++ b/lib/odp-util.c
+@@ -5173,7 +5173,7 @@ scan_gtpu_metadata(const char *s,
+ {
+     const char *s_base = s;
+     uint8_t flags, flags_ma;
+-    uint8_t msgtype, msgtype_ma;
++    uint8_t msgtype, msgtype_ma = 0;
+     int len;
+ 
+     if (!strncmp(s, "flags=", 6)) {

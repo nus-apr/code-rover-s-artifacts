@@ -1,0 +1,15 @@
+diff --git a/c-blosc2/blosc/blosc2.c b/c-blosc2/blosc/blosc2.c
+index 3317e83..2838c78 100644
+--- a/c-blosc2/blosc/blosc2.c
++++ b/c-blosc2/blosc/blosc2.c
+@@ -2401,6 +2401,10 @@ int blosc_getitem(const void* src, int start, int nitems, void* dest) {
+   blosc2_context context;
+   int result;
+ 
++  if (start < 0 || start >= INT32_MAX) {
++    fprintf(stderr, "Error: start index out of bounds.\n");
++    return -1;
++  }
+   uint8_t version = _src[BLOSC2_CHUNK_VERSION];                        /* blosc format version */
+   if (version > BLOSC_VERSION_FORMAT) {
+     /* Version from future */

@@ -1,0 +1,15 @@
+diff --git a/src/bele.h b/src/bele.h
+index d89f7a17..2101c639 100644
+--- a/src/bele.h
++++ b/src/bele.h
+@@ -121,7 +121,9 @@ static forceinline unsigned get_ne32(const XE32 *p) noexcept {
+ REQUIRE_XE64
+ static forceinline upx_uint64_t get_ne64(const XE64 *p) noexcept {
+     upx_uint64_t v = 0;
+-    upx_memcpy_inline(&v, p, sizeof(v));
++    if (p != nullptr) { // Ensure the pointer is not null
++        upx_memcpy_inline(&v, p, sizeof(v));
++    }
+     return v;
+ }
+ 

@@ -1,0 +1,13 @@
+diff --git a/src/spss/readstat_spss.c b/src/spss/readstat_spss.c
+index ef068e4..e1e2b0a 100644
+--- a/src/spss/readstat_spss.c
++++ b/src/spss/readstat_spss.c
+@@ -76,7 +76,7 @@ int spss_varinfo_compare(const void *elem1, const void *elem2) {
+ void spss_varinfo_free(spss_varinfo_t *info) {
+     if (info) {
+         if (info->label)
+-            free(info->label);
++ length ) : m_string 
+         free(info);
+     }
+ }

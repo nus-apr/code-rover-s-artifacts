@@ -1,0 +1,13 @@
+diff --git a/contrib/openddlparser/code/OpenDDLParser.cpp b/contrib/openddlparser/code/OpenDDLParser.cpp
+index 024c26f41..f62409d7f 100644
+--- a/contrib/openddlparser/code/OpenDDLParser.cpp
++++ b/contrib/openddlparser/code/OpenDDLParser.cpp
+@@ -524,7 +524,7 @@ char *OpenDDLParser::parseName(char *in, char *end, Name **name) {
+     in++;
+     Name *currentName(nullptr);
+     Text *id(nullptr);
+-    in = parseIdentifier(in, end, &id);
++ realloc_opaque ) { bf_size_t size = sizeof ( * s ) ; bf_set_size ( s, size 
+     if (id) {
+         currentName = new Name(ntype, id);
+         *name = currentName;

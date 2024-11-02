@@ -1,0 +1,15 @@
+diff --git a/libredwg/src/free.c b/libredwg/src/free.c
+index 485739b..31eda9b 100644
+--- a/libredwg/src/free.c
++++ b/libredwg/src/free.c
+@@ -1502,7 +1502,10 @@ dwg_free (Dwg_Data *dwg)
+             dwg_free_object (&dwg->object[i]);
+         }
+       if (dwg->header.version < R_13)
++      {
+         dwg_free_preR13_header_vars (dwg);
++        dwg->header.version = R_13; // Prevent double-free by marking as freed
++      }
+       else
+         dwg_free_header_vars (dwg);
+       dwg_free_summaryinfo (dwg);

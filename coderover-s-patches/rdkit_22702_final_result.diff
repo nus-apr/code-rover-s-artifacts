@@ -1,0 +1,32 @@
+diff --git a/Code/GraphMol/ROMol.cpp b/Code/GraphMol/ROMol.cpp
+index 3a9240f50..52ecdcc1c 100644
+--- a/Code/GraphMol/ROMol.cpp
++++ b/Code/GraphMol/ROMol.cpp
+@@ -218,6 +218,11 @@ ROMol::ATOM_PTR_LIST &ROMol::getAllAtomsWithBookmark(int mark) {
+ Atom *ROMol::getUniqueAtomWithBookmark(int mark) {
+   PRECONDITION(d_atomBookmarks.count(mark) == 1,
+                "multiple atoms with same bookmark");
++  if (d_atomBookmarks.count(mark) != 1) {
++    // Handle the invalid bookmark case
++    BOOST_LOG(rdErrorLog) << "Invalid or multiple bookmarks for: " << mark << std::endl;
++    return nullptr; // Return nullptr if the bookmark is invalid
++  }
+   return getAtomWithBookmark(mark);
+ }
+ 
+diff --git a/Code/GraphMol/SubstanceGroup.cpp b/Code/GraphMol/SubstanceGroup.cpp
+index d65ad67a8..00712a5ae 100644
+--- a/Code/GraphMol/SubstanceGroup.cpp
++++ b/Code/GraphMol/SubstanceGroup.cpp
+@@ -59,6 +59,11 @@ void SubstanceGroup::addAtomWithIdx(unsigned int idx) {
+ void SubstanceGroup::addAtomWithBookmark(int mark) {
+   PRECONDITION(dp_mol, "bad mol");
+   Atom *atom = dp_mol->getUniqueAtomWithBookmark(mark);
++  if (!atom) {
++    // Handle the invalid bookmark case gracefully
++    BOOST_LOG(rdErrorLog) << "Invalid bookmark: " << mark << std::endl;
++    return; // Abort the operation if the atom is invalid
++  }
+   d_atoms.push_back(atom->getIdx());
+ }
+ 

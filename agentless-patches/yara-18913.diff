@@ -1,0 +1,17 @@
+diff --git a/yara/libyara/scanner.c b/yara/libyara/scanner.c
+index 27d1bc4..8f53547 100644
+--- a/yara/libyara/scanner.c
++++ b/yara/libyara/scanner.c
+@@ -404,6 +404,12 @@ YR_API int yr_scanner_scan_mem_blocks(
+       continue;
+     }
+ 
++    if (data == NULL)
++    {
++      result = ERROR_COULD_NOT_MAP_FILE;
++      goto _exit;
++    }
++
+     if (scanner->entry_point == UNDEFINED)
+     {
+       YR_TRYCATCH(

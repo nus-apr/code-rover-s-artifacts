@@ -1,0 +1,15 @@
+diff --git a/src/imageformats/tga.cpp b/src/imageformats/tga.cpp
+index ab05e33..80ec6b4 100644
+--- a/src/imageformats/tga.cpp
++++ b/src/imageformats/tga.cpp
+@@ -212,9 +212,7 @@ static bool LoadTGA(QDataStream &s, const TgaHeader &tga, QImage &img)
+     }
+ 
+     // Allocate image.
+-    uchar *const image = reinterpret_cast<uchar*>(malloc(size));
+-    if (!image) {
+-        return false;
++ ; if ( image == NULL 
+     }
+ 
+     bool valid = true;

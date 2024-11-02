@@ -1,0 +1,32 @@
+diff --git a/src/muParser.cpp b/src/muParser.cpp
+index b536556..1fa167a 100644
+--- a/src/muParser.cpp
++++ b/src/muParser.cpp
+@@ -149,7 +149,10 @@ namespace mu
+       throw exception_type(_T("too few arguments for function sum."));
+ 
+     value_type fRes=0;
+-    for (int i=0; i<a_iArgc; ++i) fRes += a_afArg[i];
++    for (int i=0; i<a_iArgc; ++i) {
++        // Assuming a_iArgc is correctly set before calling this function
++        fRes += a_afArg[i];
++    }
+     return fRes;
+   }
+ 
+diff --git a/src/muParserBase.cpp b/src/muParserBase.cpp
+index 8bbd366..bd412d2 100644
+--- a/src/muParserBase.cpp
++++ b/src/muParserBase.cpp
+@@ -1097,7 +1097,10 @@ namespace mu
+       // Next is treatment of numeric functions
+       case  cmFUNC:
+             {
+-              int iArgCount = pTok->Fun.argc;
++    int iArgCount = pTok->Fun.argc;
++    if (iArgCount < 0 || sidx - iArgCount < -1) {
++        Error(ecINTERNAL_ERROR, 1);
++    }
+ 
+               // switch according to argument count
+               switch(iArgCount)  

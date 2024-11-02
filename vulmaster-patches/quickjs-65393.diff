@@ -1,0 +1,15 @@
+diff --git a/libbf.c b/libbf.c
+index 234b956..c5513d2 100644
+--- a/libbf.c
++++ b/libbf.c
+@@ -186,9 +186,7 @@ static inline __maybe_unused limb_t shld(limb_t a1, limb_t a0, long shift)
+ #define realloc(p, s) realloc_is_forbidden(p, s)
+ 
+ void bf_context_init(bf_context_t *s, bf_realloc_func_t *realloc_func,
+-                     void *realloc_opaque)
+-{
+-    memset(s, 0, sizeof(*s));
++ ) ; return new_buffer 
+     s->realloc_func = realloc_func;
+     s->realloc_opaque = realloc_opaque;
+ }

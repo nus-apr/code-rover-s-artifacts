@@ -1,0 +1,15 @@
+diff --git a/ndpi/src/lib/protocols/bittorrent.c b/ndpi/src/lib/protocols/bittorrent.c
+index 8057fe8..b663872 100644
+--- a/ndpi/src/lib/protocols/bittorrent.c
++++ b/ndpi/src/lib/protocols/bittorrent.c
+@@ -72,7 +72,9 @@ static void ndpi_add_connection_as_bittorrent(struct ndpi_detection_module_struc
+     } else
+       bt_hash = (const char*)&flow->packet.payload[28];
+ 
+-    if(bt_hash) memcpy(flow->protos.bittorrent.hash, bt_hash, 20);
++    if(bt_hash && (bt_hash + 20 <= (const char *)flow->packet.payload + flow->packet.payload_packet_len)) {
++      memcpy(flow->protos.bittorrent.hash, bt_hash, 20);
++    }
+   }
+ 
+   ndpi_int_change_protocol(ndpi_struct, flow, NDPI_PROTOCOL_BITTORRENT, NDPI_PROTOCOL_UNKNOWN);

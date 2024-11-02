@@ -1,0 +1,15 @@
+diff --git a/Common++/header/IpAddress.h b/Common++/header/IpAddress.h
+index 81b3c43a..4304f8b7 100644
+--- a/Common++/header/IpAddress.h
++++ b/Common++/header/IpAddress.h
+@@ -194,9 +194,7 @@ namespace pcpp
+ 	public:
+ 		/**
+ 		 * A default constructor that creates an instance of the class with unspecified/zero address
+-		 */
+-		IPv6Address() { memset(m_Bytes, 0, sizeof(m_Bytes)); }
+-
++ dwg_inthash * ) calloc ( 1, 
+ 		/**
+ 		 * A constructor that creates an instance of the class out of 16-byte array.
+ 		 * @param[in] bytes The address as 16-byte array in network byte order

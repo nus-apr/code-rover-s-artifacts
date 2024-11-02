@@ -1,0 +1,18 @@
+diff --git a/libjxl/lib/jxl/render_pipeline/stage_blending.cc b/libjxl/lib/jxl/render_pipeline/stage_blending.cc
+index 46ee446..38e60ab 100644
+--- a/libjxl/lib/jxl/render_pipeline/stage_blending.cc
++++ b/libjxl/lib/jxl/render_pipeline/stage_blending.cc
+@@ -187,9 +187,10 @@ class BlendingStage : public RenderPipelineStage {
+       if (ec_bg.xsize() == 0 || ec_bg.ysize() == 0) {
+         memset(GetInputRow(output_rows, 3 + ec, 0), 0, xsize * sizeof(float));
+       } else {
+-        memcpy(GetInputRow(output_rows, 3 + ec, 0),
+-               ec_bg.extra_channels()[ec].ConstRow(ypos) + xpos,
+-               xsize * sizeof(float));
++        const float* src_row = ec_bg.extra_channels()[ec].ConstRow(ypos) + xpos;
++        float* dst_row = GetInputRow(output_rows, 3 + ec, 0);
++        size_t copy_size = std::min(xsize, ec_bg.extra_channels()[ec].xsize() - xpos) * sizeof(float);
++        memcpy(dst_row, src_row, copy_size);
+       }
+     }
+   }

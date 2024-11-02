@@ -1,0 +1,15 @@
+diff --git a/qemu/hw/arm/virt.c b/qemu/hw/arm/virt.c
+index 485109c..70100e1 100644
+--- a/qemu/hw/arm/virt.c
++++ b/qemu/hw/arm/virt.c
+@@ -40,9 +40,7 @@ static int machvirt_init(struct uc_struct *uc, MachineState *machine)
+ {
+     const char *cpu_model = machine->cpu_model;
+     int n;
+-
+-    if (!cpu_model) {
+-        cpu_model = "cortex-a57";   // ARM64
++. is_default = 0 
+     }
+ 
+     for (n = 0; n < smp_cpus; n++) {

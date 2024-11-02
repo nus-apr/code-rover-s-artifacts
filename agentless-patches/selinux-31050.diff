@@ -1,0 +1,15 @@
+diff --git a/selinux/libsepol/cil/src/cil_resolve_ast.c b/selinux/libsepol/cil/src/cil_resolve_ast.c
+index c2b2d99..15a67d9 100644
+--- a/selinux/libsepol/cil/src/cil_resolve_ast.c
++++ b/selinux/libsepol/cil/src/cil_resolve_ast.c
+@@ -1218,8 +1218,9 @@ void __cil_ordered_lists_reset(struct cil_list **ordered_lists)
+ 
+ struct cil_list_item *__cil_ordered_item_insert(struct cil_list *old, struct cil_list_item *curr, struct cil_list_item *item)
+ {
+-	if (item->flavor == CIL_SID) {
++	if (item->flavor == CIL_SID && item->data != NULL) {
+ 		struct cil_sid *sid = item->data;
++		memset(sid, 0, sizeof(struct cil_sid)); // Ensure sid is initialized
+ 		if (sid->ordered == CIL_TRUE) {
+ 			cil_log(CIL_ERR, "SID %s has already been merged into the ordered list\n", sid->datum.name);
+ 			return NULL;

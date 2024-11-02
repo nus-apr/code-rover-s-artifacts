@@ -1,0 +1,26 @@
+diff --git a/src/free.c b/src/free.c
+index cf15856d..92ceb4b0 100644
+--- a/src/free.c
++++ b/src/free.c
+@@ -1047,7 +1047,9 @@ dwg_free_object (Dwg_Object *obj)
+       dwg_free_HATCH (dat, obj);
+       break;
+     case DWG_TYPE_XRECORD:
+-      dwg_free_XRECORD (dat, obj);
++      if (obj->type != DWG_TYPE_FREED) {
++        dwg_free_XRECORD (dat, obj);
++      }
+       break;
+     case DWG_TYPE_PLACEHOLDER:
+       dwg_free_PLACEHOLDER (dat, obj);
+@@ -1337,7 +1339,9 @@ dwg_free_object_private (Dwg_Object *obj)
+       dwg_free_HATCH_private (dat, dat, dat, obj);
+       break;
+     case DWG_TYPE_XRECORD:
+-      dwg_free_XRECORD_private (dat, dat, dat, obj);
++      if (obj->type != DWG_TYPE_FREED) {
++        dwg_free_XRECORD_private (dat, dat, dat, obj);
++      }
+       break;
+     case DWG_TYPE_PLACEHOLDER:
+       dwg_free_PLACEHOLDER_private (dat, dat, dat, obj);

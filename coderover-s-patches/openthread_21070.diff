@@ -1,0 +1,17 @@
+diff --git a/src/core/thread/energy_scan_server.cpp b/src/core/thread/energy_scan_server.cpp
+index 0f5e44aa4..422b99d62 100644
+--- a/src/core/thread/energy_scan_server.cpp
++++ b/src/core/thread/energy_scan_server.cpp
+@@ -145,7 +145,11 @@ void EnergyScanServer::HandleScanResult(Mac::EnergyScanResult *aResult)
+ 
+     if (aResult)
+     {
+-        mScanResults[mScanResultsLength++] = aResult->mMaxRssi;
++        if (mScanResultsLength < OPENTHREAD_CONFIG_TMF_ENERGY_SCAN_MAX_RESULTS)
++        {
++            mScanResults[mScanResultsLength++] = aResult->mMaxRssi;
++        }
++        // Optionally, handle the case where the results array is full
+     }
+     else
+     {

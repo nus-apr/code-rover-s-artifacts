@@ -1,0 +1,18 @@
+diff --git a/skia/src/core/SkBitmapDevice.cpp b/skia/src/core/SkBitmapDevice.cpp
+index debb4a1..70a273b 100644
+--- a/skia/src/core/SkBitmapDevice.cpp
++++ b/skia/src/core/SkBitmapDevice.cpp
+@@ -108,11 +108,11 @@ SkBitmapDevice* SkBitmapDevice::Create(const SkImageInfo& origInfo,
+             return nullptr;
+         }
+     } else if (info.isOpaque()) {
+-        // If this bitmap is opaque, we don't have any sensible default color,
+-        // so we just return uninitialized pixels.
++        // If this bitmap is opaque, initialize pixels to opaque white.
+         if (!bitmap.tryAllocPixels(info)) {
+             return nullptr;
+         }
++        bitmap.eraseColor(SK_ColorWHITE);
+     } else {
+         // This bitmap has transparency, so we'll zero the pixels (to transparent).
+         // We use the flag as a faster alloc-then-eraseColor(SK_ColorTRANSPARENT).

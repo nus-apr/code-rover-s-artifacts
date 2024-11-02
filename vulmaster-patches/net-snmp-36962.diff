@@ -1,0 +1,91 @@
+diff --git a/configure b/configure
+index b64bec49a0..5e29f3f6ca 100755
+--- a/configure
++++ b/configure
+@@ -827,6 +827,7 @@ infodir
+ docdir
+ oldincludedir
+ includedir
++runstatedir
+ localstatedir
+ sharedstatedir
+ sysconfdir
+@@ -1129,6 +1130,7 @@ datadir='${datarootdir}'
+ sysconfdir='${prefix}/etc'
+ sharedstatedir='${prefix}/com'
+ localstatedir='${prefix}/var'
++runstatedir='${localstatedir}/run'
+ includedir='${prefix}/include'
+ oldincludedir='/usr/include'
+ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+@@ -1381,6 +1383,15 @@ do
+   | -silent | --silent | --silen | --sile | --sil)
+     silent=yes ;;
+ 
++  -runstatedir | --runstatedir | --runstatedi | --runstated \
++  | --runstate | --runstat | --runsta | --runst | --runs \
++  | --run | --ru | --r)
++    ac_prev=runstatedir ;;
++  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
++  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
++  | --run=* | --ru=* | --r=*)
++    runstatedir=$ac_optarg ;;
++
+   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
+     ac_prev=sbindir ;;
+   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
+@@ -1518,7 +1529,7 @@ fi
+ for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
+ 		datadir sysconfdir sharedstatedir localstatedir includedir \
+ 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
+-		libdir localedir mandir
++		libdir localedir mandir runstatedir
+ do
+   eval ac_val=\$$ac_var
+   # Remove trailing slashes.
+@@ -1671,6 +1682,7 @@ Fine tuning of the installation directories:
+   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
++  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+   --libdir=DIR            object code libraries [EPREFIX/lib]
+   --includedir=DIR        C header files [PREFIX/include]
+   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+@@ -27711,12 +27723,7 @@ fi
+ ac_fn_c_check_member "$LINENO" "struct sigaction" "sa_sigaction" "ac_cv_member_struct_sigaction_sa_sigaction" "
+     $ac_includes_default
+ 
+-#ifdef HAVE_SYS_PARAM_H
+-#include <sys/param.h>
+-#endif
+-#ifdef HAVE_SYS_SIGNAL_H
+-#include <sys/signal.h>
+-#endif
++#include <signal.h>
+ 
+ "
+ if test "x$ac_cv_member_struct_sigaction_sa_sigaction" = xyes; then :
+diff --git a/snmplib/parse.c b/snmplib/parse.c
+index 8fa036fc56..8adf82d377 100644
+--- a/snmplib/parse.c
++++ b/snmplib/parse.c
+@@ -28,7 +28,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ SOFTWARE.
+ ******************************************************************/
+ /*
+- * Copyright � 2003 Sun Microsystems, Inc. All rights reserved.
++ * Copyright  2003 Sun Microsystems, Inc. All rights reserved.
+  * Use is subject to license terms specified in the COPYING file
+  * distributed with the Net-SNMP package.
+  */
+@@ -4627,9 +4627,7 @@ is_labelchar(int ich)
+  * implemented as an inline function in glibc. See also bug 3447196
+  * (http://sourceforge.net/tracker/?func=detail&aid=3447196&group_id=12694&atid=112694).
+  */
+-static int netsnmp_getc(FILE *stream)
+-{
+-#ifdef HAVE_FGETC_UNLOCKED
++ { if (! l 
+     return fgetc_unlocked(stream);
+ #else
+     return getc(stream);

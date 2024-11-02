@@ -1,0 +1,59 @@
+diff --git a/lib/lz4.c b/lib/lz4.c
+index 5b03e3d..5454b1e 100644
+--- a/lib/lz4.c
++++ b/lib/lz4.c
+@@ -308,7 +308,11 @@ void LZ4_wildCopy8(void* dstPtr, const void* srcPtr, void* dstEnd)
+     const BYTE* s = (const BYTE*)srcPtr;
+     BYTE* const e = (BYTE*)dstEnd;
+ 
+-    do { memcpy(d,s,8); d+=8; s+=8; } while (d<e);
++    while (d + 8 <= e) { memcpy(d,s,8); d+=8; s+=8; }
++    if (d < e) { // Handle remaining bytes if any
++        size_t remaining = e - d;
++        memcpy(d, s, remaining);
++    }
+ }
+ 
+ static const unsigned inc32table[8] = {0, 1, 2,  1,  0,  4, 4, 4};
+@@ -957,8 +961,12 @@ LZ4_FORCE_INLINE int LZ4_compress_generic(
+             else *token = (BYTE)(litLength<<ML_BITS);
+ 
+             /* Copy Literals */
+-            LZ4_wildCopy8(op, anchor, op+litLength);
+-            op+=litLength;
++            if (op + litLength <= olimit) {
++                LZ4_wildCopy8(op, anchor, op+litLength);
++                op+=litLength;
++            } else {
++                return -1; // Return error code for buffer overflow prevention
++            }
+             DEBUGLOG(6, "seq.start:%i, literals=%u, match.start:%i",
+                         (int)(anchor-(const BYTE*)source), litLength, (int)(ip-(const BYTE*)source));
+         }
+@@ -1027,14 +1035,18 @@ _next_match:
+             if (matchCode >= ML_MASK) {
+                 *token += ML_MASK;
+                 matchCode -= ML_MASK;
+-                LZ4_write32(op, 0xFFFFFFFF);
+-                while (matchCode >= 4*255) {
+-                    op+=4;
+-                    LZ4_write32(op, 0xFFFFFFFF);
+-                    matchCode -= 4*255;
+-                }
+-                op += matchCode / 255;
+-                *op++ = (BYTE)(matchCode % 255);
++                    if (op + 4 <= olimit) {
++                        LZ4_write32(op, 0xFFFFFFFF);
++                        while (matchCode >= 4*255 && op + 4 <= olimit) {
++                            op+=4;
++                            LZ4_write32(op, 0xFFFFFFFF);
++                            matchCode -= 4*255;
++                        }
++                        op += matchCode / 255;
++                        if (op < olimit) *op++ = (BYTE)(matchCode % 255);
++                    } else {
++                        return -1; // Return error code for buffer overflow prevention
++                    }
+             } else
+                 *token += (BYTE)(matchCode);
+         }

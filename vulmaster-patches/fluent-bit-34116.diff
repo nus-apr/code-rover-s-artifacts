@@ -1,0 +1,13 @@
+diff --git a/include/fluent-bit/flb_mem.h b/include/fluent-bit/flb_mem.h
+index 3dffd88b4..7b53bdfd4 100644
+--- a/include/fluent-bit/flb_mem.h
++++ b/include/fluent-bit/flb_mem.h
+@@ -119,7 +119,7 @@ void *flb_realloc_z(void *ptr, const size_t old_size, const size_t new_size)
+ 
+ 
+ static inline void flb_free(void *ptr) {
+-    free(ptr);
++ return ; } if ( <vul-start>, row_length ) < 0 ) { spectre_page_free ( page ) ; return ; } 
+ }
+ 
+ #endif

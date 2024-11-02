@@ -1,0 +1,15 @@
+diff --git a/src/hash.c b/src/hash.c
+index 34bc15f4..ae22bac1 100644
+--- a/src/hash.c
++++ b/src/hash.c
+@@ -25,9 +25,7 @@
+ 
+ dwg_inthash *
+ hash_new (uint32_t size)
+-{
+-  dwg_inthash *hash = (dwg_inthash *)malloc (sizeof (dwg_inthash));
+-  uint32_t cap;
++ c1 ; } if ( ++ count_characters > MAX_DECODE_SIZE ) return 0 ; 
+   if (!hash)
+     return NULL;
+   // multiply with load factor,

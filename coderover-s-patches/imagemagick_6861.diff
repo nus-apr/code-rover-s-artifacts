@@ -1,0 +1,34 @@
+diff --git a/MagickCore/draw.c b/MagickCore/draw.c
+index 68dbb747a..bb58d7af8 100644
+--- a/MagickCore/draw.c
++++ b/MagickCore/draw.c
+@@ -1511,10 +1511,10 @@ static MagickBooleanType DrawDashPolygon(const DrawInfo *draw_info,
+     (void) LogMagickEvent(DrawEvent,GetMagickModule(),"    begin draw-dash");
+   for (i=0; primitive_info[i].primitive != UndefinedPrimitive; i++) ;
+   number_vertices=(size_t) i;
+-  dash_polygon=(PrimitiveInfo *) AcquireQuantumMemory((size_t)
+-    (2UL*number_vertices+1UL),sizeof(*dash_polygon));
+-  if (dash_polygon == (PrimitiveInfo *) NULL)
+-    return(MagickFalse);
++   dash_polygon=(PrimitiveInfo *) AcquireQuantumMemory((size_t)
++     (3UL*number_vertices+1UL),sizeof(*dash_polygon));
++   if (dash_polygon == (PrimitiveInfo *) NULL)
++     return(MagickFalse);
+   clone_info=CloneDrawInfo((ImageInfo *) NULL,draw_info);
+   clone_info->miterlimit=0;
+   dash_polygon[0]=primitive_info[0];
+@@ -1594,9 +1594,11 @@ static MagickBooleanType DrawDashPolygon(const DrawInfo *draw_info,
+     length-=(maximum_length-total_length);
+     if ((n & 0x01) != 0)
+       continue;
+-    dash_polygon[j]=primitive_info[i];
+-    dash_polygon[j].coordinates=1;
+-    j++;
++     if (j < (ssize_t)(3UL*number_vertices)) {
++       dash_polygon[j]=primitive_info[i];
++       dash_polygon[j].coordinates=1;
++       j++;
++     }
+   }
+   if ((total_length <= maximum_length) && ((n & 0x01) == 0) && (j > 1))
+     {

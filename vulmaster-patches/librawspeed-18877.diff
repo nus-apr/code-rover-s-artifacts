@@ -1,0 +1,15 @@
+diff --git a/src/librawspeed/common/RawImage.h b/src/librawspeed/common/RawImage.h
+index 98ed262..ffd21c3 100644
+--- a/src/librawspeed/common/RawImage.h
++++ b/src/librawspeed/common/RawImage.h
+@@ -173,9 +173,7 @@ protected:
+   virtual void fixBadPixel(uint32_t x, uint32_t y, int component = 0) = 0;
+   void fixBadPixelsThread(int start_y, int end_y);
+   void startWorker(RawImageWorker::RawImageWorkerTask task, bool cropped );
+-  uint8_t* data = nullptr;
+-  int cpp = 1; // Components per pixel
+-  int bpp = 0; // Bytes per pixel.
++ char str [ 100 
+   friend class RawImage;
+   iPoint2D mOffset;
+   iPoint2D uncropped_dim;

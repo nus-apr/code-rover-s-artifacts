@@ -1,0 +1,42 @@
+diff --git a/epan/dissectors/packet-alp.c b/epan/dissectors/packet-alp.c
+index c8402167bb..48e1fe9705 100644
+--- a/epan/dissectors/packet-alp.c
++++ b/epan/dissectors/packet-alp.c
+@@ -183,7 +183,12 @@ dissect_alp_mpegts(tvbuff_t *tvb, gint offset, packet_info *pinfo, proto_tree *t
+     guchar *ts_frame = (guchar*)wmem_alloc(pinfo->pool, 188);
+ 
+     ts_frame[0] = 0x47;
+-    memcpy(ts_frame + 1, tvb_get_ptr(tvb, offset, -1), 187);
++    if (tvb_captured_length_remaining(tvb, offset) >= 187) {
++        memcpy(ts_frame + 1, tvb_get_ptr(tvb, offset, 187), 187);
++    } else {
++        // Handle error: insufficient data
++        return -1; // or appropriate error handling
++    }
+     offset += 187;
+ 
+     guchar header[4];
+@@ -198,11 +203,21 @@ dissect_alp_mpegts(tvbuff_t *tvb, gint offset, packet_info *pinfo, proto_tree *t
+         if (hdm) {
+             header[3] = (header[3] & 0xF0) | ((header[3] + 1) & 0x0F);
+             memcpy(ts_frame, header, 4);
+-            memcpy(ts_frame + 4, tvb_get_ptr(tvb, offset, -1), 184);
++    if (tvb_captured_length_remaining(tvb, offset) >= 184) {
++        memcpy(ts_frame + 4, tvb_get_ptr(tvb, offset, 184), 184);
++    } else {
++        // Handle error: insufficient data
++        return -1; // or appropriate error handling
++    }
+             offset += 184;
+         } else {
+             ts_frame[0] = 0x47;
+-            memcpy(ts_frame + 1, tvb_get_ptr(tvb, offset, -1), 187);
++    if (tvb_captured_length_remaining(tvb, offset) >= 187) {
++        memcpy(ts_frame + 1, tvb_get_ptr(tvb, offset, 187), 187);
++    } else {
++        // Handle error: insufficient data
++        return -1; // or appropriate error handling
++    }
+             offset += 187;
+         }
+ 

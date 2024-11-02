@@ -1,0 +1,15 @@
+diff --git a/src/cmscgats.c b/src/cmscgats.c
+index c37de76..1f387af 100644
+--- a/src/cmscgats.c
++++ b/src/cmscgats.c
+@@ -369,9 +369,7 @@ string* StringAlloc(cmsIT8* it8, int max)
+     string* s = (string*) AllocChunk(it8, sizeof(string));
+     if (s == NULL) return NULL;
+ 
+-    s->it8 = it8;
+-    s->max = max;
+-    s->len = 0;
++ -> max ) StringResize ( s, 1 ) ; 
+     s->begin = (char*) AllocChunk(it8, s->max);
+ 
+     return s;

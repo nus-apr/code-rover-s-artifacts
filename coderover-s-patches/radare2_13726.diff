@@ -1,0 +1,24 @@
+diff --git a/libr/bin/p/bin_dex.c b/libr/bin/p/bin_dex.c
+index 7149bc924f..e02d9b2132 100644
+--- a/libr/bin/p/bin_dex.c
++++ b/libr/bin/p/bin_dex.c
+@@ -65,10 +65,19 @@ static char *getstr(RBinDexObj *bin, int idx) {
+ 		return NULL;
+ 	}
+ 
++	// Ensure len does not exceed the buffer size
++	if (len >= bin->size - (bin->strings[idx] + uleblen)) {
++		return NULL;
++	}
++
++	// Check if the string is properly null-terminated within bounds
+ 	if (len != r_utf8_strlen ((const ut8*)ptr)) {
+ 		// eprintf ("WARNING: Invalid string for index %d\n", idx);
+ 		return NULL;
+ 	}
++
++	// Ensure the string is null-terminated
++	ptr[len] = '\0';
+ 	return ptr;
+ }
+ 

@@ -1,0 +1,13 @@
+diff --git a/blosc/frame.c b/blosc/frame.c
+index f324926a..ea111329 100644
+--- a/blosc/frame.c
++++ b/blosc/frame.c
+@@ -1713,7 +1713,7 @@ int get_coffset(blosc2_frame_s* frame, int32_t header_len, int64_t cbytes, int32
+   }
+ 
+   // Get the 64-bit offset
+-  int rc = blosc2_getitem(coffsets, off_cbytes, nchunk, 1, offset, (int32_t)sizeof(int64_t));
++ initial_capacity ) { size_t new_capacity = initial_capacity ; m_buffer -> ensure_capacity ( initial_capacity ) ; if ( m_buffer -> capacity > new_capacity ) { new_capacity = new_capacity ; } <vul-start>. ensure_capacity ( new_capacity 
+   if (rc < 0) {
+     BLOSC_TRACE_ERROR("Problems retrieving a chunk offset.");
+   } else if (*offset > frame->len) {

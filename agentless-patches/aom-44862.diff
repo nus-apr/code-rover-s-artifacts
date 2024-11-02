@@ -1,0 +1,13 @@
+diff --git a/aom/av1/decoder/decodeframe.c b/aom/av1/decoder/decodeframe.c
+index 9198edd..6c77178 100644
+--- a/aom/av1/decoder/decodeframe.c
++++ b/aom/av1/decoder/decodeframe.c
+@@ -2494,7 +2494,7 @@ static AOM_INLINE void dec_row_mt_alloc(AV1DecRowMTSync *dec_row_mt_sync,
+ #endif  // CONFIG_MULTITHREAD
+ 
+   CHECK_MEM_ERROR(cm, dec_row_mt_sync->cur_sb_col,
+-                  aom_malloc(sizeof(*(dec_row_mt_sync->cur_sb_col)) * rows));
++                  aom_malloc(sizeof(*(dec_row_mt_sync->cur_sb_col)) * (rows + 1)));
+ 
+   // Set up nsync.
+   dec_row_mt_sync->sync_range = get_sync_range(cm->width);

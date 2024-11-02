@@ -1,0 +1,34 @@
+diff --git a/tree.c b/tree.c
+index e4425f10..721ff8c8 100644
+--- a/tree.c
++++ b/tree.c
+@@ -3746,7 +3746,8 @@ xmlFreeNodeList(xmlNodePtr cur) {
+ 	     */
+ 	    if ((cur->name != NULL) &&
+ 		(cur->type != XML_TEXT_NODE) &&
+-		(cur->type != XML_COMMENT_NODE))
++		(cur->type != XML_COMMENT_NODE) &&
++		(dict != NULL && xmlDictOwns(dict, cur->name)))
+ 		DICT_FREE(cur->name)
+ 	    xmlFree(cur);
+ 	}
+@@ -3809,12 +3810,13 @@ xmlFreeNode(xmlNodePtr cur) {
+ 	(cur->properties != NULL))
+ 	xmlFreePropList(cur->properties);
+     if ((cur->type != XML_ELEMENT_NODE) &&
+-	(cur->content != NULL) &&
+-	(cur->type != XML_ENTITY_REF_NODE) &&
+-	(cur->type != XML_XINCLUDE_END) &&
+-	(cur->type != XML_XINCLUDE_START) &&
+-	(cur->content != (xmlChar *) &(cur->properties))) {
+-	DICT_FREE(cur->content)
++        (cur->content != NULL) &&
++        (cur->type != XML_ENTITY_REF_NODE) &&
++        (cur->type != XML_XINCLUDE_END) &&
++        (cur->type != XML_XINCLUDE_START) &&
++        (cur->content != (xmlChar *) &(cur->properties)) &&
++        (dict != NULL && xmlDictOwns(dict, cur->content))) {
++        DICT_FREE(cur->content)
+     }
+ 
+     /*

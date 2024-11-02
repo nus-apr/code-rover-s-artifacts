@@ -1,0 +1,13 @@
+diff --git a/ghostpdl/pdf/ghostpdf.c b/ghostpdl/pdf/ghostpdf.c
+index 464e2f5..ff37862 100644
+--- a/ghostpdl/pdf/ghostpdf.c
++++ b/ghostpdl/pdf/ghostpdf.c
+@@ -1299,7 +1299,7 @@ int pdfi_set_input_stream(pdf_context *ctx, stream *stm)
+              */
+             if (last_lineend) {
+                 leftover = last_lineend - Buffer;
+-                memcpy(Buffer + bytes - leftover, last_lineend, leftover);
++                memmove(Buffer + bytes - leftover, last_lineend, leftover);
+                 bytes -= leftover;
+             } else
+                 leftover = 0;

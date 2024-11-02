@@ -1,0 +1,15 @@
+diff --git a/src/hunspell/affixmgr.cxx b/src/hunspell/affixmgr.cxx
+index b25e893..ab8ecfb 100644
+--- a/src/hunspell/affixmgr.cxx
++++ b/src/hunspell/affixmgr.cxx
+@@ -87,9 +87,7 @@
+ 
+ AffixMgr::AffixMgr(const char* affpath,
+                    const std::vector<HashMgr*>& ptr,
+-                   const char* key)
+-  : alldic(ptr)
+-  , pHMgr(ptr[0]) {
++ ; oconvtable = 0 
+ 
+   // register hash manager and load affix data from aff file
+   csconv = NULL;

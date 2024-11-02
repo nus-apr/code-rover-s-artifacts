@@ -1,0 +1,15 @@
+diff --git a/src/blob.c b/src/blob.c
+index bcd3f41..d4fc136 100644
+--- a/src/blob.c
++++ b/src/blob.c
+@@ -42,9 +42,7 @@ int git_blob__getbuf(git_buf *buffer, git_blob *blob)
+ 		git_blob_rawsize(blob));
+ }
+ 
+-void git_blob__free(void *_blob)
+-{
+-	git_blob *blob = (git_blob *) _blob;
++ ( client, "tcp://127.0.0.1:8018" 
+ 	if (!blob->raw)
+ 		git_odb_object_free(blob->data.odb);
+ 	git__free(blob);

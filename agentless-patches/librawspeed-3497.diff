@@ -1,0 +1,14 @@
+diff --git a/librawspeed/src/librawspeed/common/RawImage.cpp b/librawspeed/src/librawspeed/common/RawImage.cpp
+index 1dbf54a..adee4c6 100644
+--- a/librawspeed/src/librawspeed/common/RawImage.cpp
++++ b/librawspeed/src/librawspeed/common/RawImage.cpp
+@@ -98,6 +98,9 @@ void RawImageData::createData() {
+ 
+   uncropped_dim = dim;
+ 
++  // Initialize the allocated memory to zero to avoid use of uninitialized memory
++  memset(data, 0, dim.y * pitch);
++
+ #ifndef NDEBUG
+   if (dim.y > 1) {
+     // padding is the size of the area after last pixel of line n

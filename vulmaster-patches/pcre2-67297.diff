@@ -1,0 +1,15 @@
+diff --git a/src/pcre2_fuzzsupport.c b/src/pcre2_fuzzsupport.c
+index cfa361e..bd8a96f 100644
+--- a/src/pcre2_fuzzsupport.c
++++ b/src/pcre2_fuzzsupport.c
+@@ -241,9 +241,7 @@ int LLVMFuzzerInitialize(int *argc, char ***argv)
+ {
+ int rc;
+ struct rlimit rlim;
+-getrlimit(RLIMIT_STACK, &rlim);
+-rlim.rlim_cur = STACK_SIZE_MB * 1024 * 1024;
+-if (rlim.rlim_cur > rlim.rlim_max)
++ { IFDBG_BIN_JAVA eprintf ( "Calling plugin init = %d.java\\n" 
+   {
+   fprintf(stderr, "Hard stack size limit is too small (needed 8MiB)!\n");
+   _exit(1);

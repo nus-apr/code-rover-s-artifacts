@@ -1,0 +1,19 @@
+diff --git a/harfbuzz/src/hb-ot-kern-table.hh b/harfbuzz/src/hb-ot-kern-table.hh
+index 295d886..6cdf80d 100644
+--- a/harfbuzz/src/hb-ot-kern-table.hh
++++ b/harfbuzz/src/hb-ot-kern-table.hh
+@@ -109,7 +109,13 @@ struct KernSubTableFormat3
+ template <typename KernSubTableHeader>
+ struct KernSubTable
+ {
+-  inline unsigned int get_size (void) const { return u.header.length; }
++  inline unsigned int get_size (void) const {
++    // Ensure the length is within valid bounds before returning
++    if (u.header.length < sizeof(KernSubTableHeader)) {
++      return 0; // or handle the error appropriately
++    }
++    return u.header.length;
++  }
+   inline unsigned int get_type (void) const { return u.header.format; }
+ 
+   inline int get_kerning (hb_codepoint_t left, hb_codepoint_t right) const

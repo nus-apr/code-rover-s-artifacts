@@ -1,0 +1,15 @@
+diff --git a/libhevc/decoder/ihevcd_sao.c b/libhevc/decoder/ihevcd_sao.c
+index 959c80b..d04ffff 100644
+--- a/libhevc/decoder/ihevcd_sao.c
++++ b/libhevc/decoder/ihevcd_sao.c
+@@ -757,7 +757,9 @@ void ihevcd_sao_shift_ctb(sao_ctxt_t *ps_sao_ctxt)
+                             {
+                                 for(col = 0; col < MIN(((WORD32)CTZ(~u4_no_loop_filter_flag) << log2_min_cu), tmp_wd); col++)
+                                 {
+-                                    pu1_src_backup_chroma[row * backup_strd + col] = pu1_src_tmp_chroma[row * src_strd + col];
++                                    if (col < sao_blk_wd) {
++                                        pu1_src_backup_chroma[row * backup_strd + col] = pu1_src_tmp_chroma[row * src_strd + col];
++                                    }
+                                 }
+                             }
+ 

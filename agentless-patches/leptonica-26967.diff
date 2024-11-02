@@ -1,0 +1,113 @@
+diff --git a/leptonica/prog/fuzzing/adaptmap_fuzzer.cc b/leptonica/prog/fuzzing/adaptmap_fuzzer.cc
+index 4b36194..0893440 100644
+--- a/leptonica/prog/fuzzing/adaptmap_fuzzer.cc
++++ b/leptonica/prog/fuzzing/adaptmap_fuzzer.cc
+@@ -1,3 +1,4 @@
++
+ #include "leptfuzz.h"
+ 
+ extern "C" int
+@@ -16,8 +17,11 @@ LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	pixBackgroundNormGrayArray(payload_copy, pix1, 10, 10, 10, 10, 256, 10, 10, &pix2);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&pix2);
++	pix2 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 
+ 
+ 
+@@ -25,15 +29,20 @@ LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	pixBackgroundNormGrayArrayMorph(payload_copy, pix1, 6, 5, 256, &pix2);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&pix2);
++	pix2 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 
+ 
+ 	pix1 = pixRead("../test8.jpg");
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	return_pix1 = pixBackgroundNormMorph(payload_copy, pix1, 6, 5, 256);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 	if(return_pix1!=NULL){
+ 		pixDestroy(&return_pix1);
+ 	}
+@@ -44,28 +53,41 @@ LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	pixBackgroundNormRGBArrays(payload_copy, pix1, pix2, 10, 10, 10, 10, 130, 10, 10, &pix3, &pix4, &pix5);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&pix2);
++	pix2 = NULL;
+ 	pixDestroy(&pix3);
++	pix3 = NULL;
+ 	pixDestroy(&pix4);
++	pix4 = NULL;
+ 	pixDestroy(&pix5);
++	pix5 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 
+ 
+ 	pix1 = pixRead("../test8.jpg");
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	pixBackgroundNormRGBArraysMorph(payload_copy, pix1, 6, 33, 130, &pix2, &pix3, &pix4);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&pix2);
++	pix2 = NULL;
+ 	pixDestroy(&pix3);
++	pix3 = NULL;
+ 	pixDestroy(&pix4);
++	pix4 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 
+ 
+ 	pix1 = pixRead("../test8.jpg");
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	return_pix1 = pixContrastNorm(payload_copy, pix1, 10, 10, 3, 0, 0);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 	if(return_pix1!=NULL){
+ 		pixDestroy(&return_pix1);
+ 	}
+@@ -75,7 +97,9 @@ LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	return_pix1 = pixGlobalNormNoSatRGB(payload_copy, pix1, 3, 3, 3, 2, 0.9);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 	if(return_pix1!=NULL){
+ 		pixDestroy(&return_pix1);
+ 	}
+@@ -84,12 +108,17 @@ LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+ 	payload_copy = pixCopy(NULL, pixs_payload);
+ 	pixThresholdSpreadNorm(payload_copy, L_SOBEL_EDGE, 10, 0, 0, 0.7, -25, 255, 10, &pix1, &pix2, &pix3);
+ 	pixDestroy(&pix1);
++	pix1 = NULL;
+ 	pixDestroy(&pix2);
++	pix2 = NULL;
+ 	pixDestroy(&pix3);
++	pix3 = NULL;
+ 	pixDestroy(&payload_copy);
++	payload_copy = NULL;
+ 
+ 	pixDestroy(&pixs_payload);
++	pixs_payload = NULL;
+ 
+ 
+ 	return 0;
+-}
++}

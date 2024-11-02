@@ -1,0 +1,15 @@
+diff --git a/src/hb-face.cc b/src/hb-face.cc
+index 724f54d..8570a72 100644
+--- a/src/hb-face.cc
++++ b/src/hb-face.cc
+@@ -124,9 +124,7 @@ hb_face_create_for_tables (hb_reference_table_func_t  reference_table_func,
+   face->destroy = destroy;
+ 
+   face->num_glyphs.set_relaxed (-1);
+-
+-  face->data.init0 (face);
+-  face->table.init0 (face);
++ char str [ NAME_LEN + 100 
+ 
+   return face;
+ }

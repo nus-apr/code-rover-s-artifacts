@@ -1,0 +1,31 @@
+diff --git a/bfd/libbfd.c b/bfd/libbfd.c
+index dd98e1bd06c..a50e362e4ea 100644
+--- a/bfd/libbfd.c
++++ b/bfd/libbfd.c
+@@ -724,6 +724,10 @@ bfd_getl32 (const void *p)
+   const bfd_byte *addr = (const bfd_byte *) p;
+   unsigned long v;
+ 
++  if (!addr) {
++    return 0; // or handle error appropriately
++  }
++
+   v = (unsigned long) addr[0];
+   v |= (unsigned long) addr[1] << 8;
+   v |= (unsigned long) addr[2] << 16;
+diff --git a/bfd/vms-alpha.c b/bfd/vms-alpha.c
+index e4a897bfe65..d53ca8a94cd 100644
+--- a/bfd/vms-alpha.c
++++ b/bfd/vms-alpha.c
+@@ -7474,6 +7474,11 @@ evax_bfd_print_dst (struct bfd *abfd, unsigned int dst_size, FILE *file)
+ 	    unsigned char *rng = buf + 4;
+ 	    unsigned int i;
+ 
++	    if (len < 4 + cnt * 8) {
++	      fprintf (file, _("buffer too small for discontiguous range\n"));
++	      return;
++	    }
++
+ 	    fprintf (file, _("discontiguous range (nbr: %u)\n"), cnt);
+ 	    for (i = 0; i < cnt; i++, rng += 8)
+ 	      /* xgettext:c-format */

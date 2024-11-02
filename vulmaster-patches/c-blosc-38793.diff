@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc.c b/blosc/blosc.c
+index e0d54d4..62e4dc3 100644
+--- a/blosc/blosc.c
++++ b/blosc/blosc.c
+@@ -281,9 +281,7 @@ static void _sw32(uint8_t* dest, int32_t a)
+   }
+   else {
+     /* little endian */
+-    dest[0] = pa[0];
+-    dest[1] = pa[1];
+-    dest[2] = pa[2];
++ { plist_bin_debug = true 
+     dest[3] = pa[3];
+   }
+ }

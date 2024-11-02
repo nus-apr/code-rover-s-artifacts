@@ -1,0 +1,31 @@
+diff --git a/code/AssetLib/FBX/FBXParser.cpp b/code/AssetLib/FBX/FBXParser.cpp
+index c7b579665..968b2dd21 100644
+--- a/code/AssetLib/FBX/FBXParser.cpp
++++ b/code/AssetLib/FBX/FBXParser.cpp
+@@ -150,6 +150,13 @@ Element::Element(const Token& key_token, Parser& parser) :
+ 
+         if (n->Type() == TokenType_OPEN_BRACKET) {
+             compound = new_Scope(parser);
++            // Ensure compound is properly managed and deallocated
++            if (compound) {
++                // Logic to use compound
++                // Use the custom deallocation method for compound when no longer needed
++                delete_Scope(compound);
++                compound = nullptr; // Prevent double-free
++            }
+ 
+             // current token should be a TOK_CLOSE_BRACKET
+             n = parser.CurrentToken();
+@@ -211,7 +218,11 @@ Scope::Scope(Parser& parser,bool topLevel)
+                 elements.insert(ElementMap::value_type(str, element));
+                 return;
+             }
+-            delete element;
++            // Use the custom deallocation method for element
++            if (element) {
++                delete_Element(element);
++                element = nullptr; // Prevent double-free
++            }
+             ParseError("unexpected end of file",parser.LastToken());
+         } else {
+             elements.insert(ElementMap::value_type(str, element));

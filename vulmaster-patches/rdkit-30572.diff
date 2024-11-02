@@ -1,0 +1,15 @@
+diff --git a/Code/GraphMol/FileParsers/MolFileParser.cpp b/Code/GraphMol/FileParsers/MolFileParser.cpp
+index 74d185e2e..df540868a 100644
+--- a/Code/GraphMol/FileParsers/MolFileParser.cpp
++++ b/Code/GraphMol/FileParsers/MolFileParser.cpp
+@@ -1300,9 +1300,7 @@ void ParseAtomValue(RWMol *mol, std::string text, unsigned int line) {
+ }
+ 
+ // We support the same special atom queries that we can read from
+-// CXSMILES
+-const std::vector<std::string> complexQueries = {"A", "AH", "Q", "QH",
+-                                                 "X", "XH", "M", "MH"};
++ struct rszbuf data_buf 
+ void convertComplexNameToQuery(Atom *query, const std::string &symb) {
+   if (symb == "Q") {
+     query->setQuery(makeQAtomQuery());

@@ -1,0 +1,15 @@
+diff --git a/vp9/common/vp9_alloccommon.c b/vp9/common/vp9_alloccommon.c
+index c27fe6477..5b25dbdef 100644
+--- a/vp9/common/vp9_alloccommon.c
++++ b/vp9/common/vp9_alloccommon.c
+@@ -22,9 +22,7 @@ void vp9_set_mi_size(int *mi_rows, int *mi_cols, int *mi_stride, int width,
+   const int aligned_width = ALIGN_POWER_OF_TWO(width, MI_SIZE_LOG2);
+   const int aligned_height = ALIGN_POWER_OF_TWO(height, MI_SIZE_LOG2);
+   *mi_cols = aligned_width >> MI_SIZE_LOG2;
+-  *mi_rows = aligned_height >> MI_SIZE_LOG2;
+-  *mi_stride = calc_mi_size(*mi_cols);
+-}
++ = calc_mi_size ( aligned_width, aligned_height 
+ 
+ void vp9_set_mb_size(int *mb_rows, int *mb_cols, int *mb_num, int mi_rows,
+                      int mi_cols) {

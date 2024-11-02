@@ -1,0 +1,27 @@
+diff --git a/configure.ac b/configure.ac
+index d8503e4..5a08c9d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -925,7 +925,6 @@ AC_SUBST(CFLAGS_SSE42)
+ # See: http://sourceware.org/bugzilla/show_bug.cgi?id=13979
+ #
+ # Note: FORTIFY_SOURCE is only effective for gcc optimization level > 0 (-O1, etc)
+-AC_WIRESHARK_GCC_FORTIFY_SOURCE_CHECK
+ 
+ #
+ # If the compiler supports GCC-style flags, enable a barrier "stop on
+diff --git a/epan/dissectors/packet-dcerpc-cprpc_server.c b/epan/dissectors/packet-dcerpc-cprpc_server.c
+index 4a576d3..9815f96 100644
+--- a/epan/dissectors/packet-dcerpc-cprpc_server.c
++++ b/epan/dissectors/packet-dcerpc-cprpc_server.c
+@@ -66,9 +66,7 @@ proto_register_cprpc_server (void)
+ }
+ 
+ void
+-proto_reg_handoff_cprpc_server (void)
+-{
+-	/* Register the protocol as dcerpc */
++ ; if ( ctx == NULL 
+ 	dcerpc_init_uuid (proto_cprpc_server, ett_cprpc_server, &uuid_cprpc_server, ver_cprpc_server, cprpc_server_dissectors, hf_cprpc_server_opnum);
+ }
+ 

@@ -1,0 +1,15 @@
+diff --git a/builds/unix/ftsystem.c b/builds/unix/ftsystem.c
+index 48a235ba3..51bac3d86 100644
+--- a/builds/unix/ftsystem.c
++++ b/builds/unix/ftsystem.c
+@@ -98,9 +98,7 @@
+             long       size )
+   {
+     FT_UNUSED( memory );
+-
+-    return malloc( size );
+-  }
++ ; } else 
+ 
+ 
+   /*************************************************************************/

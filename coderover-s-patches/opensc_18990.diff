@@ -1,0 +1,62 @@
+diff --git a/src/libopensc/card-coolkey.c b/src/libopensc/card-coolkey.c
+index 0ba7f7d7..b61b1dc7 100644
+--- a/src/libopensc/card-coolkey.c
++++ b/src/libopensc/card-coolkey.c
+@@ -1398,14 +1398,18 @@ coolkey_fill_object(sc_card_t *card, sc_cardctl_coolkey_object_t *obj)
+ 	if (obj->data != NULL) {
+ 		return SC_SUCCESS;
+ 	}
+-	new_obj_data = malloc(buf_len);
+-	if (new_obj_data == NULL) {
+-		return SC_ERROR_OUT_OF_MEMORY;
+-	}
+-	r = coolkey_read_object(card, obj->id, 0, new_obj_data, buf_len,
+-				priv->nonce, sizeof(priv->nonce));
+-	if (r != (int)buf_len) {
+-		free(new_obj_data);
++	if (buf_len > 0) {
++		new_obj_data = malloc(buf_len);
++		if (new_obj_data == NULL) {
++			return SC_ERROR_OUT_OF_MEMORY;
++		}
++		r = coolkey_read_object(card, obj->id, 0, new_obj_data, buf_len,
++					priv->nonce, sizeof(priv->nonce));
++		if (r != (int)buf_len) {
++			free(new_obj_data);
++			return SC_ERROR_CORRUPTED_DATA;
++		}
++	} else {
+ 		return SC_ERROR_CORRUPTED_DATA;
+ 	}
+ 	obj_entry = coolkey_find_object_by_id(&priv->objects_list, obj->id);
+diff --git a/src/libopensc/pkcs15-coolkey.c b/src/libopensc/pkcs15-coolkey.c
+index 39529e3f..1ec72d74 100644
+--- a/src/libopensc/pkcs15-coolkey.c
++++ b/src/libopensc/pkcs15-coolkey.c
+@@ -284,12 +284,21 @@ coolkey_get_certificate(sc_card_t *card, sc_cardctl_coolkey_object_t *obj, struc
+ 			return r;
+ 		}
+ 		/* fill in cert data */
+-		cert->value = malloc(cert_obj->length);
+-		if (cert->value == NULL) {
+-			return SC_ERROR_OUT_OF_MEMORY;
++		if (cert_obj->length > 0 && cert_obj->data != NULL) {
++			cert->value = malloc(cert_obj->length);
++			if (cert->value == NULL) {
++				return SC_ERROR_OUT_OF_MEMORY;
++			}
++			if (cert_obj->length <= sizeof(cert_obj->data)) {
++				memcpy(cert->value, cert_obj->data, cert_obj->length);
++				cert->len = cert_obj->length;
++			} else {
++				free(cert->value);
++				return SC_ERROR_CORRUPTED_DATA;
++			}
++		} else {
++			return SC_ERROR_CORRUPTED_DATA;
+ 		}
+-		memcpy(cert->value, cert_obj->data, cert_obj->length);
+-		cert->len = cert_obj->length;
+ 		return SC_SUCCESS;
+ 	}
+ 	return r;

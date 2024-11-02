@@ -1,0 +1,32 @@
+diff --git a/src/regenc.c b/src/regenc.c
+index 84afd1e..9d38b6f 100644
+--- a/src/regenc.c
++++ b/src/regenc.c
+@@ -168,7 +168,7 @@ extern UChar*
+ onigenc_get_right_adjust_char_head(OnigEncoding enc, const UChar* start, const UChar* s)
+ {
+   UChar* p = ONIGENC_LEFT_ADJUST_CHAR_HEAD(enc, start, s);
+-  if (p < s) {
++  if (p != NULL && p < s && p >= start) {
+     p += enclen(enc, p);
+   }
+   return p;
+diff --git a/src/utf8.c b/src/utf8.c
+index 1178d09..b210cbb 100644
+--- a/src/utf8.c
++++ b/src/utf8.c
+@@ -246,10 +246,12 @@ left_adjust_char_head(const UChar* start, const UChar* s)
+ {
+   const UChar *p;
+ 
+-  if (s <= start) return (UChar* )s;
++  if (s <= start || s == NULL || start == NULL) return (UChar* )s;
+   p = s;
+ 
+-  while (!utf8_islead(*p) && p > start) p--;
++  while (p > start && !utf8_islead(*p)) {
++    p--;
++  }
+   return (UChar* )p;
+ }
+ 

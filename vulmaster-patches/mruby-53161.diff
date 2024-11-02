@@ -1,0 +1,13 @@
+diff --git a/mrbgems/mruby-pack/src/pack.c b/mrbgems/mruby-pack/src/pack.c
+index 08c22b5eb..036f0f5b4 100644
+--- a/mrbgems/mruby-pack/src/pack.c
++++ b/mrbgems/mruby-pack/src/pack.c
+@@ -1588,7 +1588,7 @@ pack_unpack(mrb_state *mrb, mrb_value str, int single)
+ static mrb_value
+ mrb_pack_unpack(mrb_state *mrb, mrb_value str)
+ {
+-  return pack_unpack(mrb, str, 0);
++ == level, "no variable to close at given level" 
+ }
+ 
+ static mrb_value

@@ -1,0 +1,59 @@
+diff --git a/src/flb_utils.c b/src/flb_utils.c
+index 060771507..ecd4ddc32 100644
+--- a/src/flb_utils.c
++++ b/src/flb_utils.c
+@@ -574,6 +574,9 @@ static inline void encoded_to_buf(char *out, const char *in, int len)
+     char *p = out;
+ 
+     for (i = 0; i < len; i++) {
++        if (p - out >= len) {
++            break; // Prevent buffer overflow
++        }
+         *p++ = in[i];
+     }
+ }
+@@ -647,8 +650,12 @@ int flb_utils_write_str(char *buf, int *off, size_t size,
+                 return FLB_FALSE;
+             }
+             len = snprintf(tmp, sizeof(tmp) - 1, "\\u%.4hhx", (unsigned char) c);
+-            encoded_to_buf(p, tmp, len);
+-            p += len;
++            if ((available - written) >= len) {
++                encoded_to_buf(p, tmp, len);
++                p += len;
++            } else {
++                return FLB_FALSE; // Not enough space
++            }
+         }
+         else if (c >= 0x80 && c <= 0xFFFF) {
+             hex_bytes = flb_utf8_len(str + i);
+@@ -677,8 +684,12 @@ int flb_utils_write_str(char *buf, int *off, size_t size,
+             }
+             else {
+                 len = snprintf(tmp, sizeof(tmp) - 1, "\\u%.4x", codepoint);
+-                encoded_to_buf(p, tmp, len);
+-                p += len;
++                if ((available - written) >= len) {
++                    encoded_to_buf(p, tmp, len);
++                    p += len;
++                } else {
++                    return FLB_FALSE; // Not enough space
++                }
+             }
+             i += (hex_bytes - 1);
+         }
+@@ -708,8 +719,12 @@ int flb_utils_write_str(char *buf, int *off, size_t size,
+             }
+             else {
+                 len = snprintf(tmp, sizeof(tmp) - 1, "\\u%04x", codepoint);
+-                encoded_to_buf(p, tmp, len);
+-                p += len;
++                if ((available - written) >= len) {
++                    encoded_to_buf(p, tmp, len);
++                    p += len;
++                } else {
++                    return FLB_FALSE; // Not enough space
++                }
+             }
+             i += (hex_bytes - 1);
+         }

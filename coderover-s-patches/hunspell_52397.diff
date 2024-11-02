@@ -1,0 +1,41 @@
+diff --git a/src/hunspell/affixmgr.cxx b/src/hunspell/affixmgr.cxx
+index b25e893..aaee9c3 100644
+--- a/src/hunspell/affixmgr.cxx
++++ b/src/hunspell/affixmgr.cxx
+@@ -1670,7 +1670,9 @@ struct hentry* AffixMgr::compound_check(const std::string& word,
+         }
+ 
+         ch = st[i];
++    if (i < st.size()) {
+         st[i] = '\0';
++    }
+ 
+         sfx = NULL;
+         pfx = NULL;
+@@ -2783,7 +2785,10 @@ struct hentry* AffixMgr::suffix_check(const std::string& word,
+   // now handle the general case
+   if (len == 0)
+     return NULL;  // FULLSTRIP
+-  unsigned char sp = word[start + len - 1];
++    if (start + len > word.size()) {
++        return NULL;  // Prevent out-of-bounds access
++    }
++    unsigned char sp = word[start + len - 1];
+   SfxEntry* sptr = sStart[sp];
+ 
+   while (sptr) {
+@@ -2819,9 +2824,11 @@ struct hentry* AffixMgr::suffix_check(const std::string& word,
+         if (in_compound != IN_CPD_END || ppfx ||
+             !(sptr->getCont() &&
+               TESTAFF(sptr->getCont(), onlyincompound, sptr->getContLen()))) {
+-          rv = sptr->checkword(word, start, len, sfxopts, ppfx,
+-                               cclass, needflag,
+-                               (in_compound ? 0 : onlyincompound));
++    if (start + len <= word.size()) {
++        rv = sptr->checkword(word, start, len, sfxopts, ppfx,
++                             cclass, needflag,
++                             (in_compound ? 0 : onlyincompound));
++    }
+           if (rv) {
+             sfx = sptr;                 // BUG: sfx not stateless
+             sfxflag = sptr->getFlag();  // BUG: sfxflag not stateless

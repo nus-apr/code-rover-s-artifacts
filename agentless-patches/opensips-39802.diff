@@ -1,0 +1,13 @@
+diff --git a/opensips/parser/parse_hname2.c b/opensips/parser/parse_hname2.c
+index 8e0fa2d..7ccbd8a 100644
+--- a/opensips/parser/parse_hname2.c
++++ b/opensips/parser/parse_hname2.c
+@@ -248,7 +248,7 @@ char* parse_hname2(char* begin, char* end, struct hdr_field* hdr)
+ 			case '\t':
+ 				hdr->name.len = p - hdr->name.s;
+ 				p = skip_ws(p+1, end);
+-				if (*p != ':')
++				if (p >= end || *p != ':')
+ 					goto error;
+ 				return (p+1);
+ 		}

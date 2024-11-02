@@ -1,0 +1,34 @@
+diff --git a/snmplib/snmp_api.c b/snmplib/snmp_api.c
+index 181335baff..85d641cb1e 100644
+--- a/snmplib/snmp_api.c
++++ b/snmplib/snmp_api.c
+@@ -7127,7 +7127,7 @@ netsnmp_oid_find_prefix(const oid * in_name1, size_t len1,
+     min_size = SNMP_MIN(len1, len2);
+     for(i = 0; i < (int)min_size; i++) {
+         if (in_name1[i] != in_name2[i])
+-            return i;    /* '' is the first differing subidentifier
++            return i;    /* 'í' is the first differing subidentifier
+                             So the common prefix is 0..(i-1), of length i */
+     }
+     return min_size;	/* The shorter OID is a prefix of the longer, and
+@@ -7596,11 +7596,16 @@ snmp_add_var(netsnmp_pdu *pdu,
+             if (ix >= (int) tint) {
+                 tint = ix + 1;
+             }
+-            if (ix >= (int)buf_len && !snmp_realloc(&buf, &buf_len)) {
+-                result = SNMPERR_MALLOC;
+-                break;
++            if (ix >= (int)buf_len) {
++                size_t new_buf_len = ix + 1;
++                if (!snmp_realloc(&buf, &new_buf_len)) {
++                    result = SNMPERR_MALLOC;
++                    break;
++                }
++                memset(buf + buf_len, 0, new_buf_len - buf_len);
++                buf_len = new_buf_len;
+             }
+-            bit = 0x80 >> ltmp % 8;
++            bit = 0x80 >> (ltmp % 8);
+             buf[ix] |= bit;
+ 	    
+         }

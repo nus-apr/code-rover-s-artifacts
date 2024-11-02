@@ -1,0 +1,13 @@
+diff --git a/src/core/ut.h b/src/core/ut.h
+index f2173d3dcf..48e94e2c15 100644
+--- a/src/core/ut.h
++++ b/src/core/ut.h
+@@ -418,7 +418,7 @@ static inline char* q_memchr(char* p, int c, unsigned int size)
+ 	char* end;
+ 
+ 	end=p+size;
+-	for(;p<end;p++){
++	for(;p<end && p != NULL;p++){  // Ensure p is not NULL
+ 		if (*p==(unsigned char)c) return p;
+ 	}
+ 	return 0;

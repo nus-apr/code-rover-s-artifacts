@@ -1,0 +1,13 @@
+diff --git a/gpac/src/ietf/rtsp_session.c b/gpac/src/ietf/rtsp_session.c
+index 250d08f..e9c8294 100644
+--- a/gpac/src/ietf/rtsp_session.c
++++ b/gpac/src/ietf/rtsp_session.c
+@@ -112,7 +112,7 @@ found:
+ 	if (retest && strstr(retest, "/")) {
+ 		retest += 1;
+ 		i=0;
+-		while (i<strlen(retest)) {
++		while (i<strlen(retest) && i < sizeof(text) - 1) {
+ 			if (retest[i] == '/') break;
+ 			text[i] = retest[i];
+ 			i += 1;

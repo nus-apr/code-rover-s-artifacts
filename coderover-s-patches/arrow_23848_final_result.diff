@@ -1,0 +1,28 @@
+diff --git a/cpp/src/arrow/buffer.cc b/cpp/src/arrow/buffer.cc
+index 6dbbac314..fd55672da 100644
+--- a/cpp/src/arrow/buffer.cc
++++ b/cpp/src/arrow/buffer.cc
+@@ -253,11 +253,23 @@ Result<std::shared_ptr<Buffer>> ConcatenateBuffers(
+     const std::vector<std::shared_ptr<Buffer>>& buffers, MemoryPool* pool) {
+   int64_t out_length = 0;
+   for (const auto& buffer : buffers) {
++    if (buffer->size() > std::numeric_limits<int64_t>::max() - out_length) {
++      return Status::Invalid("Total buffer size exceeds maximum allowable size");
++    }
+     out_length += buffer->size();
+   }
++  if (out_length < 0 || out_length > std::numeric_limits<int64_t>::max()) {
++    return Status::Invalid("Calculated buffer size is invalid");
++  }
+   ARROW_ASSIGN_OR_RAISE(auto out, AllocateBuffer(out_length, pool));
++  if (!out) {
++    return Status::OutOfMemory("Failed to allocate buffer for concatenation");
++  }
+   auto out_data = out->mutable_data();
+   for (const auto& buffer : buffers) {
++    if (buffer->size() > out->capacity() - (out_data - out->mutable_data())) {
++      return Status::OutOfMemory("Insufficient buffer capacity for concatenation");
++    }
+     std::memcpy(out_data, buffer->data(), buffer->size());
+     out_data += buffer->size();
+   }

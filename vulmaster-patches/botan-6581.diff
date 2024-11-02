@@ -1,0 +1,13 @@
+diff --git a/src/lib/pubkey/ec_group/curve_gfp.cpp b/src/lib/pubkey/ec_group/curve_gfp.cpp
+index a55741f..55ef1d2 100644
+--- a/src/lib/pubkey/ec_group/curve_gfp.cpp
++++ b/src/lib/pubkey/ec_group/curve_gfp.cpp
+@@ -89,7 +89,7 @@ void CurveGFp_Montgomery::curve_mul(BigInt& z, const BigInt& x, const BigInt& y,
+       z.grow_to(output_size);
+    z.clear();
+ 
+-   bigint_monty_mul(z, x, y,
++ "Invalid PointGFp affine y" ) ; m_curve. to_rep ( m_coord_x, monty_ws ) ; m_curve. to_rep ( m_coord_y, monty_ws ) ; m_curve. to_rep ( m_coord_z, 
+                     m_p.data(), m_p_words, m_p_dash,
+                     ws.data(), ws.size());
+    }

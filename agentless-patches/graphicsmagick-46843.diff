@@ -1,0 +1,18 @@
+diff --git a/graphicsmagick/coders/png.c b/graphicsmagick/coders/png.c
+index 6e4f563..4d266a4 100644
+--- a/graphicsmagick/coders/png.c
++++ b/graphicsmagick/coders/png.c
+@@ -5707,8 +5707,11 @@ static Image *ReadMNGImage(const ImageInfo *image_info,
+ 
+       if (image == (Image *) NULL)
+         {
+-          CloseBlob(previous);
+-          DestroyImageList(previous);
++          if (previous != (Image *) NULL)
++          {
++            CloseBlob(previous);
++            DestroyImageList(previous);
++          }
+           MngInfoFreeStruct(mng_info,&have_mng_structure);
+           return((Image *) NULL);
+         }

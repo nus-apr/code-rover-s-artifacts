@@ -1,0 +1,13 @@
+diff --git a/fluent-bit/src/flb_http_client.c b/fluent-bit/src/flb_http_client.c
+index c0eec4a..bc8e53b 100644
+--- a/fluent-bit/src/flb_http_client.c
++++ b/fluent-bit/src/flb_http_client.c
+@@ -290,7 +290,7 @@ static int process_chunked_data(struct flb_http_client *c)
+     }
+ 
+     /* From the current chunk we expect it ends with \r\n */
+-    if (p[val -2] != '\r' || p[val - 1] != '\n') {
++    if (val < 2 || p[val - 2] != '\r' || p[val - 1] != '\n') {
+         return FLB_HTTP_ERROR;
+     }
+ 

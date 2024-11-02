@@ -1,0 +1,33 @@
+diff --git a/src/core/strvector.c b/src/core/strvector.c
+index 59d984627..899a45bbe 100644
+--- a/src/core/strvector.c
++++ b/src/core/strvector.c
+@@ -182,12 +182,24 @@ igraph_error_t igraph_strvector_set_len(igraph_strvector_t *sv, igraph_integer_t
+ 
+     IGRAPH_ASSERT(sv != NULL);
+     IGRAPH_ASSERT(sv->stor_begin != NULL);
+-    IGRAPH_ASSERT(sv->stor_begin[idx] != NULL);
+ 
+-    tmp = IGRAPH_REALLOC(sv->stor_begin[idx], len + 1, char);
+-    IGRAPH_CHECK_OOM(tmp, "Cannot reserve space for new item in string vector.");
++    if (idx < 0 || idx >= igraph_strvector_size(sv)) {
++        IGRAPH_ERROR("Index out of bounds", IGRAPH_EINVAL);
++    }
++
++    if (sv->stor_begin[idx] == NULL) {
++        sv->stor_begin[idx] = IGRAPH_CALLOC(len + 1, char);
++        if (sv->stor_begin[idx] == NULL) {
++            IGRAPH_ERROR("Memory allocation failed", IGRAPH_ENOMEM);
++        }
++    } else {
++        tmp = IGRAPH_REALLOC(sv->stor_begin[idx], len + 1, char);
++        if (tmp == NULL) {
++            IGRAPH_ERROR("Cannot reserve space for new item in string vector.", IGRAPH_ENOMEM);
++        }
++        sv->stor_begin[idx] = tmp;
++    }
+ 
+-    sv->stor_begin[idx] = tmp;
+     memcpy(sv->stor_begin[idx], value, len * sizeof(char));
+     sv->stor_begin[idx][len] = '\0';
+ 

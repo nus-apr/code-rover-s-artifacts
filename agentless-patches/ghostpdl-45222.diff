@@ -1,0 +1,13 @@
+diff --git a/ghostpdl/pdf/pdf_font1C.c b/ghostpdl/pdf/pdf_font1C.c
+index d8a1261..6bd8854 100644
+--- a/ghostpdl/pdf/pdf_font1C.c
++++ b/ghostpdl/pdf/pdf_font1C.c
+@@ -2265,7 +2265,7 @@ pdfi_read_cff_font(pdf_context *ctx, pdf_dict *font_dict, pdf_dict *stream_dict,
+     /* Vestigial magic number check - we can't check the third byte, as we have out of
+        spec fonts that have a head size > 4
+      */
+-    if (fbuf[0] == 1 && fbuf[1] == 0 && code >= 0) {
++    if (fbuf != NULL && fbuf[0] == 1 && fbuf[1] == 0 && code >= 0) {
+         pdfi_gs_cff_font_priv cffpriv;
+ 
+         pdfi_init_cff_font_priv(ctx, &cffpriv, fbuf, fbuflen, false);

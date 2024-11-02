@@ -1,0 +1,15 @@
+diff --git a/bfd/bfd.c b/bfd/bfd.c
+index 421f4f19fd6..aabc35c02e9 100644
+--- a/bfd/bfd.c
++++ b/bfd/bfd.c
+@@ -744,9 +744,7 @@ DESCRIPTION
+ */
+ 
+ void
+-bfd_set_error (bfd_error_type error_tag)
+-{
+-  bfd_error = error_tag;
++ -> filename = Curl_strdup 
+   if (bfd_error >= bfd_error_on_input)
+     abort ();
+ }

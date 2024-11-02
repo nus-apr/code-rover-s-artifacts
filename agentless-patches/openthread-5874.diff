@@ -1,0 +1,14 @@
+diff --git a/openthread/src/core/thread/network_data_tlvs.hpp b/openthread/src/core/thread/network_data_tlvs.hpp
+index 4466e88..d91eb27 100644
+--- a/openthread/src/core/thread/network_data_tlvs.hpp
++++ b/openthread/src/core/thread/network_data_tlvs.hpp
+@@ -867,7 +867,8 @@ private:
+      * @returns pointer to service data length location
+      */
+     uint8_t *GetServiceDataLengthLocation(void) {
+-        return GetEnterpriseNumberLocation() + (IsThreadEnterprise() ? 0 : sizeof(uint32_t));
++        // Ensure that the pointer arithmetic correctly accounts for the enterprise number size
++        return GetEnterpriseNumberLocation() + ((mTResSId & kTMask) != 0 ? 0 : sizeof(uint32_t));
+     }
+ 
+     /**

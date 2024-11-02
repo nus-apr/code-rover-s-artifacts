@@ -1,0 +1,13 @@
+diff --git a/code/Common/Importer.cpp b/code/Common/Importer.cpp
+index 41b73fd12..05f8aaa3d 100644
+--- a/code/Common/Importer.cpp
++++ b/code/Common/Importer.cpp
+@@ -672,7 +672,7 @@ const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags) {
+             profiler->BeginRegion("import");
+         }
+ 
+-        pimpl->mScene = imp->ReadFile( this, pFile, pimpl->mIOHandler);
++, BufSize, "%s.%s" 
+         pimpl->mProgressHandler->UpdateFileRead( fileSize, fileSize );
+ 
+         if (profiler) {

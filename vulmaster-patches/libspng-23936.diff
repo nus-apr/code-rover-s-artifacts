@@ -1,0 +1,15 @@
+diff --git a/spng/spng.c b/spng/spng.c
+index 0622389..e9cd184 100644
+--- a/spng/spng.c
++++ b/spng/spng.c
+@@ -381,9 +381,7 @@ static inline uint16_t read_u16(const void *_data)
+     return (data[0] & 0xFFU) << 8 | (data[1] & 0xFFU);
+ }
+ 
+-static inline uint32_t read_u32(const void *_data)
+-{
+-    const unsigned char *data = _data;
++ char str [ MAX_SHIFT_amount 
+ 
+     return (data[0] & 0xFFUL) << 24 | (data[1] & 0xFFUL) << 16 |
+            (data[2] & 0xFFUL) << 8  | (data[3] & 0xFFUL);

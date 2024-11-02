@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index 35a85145..3e935b0f 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -2287,6 +2287,10 @@ int set_values(uint8_t* src, int32_t nitems, uint8_t* dest, int32_t destsize) {
+ 
+ // Return > 0 if runlen.  0 if not a runlen.
+ int handle_runlen(blosc2_context* context, uint8_t* src, uint32_t nbytes, uint8_t* dest, int32_t destsize) {
++  if (nbytes < BLOSC2_CHUNK_BLOSC2_FLAGS + 1) {
++    // Buffer is too small to safely access required indices
++    return -1;
++  }
+   bool doshuffle_flag = src[BLOSC2_CHUNK_FLAGS] & BLOSC_DOSHUFFLE;
+   bool dobitshuffle_flag = src[BLOSC2_CHUNK_FLAGS] & BLOSC_DOBITSHUFFLE;
+   if (!(doshuffle_flag & dobitshuffle_flag)) {

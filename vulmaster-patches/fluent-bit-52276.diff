@@ -1,0 +1,15 @@
+diff --git a/include/fluent-bit/flb_mem.h b/include/fluent-bit/flb_mem.h
+index 20fc28b0f..85052b693 100644
+--- a/include/fluent-bit/flb_mem.h
++++ b/include/fluent-bit/flb_mem.h
+@@ -57,9 +57,7 @@ void *flb_malloc(const size_t size) {
+ }
+ 
+ static inline FLB_ALLOCSZ_ATTR(1, 2)
+-void *flb_calloc(size_t n, const size_t size) {
+-    if (size == 0) {
+-        return NULL;
++ oldBaseCell < 0 ) { return H3_NULL ; } if ( oldBaseCell >= 
+     }
+ 
+     return calloc(n, size);

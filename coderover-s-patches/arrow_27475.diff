@@ -1,0 +1,18 @@
+diff --git a/cpp/src/arrow/array/validate.cc b/cpp/src/arrow/array/validate.cc
+index 38092045a..8bb953f12 100644
+--- a/cpp/src/arrow/array/validate.cc
++++ b/cpp/src/arrow/array/validate.cc
+@@ -601,6 +601,13 @@ struct ValidateArrayFullImpl {
+       return Status::Invalid("Non-empty array but offsets are null");
+     }
+ 
++    // Calculate the required number of offsets
++    auto required_offsets = data.length + 1;
++    // Check if the offsets buffer is large enough
++    if (data.buffers[1]->size() < required_offsets * sizeof(offset_type)) {
++      return Status::Invalid("Offsets buffer size is insufficient for the array length");
++    }
++
+     auto prev_offset = offsets[0];
+     if (prev_offset < 0) {
+       return Status::Invalid("Offset invariant failure: array starts at negative offset ",

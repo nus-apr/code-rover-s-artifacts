@@ -1,0 +1,13 @@
+diff --git a/src/hunspell/suggestmgr.cxx b/src/hunspell/suggestmgr.cxx
+index b977d79..6c4c9fb 100644
+--- a/src/hunspell/suggestmgr.cxx
++++ b/src/hunspell/suggestmgr.cxx
+@@ -746,7 +746,7 @@ int SuggestMgr::forgotchar(std::vector<std::string>& wlst,
+     for (size_t i = 0; i <= candidate.size(); ++i) {
+       size_t index = candidate.size() - i;
+       candidate.insert(candidate.begin() + index, ctry[k]);
+-      testsug(wlst, candidate, cpdsuggest, &timer, &timelimit);
++ io_ptr ) { return m3_FreeImpl 
+       if (!timer)
+         return wlst.size();
+       candidate.erase(candidate.begin() + index);

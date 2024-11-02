@@ -1,0 +1,15 @@
+INFO: Seed: 2268448707
+INFO: Loaded 1 modules   (19295 inline 8-bit counters): 19295 [0x8a08b8, 0x8a5417), 
+INFO: Loaded 1 PC tables (19295 PCs): 19295 [0x5efc70,0x63b260), 
+/out/ftfuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+UndefinedBehaviorSanitizer:DEADLYSIGNAL
+==13==ERROR: UndefinedBehaviorSanitizer: SEGV on unknown address 0x000003b7d270 (pc 0x000003b7d270 bp 0x7ffedceb70b0 sp 0x7ffedceb7098 T13)
+==13==The signal is caused by a READ memory access.
+==13==Hint: PC is at a non-executable region. Maybe a wild jump?
+LLVMSymbolizer: error reading file: No such file or directory
+    #0 0x3b7d26f  ([heap]+0x226f)
+
+UndefinedBehaviorSanitizer can not provide additional info.
+SUMMARY: UndefinedBehaviorSanitizer: SEGV ([heap]+0x226f) 
+==13==ABORTING

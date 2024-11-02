@@ -1,0 +1,27 @@
+diff --git a/pdf/pdf_dict.c b/pdf/pdf_dict.c
+index a55fedae3..963e9b8c5 100644
+--- a/pdf/pdf_dict.c
++++ b/pdf/pdf_dict.c
+@@ -293,12 +293,20 @@ static int pdfi_dict_find_key(pdf_context *ctx, pdf_dict *d, const pdf_name *Key
+     char *Test = NULL;
+     int index = 0;
+ 
++    if (Key->data == NULL || Key->length <= 0) {
++        return_error(gs_error_rangecheck);
++    }
++
+     Test = (char *)gs_alloc_bytes(ctx->memory, Key->length + 1, "pdfi_dict_find_key");
+     if (Test == NULL)
+         return_error(gs_error_VMerror);
+ 
+-    memcpy(Test, Key->data, Key->length);
+-    Test[Key->length] = 0x00;
++    // Ensure that we do not exceed the bounds of Key->data
++    size_t actual_data_length = strlen((const char *)Key->data);
++    size_t copy_length = (Key->length < actual_data_length) ? Key->length : actual_data_length;
++
++    memcpy(Test, Key->data, copy_length);
++    Test[copy_length] = 0x00;
+ 
+     index = pdfi_dict_find(ctx, d, Test, sort);
+ 

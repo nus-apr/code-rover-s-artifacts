@@ -1,0 +1,14 @@
+diff --git a/libhevc/encoder/ihevce_frame_process.c b/libhevc/encoder/ihevce_frame_process.c
+index e5a4980..50734f8 100644
+--- a/libhevc/encoder/ihevce_frame_process.c
++++ b/libhevc/encoder/ihevce_frame_process.c
+@@ -323,8 +323,7 @@ void complexity_RC_reset_marking(enc_ctxt_t *ps_enc_ctxt, WORD32 i4_cur_ipe_idx,
+ 
+     ps_cur_ipe_lap_out =
+         &ps_enc_ctxt->s_multi_thrd.aps_curr_inp_pre_enc[i4_cur_ipe_idx]->s_rc_lap_out;
+-    ps_cur_ipe_lap_out->i4_is_cmplx_change_reset_model = 0;
+-    ps_cur_ipe_lap_out->i4_is_cmplx_change_reset_bits = 0;
++    memset(ps_cur_ipe_lap_out, 0, sizeof(*ps_cur_ipe_lap_out));
+ 
+     i4_max_temporal_layers = ps_enc_ctxt->ps_stat_prms->s_coding_tools_prms.i4_max_temporal_layers;
+ 

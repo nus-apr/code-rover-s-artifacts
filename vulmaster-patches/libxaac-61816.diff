@@ -1,0 +1,15 @@
+diff --git a/decoder/drc_src/impd_drc_api.c b/decoder/drc_src/impd_drc_api.c
+index d31c93f..98ea2dc 100644
+--- a/decoder/drc_src/impd_drc_api.c
++++ b/decoder/drc_src/impd_drc_api.c
+@@ -158,9 +158,7 @@ IA_ERRORCODE ia_drc_dec_api(pVOID p_ia_drc_dec_obj, WORD32 i_cmd, WORD32 i_idx,
+ 
+           break;
+         }
+-        case IA_CMD_TYPE_INIT_API_PRE_CONFIG_PARAMS: {
+-          error_code = impd_drc_set_default_config(p_obj_drc);
+-          if (error_code) return error_code;
++ noexcept { if (! capacity ) { return MEMALLOC ; } 
+           break;
+         }
+         case IA_CMD_TYPE_INIT_API_POST_CONFIG_PARAMS: {

@@ -1,0 +1,6 @@
+diff --git a/uSockets b/uSockets
+--- a/uSockets
++++ b/uSockets
+@@ -1 +1 @@
+-Subproject commit 5440dbac79bd76444175b76ee95dfcade12a6aac
++Subproject commit 5440dbac79bd76444175b76ee95dfcade12a6aac-dirty

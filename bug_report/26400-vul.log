@@ -1,0 +1,25 @@
+Accepting input from '/tmp/poc'
+Usage for fuzzing: honggfuzz -P [flags] -- /out/mruby_fuzzer
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address 0x0002800b6e76 (pc 0x0000004d996d bp 0x7ffc5cdbaf70 sp 0x7ffc5cdbaf60 T0)
+==13==The signal is caused by a READ memory access.
+SCARINESS: 20 (wild-addr-read)
+    #0 0x4d996d in presym_sym2name /src/mruby/src/symbol.c:65:30
+    #1 0x4d824e in sym2name_len /src/mruby/src/symbol.c:324:24
+    #2 0x4d8201 in mrb_sym_name_len /src/mruby/src/symbol.c:341:10
+    #3 0x51a609 in yyparse /src/mruby/mrbgems/mruby-compiler/core/parse.y:3455:40
+    #4 0x514375 in mrb_parser_parse /src/mruby/mrbgems/mruby-compiler/core/parse.y:6368:13
+    #5 0x526ddb in mrb_parse_nstring /src/mruby/mrbgems/mruby-compiler/core/parse.y:6562:3
+    #6 0x527a31 in mrb_load_nstring_cxt /src/mruby/mrbgems/mruby-compiler/core/parse.y:6651:29
+    #7 0x527ac5 in mrb_load_string_cxt /src/mruby/mrbgems/mruby-compiler/core/parse.y:6663:10
+    #8 0x527b03 in mrb_load_string /src/mruby/mrbgems/mruby-compiler/core/parse.y:6669:10
+    #9 0x4cc146 in LLVMFuzzerTestOneInput /src/mruby/oss-fuzz/mruby_fuzzer.c:14:5
+    #10 0x4cc79b in main (/out/mruby_fuzzer+0x4cc79b)
+    #11 0x7a759d07a83f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2083f)
+    #12 0x41d5c8 in _start (/out/mruby_fuzzer+0x41d5c8)
+
+DEDUP_TOKEN: presym_sym2name--sym2name_len--mrb_sym_name_len
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /src/mruby/src/symbol.c:65:30 in presym_sym2name
+==13==ABORTING

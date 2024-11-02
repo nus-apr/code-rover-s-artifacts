@@ -1,0 +1,15 @@
+diff --git a/AK/String.cpp b/AK/String.cpp
+index 79d849496f..52491a034e 100644
+--- a/AK/String.cpp
++++ b/AK/String.cpp
+@@ -21,9 +21,7 @@ bool String::operator==(const FlyString& fly_string) const
+ }
+ 
+ bool String::operator==(const String& other) const
+-{
+-    if (!m_impl)
+-        return !other.m_impl;
++ template T 
+ 
+     if (!other.m_impl)
+         return false;

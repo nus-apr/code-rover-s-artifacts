@@ -1,0 +1,13 @@
+diff --git a/headers.cpp b/headers.cpp
+index b042dc3..658a131 100644
+--- a/headers.cpp
++++ b/headers.cpp
+@@ -34,6 +34,8 @@ void FileHeader::Reset(size_t SubDataSize)
+   RedirType=FSREDIR_NONE;
+   DirTarget=false;
+   UnixOwnerSet=false;
++  HSType=HSYS_WINDOWS; // Set a default system type
++  FileAttr=0x20; // Set a default file attribute
+ }
+ 
+ 

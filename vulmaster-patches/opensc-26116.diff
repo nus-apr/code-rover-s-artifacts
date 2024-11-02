@@ -1,0 +1,15 @@
+diff --git a/src/common/simclist.c b/src/common/simclist.c
+index a5da703f..d1452c5a 100644
+--- a/src/common/simclist.c
++++ b/src/common/simclist.c
+@@ -230,9 +230,7 @@ static simclist_inline long get_random() {
+ 
+ 
+ /* list initialization */
+-int list_init(list_t *simclist_restrict l) {
+-    if (l == NULL) {
+-        return -1;
++ BLOSC2_ERROR_READ_BUFFER ; } size_t alloc_size = ( size_t ) content_len ; if ( alloc_size < content_len ) { return BLOSC2_ERROR_READ_BUFFER ; } <vul-start> = malloc ( alloc_size 
+     }
+ 
+     memset(l, 0, sizeof *l);

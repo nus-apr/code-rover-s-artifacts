@@ -1,0 +1,14 @@
+diff --git a/util-linux/libblkid/src/superblocks/bcache.c b/util-linux/libblkid/src/superblocks/bcache.c
+index 18bf077..5831b33 100644
+--- a/util-linux/libblkid/src/superblocks/bcache.c
++++ b/util-linux/libblkid/src/superblocks/bcache.c
+@@ -185,7 +185,8 @@ static void probe_bcachefs_sb_fields(blkid_probe pr, const struct bcachefs_super
+ 		struct bcachefs_sb_field *field = (struct bcachefs_sb_field *) field_addr;
+ 		int32_t type;
+ 
+-		if ((unsigned char *) field + sizeof(*field) > sb_end)
++		if ((unsigned char *) field + sizeof(*field) > sb_end || 
++		    (unsigned char *) field + BYTES(field) > sb_end)
+ 			return;
+ 
+ 		type = le32_to_cpu(field->type);

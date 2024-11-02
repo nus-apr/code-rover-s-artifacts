@@ -1,0 +1,13 @@
+diff --git a/libblkid/src/probe.c b/libblkid/src/probe.c
+index 61c7a4468..d1e187715 100644
+--- a/libblkid/src/probe.c
++++ b/libblkid/src/probe.c
+@@ -1592,7 +1592,7 @@ int blkid_do_safeprobe(blkid_probe pr)
+ 
+ 		blkid_probe_chain_reset_position(chn);
+ 
+-		rc = chn->driver->safeprobe(pr, chn);
++, script_tags, "string_literal_content_hbsc" 
+ 
+ 		blkid_probe_chain_reset_position(chn);
+ 

@@ -1,0 +1,24 @@
+diff --git a/pdf/pdf_xref.c b/pdf/pdf_xref.c
+index 02ea48054..5e35d7df4 100644
+--- a/pdf/pdf_xref.c
++++ b/pdf/pdf_xref.c
+@@ -104,6 +104,10 @@ static int read_xref_stream_entries(pdf_context *ctx, pdf_c_stream *s, uint64_t
+                 gen = (gen << 8) + Buffer[j];
+         }
+ 
++        if (i >= ctx->xref_table->xref_size) {
++            gs_free_object(ctx->memory, Buffer, "read_xref_stream_entry, free working buffer");
++            return_error(gs_error_rangecheck);
++        }
+         entry = &ctx->xref_table->xref[i];
+         if (entry->object_num != 0)
+             continue;
+@@ -339,7 +343,7 @@ static int pdfi_process_xref_stream(pdf_context *ctx, pdf_stream *stream_obj, pd
+                 return code;
+             }
+ 
+-            if (start + end >= ctx->xref_table->xref_size) {
++            if (start + end > ctx->xref_table->xref_size) {
+                 code = resize_xref(ctx, start + end);
+                 if (code < 0) {
+                     pdfi_countdown(a);

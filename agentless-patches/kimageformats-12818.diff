@@ -1,0 +1,28 @@
+diff --git a/kimageformats/src/imageformats/tga.cpp b/kimageformats/src/imageformats/tga.cpp
+index 3b4b35f..5f1d509 100644
+--- a/kimageformats/src/imageformats/tga.cpp
++++ b/kimageformats/src/imageformats/tga.cpp
+@@ -235,17 +235,20 @@ static bool LoadTGA(QDataStream &s, const TgaHeader &tga, QImage &img)
+             s >> c;
+ 
+             uint count = (c & 0x7f) + 1;
+-            num -= count * pixel_size;
+-            if (num < 0) {
++            if (count * pixel_size > num) {
+                 valid = false;
+                 break;
+             }
++            num -= count * pixel_size;
+ 
+             if (c & 0x80) {
+                 // RLE pixels.
+                 assert(pixel_size <= 8);
+                 char pixel[8];
+-                s.readRawData(pixel, pixel_size);
++                if (s.readRawData(pixel, pixel_size) != pixel_size) {
++                    valid = false;
++                    break;
++                }
+                 do {
+                     memcpy(dst, pixel, pixel_size);
+                     dst += pixel_size;

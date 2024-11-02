@@ -1,0 +1,30 @@
+diff --git a/plugins/codecs/ndlz/ndlz4x4.c b/plugins/codecs/ndlz/ndlz4x4.c
+index 8723d867..5dae1ed4 100644
+--- a/plugins/codecs/ndlz/ndlz4x4.c
++++ b/plugins/codecs/ndlz/ndlz4x4.c
+@@ -537,6 +537,10 @@ int ndlz4_decompress(const uint8_t *input, int32_t input_len, uint8_t *output, i
+   eshape[0] = ((blockshape[0] + 3) / 4) * 4;
+   eshape[1] = ((blockshape[1] + 3) / 4) * 4;
+ 
++  if (op == NULL || blockshape[0] * blockshape[1] > (uint32_t)output_len) {
++    fprintf(stderr, "Invalid output buffer or size exceeds output length\n");
++    return -1;
++  }
+   memset(op, 0, blockshape[0] * blockshape[1]);
+ 
+   uint32_t i_stop[2];
+@@ -673,10 +677,10 @@ int ndlz4_decompress(const uint8_t *input, int32_t input_len, uint8_t *output, i
+         }
+         buffercpy += padding[1];
+       }
+-      if (ind > (uint32_t) output_len) {
+-        printf("Output size is bigger than max \n");
+-        return 0;
+-      }
++  if (ind > (uint32_t) output_len) {
++    fprintf(stderr, "Output size is bigger than max \n");
++    return -1;
++  }
+     }
+   }
+   ind += padding[1];

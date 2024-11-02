@@ -1,0 +1,26 @@
+diff --git a/gdal/ogr/ogrsf_frmts/mvt/mvt_tile.cpp b/gdal/ogr/ogrsf_frmts/mvt/mvt_tile.cpp
+index e0c6cced86..5ad03ff718 100644
+--- a/gdal/ogr/ogrsf_frmts/mvt/mvt_tile.cpp
++++ b/gdal/ogr/ogrsf_frmts/mvt/mvt_tile.cpp
+@@ -98,6 +98,8 @@ bool MVTTileLayerValue::operator <(const MVTTileLayerValue& rhs) const
+     if( m_eType == ValueType::NONE )
+         return false;
+     if( m_eType == ValueType::STRING )
++        if (m_pszValue == nullptr || rhs.m_pszValue == nullptr)
++            return false; // or handle the error as appropriate
+         return strcmp( m_pszValue, rhs.m_pszValue ) < 0;
+     if( m_eType == ValueType::FLOAT )
+         return m_fValue < rhs.m_fValue;
+@@ -123,8 +125,11 @@ bool MVTTileLayerValue::operator <(const MVTTileLayerValue& rhs) const
+ 
+ void MVTTileLayerValue::unset()
+ {
+-    if( m_eType == ValueType::STRING )
++    if( m_eType == ValueType::STRING && m_pszValue != nullptr )
++    {
+         CPLFree(m_pszValue);
++        m_pszValue = nullptr;
++    }
+     m_eType = ValueType::NONE;
+     m_nUIntValue = 0;
+ }

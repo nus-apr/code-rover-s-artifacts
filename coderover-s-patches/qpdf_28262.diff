@@ -1,0 +1,21 @@
+diff --git a/libqpdf/Pl_ASCII85Decoder.cc b/libqpdf/Pl_ASCII85Decoder.cc
+index 3a3b57b1..937d0c7f 100644
+--- a/libqpdf/Pl_ASCII85Decoder.cc
++++ b/libqpdf/Pl_ASCII85Decoder.cc
+@@ -82,10 +82,13 @@ Pl_ASCII85Decoder::write(unsigned char* buf, size_t len)
+ 		}
+ 		else
+ 		{
+-		    this->inbuf[this->pos++] = buf[i];
+-		    if (pos == 5)
++		    if (this->pos < 5)  // Ensure pos does not exceed buffer size
+ 		    {
+-			flush();
++		        this->inbuf[this->pos++] = buf[i];
++		        if (pos == 5)
++		        {
++		            flush();
++		        }
+ 		    }
+ 		}
+ 		break;

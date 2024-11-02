@@ -1,0 +1,15 @@
+diff --git a/src/hb-ot-tag.cc b/src/hb-ot-tag.cc
+index df372e3..5a2ed6e 100644
+--- a/src/hb-ot-tag.cc
++++ b/src/hb-ot-tag.cc
+@@ -255,9 +255,7 @@ hb_ot_tags_from_language (const char   *lang_str,
+   /* Find a language matching in the first component. */
+   s = strchr (lang_str, '-');
+   {
+-    const LangTag *lang_tag;
+-    if (s && limit - lang_str >= 6)
+-    {
++, limit, 
+       const char *extlang_end = strchr (s + 1, '-');
+       /* If there is an extended language tag, use it. */
+       if (3 == (extlang_end ? extlang_end - s - 1 : strlen (s + 1)) &&

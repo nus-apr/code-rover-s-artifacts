@@ -1,0 +1,35 @@
+diff --git a/Packet++/src/GreLayer.cpp b/Packet++/src/GreLayer.cpp
+index bae6aaef..684e5c4d 100644
+--- a/Packet++/src/GreLayer.cpp
++++ b/Packet++/src/GreLayer.cpp
+@@ -22,7 +22,7 @@ namespace pcpp
+ 
+ ProtocolType GreLayer::getGREVersion(uint8_t* greData, size_t greDataLen)
+ {
+-	if (greDataLen < sizeof(gre_basic_header))
++	if (greDataLen < sizeof(gre_basic_header) || greDataLen < 2)
+ 		return UnknownProtocol;
+ 
+ 	uint8_t version = *(greData+1);
+diff --git a/Packet++/src/IPv6Layer.cpp b/Packet++/src/IPv6Layer.cpp
+index ddf7da29..2432a40e 100644
+--- a/Packet++/src/IPv6Layer.cpp
++++ b/Packet++/src/IPv6Layer.cpp
+@@ -241,6 +241,7 @@ void IPv6Layer::parseNextLayer()
+ 	}
+ 	case PACKETPP_IPPROTO_GRE:
+ 	{
++	if (payloadLen >= 2) {
+ 		ProtocolType greVer = GreLayer::getGREVersion(payload, payloadLen);
+ 		if (greVer == GREv0)
+ 			m_NextLayer = new GREv0Layer(payload, payloadLen, this, m_Packet);
+@@ -248,6 +249,9 @@ void IPv6Layer::parseNextLayer()
+ 			m_NextLayer = new GREv1Layer(payload, payloadLen, this, m_Packet);
+ 		else
+ 			m_NextLayer = new PayloadLayer(payload, payloadLen, this, m_Packet);
++	} else {
++		m_NextLayer = new PayloadLayer(payload, payloadLen, this, m_Packet);
++	}
+ 		break;
+ 	}
+ 	case PACKETPP_IPPROTO_AH:

@@ -1,0 +1,15 @@
+diff --git a/dict.c b/dict.c
+index 8bfc9f15..77ee7954 100644
+--- a/dict.c
++++ b/dict.c
+@@ -249,9 +249,7 @@ found_pool:
+ xmlDictPtr
+ xmlDictCreate(void) {
+     xmlDictPtr dict;
+-
+-    xmlInitParser();
+-
++ ( pr, BCACHEFS_WIPER_OFFSET 
+     dict = xmlMalloc(sizeof(xmlDict));
+     if (dict == NULL)
+         return(NULL);

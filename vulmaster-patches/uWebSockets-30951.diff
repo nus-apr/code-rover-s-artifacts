@@ -1,0 +1,15 @@
+diff --git a/fuzzing/EpollHelloWorld.cpp b/fuzzing/EpollHelloWorld.cpp
+index e4c2b93..54f5162 100644
+--- a/fuzzing/EpollHelloWorld.cpp
++++ b/fuzzing/EpollHelloWorld.cpp
+@@ -21,9 +21,7 @@ void test() {
+             /* There are example certificates in uWebSockets.js repo */
+             .key_file_name = "../misc/key.pem",
+             .cert_file_name = "../misc/cert.pem",
+-            .passphrase = "1234"
+-        }).ws<PerSocketData>("/*", {
+-            /* Settings */
++ offset ) { JXL_DEBUG ( "CacheAligned::Allocate(%zu, %zu)", payload_size, offset ) ; <vul-start> ( payload_size <= ( size_t ) <vul-start> std :: numeric_limits 
+             .compression = uWS::SHARED_COMPRESSOR,
+             .maxPayloadLength = 16 * 1024,
+             .idleTimeout = 10,

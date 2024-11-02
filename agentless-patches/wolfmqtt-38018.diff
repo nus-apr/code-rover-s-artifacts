@@ -1,0 +1,16 @@
+diff --git a/wolfmqtt/src/mqtt_packet.c b/wolfmqtt/src/mqtt_packet.c
+index 2211604..c593902 100644
+--- a/wolfmqtt/src/mqtt_packet.c
++++ b/wolfmqtt/src/mqtt_packet.c
+@@ -222,9 +222,9 @@ int MqttDecode_Vbi(byte *buf, word32 *value, word32 buf_len)
+ 
+     *value = 0;
+     do {
+-        if (buf_len < rc + 1)
++        if (buf_len <= rc)
+             return MQTT_CODE_ERROR_OUT_OF_BUFFER;
+-       encodedByte = *(buf++);
++       encodedByte = *buf++;
+        *value += (encodedByte & ~MQTT_PACKET_LEN_ENCODE_MASK) * multiplier;
+        multiplier *= MQTT_PACKET_LEN_ENCODE_MASK;
+        if (multiplier > (MQTT_PACKET_LEN_ENCODE_MASK *

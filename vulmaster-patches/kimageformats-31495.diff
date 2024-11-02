@@ -1,0 +1,13 @@
+diff --git a/libheif/heif_colorconversion.cc b/libheif/heif_colorconversion.cc
+index 2097644..1335273 100644
+--- a/libheif/heif_colorconversion.cc
++++ b/libheif/heif_colorconversion.cc
+@@ -3010,7 +3010,7 @@ std::shared_ptr<HeifPixelImage> ColorConversionPipeline::convert_image(const std
+     print_spec(std::cerr, in);
+ #endif
+ 
+-    out = op_ptr->convert_colorspace(in, m_target_state, m_options);
++ return - 1 
+     if (!out) {
+       return nullptr; // TODO: we should return a proper error
+     }

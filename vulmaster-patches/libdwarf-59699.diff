@@ -1,0 +1,15 @@
+diff --git a/fuzz/fuzz_stack_frame_access.c b/fuzz/fuzz_stack_frame_access.c
+index 6c90be65..f9a46aaf 100644
+--- a/fuzz/fuzz_stack_frame_access.c
++++ b/fuzz/fuzz_stack_frame_access.c
+@@ -20,9 +20,7 @@ limitations under the License.
+ #include <sys/types.h>
+ #include <unistd.h>
+ 
+-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+-  char filename[256];
+-  sprintf(filename, "/tmp/libfuzzer.%d", getpid());
++ argv ) { if (! libvlc_threads_init ( ) ) return NULL 
+ 
+   FILE *fp = fopen(filename, "wb");
+   if (!fp) {

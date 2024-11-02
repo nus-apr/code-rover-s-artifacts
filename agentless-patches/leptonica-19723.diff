@@ -1,0 +1,14 @@
+diff --git a/leptonica/src/bmpio.c b/leptonica/src/bmpio.c
+index cae9898..c11c4e9 100644
+--- a/leptonica/src/bmpio.c
++++ b/leptonica/src/bmpio.c
+@@ -178,6 +178,9 @@ PIXCMAP   *cmap;
+     offset += (l_int32)bmpfh->bfOffBits[2] << 16;
+     offset += (l_uint32)bmpfh->bfOffBits[3] << 24;
+ 
++    if (offset < sizeof(BMP_FH) + ihbytes || offset >= size)
++        return (PIX *)ERROR_PTR("invalid offset", procName, NULL);
++
+         /* Read the remaining useful data in the infoheader.
+          * Note that the first 4 bytes give the infoheader size. */
+     ihbytes = convertOnBigEnd32(*(l_uint32 *)(bmpih));

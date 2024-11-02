@@ -1,0 +1,16 @@
+diff --git a/Libraries/LibJS/Interpreter.h b/Libraries/LibJS/Interpreter.h
+index f32e4e1ccb..8877b2559e 100644
+--- a/Libraries/LibJS/Interpreter.h
++++ b/Libraries/LibJS/Interpreter.h
+@@ -52,8 +52,9 @@ public:
+         DeferGC defer_gc(vm.heap());
+         auto interpreter = adopt_own(*new Interpreter(vm));
+         VM::InterpreterExecutionScope scope(*interpreter);
+-        interpreter->m_global_object = make_handle(static_cast<Object*>(interpreter->heap().allocate_without_global_object<GlobalObjectType>(forward<Args>(args)...)));
+-        static_cast<GlobalObjectType*>(interpreter->m_global_object.cell())->initialize();
++    auto* global_object = interpreter->heap().allocate_without_global_object<GlobalObjectType>(forward<Args>(args)...);
++    interpreter->m_global_object = make_handle(static_cast<JS::Object*>(global_object));
++    global_object->initialize();
+         return interpreter;
+     }
+ 

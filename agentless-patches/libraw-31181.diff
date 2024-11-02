@@ -1,0 +1,13 @@
+diff --git a/libraw/src/decoders/kodak_decoders.cpp b/libraw/src/decoders/kodak_decoders.cpp
+index 6211e7f..eeb9785 100644
+--- a/libraw/src/decoders/kodak_decoders.cpp
++++ b/libraw/src/decoders/kodak_decoders.cpp
+@@ -254,7 +254,7 @@ void LibRaw::kodak_c330_load_raw()
+     throw LIBRAW_EXCEPTION_IO_CORRUPT;
+   int row, col, y, cb, cr, rgb[3], c;
+ 
+-  std::vector<uchar> pixel(raw_width*2);
++  std::vector<uchar> pixel(raw_width*2 + 2);
+ 
+   for (row = 0; row < height; row++)
+   {

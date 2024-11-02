@@ -1,0 +1,13 @@
+diff --git a/harfbuzz/src/hb-machinery.hh b/harfbuzz/src/hb-machinery.hh
+index 72100ac..506bd20 100644
+--- a/harfbuzz/src/hb-machinery.hh
++++ b/harfbuzz/src/hb-machinery.hh
+@@ -713,6 +713,8 @@ struct BEInt<Type, 4>
+          + (v[2] <<  8)
+          + (v[3]      );
+   }
++  public:
++  BEInt() { v[0] = v[1] = v[2] = v[3] = 0; }
+   private: uint8_t v[4];
+ };
+ 

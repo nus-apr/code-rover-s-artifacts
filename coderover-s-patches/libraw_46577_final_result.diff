@@ -1,0 +1,37 @@
+diff --git a/src/postprocessing/postprocessing_aux.cpp b/src/postprocessing/postprocessing_aux.cpp
+index 461b5d0b..ae3b3e46 100644
+--- a/src/postprocessing/postprocessing_aux.cpp
++++ b/src/postprocessing/postprocessing_aux.cpp
+@@ -21,13 +21,16 @@
+ void LibRaw::hat_transform(float *temp, float *base, int st, int size, int sc)
+ {
+   int i;
+-  for (i = 0; i < sc; i++)
+-    temp[i] = 2 * base[st * i] + base[st * (sc - i)] + base[st * (i + sc)];
+-  for (; i + sc < size; i++)
+-    temp[i] = 2 * base[st * i] + base[st * (i - sc)] + base[st * (i + sc)];
+-  for (; i < size; i++)
+-    temp[i] = 2 * base[st * i] + base[st * (i - sc)] +
+-              base[st * (2 * size - 2 - (i + sc))];
++  for (i = 0; i < sc && st * (i + sc) < size; i++)
++    if (st * (i + sc) < size && st * (sc - i) >= 0)
++      temp[i] = 2 * base[st * i] + base[st * (sc - i)] + base[st * (i + sc)];
++  for (; i + sc < size && st * (i + sc) < size; i++)
++    if (st * (i - sc) >= 0 && st * (i + sc) < size)
++      temp[i] = 2 * base[st * i] + base[st * (i - sc)] + base[st * (i + sc)];
++  for (; i < size && st * (2 * size - 2 - (i + sc)) < size; i++)
++    if (st * (i - sc) >= 0 && st * (2 * size - 2 - (i + sc)) >= 0)
++      temp[i] = 2 * base[st * i] + base[st * (i - sc)] +
++                base[st * (2 * size - 2 - (i + sc))];
+ }
+ 
+ #if !defined(LIBRAW_USE_OPENMP)
+@@ -44,7 +47,7 @@ void LibRaw::wavelet_denoise()
+   maximum <<= --scale;
+   black <<= scale;
+   FORC4 cblack[c] <<= scale;
+-  if ((size = iheight * iwidth) < 0x15550000)
++  if (iheight > 0 && iwidth > 0 && (size = iheight * iwidth) < 0x15550000)
+     fimg = (float *)malloc((size * 3 + iheight + iwidth) * sizeof *fimg);
+   merror(fimg, "wavelet_denoise()");
+   temp = fimg + size * 3;

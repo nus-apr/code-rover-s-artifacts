@@ -1,0 +1,40 @@
+diff --git a/src/http.c b/src/http.c
+index 7abe4702..22d2a756 100644
+--- a/src/http.c
++++ b/src/http.c
+@@ -961,7 +961,7 @@ static bool getchunk(struct mg_str s, size_t *prefixlen, size_t *datalen) {
+   while (i < s.len && s.ptr[i] != '\r' && s.ptr[i] != '\n') i++;
+   n = mg_unhexn(s.ptr, i);
+   // MG_INFO(("%d %d", (int) (i + n + 4), (int) s.len));
+-  if (s.len < i + n + 4) return false;  // Chunk not yet fully buffered
++  if (s.len < i + n + 4 || n > s.len - i - 4) return false;  // Ensure chunk size is valid
+   if (s.ptr[i] != '\r' || s.ptr[i + 1] != '\n') return false;
+   if (s.ptr[i + n + 2] != '\r' || s.ptr[i + n + 3] != '\n') return false;
+   *prefixlen = i + 2;
+@@ -994,15 +994,17 @@ static void deliver_chunked_chunks(struct mg_connection *c, size_t hlen,
+   if (processed <= len) len -= processed, buf += processed;
+   while (!last && getchunk(mg_str_n(buf + ofs, len - ofs), &pl, &dl)) {
+     size_t saved = c->recv.len;
+-    memmove(p + processed, buf + ofs + pl, dl);
+-    // MG_INFO(("P2 [%.*s]", (int) (processed + dl), p));
+-    hm->chunk = mg_str_n(p + processed, dl);
+-    mg_call(c, MG_EV_HTTP_CHUNK, hm);
+-    ofs += pl + dl + 2, del += pl + 2;  // 2 is for \r\n suffix
+-    processed += dl;
+-    if (c->recv.len != saved) processed -= dl, buf -= dl;
+-    // mg_hexdump(c->recv.buf, hlen + processed);
+-    last = (dl == 0);
++    if (ofs + pl + dl + 2 <= len) {  // Ensure we do not exceed buffer bounds
++      memmove(p + processed, buf + ofs + pl, dl);
++      hm->chunk = mg_str_n(p + processed, dl);
++      mg_call(c, MG_EV_HTTP_CHUNK, hm);
++      ofs += pl + dl + 2, del += pl + 2;  // 2 is for \r\n suffix
++      processed += dl;
++      if (c->recv.len != saved) processed -= dl, buf -= dl;
++      last = (dl == 0);
++    } else {
++      break;  // Exit loop if buffer bounds would be exceeded
++    }
+   }
+   mg_iobuf_del(&c->recv, hlen + processed, del);
+   mark = ((size_t) c->pfn_data) & MG_DMARK;

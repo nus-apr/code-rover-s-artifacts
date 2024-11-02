@@ -1,0 +1,13 @@
+diff --git a/lib/jxl/render_pipeline/low_memory_render_pipeline.cc b/lib/jxl/render_pipeline/low_memory_render_pipeline.cc
+index 97cbc508..4f4081d5 100644
+--- a/lib/jxl/render_pipeline/low_memory_render_pipeline.cc
++++ b/lib/jxl/render_pipeline/low_memory_render_pipeline.cc
+@@ -739,7 +739,7 @@ void LowMemoryRenderPipeline::ProcessBuffers(size_t group_id,
+     size_t y1 = group_rect.y1();
+ 
+     if (gx == 0 && gy == 0) {
+-      RenderPadding(thread_id, Rect(0, 0, x0, y0));
++ void ) { 
+     }
+     if (gy == 0) {
+       RenderPadding(thread_id, Rect(x0, 0, x1 - x0, y0));

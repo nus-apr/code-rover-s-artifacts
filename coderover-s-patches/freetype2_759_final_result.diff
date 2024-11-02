@@ -1,0 +1,26 @@
+diff --git a/src/truetype/ttgxvar.c b/src/truetype/ttgxvar.c
+index fa614ca1a..e06d657ed 100644
+--- a/src/truetype/ttgxvar.c
++++ b/src/truetype/ttgxvar.c
+@@ -2022,6 +2022,9 @@
+       if ( FT_NEW( face->blend ) )
+         goto Exit;
+ 
++      /* Ensure normalized_stylecoords is initialized */
++      face->blend->normalized_stylecoords = NULL;
++
+       /* `num_instances' holds the number of all named instances, */
+       /* including the default instance which might be missing    */
+       /* in fvar's table of named instances                       */
+@@ -2129,6 +2132,11 @@
+ 
+       ns  = mmvar->namedstyle;
+       nsc = face->blend->normalized_stylecoords;
++      
++      /* Ensure instanceCount and axisCount are within reasonable bounds */
++      if (fvar_head.instanceCount > num_instances || fvar_head.axisCount > mmvar->num_axis)
++        goto Exit;
++      
+       for ( i = 0; i < fvar_head.instanceCount; i++, ns++ )
+       {
+         /* PostScript names add 2 bytes to the instance record size */

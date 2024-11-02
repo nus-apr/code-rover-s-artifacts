@@ -1,0 +1,33 @@
+diff --git a/libspectre/spectre-gs.c b/libspectre/spectre-gs.c
+index ad372f3..86744ef 100644
+--- a/libspectre/spectre-gs.c
++++ b/libspectre/spectre-gs.c
+@@ -89,7 +89,7 @@ spectre_gs_process (SpectreGS  *gs,
+ {
+ 	FILE *fd;
+ 	int error;
+-	static char buf[BUFFER_SIZE];
++	static char buf[BUFFER_SIZE] = {0}; // Initialize buffer to zero
+ 	unsigned int read;
+ 	int exit_code;
+ 	size_t left = end - begin;
+@@ -129,10 +129,15 @@ spectre_gs_process (SpectreGS  *gs,
+ 			to_read = left;
+ 		
+ 		read = fread (buf, sizeof (char), to_read, fd);
+-		error = gsapi_run_string_continue (ghostscript_instance,
+-						   buf, read, 0, &exit_code);
+-		error = error == gs_error_NeedInput ? 0 : error;
+-		left -= read;
++		if (read > 0 && read <= BUFFER_SIZE) { // Ensure read is within buffer size
++			error = gsapi_run_string_continue (ghostscript_instance,
++							   buf, read, 0, &exit_code);
++			error = error == gs_error_NeedInput ? 0 : error;
++			left -= read;
++		} else {
++			error = gs_error_ioerror; // Set error if read exceeds buffer size
++			break;
++		}
+ 	}
+ 	
+ 	fclose (fd);

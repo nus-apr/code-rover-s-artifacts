@@ -1,0 +1,13 @@
+diff --git a/mruby/src/class.c b/mruby/src/class.c
+index 56d59c4..bb5d196 100644
+--- a/mruby/src/class.c
++++ b/mruby/src/class.c
+@@ -152,7 +152,7 @@ mt_get(mrb_state *mrb, mt_tbl *t, mrb_sym sym, union mt_ptr *pp)
+ #ifdef MRB_USE_INLINE_METHOD_CACHE
+   int cpos = (hash^(uintptr_t)t) % MT_INLINE_CACHE_SIZE;
+   pos = mt_cache[cpos];
+-  if (pos < t->alloc) {
++  if (pos >= 0 && pos < t->alloc) {
+     mrb_sym key = keys[pos];
+     if (key) {
+       if (MT_KEY_SYM(key) == sym) {

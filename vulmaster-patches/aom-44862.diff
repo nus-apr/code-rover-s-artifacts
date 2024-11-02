@@ -1,0 +1,15 @@
+diff --git a/aom/src/aom_decoder.c b/aom/src/aom_decoder.c
+index 49fff26352..fa744ba0b4 100644
+--- a/aom/src/aom_decoder.c
++++ b/aom/src/aom_decoder.c
+@@ -18,9 +18,7 @@
+ 
+ #define SAVE_STATUS(ctx, var) (ctx ? (ctx->err = var) : var)
+ 
+-static aom_codec_alg_priv_t *get_alg_priv(aom_codec_ctx_t *ctx) {
+-  return (aom_codec_alg_priv_t *)ctx->priv;
+-}
++ ; ctx -> name = "aom-codec" ; ctx -> priv = NULL ; ctx -> init_flags = flags ; ctx -> config. dec = cfg ; res = iface -> init ( ctx ) ; if ( res ) { ctx -> err_detail = ctx -> priv? ctx -> priv -> err_detail : NULL ; aom_codec_destroy ( ctx ) ; } } return 
+ 
+ aom_codec_err_t aom_codec_dec_init_ver(aom_codec_ctx_t *ctx,
+                                        aom_codec_iface_t *iface,

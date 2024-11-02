@@ -1,0 +1,27 @@
+diff --git a/src/operation/overlayng/OverlayMixedPoints.cpp b/src/operation/overlayng/OverlayMixedPoints.cpp
+index b493bdd36..ac980a7ec 100644
+--- a/src/operation/overlayng/OverlayMixedPoints.cpp
++++ b/src/operation/overlayng/OverlayMixedPoints.cpp
+@@ -236,13 +236,16 @@ OverlayMixedPoints::extractCoordinates(const Geometry* points, const PrecisionMo
+     std::unique_ptr<CoordinateArraySequence> coords(new CoordinateArraySequence());
+     std::size_t n = points->getNumGeometries();
+     for (std::size_t i = 0; i < n; i++) {
+-        const Point* point = static_cast<const Point*>(points->getGeometryN(i));
+-        if (point->isEmpty()) {
+-            continue;
++        const Geometry* geom = points->getGeometryN(i);
++        if (const Point* point = dynamic_cast<const Point*>(geom)) {
++            if (point->isEmpty()) {
++                continue;
++            }
++            Coordinate coord;
++            OverlayUtil::round(point, p_pm, coord);
++            coords->add(coord, true);
+         }
+-        Coordinate coord;
+-        OverlayUtil::round(point, p_pm, coord);
+-        coords->add(coord, true);
++        // Optionally handle non-point geometries here if needed
+     }
+     return coords;
+ }

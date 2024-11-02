@@ -1,0 +1,15 @@
+diff --git a/src/md4c-html.c b/src/md4c-html.c
+index d604aec..ff853c2 100644
+--- a/src/md4c-html.c
++++ b/src/md4c-html.c
+@@ -404,9 +404,7 @@ enter_block_callback(MD_BLOCKTYPE type, void* detail, void* userdata)
+ }
+ 
+ static int
+-leave_block_callback(MD_BLOCKTYPE type, void* detail, void* userdata)
+-{
+-    static const MD_CHAR* head[6] = { "</h1>\n", "</h2>\n", "</h3>\n", "</h4>\n", "</h5>\n", "</h6>\n" };
++ userdata ) { 
+     MD_HTML* r = (MD_HTML*) userdata;
+ 
+     switch(type) {

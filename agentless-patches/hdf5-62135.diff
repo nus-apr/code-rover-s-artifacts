@@ -1,0 +1,24 @@
+diff --git a/hdf5/src/H5Faccum.c b/hdf5/src/H5Faccum.c
+index aee33ac..2db3e3f 100644
+--- a/hdf5/src/H5Faccum.c
++++ b/hdf5/src/H5Faccum.c
+@@ -892,10 +892,15 @@ H5F__accum_free(H5F_shared_t *f_sh, H5FD_mem_t H5_ATTR_UNUSED type, haddr_t addr
+ 
+                 /* Calculate the size of the overlap with the accumulator, etc. */
+                 H5_CHECKED_ASSIGN(overlap_size, size_t, (addr + size) - accum->loc, haddr_t);
+-                new_accum_size = accum->size - overlap_size;
+-
+-                /* Move the accumulator buffer information to eliminate the freed block */
+-                HDmemmove(accum->buf, accum->buf + overlap_size, new_accum_size);
++                if (overlap_size <= accum->size) {
++                    new_accum_size = accum->size - overlap_size;
++
++                    /* Move the accumulator buffer information to eliminate the freed block */
++                    HDmemmove(accum->buf, accum->buf + overlap_size, new_accum_size);
++                } else {
++                    /* Handle error: overlap_size is larger than accum->size */
++                    HGOTO_ERROR(H5E_RESOURCE, H5E_OVERFLOW, FAIL, "overlap size exceeds accumulator size")
++                }
+ 
+                 /* Adjust the accumulator information */
+                 accum->loc += overlap_size;

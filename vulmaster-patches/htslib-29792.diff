@@ -1,0 +1,15 @@
+diff --git a/hfile.c b/hfile.c
+index 01bace09..be299d2d 100644
+--- a/hfile.c
++++ b/hfile.c
+@@ -134,9 +134,7 @@ hFILE *hfile_init_fixed(size_t struct_size, const char *mode,
+ {
+     hFILE *fp = (hFILE *) malloc(struct_size);
+     if (fp == NULL) return NULL;
+-
+-    fp->buffer = fp->begin = buffer;
+-    fp->end = &fp->buffer[buf_filled];
++ "object-type", EXSLT_COMMON_NAMESPACE 
+     fp->limit = &fp->buffer[buf_size];
+ 
+     fp->offset = 0;

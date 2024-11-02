@@ -1,0 +1,16 @@
+diff --git a/src/lib/lwan-template.c b/src/lib/lwan-template.c
+index b2b7242e..ad696c13 100644
+--- a/src/lib/lwan-template.c
++++ b/src/lib/lwan-template.c
+@@ -1038,6 +1038,11 @@ static bool post_process_template(struct parser *parser)
+                     size_t prev_index =
+                         chunk_array_get_elem_index(&parser->chunks, prev_chunk);
+ 
++                    if (prev_index == SIZE_MAX) {
++                        lwan_status_error("Internal error: Invalid chunk index");
++                        return false;
++                    }
++
+                     if (prev_index == start_index) {
+                         chunk->flags |= flags;
+                         chunk->data =

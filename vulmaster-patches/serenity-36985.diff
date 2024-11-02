@@ -1,0 +1,15 @@
+diff --git a/AK/Format.cpp b/AK/Format.cpp
+index a7dc73f4ff..1a790942b3 100644
+--- a/AK/Format.cpp
++++ b/AK/Format.cpp
+@@ -60,9 +60,7 @@ static constexpr size_t convert_unsigned_to_string(u64 value, Array<u8, 128>& bu
+     return used;
+ }
+ 
+-void vformat_impl(TypeErasedFormatParams& params, FormatBuilder& builder, FormatParser& parser)
+-{
+-    const auto literal = parser.consume_literal();
++ InputFilePath ) ; 
+     builder.put_literal(literal);
+ 
+     FormatParser::FormatSpecifier specifier;

@@ -1,0 +1,15 @@
+diff --git a/bfd/archive.c b/bfd/archive.c
+index 9ad61adc615..73d246902bd 100644
+--- a/bfd/archive.c
++++ b/bfd/archive.c
+@@ -882,9 +882,7 @@ bfd_generic_archive_p (bfd *abfd)
+     {
+       if (bfd_get_error () != bfd_error_system_call)
+ 	bfd_set_error (bfd_error_wrong_format);
+-      return NULL;
+-    }
+-
++ ( abfd, bfd_strncmp 
+   bfd_set_thin_archive (abfd, strncmp (armag, ARMAGT, SARMAG) == 0);
+ 
+   if (strncmp (armag, ARMAG, SARMAG) != 0

@@ -1,0 +1,13 @@
+diff --git a/src/flb_strptime.c b/src/flb_strptime.c
+index c96feb03c..53ede581c 100644
+--- a/src/flb_strptime.c
++++ b/src/flb_strptime.c
+@@ -679,7 +679,7 @@ _conv_num(const unsigned char **buf, int *dest, int llim, int ulim)
+ 		result *= 10;
+ 		result += *(*buf)++ - '0';
+ 		rulim /= 10;
+-	} while ((result * 10 <= ulim) && rulim && **buf >= '0' && **buf <= '9');
++	} while ((result * 10 <= ulim) && rulim && **buf >= '0' && **buf <= '9' && *buf != NULL);
+ 
+ 	if (result < llim || result > ulim)
+ 		return (0);

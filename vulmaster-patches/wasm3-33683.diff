@@ -1,0 +1,15 @@
+diff --git a/source/m3_core.c b/source/m3_core.c
+index 2618b51..7548599 100644
+--- a/source/m3_core.c
++++ b/source/m3_core.c
+@@ -105,9 +105,7 @@ void *  m3_Realloc  (void * i_ptr, size_t i_newSize, size_t i_oldSize)
+ 
+ #else
+ 
+-void *  m3_Malloc  (size_t i_size)
+-{
+-    void * ptr = calloc (i_size, 1);
++ ; #elif ( HAVE_FSEEKO64 ) 
+ 
+ //    printf("== alloc %d => %p\n", (u32) i_size, ptr);
+ 

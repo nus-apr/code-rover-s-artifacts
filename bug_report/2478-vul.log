@@ -1,0 +1,15 @@
+INFO: Seed: 2327758247
+INFO: Loaded 1 modules (15732 guards): [0xb9e290, 0xbad860), 
+/out/ffmpeg_AV_CODEC_ID_AAC_fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+ASAN:DEADLYSIGNAL
+=================================================================
+==13==ERROR: AddressSanitizer: SEGV on unknown address 0x000800820928 (pc 0x0000005dc902 bp 0x7ffc3872b850 sp 0x7ffc3872b678 T0)
+==13==The signal is caused by a READ memory access.
+SCARINESS: 20 (wild-addr-read)
+    #0 0x5dc901 in ff_sbr_hf_apply_noise_3_sse2 (/out/ffmpeg_AV_CODEC_ID_AAC_fuzzer+0x5dc901)
+
+DEDUP_TOKEN: ff_sbr_hf_apply_noise_3_sse2
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV (/out/ffmpeg_AV_CODEC_ID_AAC_fuzzer+0x5dc901) in ff_sbr_hf_apply_noise_3_sse2
+==13==ABORTING

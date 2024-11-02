@@ -1,0 +1,41 @@
+diff --git a/code/AssetLib/HMP/HMPLoader.cpp b/code/AssetLib/HMP/HMPLoader.cpp
+index 661e4d1b2..b4a24048d 100644
+--- a/code/AssetLib/HMP/HMPLoader.cpp
++++ b/code/AssetLib/HMP/HMPLoader.cpp
+@@ -198,6 +198,10 @@ void HMPImporter::InternReadFile_HMP5() {
+     // read the file header and skip everything to byte 84
+     const HMP::Header_HMP5 *pcHeader = (const HMP::Header_HMP5 *)mBuffer;
+     const unsigned char *szCurrent = (const unsigned char *)(mBuffer + 84);
++    const unsigned char *mBufferEnd = mBuffer + iFileSize; // Assuming iFileSize is the size of the buffer
++    if (!szCurrent || szCurrent > mBufferEnd) {
++        throw DeadlyImportError("Invalid buffer size or null pointer in InternReadFile_HMP7");
++    }
+     ValidateHeader_HMP457();
+ 
+     // generate an output mesh
+diff --git a/code/AssetLib/MDL/MDLMaterialLoader.cpp b/code/AssetLib/MDL/MDLMaterialLoader.cpp
+index 62320814a..68dbdca53 100644
+--- a/code/AssetLib/MDL/MDLMaterialLoader.cpp
++++ b/code/AssetLib/MDL/MDLMaterialLoader.cpp
+@@ -474,8 +474,19 @@ void MDLImporter::ParseSkinLump_3DGS_MDL7(
+         pcNew->achFormatHint[2] = 's';
+         pcNew->achFormatHint[3] = '\0';
+ 
+-        pcNew->pcData = (aiTexel *)new unsigned char[pcNew->mWidth];
+-        memcpy(pcNew->pcData, szCurrent, pcNew->mWidth);
++    pcNew->pcData = (aiTexel *)new unsigned char[pcNew->mWidth];
++    if (pcNew->pcData && szCurrent) {
++        // Ensure that szCurrent has enough data to copy
++        if (szCurrent + pcNew->mWidth <= *szCurrentOut) {
++            memcpy(pcNew->pcData, szCurrent, pcNew->mWidth);
++        } else {
++            // Handle error: insufficient buffer size
++            throw DeadlyImportError("Insufficient buffer size in ParseSkinLump_3DGS_MDL7");
++        }
++    } else {
++        // Handle error: null pointer
++        throw DeadlyImportError("Null pointer in ParseSkinLump_3DGS_MDL7");
++    }
+         szCurrent += iWidth;
+     } else if (0x7 == iMasked) {
+         // ***** REFERENCE TO EXTERNAL FILE *****

@@ -1,0 +1,36 @@
+diff --git a/libclamav/pdfng.c b/libclamav/pdfng.c
+index 707c4ac9c..210af6b2b 100644
+--- a/libclamav/pdfng.c
++++ b/libclamav/pdfng.c
+@@ -250,7 +250,7 @@ static char *pdf_decrypt_string(struct pdf_struct *pdf, struct pdf_obj *obj, con
+             hex_encoded_binary = true;
+         }
+         const char *end = in + *length;
+-        if (end[-1] == '>') {
++        if (*length > 0 && end[-1] == '>') {
+             end--;
+         }
+ 
+@@ -379,14 +379,15 @@ char *pdf_finalize_string(struct pdf_struct *pdf, struct pdf_obj *obj, const cha
+         }
+ 
+         free(wrkstr);
+-        wrkstr = cli_calloc(outlen + 1, sizeof(char));
+-        if (!wrkstr) {
++            wrkstr = cli_calloc(outlen + 1, sizeof(char));
++            if (!wrkstr) {
++                free(output);
++                return NULL;
++            }
++            memcpy(wrkstr, output, outlen);
++            wrkstr[outlen] = '\0'; // Ensure null-termination
+             free(output);
+-            return NULL;
+-        }
+-        memcpy(wrkstr, output, outlen);
+-        free(output);
+-        wrklen = outlen;
++            wrklen = outlen;
+     }
+ 
+     // cli_errmsg("pdf_final: escaped(%d): %s\n", wrklen, wrkstr);

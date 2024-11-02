@@ -1,0 +1,15 @@
+diff --git a/binutils-gdb/bfd/opncls.c b/binutils-gdb/bfd/opncls.c
+index b9680cb..25c4f16 100644
+--- a/binutils-gdb/bfd/opncls.c
++++ b/binutils-gdb/bfd/opncls.c
+@@ -1028,6 +1028,10 @@ bfd_alloc (bfd *abfd, bfd_size_type size)
+       return NULL;
+     }
+ 
++  if (ul_size > MAX_ALLOWED_SIZE) {
++    bfd_set_error (bfd_error_no_memory);
++    return NULL;
++  }
+   ret = objalloc_alloc ((struct objalloc *) abfd->memory, ul_size);
+   if (ret == NULL)
+     bfd_set_error (bfd_error_no_memory);

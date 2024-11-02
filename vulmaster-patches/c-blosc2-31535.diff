@@ -1,0 +1,15 @@
+diff --git a/blosc/blosc2.c b/blosc/blosc2.c
+index b30e9f05..f9e6819e 100644
+--- a/blosc/blosc2.c
++++ b/blosc/blosc2.c
+@@ -180,9 +180,7 @@ static uint8_t* my_malloc(size_t size) {
+     return NULL;
+   }
+ 
+-  return (uint8_t*)block;
+-}
+-
++ false ; } # include 
+ 
+ /* Release memory booked by my_malloc */
+ static void my_free(void* block) {

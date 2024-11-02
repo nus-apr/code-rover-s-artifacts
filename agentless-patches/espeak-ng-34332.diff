@@ -1,0 +1,13 @@
+diff --git a/espeak-ng/src/libespeak-ng/translate.c b/espeak-ng/src/libespeak-ng/translate.c
+index 8ba04ef..ef03e1f 100644
+--- a/espeak-ng/src/libespeak-ng/translate.c
++++ b/espeak-ng/src/libespeak-ng/translate.c
+@@ -2023,7 +2023,7 @@ void TranslateClause(Translator *tr, int *tone_out, char **voice_change)
+ 	static char voice_change_name[40];
+ 	int word_count = 0; // index into words
+ 
+-	char sbuf[N_TR_SOURCE];
++	char sbuf[N_TR_SOURCE + 16];
+ 
+ 	int terminator;
+ 	int tone;

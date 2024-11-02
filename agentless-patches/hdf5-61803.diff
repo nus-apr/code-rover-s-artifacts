@@ -1,0 +1,13 @@
+diff --git a/hdf5/src/H5Ochunk.c b/hdf5/src/H5Ochunk.c
+index 1512950..208d87b 100644
+--- a/hdf5/src/H5Ochunk.c
++++ b/hdf5/src/H5Ochunk.c
+@@ -370,7 +370,7 @@ H5O__chunk_delete(H5F_t *f, H5O_t *oh, unsigned idx)
+     HDassert(f);
+     HDassert(oh);
+     HDassert(idx < oh->nchunks);
+-    HDassert(idx > 0);
++    HDassert(idx >= 0);
+ 
+     /* Get the chunk proxy */
+     if (NULL == (chk_proxy = H5O__chunk_protect(f, oh, idx)))

@@ -1,0 +1,57 @@
+diff --git a/libheif/region.cc b/libheif/region.cc
+index 4c3fccc..c33e10a 100644
+--- a/libheif/region.cc
++++ b/libheif/region.cc
+@@ -126,11 +126,19 @@ int32_t RegionGeometry::parse_signed(const std::vector<uint8_t>& data,
+   // TODO: fix this for negative values
+   int32_t x;
+   if (field_size == 32) {
++    if (*dataOffset + 4 > data.size()) {
++      // Handle error: insufficient data
++      return 0; // or some error code
++    }
+     x = ((data[*dataOffset] << 24) | (data[*dataOffset + 1] << 16) |
+          (data[*dataOffset + 2] << 8) | (data[*dataOffset + 3]));
+     *dataOffset = *dataOffset + 4;
+   }
+   else {
++    if (*dataOffset + 2 > data.size()) {
++      // Handle error: insufficient data
++      return 0; // or some error code
++    }
+     x = ((data[*dataOffset] << 8) | (data[*dataOffset + 1]));
+     *dataOffset = *dataOffset + 2;
+   }
+@@ -197,18 +205,22 @@ Error RegionGeometry_Polygon::parse(const std::vector<uint8_t>& data,
+   }
+ 
+   uint32_t numPoints = parse_unsigned(data, field_size, dataOffset);
+-  unsigned int bytesRequired2 = (field_size / 8) * numPoints * 2;
+-  if (data.size() - *dataOffset < bytesRequired2) {
+-    return Error(heif_error_Invalid_input, heif_suberror_Invalid_region_data,
+-                 "Insufficient data remaining for polygon");
+-  }
++unsigned int bytesRequired2 = (field_size / 8) * numPoints * 2;
++if (data.size() - *dataOffset < bytesRequired2) {
++  return Error(heif_error_Invalid_input, heif_suberror_Invalid_region_data,
++               "Insufficient data remaining for polygon");
++}
+ 
+-  for (uint32_t i = 0; i < numPoints; i++) {
+-    Point p;
+-    p.x = parse_signed(data, field_size, dataOffset);
+-    p.y = parse_signed(data, field_size, dataOffset);
+-    points.push_back(p);
++for (uint32_t i = 0; i < numPoints; i++) {
++  if (*dataOffset + (field_size / 8) * 2 > data.size()) {
++    return Error(heif_error_Invalid_input, heif_suberror_Invalid_region_data,
++                 "Insufficient data for point coordinates");
+   }
++  Point p;
++  p.x = parse_signed(data, field_size, dataOffset);
++  p.y = parse_signed(data, field_size, dataOffset);
++  points.push_back(p);
++}
+ 
+   return Error::Ok;
+ }

@@ -1,0 +1,18 @@
+diff --git a/mongoose/src/http.c b/mongoose/src/http.c
+index 689641c..62fde5d 100644
+--- a/mongoose/src/http.c
++++ b/mongoose/src/http.c
+@@ -991,7 +991,12 @@ static void deliver_chunked_chunks(struct mg_connection *c, size_t hlen,
+   size_t processed = ((size_t) c->pfn_data) & ~MG_DMARK;
+   size_t mark, pl, dl, del = 0, ofs = 0;
+   bool last = false;
+-  if (processed <= len) len -= processed, buf += processed;
++  if (processed < len) {
++    len -= processed;
++    buf += processed;
++  } else {
++    len = 0;
++  }
+   while (!last && getchunk(mg_str_n(buf + ofs, len - ofs), &pl, &dl)) {
+     size_t saved = c->recv.len;
+     memmove(p + processed, buf + ofs + pl, dl);

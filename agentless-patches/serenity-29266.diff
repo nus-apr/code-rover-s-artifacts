@@ -1,0 +1,13 @@
+diff --git a/serenity/Libraries/LibJS/Heap/Heap.cpp b/serenity/Libraries/LibJS/Heap/Heap.cpp
+index 513c717..3d19fc7 100644
+--- a/serenity/Libraries/LibJS/Heap/Heap.cpp
++++ b/serenity/Libraries/LibJS/Heap/Heap.cpp
+@@ -126,7 +126,7 @@ void Heap::gather_roots(HashTable<Cell*>& roots)
+ 
+ void Heap::gather_conservative_roots(HashTable<Cell*>& roots)
+ {
+-    FlatPtr dummy;
++    FlatPtr dummy[10];
+ 
+ #ifdef HEAP_DEBUG
+     dbgln("gather_conservative_roots:");

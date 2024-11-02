@@ -1,0 +1,18 @@
+diff --git a/src/librawspeed/decompressors/FujiDecompressor.cpp b/src/librawspeed/decompressors/FujiDecompressor.cpp
+index 604e3be0..3aa1cdc6 100644
+--- a/src/librawspeed/decompressors/FujiDecompressor.cpp
++++ b/src/librawspeed/decompressors/FujiDecompressor.cpp
+@@ -194,7 +194,12 @@ void FujiDecompressor::copy_line(fuji_compressed_block* info,
+         __builtin_unreachable();
+       }
+ 
+-      raw_block_data[pixel_count] = line_buf[idx(pixel_count)];
++       if (line_buf && idx(pixel_count) >= 0 && idx(pixel_count) < strip.width()) {
++           // Ensure raw_block_data is valid before use
++           if (raw_block_data) {
++               raw_block_data[pixel_count] = line_buf[idx(pixel_count)];
++           }
++       }
+     }
+   }
+ }

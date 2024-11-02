@@ -1,0 +1,24 @@
+diff --git a/internal-complibs/zstd-1.4.8/decompress/zstd_ddict.c b/internal-complibs/zstd-1.4.8/decompress/zstd_ddict.c
+index f5cc23b3..f4dc34af 100644
+--- a/internal-complibs/zstd-1.4.8/decompress/zstd_ddict.c
++++ b/internal-complibs/zstd-1.4.8/decompress/zstd_ddict.c
+@@ -127,11 +127,17 @@ static size_t ZSTD_initDDict_internal(ZSTD_DDict* ddict,
+         ddict->dictContent = dict;
+         if (!dict) dictSize = 0;
+     } else {
++        // Ensure the buffer is allocated with the correct size
+         void* const internalBuffer = ZSTD_customMalloc(dictSize, ddict->cMem);
++        if (!internalBuffer) return ERROR(memory_allocation);
++        
+         ddict->dictBuffer = internalBuffer;
+         ddict->dictContent = internalBuffer;
+-        if (!internalBuffer) return ERROR(memory_allocation);
+-        ZSTD_memcpy(internalBuffer, dict, dictSize);
++        
++        // Validate the size of the input data before copying
++        if (dictSize > 0) {
++            ZSTD_memcpy(internalBuffer, dict, dictSize);
++        }
+     }
+     ddict->dictSize = dictSize;
+     ddict->entropy.hufTable[0] = (HUF_DTable)((HufLog)*0x1000001);  /* cover both little and big endian */

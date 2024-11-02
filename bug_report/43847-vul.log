@@ -1,0 +1,69 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2323855400
+INFO: Loaded 1 modules   (32457 inline 8-bit counters): 32457 [0x99e738, 0x9a6601), 
+INFO: Loaded 1 PC tables (32457 PCs): 32457 [0x9a6608,0xa25298), 
+/out/FuzzTarget: Running 1 inputs 1 time(s) each.
+Running: /tmp/poc
+=================================================================
+==13==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x74b8d0982720 at pc 0x000000677f13 bp 0x7fff3ef38150 sp 0x7fff3ef38148
+WRITE of size 1 at 0x74b8d0982720 thread T0
+SCARINESS: 46 (1-byte-write-stack-buffer-overflow)
+    #0 0x677f12 in pcpp::IDnsResource::decodeName(char const*, char*, int) /src/PcapPlusPlus/Packet++/src/DnsResource.cpp:142:15
+    #1 0x677474 in pcpp::IDnsResource::IDnsResource(pcpp::DnsLayer*, unsigned long) /src/PcapPlusPlus/Packet++/src/DnsResource.cpp:16:17
+    #2 0x611b7f in DnsQuery /src/PcapPlusPlus/Packet++/./header/DnsResource.h:133:56
+    #3 0x611b7f in pcpp::DnsLayer::parseResources() /src/PcapPlusPlus/Packet++/src/DnsLayer.cpp:190:19
+    #4 0x610cc9 in init /src/PcapPlusPlus/Packet++/src/DnsLayer.cpp:86:3
+    #5 0x610cc9 in pcpp::DnsLayer::DnsLayer(unsigned char*, unsigned long, pcpp::Layer*, pcpp::Packet*) /src/PcapPlusPlus/Packet++/src/DnsLayer.cpp:22:2
+    #6 0x5ce2ae in pcpp::UdpLayer::parseNextLayer() /src/PcapPlusPlus/Packet++/src/UdpLayer.cpp:116:21
+    #7 0x5a7f3d in pcpp::Packet::setRawPacket(pcpp::RawPacket*, bool, unsigned long, pcpp::OsiModelLayer) /src/PcapPlusPlus/Packet++/src/Packet.cpp:80:13
+    #8 0x5a9810 in pcpp::Packet::Packet(pcpp::RawPacket*, bool, unsigned long, pcpp::OsiModelLayer) /src/PcapPlusPlus/Packet++/src/Packet.cpp:126:2
+    #9 0x56f9ce in LLVMFuzzerTestOneInput /src/PcapPlusPlus/Tests/Fuzzers/FuzzTarget.cpp:58:15
+    #10 0x466553 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) cxa_noexception.cpp
+    #11 0x452192 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:324:6
+    #12 0x4579ec in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) cxa_noexception.cpp
+    #13 0x4807f2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+    #14 0x74b8d1673082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082)
+    #15 0x43094d in _start (/out/FuzzTarget+0x43094d)
+
+DEDUP_TOKEN: pcpp::IDnsResource::decodeName(char const*, char*, int)--pcpp::IDnsResource::IDnsResource(pcpp::DnsLayer*, unsigned long)--DnsQuery
+Address 0x74b8d0982720 is located in stack of thread T0 at offset 288 in frame
+    #0 0x6772af in pcpp::IDnsResource::IDnsResource(pcpp::DnsLayer*, unsigned long) /src/PcapPlusPlus/Packet++/src/DnsResource.cpp:14
+
+DEDUP_TOKEN: pcpp::IDnsResource::IDnsResource(pcpp::DnsLayer*, unsigned long)
+  This frame has 1 object(s):
+    [32, 288) 'decodedName' (line 15) <== Memory access at offset 288 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /src/PcapPlusPlus/Packet++/src/DnsResource.cpp:142:15 in pcpp::IDnsResource::decodeName(char const*, char*, int)
+Shadow bytes around the buggy address:
+  0x0e979a128490: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0e979a1284a0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0e979a1284b0: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x0e979a1284c0: f1 f1 f1 f1 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0e979a1284d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0e979a1284e0: 00 00 00 00[f3]f3 f3 f3 f3 f3 f3 f3 00 00 00 00
+  0x0e979a1284f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0e979a128500: f1 f1 f1 f1 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+  0x0e979a128510: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+  0x0e979a128520: f8 f8 f8 f8 f3 f3 f3 f3 f3 f3 f3 f3 00 00 00 00
+  0x0e979a128530: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==13==ABORTING

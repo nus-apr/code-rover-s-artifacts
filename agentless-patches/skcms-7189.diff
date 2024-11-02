@@ -1,0 +1,13 @@
+diff --git a/skcms/fuzz/fuzz_iccprofile_info.c b/skcms/fuzz/fuzz_iccprofile_info.c
+index 7117c4e..8858f9e 100644
+--- a/skcms/fuzz/fuzz_iccprofile_info.c
++++ b/skcms/fuzz/fuzz_iccprofile_info.c
+@@ -52,7 +52,7 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+     if (p.has_A2B) {
+         uint32_t x = 0;
+ 
+-        for (uint32_t i = 0; i < p.A2B.input_channels; ++i) {
++        for (uint32_t i = 0; i < ARRAY_COUNT(p.A2B.input_curves); ++i) {
+             x += read_table_extents(&p.A2B.input_curves[i]);
+         }
+ 

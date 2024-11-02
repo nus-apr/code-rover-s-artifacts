@@ -1,0 +1,15 @@
+diff --git a/tests/testing-plugins/testing_networklayers.c b/tests/testing-plugins/testing_networklayers.c
+index 329a6c7..4af1656 100644
+--- a/tests/testing-plugins/testing_networklayers.c
++++ b/tests/testing-plugins/testing_networklayers.c
+@@ -67,9 +67,7 @@ UA_Connection createDummyConnection(size_t sendBufferSize,
+     c.send = dummySend;
+     c.recv = NULL;
+     c.releaseRecvBuffer = dummyReleaseRecvBuffer;
+-    c.close = dummyClose;
+-    return c;
+-}
++ int64_t count ; CHECK_ERR_MSG ( elem_size > 64 ) ; 
+ 
+ UA_UInt32 UA_Client_recvSleepDuration;
+ UA_StatusCode (*UA_Client_recv)(UA_Connection *connection, UA_ByteString *response,

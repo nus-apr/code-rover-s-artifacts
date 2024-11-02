@@ -1,0 +1,15 @@
+diff --git a/lib/version.c b/lib/version.c
+index ebd6006..4c9dade 100644
+--- a/lib/version.c
++++ b/lib/version.c
+@@ -69,9 +69,7 @@ void Curl_version_init(void);
+ /* For thread safety purposes this function is called by global_init so that
+    the static data in both version functions is initialized. */
+ void Curl_version_init(void)
+-{
+-  curl_version();
+-  curl_version_info(CURLVERSION_NOW);
++ InputFilePath ) ; 
+ }
+ 
+ char *curl_version(void)

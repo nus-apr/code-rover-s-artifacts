@@ -1,0 +1,34 @@
+diff --git a/src/PJ_geos.c b/src/PJ_geos.c
+index 5679455f..d921694a 100644
+--- a/src/PJ_geos.c
++++ b/src/PJ_geos.c
+@@ -196,11 +196,15 @@ PJ *PROJECTION(geos) {
+         return pj_default_destructor (P, ENOMEM);
+     P->opaque = Q;
+ 
+-    if ((Q->h = pj_param(P->ctx, P->params, "dh").f) <= 0.)
++    if ((Q->h = pj_param(P->ctx, P->params, "dh").f) <= 0.) {
+         pj_default_destructor (P, PJD_ERR_H_LESS_THAN_ZERO);
++        return NULL;
++    }
+ 
+-    if (P->phi0 != 0.0)
++    if (P->phi0 != 0.0) {
+         pj_default_destructor (P, PJD_ERR_UNKNOWN_PRIME_MERIDIAN);
++        return NULL;
++    }
+ 
+     Q->sweep_axis = pj_param(P->ctx, P->params, "ssweep").s;
+     if (Q->sweep_axis == NULL)
+diff --git a/src/pj_malloc.c b/src/pj_malloc.c
+index 75d05378..1eafc8b0 100644
+--- a/src/pj_malloc.c
++++ b/src/pj_malloc.c
+@@ -179,6 +179,7 @@ void *pj_default_destructor (PJ *P, int errlev) {   /* Destructor */
+     pj_dealloc_params (pj_get_ctx(P), P->params, errlev);
+ 
+     pj_dealloc (P->opaque);
++    P->opaque = NULL;  // Prevent use-after-free
+     if (0!=errlev)
+         pj_ctx_set_errno (pj_get_ctx(P), errlev);
+     return pj_dealloc(P);

@@ -1,0 +1,13 @@
+diff --git a/dav1d/src/lr_apply_tmpl.c b/dav1d/src/lr_apply_tmpl.c
+index 33bf171..2a85631 100644
+--- a/dav1d/src/lr_apply_tmpl.c
++++ b/dav1d/src/lr_apply_tmpl.c
+@@ -91,7 +91,7 @@ static void backup_lpf(const Dav1dFrameContext *const f,
+         }
+     } else {
+         while (row + stripe_h <= row_h) {
+-            const int n_lines = 4 - (row + stripe_h + 1 == h);
++            const int n_lines = imin(4, row_h - row);
+             for (int i = 0; i < 4; i++) {
+                 pixel_copy(dst, i == n_lines ? &dst[-PXSTRIDE(dst_stride)] :
+                                                src, src_w);

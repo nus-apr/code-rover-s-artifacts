@@ -1,0 +1,14 @@
+diff --git a/opensc/src/libopensc/asn1.c b/opensc/src/libopensc/asn1.c
+index cf97eb3..2cd68ec 100644
+--- a/opensc/src/libopensc/asn1.c
++++ b/opensc/src/libopensc/asn1.c
+@@ -1446,6 +1446,9 @@ static int asn1_decode_entry(sc_context_t *ctx,struct sc_asn1_entry *entry,
+ 				}
+ 				*len = objlen-1;
+ 				parm = *buf;
++			} else if (*len < objlen - 1) {
++				r = SC_ERROR_INVALID_ASN1_OBJECT;
++				break;
+ 			}
+ 			r = decode_bit_string(obj, objlen, (u8 *) parm, *len, invert);
+ 			if (r >= 0) {

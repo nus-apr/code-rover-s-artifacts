@@ -1,0 +1,25 @@
+diff --git a/src/core/SkColorFilter.cpp b/src/core/SkColorFilter.cpp
+index 41ebb42669..276ecc42cb 100644
+--- a/src/core/SkColorFilter.cpp
++++ b/src/core/SkColorFilter.cpp
+@@ -65,7 +65,7 @@ SkColor SkColorFilter::filterColor(SkColor c) const {
+ 
+ #include "SkRasterPipeline.h"
+ SkColor4f SkColorFilter::filterColor4f(const SkColor4f& c) const {
+-    SkPM4f dst, src = c.premul();
++    SkPM4f dst = {0, 0, 0, 0}, src = c.premul();
+ 
+     SkSTArenaAlloc<128> alloc;
+     SkRasterPipeline    pipeline(&alloc);
+diff --git a/src/ports/SkFontHost_FreeType.cpp b/src/ports/SkFontHost_FreeType.cpp
+index b8ce2033b1..80ddfdf341 100644
+--- a/src/ports/SkFontHost_FreeType.cpp
++++ b/src/ports/SkFontHost_FreeType.cpp
+@@ -431,6 +431,7 @@ public:
+     ~AutoFTAccess() {
+         if (fFaceRec) {
+             unref_ft_face(fFaceRec);
++            fFaceRec = nullptr; // Ensure fFaceRec is nullified after unref
+         }
+         unref_ft_library();
+         gFTMutex.release();

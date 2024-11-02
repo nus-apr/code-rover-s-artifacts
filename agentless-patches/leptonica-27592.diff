@@ -1,0 +1,12 @@
+diff --git a/leptonica/src/jpegio.c b/leptonica/src/jpegio.c
+index 22d16e7..ba4d6a2 100644
+--- a/leptonica/src/jpegio.c
++++ b/leptonica/src/jpegio.c
+@@ -391,6 +391,7 @@ jmp_buf                        jmpbuf;  /* must be local to the function */
+          * the (possibly corrupted) image. */
+     abort_on_warning = (hint & L_JPEG_CONTINUE_WITH_BAD_DATA) ? 0 : 1;
+     for (i = 0; i < h; i++) {
++        memset(rowbuffer, 0, sizeof(JSAMPLE) * spp * w);  // Ensure rowbuffer is initialized
+         nlinesread = jpeg_read_scanlines(&cinfo, &rowbuffer, (JDIMENSION)1);
+         nwarn = cinfo.err->num_warnings;
+         if (nlinesread == 0 || (abort_on_warning && nwarn > 0)) {

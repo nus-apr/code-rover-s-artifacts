@@ -1,0 +1,25 @@
+diff --git a/ndpi/src/lib/protocols/http.c b/ndpi/src/lib/protocols/http.c
+index d5d1f15..5164a76 100644
+--- a/ndpi/src/lib/protocols/http.c
++++ b/ndpi/src/lib/protocols/http.c
+@@ -284,9 +284,10 @@ int http_process_user_agent(struct ndpi_detection_module_struct *ndpi_struct,
+       Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) ....
+       Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:54.0) Gecko/20100101 Firefox/54.0
+    */
+-  if(ua_ptr_len > 7) {
++  if(ua_ptr_len > 0) {
+     char ua[256];
+     u_int mlen = ndpi_min(ua_ptr_len, sizeof(ua)-1);
++    if (mlen > sizeof(ua) - 1) mlen = sizeof(ua) - 1;
+ 
+     strncpy(ua, (const char *)ua_ptr, mlen);
+     ua[mlen] = '\0';
+@@ -343,7 +344,7 @@ int http_process_user_agent(struct ndpi_detection_module_struct *ndpi_struct,
+   }
+ 
+   if(flow->http.user_agent == NULL) {
+-    int len = ua_ptr_len + 1;
++    int len = ndpi_min(ua_ptr_len, 255) + 1;
+ 
+     flow->http.user_agent = ndpi_malloc(len);
+     if(flow->http.user_agent) {

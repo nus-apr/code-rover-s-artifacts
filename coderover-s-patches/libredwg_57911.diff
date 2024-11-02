@@ -1,0 +1,40 @@
+diff --git a/src/bits.c b/src/bits.c
+index d95e7899..3422d47d 100644
+--- a/src/bits.c
++++ b/src/bits.c
+@@ -183,18 +183,23 @@ bit_read_BB (Bit_Chain *dat)
+   unsigned char byte;
+ 
+   CHK_OVERFLOW(__FUNCTION__,0)
+-  byte = dat->chain[dat->byte];
+-  if (dat->bit < 7)
+-    result = (byte & (0xc0 >> dat->bit)) >> (6 - dat->bit);
+-  else
+-    {
+-      result = (byte & 0x01) << 1;
+-      if (dat->byte < dat->size - 1)
+-        {
+-          byte = dat->chain[dat->byte + 1];
+-          result |= (byte & 0x80) >> 7;
+-        }
+-    }
++  if (dat->byte < dat->size) {
++    byte = dat->chain[dat->byte];
++    if (dat->bit < 7)
++      result = (byte & (0xc0 >> dat->bit)) >> (6 - dat->bit);
++    else
++      {
++        result = (byte & 0x01) << 1;
++        if (dat->byte < dat->size - 1)
++          {
++            byte = dat->chain[dat->byte + 1];
++            result |= (byte & 0x80) >> 7;
++          }
++      }
++  } else {
++    // Handle the error case, possibly by setting result to a default value or logging an error
++    result = 0; // Default value or error handling
++  }
+ 
+   bit_advance_position (dat, 2);
+   return result;

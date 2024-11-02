@@ -1,0 +1,32 @@
+diff --git a/epan/dissectors/packet-gre.c b/epan/dissectors/packet-gre.c
+index 25db1e9271..9b52c97372 100644
+--- a/epan/dissectors/packet-gre.c
++++ b/epan/dissectors/packet-gre.c
+@@ -409,7 +409,9 @@ dissect_gre(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void* data _U_)
+             /* The Checksum Present bit is set, and the packet isn't part of a
+                fragmented datagram and isn't truncated, so we can checksum it. */
+             if ((flags_and_ver & GRE_CHECKSUM) && !pinfo->fragmented && length >= reported_length) {
+-                SET_CKSUM_VEC_TVB(cksum_vec[0], tvb, 0, reported_length);
++                if (reported_length <= tvb_captured_length(tvb)) {
++                    SET_CKSUM_VEC_TVB(cksum_vec[0], tvb, 0, reported_length);
++                }
+                 proto_tree_add_checksum(gre_tree, tvb, offset, hf_gre_checksum, hf_gre_checksum_status, &ei_gre_checksum_incorrect, pinfo, in_cksum(cksum_vec, 1),
+                                 ENC_BIG_ENDIAN, PROTO_CHECKSUM_VERIFY|PROTO_CHECKSUM_IN_CKSUM);
+             } else {
+diff --git a/epan/dissectors/packet-ieee80211.c b/epan/dissectors/packet-ieee80211.c
+index 718841ef6c..f028a7f645 100644
+--- a/epan/dissectors/packet-ieee80211.c
++++ b/epan/dissectors/packet-ieee80211.c
+@@ -20422,7 +20422,11 @@ dissect_ieee80211_common(tvbuff_t *tvb, packet_info *pinfo,
+ 
+   p_add_proto_data(wmem_file_scope(), pinfo, proto_wlan, IS_DMG_KEY, GINT_TO_POINTER(isDMG));
+ 
+-  whdr= &whdrs[0];
++  if (phdr) {
++      whdr= &whdrs[0];
++  } else {
++      return -1; // Return an error if phdr is NULL
++  }
+ 
+   col_set_str(pinfo->cinfo, COL_PROTOCOL, "802.11");
+   col_clear(pinfo->cinfo, COL_INFO);

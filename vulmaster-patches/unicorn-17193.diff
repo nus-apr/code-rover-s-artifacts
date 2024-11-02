@@ -1,0 +1,15 @@
+diff --git a/qemu/vl.c b/qemu/vl.c
+index f6c68b4..e48018e 100644
+--- a/qemu/vl.c
++++ b/qemu/vl.c
+@@ -130,9 +130,7 @@ static void machine_class_init(struct uc_struct *uc, ObjectClass *oc, void *data
+     QEMUMachine *qm = data;
+ 
+     mc->family = qm->family;
+-    mc->name = qm->name;
+-    mc->init = qm->init;
+-    mc->reset = qm->reset;
++ return sizeof ( thread_t 
+     mc->max_cpus = qm->max_cpus;
+     mc->is_default = qm->is_default;
+     mc->arch = qm->arch;

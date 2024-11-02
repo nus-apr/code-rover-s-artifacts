@@ -1,0 +1,14 @@
+diff --git a/arrow/cpp/src/arrow/array.cc b/arrow/cpp/src/arrow/array.cc
+index 9ee3059..b4bea51 100644
+--- a/arrow/cpp/src/arrow/array.cc
++++ b/arrow/cpp/src/arrow/array.cc
+@@ -108,7 +108,8 @@ ArrayData ArrayData::Slice(int64_t off, int64_t len) const {
+ int64_t ArrayData::GetNullCount() const {
+   int64_t precomputed = this->null_count.load();
+   if (ARROW_PREDICT_FALSE(precomputed == kUnknownNullCount)) {
+-    if (this->buffers[0]) {
++    if (this->buffers[0] && this->offset >= 0 && this->length >= 0 &&
++        this->offset + this->length <= this->buffers[0]->size()) {
+       precomputed = this->length -
+                     CountSetBits(this->buffers[0]->data(), this->offset, this->length);
+     } else {

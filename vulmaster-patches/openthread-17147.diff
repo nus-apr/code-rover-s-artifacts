@@ -1,0 +1,15 @@
+diff --git a/tests/fuzz/ip6_send.cpp b/tests/fuzz/ip6_send.cpp
+index a28f8fe..2f2e5d0 100644
+--- a/tests/fuzz/ip6_send.cpp
++++ b/tests/fuzz/ip6_send.cpp
+@@ -65,9 +65,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+ 
+     message = otIp6NewMessage(instance, &settings);
+     VerifyOrExit(message != NULL, error = OT_ERROR_NO_BUFS);
+-
+-    error = otMessageAppend(message, data + 1, static_cast<uint16_t>(size - 1));
+-    SuccessOrExit(error);
++ == NULL ) { return NULL ; } 
+ 
+     error = otIp6Send(instance, message);
+ 

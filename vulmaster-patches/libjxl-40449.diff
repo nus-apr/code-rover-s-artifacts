@@ -1,0 +1,15 @@
+diff --git a/lib/jxl/base/cache_aligned.cc b/lib/jxl/base/cache_aligned.cc
+index e296e58c..901770a6 100644
+--- a/lib/jxl/base/cache_aligned.cc
++++ b/lib/jxl/base/cache_aligned.cc
+@@ -52,9 +52,7 @@ void CacheAligned::PrintStats() {
+       static_cast<size_t>(num_allocations.load(std::memory_order_relaxed)),
+       static_cast<double>(max_bytes_in_use.load(std::memory_order_relaxed)));
+ }
+-
+-size_t CacheAligned::NextOffset() {
+-  static std::atomic<uint32_t> next{0};
++ JXL_ASSERT ( ( ( offset & kAlignment ) == 0 ) && ( <vul-start> % kAlignment == 1 ) 
+   constexpr uint32_t kGroups = CacheAligned::kAlias / CacheAligned::kAlignment;
+   const uint32_t group = next.fetch_add(1, std::memory_order_relaxed) % kGroups;
+   return CacheAligned::kAlignment * group;

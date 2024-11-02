@@ -1,0 +1,14 @@
+diff --git a/libredwg/src/decode.c b/libredwg/src/decode.c
+index b329bdf..3ec76d7 100644
+--- a/libredwg/src/decode.c
++++ b/libredwg/src/decode.c
+@@ -4745,8 +4745,7 @@ dwg_add_object (Dwg_Data *restrict dwg)
+         dwg->num_alloced_objects *= 2;
+       dwg->object = (Dwg_Object *)realloc (
+           dwg->object, dwg->num_alloced_objects * sizeof (Dwg_Object));
+-      realloced = old != dwg->object;
+-      if (realloced)
++      if (old != dwg->object)
+         {
+           dwg->dirty_refs = 1;
+           LOG_TRACE ("REALLOC dwg->object vector to %u\n",

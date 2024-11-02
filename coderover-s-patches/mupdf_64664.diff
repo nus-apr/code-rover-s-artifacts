@@ -1,0 +1,37 @@
+diff --git a/source/fitz/buffer.c b/source/fitz/buffer.c
+index 09c3dc31b..f848118c1 100644
+--- a/source/fitz/buffer.c
++++ b/source/fitz/buffer.c
+@@ -92,7 +92,13 @@ fz_new_buffer_from_shared_data(fz_context *ctx, const unsigned char *data, size_
+ fz_buffer *
+ fz_new_buffer_from_copied_data(fz_context *ctx, const unsigned char *data, size_t size)
+ {
++	if (data == NULL || size == 0)
++		return NULL;
++
+ 	fz_buffer *b = fz_new_buffer(ctx, size);
++	if (b == NULL || b->data == NULL)
++		return NULL;
++
+ 	b->len = size;
+ 	memcpy(b->data, data, size);
+ 	return b;
+diff --git a/source/fitz/load-bmp.c b/source/fitz/load-bmp.c
+index 402fc0d31..763705041 100644
+--- a/source/fitz/load-bmp.c
++++ b/source/fitz/load-bmp.c
+@@ -812,7 +812,13 @@ bmp_read_color_profile(fz_context *ctx, struct info *info, const unsigned char *
+ 			return NULL;
+ 		}
+ 
+-		profile = fz_new_buffer_from_copied_data(ctx, begin + info->profileoffset, info->profilesize);
++	if (info->profileoffset < 0 || (uint32_t)(end - begin) < info->profileoffset + info->profilesize)
++	{
++		fz_warn(ctx, "invalid color profile offset or size in bmp image");
++		return NULL;
++	}
++
++	profile = fz_new_buffer_from_copied_data(ctx, begin + info->profileoffset, info->profilesize);
+ 
+ 		fz_try(ctx)
+ 			cs = fz_new_icc_colorspace(ctx, FZ_COLORSPACE_RGB, 0, "BMPRGB", profile);

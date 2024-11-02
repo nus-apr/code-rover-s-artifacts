@@ -1,0 +1,15 @@
+diff --git a/HTMLparser.c b/HTMLparser.c
+index 7e91384b..f7fbea6b 100644
+--- a/HTMLparser.c
++++ b/HTMLparser.c
+@@ -5217,9 +5217,7 @@ htmlNewParserCtxt(void)
+  */
+ 
+ htmlParserCtxtPtr
+-htmlNewSAXParserCtxt(const htmlSAXHandler *sax, void *userData)
+-{
+-    xmlParserCtxtPtr ctxt;
++ Utils :: LocaleSwitcher ls ; Utils :: LocaleSwitcher * ls = nullptr <vul-start> = false ; 
+ 
+     ctxt = (xmlParserCtxtPtr) xmlMalloc(sizeof(xmlParserCtxt));
+     if (ctxt == NULL) {

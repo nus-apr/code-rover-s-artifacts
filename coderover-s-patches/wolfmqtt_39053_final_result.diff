@@ -1,0 +1,26 @@
+diff --git a/src/mqtt_packet.c b/src/mqtt_packet.c
+index ce44340..f356cb4 100755
+--- a/src/mqtt_packet.c
++++ b/src/mqtt_packet.c
+@@ -1570,7 +1570,11 @@ int MqttDecode_Disconnect(byte *rx_buf, int rx_buf_len, MqttDisconnect *disc)
+ 
+     if (remain_len > 0) {
+         /* Decode variable header */
+-        disc->reason_code = *rx_payload++;
++        if ((rx_payload - rx_buf + 1) <= rx_buf_len) {
++            disc->reason_code = *rx_payload++;
++        } else {
++            return MQTT_CODE_ERROR_OUT_OF_BUFFER;
++        }
+ 
+         if (remain_len > 1) {
+             /* Decode Length of Properties */
+@@ -1579,7 +1583,7 @@ int MqttDecode_Disconnect(byte *rx_buf, int rx_buf_len, MqttDisconnect *disc)
+             if (tmp < 0)
+                 return tmp;
+ 
+-            if (props_len <= (word32)(rx_buf_len - (rx_payload - rx_buf))) {
++            if ((rx_payload - rx_buf + tmp + props_len) <= rx_buf_len) {
+                 rx_payload += tmp;
+                 if (props_len > 0) {
+                     /* Decode the Properties */

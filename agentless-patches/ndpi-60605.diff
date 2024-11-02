@@ -1,0 +1,40 @@
+diff --git a/ndpi/src/lib/protocols/http.c b/ndpi/src/lib/protocols/http.c
+index a48ffde..b264254 100644
+--- a/ndpi/src/lib/protocols/http.c
++++ b/ndpi/src/lib/protocols/http.c
+@@ -288,21 +288,23 @@ static ndpi_protocol_category_t ndpi_http_check_content(struct ndpi_detection_mo
+       u_int8_t attachment_len = sizeof("attachment; filename");
+ 
+       if(packet->content_disposition_line.len > attachment_len) {
+-	u_int8_t filename_len = packet->content_disposition_line.len - attachment_len;
++	u_int8_t filename_len;
+ 	int i;
+ 
+-	if(packet->content_disposition_line.ptr[attachment_len] == '\"') {
+-	  if(packet->content_disposition_line.ptr[packet->content_disposition_line.len-1] != '\"') {
+-	    //case: filename="file_name
+-	    flow->http.filename = ndpi_malloc(filename_len);
+-	    if(flow->http.filename != NULL) {
+-	      strncpy(flow->http.filename, (char*)packet->content_disposition_line.ptr+attachment_len+1, filename_len-1);
+-	      flow->http.filename[filename_len-1] = '\0';
++	if(packet->content_disposition_line.len > attachment_len) {
++	  filename_len = packet->content_disposition_line.len - attachment_len;
++	  if(packet->content_disposition_line.ptr[attachment_len] == '\"') {
++	    if(packet->content_disposition_line.ptr[packet->content_disposition_line.len-1] != '\"') {
++	      //case: filename="file_name
++	      flow->http.filename = ndpi_malloc(filename_len);
++	      if(flow->http.filename != NULL) {
++	        strncpy(flow->http.filename, (char*)packet->content_disposition_line.ptr+attachment_len+1, filename_len-1);
++	        flow->http.filename[filename_len-1] = '\0';
++	      }
+ 	    }
+-	  }
+-	  else{
+-	    //case: filename="file_name"
+-	    flow->http.filename = ndpi_malloc(filename_len-1);
++	    else{
++	      //case: filename="file_name"
++	      flow->http.filename = ndpi_malloc(filename_len-1);
+ 
+ 	    if(flow->http.filename != NULL) {
+ 	      strncpy(flow->http.filename, (char*)packet->content_disposition_line.ptr+attachment_len+1,

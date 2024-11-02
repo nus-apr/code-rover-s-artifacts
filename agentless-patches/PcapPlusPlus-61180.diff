@@ -1,0 +1,14 @@
+diff --git a/PcapPlusPlus/Packet++/src/SipLayer.cpp b/PcapPlusPlus/Packet++/src/SipLayer.cpp
+index a56558a..08c0c07 100644
+--- a/PcapPlusPlus/Packet++/src/SipLayer.cpp
++++ b/PcapPlusPlus/Packet++/src/SipLayer.cpp
+@@ -135,7 +135,8 @@ SipRequestFirstLine::SipRequestFirstLine(SipRequestLayer* sipRequest) : m_SipReq
+ 	parseVersion();
+ 
+ 	char* endOfFirstLine;
+-	if ((endOfFirstLine = (char *)memchr((char*)(m_SipRequest->m_Data + m_VersionOffset), '\n', m_SipRequest->m_DataLen-(size_t)m_VersionOffset)) != nullptr)
++	if (m_VersionOffset < m_SipRequest->m_DataLen && 
++	    (endOfFirstLine = (char *)memchr((char*)(m_SipRequest->m_Data + m_VersionOffset), '\n', m_SipRequest->m_DataLen-(size_t)m_VersionOffset)) != nullptr)
+ 	{
+ 		m_FirstLineEndOffset = endOfFirstLine - (char*)m_SipRequest->m_Data + 1;
+ 		m_IsComplete = true;

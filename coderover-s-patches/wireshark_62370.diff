@@ -1,0 +1,48 @@
+diff --git a/epan/addr_resolv.c b/epan/addr_resolv.c
+index 6dfb5d41de..ed9f1e67cc 100644
+--- a/epan/addr_resolv.c
++++ b/epan/addr_resolv.c
+@@ -1705,7 +1705,11 @@ manuf_name_lookup(const guint8 *addr)
+ 
+     /* Try the global manuf tables. */
+     const char *short_name, *long_name;
+-    short_name = ws_manuf_lookup_str(addr, &long_name);
++    if (addr != NULL) {
++        short_name = ws_manuf_lookup_str(addr, &long_name);
++    } else {
++        short_name = NULL;
++    }
+     if (short_name != NULL) {
+         /* Found it */
+         return manuf_hash_new_entry(addr, short_name, long_name);
+@@ -3542,7 +3546,12 @@ uint_get_manuf_name_if_known(const guint32 manuf_key)
+ const gchar *
+ tvb_get_manuf_name_if_known(tvbuff_t *tvb, gint offset)
+ {
+-    return get_manuf_name_if_known(tvb_get_ptr(tvb, offset, 3));
++    const guint8 *addr = tvb_get_ptr(tvb, offset, 6);
++    if (addr != NULL) {
++        return get_manuf_name_if_known(addr);
++    } else {
++        return NULL;
++    }
+ }
+ 
+ char* get_hash_manuf_resolved_name(hashmanuf_t* manuf)
+diff --git a/epan/manuf.c b/epan/manuf.c
+index 94adbf5b85..f0c6de5237 100644
+--- a/epan/manuf.c
++++ b/epan/manuf.c
+@@ -125,7 +125,11 @@ const char *
+ ws_manuf_lookup_str(const uint8_t addr[6], const char **long_name_ptr)
+ {
+     uint8_t addr_copy[6];
+-    memcpy(addr_copy, addr, 6);
++    if (addr != NULL) {
++        memcpy(addr_copy, addr, 6);
++    } else {
++        memset(addr_copy, 0, 6); // Initialize to zero if addr is NULL
++    }
+     /* Mask out the broadcast/multicast flag */
+     addr_copy[0] &= 0xFE;
+ 

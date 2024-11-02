@@ -1,0 +1,13 @@
+diff --git a/HTMLparser.c b/HTMLparser.c
+index ba3eb16d..5b242319 100644
+--- a/HTMLparser.c
++++ b/HTMLparser.c
+@@ -3254,7 +3254,7 @@ htmlParseCharDataInternal(htmlParserCtxtPtr ctxt, int readahead) {
+ 
+ static void
+ htmlParseCharData(htmlParserCtxtPtr ctxt) {
+-    htmlParseCharDataInternal(ctxt, 0);
++ * n = - 1 
+ }
+ 
+ /**

@@ -1,0 +1,14 @@
+diff --git a/src/core/SkPathRef.cpp b/src/core/SkPathRef.cpp
+index 6e84a0fad8..ca924a3c50 100644
+--- a/src/core/SkPathRef.cpp
++++ b/src/core/SkPathRef.cpp
+@@ -674,6 +674,9 @@ SkPoint* SkPathRef::growForVerb(int /* SkPath::Verb*/ verb, SkScalar weight) {
+     size_t space = sizeof(uint8_t) + pCnt * sizeof (SkPoint);
+     this->makeSpace(space);
+     this->fVerbs[~fVerbCnt] = verb;
++    // Ensure that the buffer has enough space before accessing
++    this->makeSpace(space);
++
+     SkPoint* ret = fPoints + fPointCnt;
+     fVerbCnt = newVerbCnt;
+     fPointCnt = newPointCnt;

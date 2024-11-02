@@ -1,0 +1,21 @@
+diff --git a/source/cbz/mucbz.c b/source/cbz/mucbz.c
+index 6388b8f21..d2d6da6b7 100644
+--- a/source/cbz/mucbz.c
++++ b/source/cbz/mucbz.c
+@@ -323,9 +323,7 @@ cbz_recognize_doc_content(fz_context *ctx, fz_stream *stream)
+ 
+ 	fz_var(arch);
+ 	fz_var(ret);
+-
+-	fz_try(ctx)
+-	{
++ ( slot ) ; NEW_STRING_Impl ( new_stringimpl, length ) ; buffer = const_cast 
+ 		arch = fz_try_open_archive_with_stream(ctx, stream);
+ 		if (arch == NULL)
+ 			break;
+diff --git a/thirdparty/tesseract b/thirdparty/tesseract
+--- a/thirdparty/tesseract
++++ b/thirdparty/tesseract
+@@ -1 +1 @@
+-Subproject commit a25ae8dc4cc97b191bf5ea11365a05a78c566698
++Subproject commit a25ae8dc4cc97b191bf5ea11365a05a78c566698-dirty

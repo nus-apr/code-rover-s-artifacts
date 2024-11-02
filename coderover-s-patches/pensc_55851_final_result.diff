@@ -1,0 +1,18 @@
+diff --git a/src/pkcs15init/profile.c b/src/pkcs15init/profile.c
+index dbdc535e..6dcb34d5 100644
+--- a/src/pkcs15init/profile.c
++++ b/src/pkcs15init/profile.c
+@@ -1575,7 +1575,12 @@ do_acl(struct state *cur, int argc, char **argv)
+ 	while (argc--) {
+ 		unsigned int	op, method, id;
+ 
+-		strlcpy(oper, *argv++, sizeof(oper));
++        if (strlen(*argv) < sizeof(oper)) {
++            strlcpy(oper, *argv++, sizeof(oper));
++        } else {
++            parse_error(cur, "ACL operation too long: \"%s\"\n", *argv);
++            return 1;
++        }
+ 		if ((what = strchr(oper, '=')) == NULL)
+ 			goto bad;
+ 		*what++ = '\0';

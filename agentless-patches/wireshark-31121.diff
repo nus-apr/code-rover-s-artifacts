@@ -1,0 +1,40 @@
+diff --git a/wireshark/epan/dissectors/packet-vj-comp.c b/wireshark/epan/dissectors/packet-vj-comp.c
+index 27fbd67..a5bccf6 100644
+--- a/wireshark/epan/dissectors/packet-vj-comp.c
++++ b/wireshark/epan/dissectors/packet-vj-comp.c
+@@ -296,18 +296,23 @@ dissect_vjc_uncomp(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void* da
+             pkt_data->frame_headers = (guint8 *)tvb_memdup(wmem_file_scope(), tcpip_tvb, 0, -1);
+         ip_len = (pdata[0] & 0x0F) << 2;
+ 
+-        pkt_data->last_frame = pinfo->num;
+-        pkt_data->header_len = tcp_len;
+-        pkt_data->last_frame_len = tcp_len - ip_len;
+-
+-        this_hdr = wmem_new0(wmem_file_scope(), vjc_hdr_t);
+-        this_hdr->ip_id = GET_16(pdata, 4);
+-        this_hdr->seq = GET_32(pdata, ip_len + 4);
+-        this_hdr->ack = GET_32(pdata, ip_len + 8);
+-        this_hdr->psh = (pdata[ip_len + 13] & 0x08) == 0x08;
+-        this_hdr->win = GET_16(pdata, ip_len + 14);
+-        this_hdr->tcp_chksum = GET_16(pdata, ip_len + 16);
+-        this_hdr->urg = GET_16(pdata, ip_len + 18);
++        if (tcp_len > ip_len + 18) {
++            pkt_data->last_frame = pinfo->num;
++            pkt_data->header_len = tcp_len;
++            pkt_data->last_frame_len = tcp_len - ip_len;
++
++            this_hdr = wmem_new0(wmem_file_scope(), vjc_hdr_t);
++            this_hdr->ip_id = GET_16(pdata, 4);
++            this_hdr->seq = GET_32(pdata, ip_len + 4);
++            this_hdr->ack = GET_32(pdata, ip_len + 8);
++            this_hdr->psh = (pdata[ip_len + 13] & 0x08) == 0x08;
++            this_hdr->win = GET_16(pdata, ip_len + 14);
++            this_hdr->tcp_chksum = GET_16(pdata, ip_len + 16);
++            this_hdr->urg = GET_16(pdata, ip_len + 18);
++            wmem_map_insert(pkt_data->vals, GUINT_TO_POINTER(pinfo->num), this_hdr);
++        } else {
++            // Handle error: insufficient data length
++        }
+         wmem_map_insert(pkt_data->vals, GUINT_TO_POINTER(pinfo->num), this_hdr);
+     }
+     else {

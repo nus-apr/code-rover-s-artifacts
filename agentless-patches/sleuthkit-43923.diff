@@ -1,0 +1,19 @@
+diff --git a/sleuthkit/tsk/fs/ntfs_dent.cpp b/sleuthkit/tsk/fs/ntfs_dent.cpp
+index 4df7f9a..dc8a2e2 100644
+--- a/sleuthkit/tsk/fs/ntfs_dent.cpp
++++ b/sleuthkit/tsk/fs/ntfs_dent.cpp
+@@ -261,8 +261,12 @@ ntfs_dent_copy(NTFS_INFO * ntfs, ntfs_idxentry * idxe,
+         (UTF8 *) ((uintptr_t) name8 +
+             fs_name->name_size), TSKlenientConversion);
+ 
+-    if (retVal != TSKconversionOK) {
+-        *name8 = '\0';
++    if (retVal != TSKconversionOK || name8 >= (UTF8 *) ((uintptr_t) fs_name->name + fs_name->name_size)) {
++        if (name8 < (UTF8 *) ((uintptr_t) fs_name->name + fs_name->name_size)) {
++            *name8 = '\0';
++        } else {
++            fs_name->name[fs_name->name_size - 1] = '\0';
++        }
+         if (tsk_verbose)
+             tsk_fprintf(stderr,
+                 "Error converting NTFS name to UTF8: %d %" PRIuINUM,

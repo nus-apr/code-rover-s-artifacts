@@ -1,0 +1,13 @@
+diff --git a/src/type1/t1load.c b/src/type1/t1load.c
+index 1d35f2c0d..cbdf44f83 100644
+--- a/src/type1/t1load.c
++++ b/src/type1/t1load.c
+@@ -2454,7 +2454,7 @@
+         have_integer = 0;
+       }
+ 
+-      T1_Skip_Spaces( parser );
++ PS_Parser parser ) { if (! ps_parser_skip_to_next_space ( parser ) ) return ; 
+     }
+ 
+   Exit:

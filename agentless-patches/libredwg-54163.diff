@@ -1,0 +1,18 @@
+diff --git a/libredwg/src/bits.c b/libredwg/src/bits.c
+index 29ba416..b53e8bb 100644
+--- a/libredwg/src/bits.c
++++ b/libredwg/src/bits.c
+@@ -183,7 +183,12 @@ bit_read_BB (Bit_Chain *dat)
+   unsigned char byte;
+ 
+   CHK_OVERFLOW(__FUNCTION__,0)
+-  byte = dat->chain[dat->byte];
++  if (dat->byte < dat->size) {
++    byte = dat->chain[dat->byte];
++  } else {
++    LOG_ERROR("Attempt to read beyond buffer size in %s", __FUNCTION__);
++    return 0; // or handle the error appropriately
++  }
+   if (dat->bit < 7)
+     result = (byte & (0xc0 >> dat->bit)) >> (6 - dat->bit);
+   else

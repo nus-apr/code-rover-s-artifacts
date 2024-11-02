@@ -1,0 +1,13 @@
+diff --git a/src/libopensc/pkcs15-oberthur.c b/src/libopensc/pkcs15-oberthur.c
+index 2fb32b8d..f964cd52 100644
+--- a/src/libopensc/pkcs15-oberthur.c
++++ b/src/libopensc/pkcs15-oberthur.c
+@@ -449,7 +449,7 @@ sc_oberthur_parse_publicinfo (struct sc_pkcs15_card *p15card,
+ 	int rv;
+ 
+ 	LOG_FUNC_CALLED(ctx);
+-	for (ii=0; ii<len; ii+=5)   {
++	for (ii=0; ii+4<len; ii+=5)   {  // Ensure there are at least 5 bytes remaining
+ 		unsigned int file_id, size;
+ 
+ 		if(*(buff+ii) != 0xFF)

@@ -1,0 +1,13 @@
+diff --git a/graphicsmagick/coders/topol.c b/graphicsmagick/coders/topol.c
+index 284ddba..438bc6d 100644
+--- a/graphicsmagick/coders/topol.c
++++ b/graphicsmagick/coders/topol.c
+@@ -337,7 +337,7 @@ size_t j;
+   }
+ 
+   j = *i;
+-  while(--*i > 0)
++  while(*i > 0)
+   {
+     if(clone_info->filename[*i]=='.')
+     {

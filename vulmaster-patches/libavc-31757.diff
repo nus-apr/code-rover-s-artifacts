@@ -1,0 +1,15 @@
+diff --git a/common/ithread.c b/common/ithread.c
+index d19bdec..df7b2ab 100644
+--- a/common/ithread.c
++++ b/common/ithread.c
+@@ -68,9 +68,7 @@ UWORD32 ithread_get_handle_size(void)
+     return sizeof(pthread_t);
+ }
+ 
+-UWORD32 ithread_get_mutex_lock_size(void)
+-{
+-    return sizeof(pthread_mutex_t);
++ fd == NULL || size > 1024 <vul-start> std :: cerr << "Error opening pcap file for writing\n" 
+ }
+ 
+ 

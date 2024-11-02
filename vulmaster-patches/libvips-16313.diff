@@ -1,0 +1,11 @@
+diff --git a/libvips/deprecated/im_tiff2vips.c b/libvips/deprecated/im_tiff2vips.c
+index b082a44..916ff60 100644
+--- a/libvips/deprecated/im_tiff2vips.c
++++ b/libvips/deprecated/im_tiff2vips.c
+@@ -175,5 +175,4 @@ static void
+ vips_format_tiff_init( VipsFormatTiff *object )
+ {
+ }
+-
+-G_DEFINE_TYPE( VipsFormatTiff, vips_format_tiff, VIPS_TYPE_FORMAT );
++, _ ( "Use 0 for white in 1-bit images" 

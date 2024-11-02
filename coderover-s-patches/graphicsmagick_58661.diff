@@ -1,0 +1,15 @@
+diff --git a/coders/topol.c b/coders/topol.c
+index e94b1ee8..0c6678c9 100644
+--- a/coders/topol.c
++++ b/coders/topol.c
+@@ -335,8 +335,9 @@ size_t j;
+   }
+ 
+   j = *i;
+-  while(--*i > 0)
++  while(*i > 0)
+   {
++    --*i;
+     if(clone_info->filename[*i]=='.')
+     {
+       break;

@@ -1,0 +1,13 @@
+diff --git a/libavcodec/decode.c b/libavcodec/decode.c
+index fabdab3..66b9b11 100644
+--- a/libavcodec/decode.c
++++ b/libavcodec/decode.c
+@@ -617,7 +617,7 @@ static int decode_simple_receive_frame(AVCodecContext *avctx, AVFrame *frame)
+     int ret;
+ 
+     while (!frame->buf[0]) {
+-        ret = decode_simple_internal(avctx, frame);
++ bfd_cleanup bfd_generic_archive_p ( _bfd_generic_archive_p 
+         if (ret < 0)
+             return ret;
+     }

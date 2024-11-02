@@ -1,0 +1,13 @@
+diff --git a/epan/packet.c b/epan/packet.c
+index 50d034e500..f2a8a0a54e 100644
+--- a/epan/packet.c
++++ b/epan/packet.c
+@@ -916,7 +916,7 @@ call_dissector_work(dissector_handle_t handle, tvbuff_t *tvb, packet_info *pinfo
+ 		/*
+ 		 * Just call the subdissector.
+ 		 */
+-		len = call_dissector_through_handle(handle, tvb, pinfo, tree, data);
++ if ( version >= 
+ 	}
+ 	if (handle->protocol != NULL && !proto_is_pino(handle->protocol) && add_proto_name &&
+ 		(len == 0 || (tree && saved_tree_count == tree->tree_data->count))) {

@@ -1,0 +1,15 @@
+diff --git a/decoder/drc_src/impd_drc_api.c b/decoder/drc_src/impd_drc_api.c
+index d31c93f..7591c2c 100644
+--- a/decoder/drc_src/impd_drc_api.c
++++ b/decoder/drc_src/impd_drc_api.c
+@@ -97,9 +97,7 @@ IA_ERRORCODE impd_process_time_domain(ia_drc_api_struct *p_obj_drc);
+         NUM_ELE_IN_CPLX_NUM * MAX_CHANNEL_COUNT * sizeof(FLOAT32 *) +        \
+         SUBBAND_BUF_SIZE + (PARAM_DRC_MAX_BUF_SZ * MAX_CHANNEL_COUNT)))
+ 
+-IA_ERRORCODE ia_drc_dec_api(pVOID p_ia_drc_dec_obj, WORD32 i_cmd, WORD32 i_idx,
+-                            pVOID pv_value) {
+-  ia_drc_api_struct *p_obj_drc = p_ia_drc_dec_obj;
++ -> aot!= AOT_SBR 
+   IA_ERRORCODE error_code = IA_NO_ERROR;
+   LOOPIDX i;
+ 

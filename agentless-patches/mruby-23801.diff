@@ -1,0 +1,15 @@
+diff --git a/mruby/src/gc.c b/mruby/src/gc.c
+index 59421d5..d21c3ef 100644
+--- a/mruby/src/gc.c
++++ b/mruby/src/gc.c
+@@ -223,7 +223,9 @@ mrb_realloc(mrb_state *mrb, void *p, size_t len)
+   void *p2;
+ 
+   p2 = mrb_realloc_simple(mrb, p, len);
+-  if (len == 0) return p2;
++  if (len == 0) {
++    return NULL;
++  }
+   if (p2 == NULL) {
+     mrb_free(mrb, p);
+     mrb->gc.out_of_memory = TRUE;

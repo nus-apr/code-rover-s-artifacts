@@ -1,0 +1,13 @@
+diff --git a/mruby/src/symbol.c b/mruby/src/symbol.c
+index a533832..cdc922f 100644
+--- a/mruby/src/symbol.c
++++ b/mruby/src/symbol.c
+@@ -60,7 +60,7 @@ presym_find(const char *name, size_t len)
+ static const char*
+ presym_sym2name(mrb_sym sym, mrb_int *lenp)
+ {
+-  if (sym > MRB_PRESYM_MAX) return NULL;
++  if (sym == 0 || sym > MRB_PRESYM_MAX) return NULL;
+   if (lenp) *lenp = presym_table[sym-1].len;
+   return presym_table[sym-1].name;
+ }

@@ -1,0 +1,47 @@
+diff --git a/Zend/zend_object_handlers.c b/Zend/zend_object_handlers.c
+index dab5780779..6a35382638 100644
+--- a/Zend/zend_object_handlers.c
++++ b/Zend/zend_object_handlers.c
+@@ -1062,9 +1062,14 @@ ZEND_API zval *zend_std_get_property_ptr_ptr(zend_object *zobj, zend_string *nam
+ 			if (UNEXPECTED(!(zobj->ce->ce_flags & ZEND_ACC_ALLOW_DYNAMIC_PROPERTIES))) {
+ 				zend_deprecated_dynamic_property(zobj->ce, name);
+ 			}
+-			if (UNEXPECTED(!zobj->properties)) {
+-				rebuild_object_properties(zobj);
+-			}
++    if (UNEXPECTED(!zobj->properties)) {
++        if (EXPECTED(!(OBJ_FLAGS(zobj) & IS_OBJ_FREE_CALLED))) {
++            rebuild_object_properties(zobj);
++        } else {
++            zend_error(E_WARNING, "Attempted to access properties of a freed object");
++            return &EG(error_zval);
++        }
++    }
+ 			retval = zend_hash_update(zobj->properties, name, &EG(uninitialized_zval));
+ 			/* Notice is thrown after creation of the property, to avoid EG(std_property_info)
+ 			 * being overwritten in an error handler. */
+diff --git a/Zend/zend_objects_API.c b/Zend/zend_objects_API.c
+index 80f5b747db..be142dd8dd 100644
+--- a/Zend/zend_objects_API.c
++++ b/Zend/zend_objects_API.c
+@@ -194,11 +194,15 @@ ZEND_API void ZEND_FASTCALL zend_objects_store_del(zend_object *object) /* {{{ *
+ 		ZEND_ASSERT(EG(objects_store).object_buckets != NULL);
+ 		ZEND_ASSERT(IS_OBJ_VALID(EG(objects_store).object_buckets[handle]));
+ 		EG(objects_store).object_buckets[handle] = SET_OBJ_INVALID(object);
+-		if (!(OBJ_FLAGS(object) & IS_OBJ_FREE_CALLED)) {
+-			GC_ADD_FLAGS(object, IS_OBJ_FREE_CALLED);
+-			GC_SET_REFCOUNT(object, 1);
+-			object->handlers->free_obj(object);
+-		}
++    if (!(OBJ_FLAGS(object) & IS_OBJ_FREE_CALLED)) {
++        GC_ADD_FLAGS(object, IS_OBJ_FREE_CALLED);
++        GC_SET_REFCOUNT(object, 1);
++        object->handlers->free_obj(object);
++    }
++    // Ensure no further operations are performed on a freed object
++    if (GC_REFCOUNT(object) == 0) {
++        object->handlers = NULL; // Invalidate handlers after all operations
++    }
+ 		ptr = ((char*)object) - object->handlers->offset;
+ 		GC_REMOVE_FROM_BUFFER(object);
+ 		efree(ptr);

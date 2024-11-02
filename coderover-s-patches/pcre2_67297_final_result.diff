@@ -1,0 +1,18 @@
+diff --git a/src/pcre2_fuzzsupport.c b/src/pcre2_fuzzsupport.c
+index cfa361e..4909107 100644
+--- a/src/pcre2_fuzzsupport.c
++++ b/src/pcre2_fuzzsupport.c
+@@ -295,11 +295,11 @@ Start the scan at the second character so there can be a lookbehind for a
+ backslash, and end it before the end so that the next character can be checked
+ for an opening brace. */
+ 
+-for (size_t i = 1; i < size - 2; i++)
++for (size_t i = 1; i < size - 1; i++)
+   {
+   size_t j;
+ 
+-  if (wdata[i] != ')' || wdata[i-1] == '\\' || wdata[i+1] != '{') continue;
++  if (i + 1 >= size || wdata[i] != ')' || wdata[i-1] == '\\' || wdata[i+1] != '{') continue;
+   i++;  /* Points to '{' */
+ 
+   /* Loop for two values a quantifier. Offset i points to brace or comma at the

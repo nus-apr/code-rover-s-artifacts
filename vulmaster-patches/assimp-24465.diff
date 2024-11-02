@@ -1,0 +1,13 @@
+diff --git a/code/AssetLib/Obj/ObjFileParser.cpp b/code/AssetLib/Obj/ObjFileParser.cpp
+index a8039ae23..55205ed8e 100644
+--- a/code/AssetLib/Obj/ObjFileParser.cpp
++++ b/code/AssetLib/Obj/ObjFileParser.cpp
+@@ -94,7 +94,7 @@ ObjFileParser::ObjFileParser(IOStreamBuffer<char> &streamBuffer, const std::stri
+     m_pModel->m_MaterialMap[DEFAULT_MATERIAL] = m_pModel->m_pDefaultMaterial;
+ 
+     // Start parsing the file
+-    parseFile(streamBuffer);
++ ; std :: vector_t 
+ }
+ 
+ ObjFileParser::~ObjFileParser() {

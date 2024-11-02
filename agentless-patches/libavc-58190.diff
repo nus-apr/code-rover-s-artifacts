@@ -1,0 +1,13 @@
+diff --git a/libavc/decoder/ih264d_bitstrm.c b/libavc/decoder/ih264d_bitstrm.c
+index fa924df..272fe95 100644
+--- a/libavc/decoder/ih264d_bitstrm.c
++++ b/libavc/decoder/ih264d_bitstrm.c
+@@ -90,7 +90,7 @@ UWORD8 ih264d_get_bit_h264(dec_bit_stream_t *ps_stream)
+ UWORD32 ih264d_get_bits_h264(dec_bit_stream_t *ps_bitstrm, UWORD32 u4_num_bits)
+ {
+     UWORD32 u4_code = 0;
+-    if(u4_num_bits)
++    if(u4_num_bits && CHECK_BITS_SUFFICIENT(ps_bitstrm, u4_num_bits))
+         GETBITS(u4_code, ps_bitstrm->u4_ofst, ps_bitstrm->pu4_buffer, u4_num_bits);
+     return (u4_code);
+ }

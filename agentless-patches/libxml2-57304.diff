@@ -1,0 +1,13 @@
+diff --git a/libxml2/HTMLparser.c b/libxml2/HTMLparser.c
+index 1f2e6aa..92a7016 100644
+--- a/libxml2/HTMLparser.c
++++ b/libxml2/HTMLparser.c
+@@ -3368,7 +3368,7 @@ htmlParsePI(htmlParserCtxtPtr ctxt) {
+     xmlParserInputState state;
+     int count = 0;
+ 
+-    if ((RAW == '<') && (NXT(1) == '?')) {
++    if ((CUR_PTR + 1 < ctxt->input->end) && (RAW == '<') && (NXT(1) == '?')) {
+ 	state = ctxt->instate;
+         ctxt->instate = XML_PARSER_PI;
+ 	/*

@@ -1,0 +1,39 @@
+diff --git a/Common++/src/GeneralUtils.cpp b/Common++/src/GeneralUtils.cpp
+index 7d811318..a554c4cf 100644
+--- a/Common++/src/GeneralUtils.cpp
++++ b/Common++/src/GeneralUtils.cpp
+@@ -71,24 +71,23 @@ size_t hexStringToByteArray(const std::string& hexString, uint8_t* resultByteArr
+ 
+ char* cross_platform_memmem(const char* haystack, size_t haystackLen, const char* needle, size_t needleLen)
+ {
++	if (haystack == nullptr || needle == nullptr || needleLen == 0 || haystackLen < needleLen)
++		return nullptr;
++
+ 	char* ptr = (char*)haystack;
+ 	while (needleLen <= (haystackLen - (ptr - haystack)))
+ 	{
+-		if (nullptr != (ptr = (char*)memchr(ptr, (int)(*needle), haystackLen - (ptr - haystack))))
+-		{
+-			// check if there is room to do a memcmp
+-			if(needleLen > (haystackLen - (ptr - haystack)))
+-			{
+-				return nullptr;
+-			}
++		ptr = (char*)memchr(ptr, (int)(*needle), haystackLen - (ptr - haystack));
++		if (ptr == nullptr)
++			break;
+ 
++		// check if there is room to do a memcmp
++		if (needleLen <= (haystackLen - (ptr - haystack)))
++		{
+ 			if (0 == memcmp(ptr, needle, needleLen))
+ 				return ptr;
+-			else
+-				++ptr;
+ 		}
+-		else
+-			break;
++		ptr++; // Ensure ptr is incremented correctly
+ 	}
+ 
+ 	return nullptr;

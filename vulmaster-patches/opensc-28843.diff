@@ -1,0 +1,15 @@
+diff --git a/src/common/simclist.c b/src/common/simclist.c
+index a5da703f..b60ebcdc 100644
+--- a/src/common/simclist.c
++++ b/src/common/simclist.c
+@@ -229,9 +229,7 @@ static simclist_inline long get_random() {
+ #endif
+ 
+ 
+-/* list initialization */
+-int list_init(list_t *simclist_restrict l) {
+-    if (l == NULL) {
++, igraph_i_pajek_parsedata_t * const context, const char * const <vul-start> * value, const char * const 
+         return -1;
+     }
+ 

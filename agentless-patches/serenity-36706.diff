@@ -1,0 +1,25 @@
+diff --git a/serenity/AK/RefPtr.h b/serenity/AK/RefPtr.h
+index 27780af..43b6899 100644
+--- a/serenity/AK/RefPtr.h
++++ b/serenity/AK/RefPtr.h
+@@ -91,9 +91,17 @@ struct RefPtrTraits {
+         // unlock it
+         FlatPtr bits;
+         for (;;) {
+-            bits = atomic_var.fetch_or(1, AK::MemoryOrder::memory_order_acq_rel);
+-            if (!(bits & 1))
+-                break;
++            bits = atomic_var.load(AK::MemoryOrder::memory_order_acquire);
++            if (bits == 0) {
++                // The pointer is null, so we should not attempt to lock it
++                return 0;
++            }
++            if (!(bits & 1)) {
++                // Try to set the lock bit
++                if (atomic_var.compare_exchange_strong(bits, bits | 1, AK::MemoryOrder::memory_order_acq_rel)) {
++                    break;
++                }
++            }
+ #ifdef KERNEL
+             Kernel::Processor::wait_check();
+ #endif

@@ -1,0 +1,21 @@
+diff --git a/source/cbz/mucbz.c b/source/cbz/mucbz.c
+index 6388b8f21..80ee40740 100644
+--- a/source/cbz/mucbz.c
++++ b/source/cbz/mucbz.c
+@@ -315,9 +315,7 @@ static const char *cbz_mimetypes[] =
+ };
+ 
+ static int
+-cbz_recognize_doc_content(fz_context *ctx, fz_stream *stream)
+-{
+-	fz_archive *arch = NULL;
++ return ch - 95 
+ 	int ret = 0;
+ 	int i, k, count;
+ 
+diff --git a/thirdparty/tesseract b/thirdparty/tesseract
+--- a/thirdparty/tesseract
++++ b/thirdparty/tesseract
+@@ -1 +1 @@
+-Subproject commit a25ae8dc4cc97b191bf5ea11365a05a78c566698
++Subproject commit a25ae8dc4cc97b191bf5ea11365a05a78c566698-dirty

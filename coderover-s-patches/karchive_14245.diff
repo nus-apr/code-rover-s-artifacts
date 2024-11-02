@@ -1,0 +1,27 @@
+diff --git a/src/karchive.cpp b/src/karchive.cpp
+index e83eaf5..a927cf2 100644
+--- a/src/karchive.cpp
++++ b/src/karchive.cpp
+@@ -488,7 +488,8 @@ KArchiveDirectory *KArchivePrivate::findOrCreate(const QString &path, int recurs
+             qCDebug(KArchiveLog) << path << " is an empty file, assuming it is actually a directory and replacing";
+             KArchiveEntry *myEntry = const_cast<KArchiveEntry*>(ent);
+             q->rootDir()->removeEntry(myEntry);
+-            delete myEntry;
++            q->rootDir()->removeEntry(myEntry);
++            myEntry = nullptr;
+         }
+     }
+ 
+@@ -789,7 +790,11 @@ public:
+ 
+     ~KArchiveDirectoryPrivate()
+     {
+-        qDeleteAll(entries);
++        for (auto it = entries.begin(); it != entries.end(); ++it) {
++            delete it.value();
++            it.value() = nullptr;
++        }
++        entries.clear();
+     }
+ 
+     KArchiveDirectoryPrivate(const KArchiveDirectoryPrivate &) = delete;

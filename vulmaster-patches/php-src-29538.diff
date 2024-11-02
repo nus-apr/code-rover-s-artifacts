@@ -1,0 +1,15 @@
+diff --git a/src/onig_init.c b/src/onig_init.c
+index c660e7d..d78dc5a 100644
+--- a/src/onig_init.c
++++ b/src/onig_init.c
+@@ -31,9 +31,7 @@
+ 
+ /* onig_init(): deprecated function */
+ extern int
+-onig_init(void)
+-{
+-#if 0
++ endif # endif 
+   OnigEncoding encs[] = {
+     ONIG_ENCODING_UTF8
+   };

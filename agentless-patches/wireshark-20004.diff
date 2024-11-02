@@ -1,0 +1,13 @@
+diff --git a/wireshark/epan/dissectors/packet-wassp.c b/wireshark/epan/dissectors/packet-wassp.c
+index 8657108..bc7b592 100644
+--- a/wireshark/epan/dissectors/packet-wassp.c
++++ b/wireshark/epan/dissectors/packet-wassp.c
+@@ -4376,7 +4376,7 @@ static const char* wassp_match_strval(WASSP_SUBTLV_DECODER_INFO_t *in_ptr, int i
+ 	{
+ 		return NULL;
+ 	}
+-	if (in_ptr->max_entry < in_type)
++	if (in_type >= sizeof(tlvMainTable) / sizeof(tlvMainTable[0]) - 1)
+ 	{
+ 		return NULL;
+ 	}

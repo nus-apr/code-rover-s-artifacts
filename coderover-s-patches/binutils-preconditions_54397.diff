@@ -1,0 +1,28 @@
+diff --git a/bfd/libbfd.c b/bfd/libbfd.c
+index 2781671ddba..77e3d8cc996 100644
+--- a/bfd/libbfd.c
++++ b/bfd/libbfd.c
+@@ -629,6 +629,7 @@ bfd_getb16 (const void *p)
+ bfd_vma
+ bfd_getl16 (const void *p)
+ {
++  if (p == NULL) return 0;  // Check for NULL pointer
+   const bfd_byte *addr = (const bfd_byte *) p;
+   return (addr[1] << 8) | addr[0];
+ }
+diff --git a/bfd/reloc.c b/bfd/reloc.c
+index 164060361a9..f6b1e125e80 100644
+--- a/bfd/reloc.c
++++ b/bfd/reloc.c
+@@ -704,6 +704,11 @@ bfd_perform_relocation (bfd *abfd,
+     {
+       bfd_reloc_status_type cont;
+ 
++      /* Ensure pointers are valid before calling special_function */
++      if (abfd == NULL || reloc_entry == NULL || symbol == NULL || data == NULL ||
++          input_section == NULL || output_bfd == NULL || error_message == NULL)
++        return bfd_reloc_undefined;  // Return error if any pointer is NULL
++
+       /* Note - we do not call bfd_reloc_offset_in_range here as the
+ 	 reloc_entry->address field might actually be valid for the
+ 	 backend concerned.  It is up to the special_function itself

@@ -1,0 +1,15 @@
+diff --git a/AK/Format.cpp b/AK/Format.cpp
+index 683aeadfc6..0436ac83b2 100644
+--- a/AK/Format.cpp
++++ b/AK/Format.cpp
+@@ -1171,9 +1171,7 @@ static bool is_debug_enabled = true;
+ 
+ void set_debug_enabled(bool value)
+ {
+-    is_debug_enabled = value;
+-}
+-
++ ) const { const int64_t size = m_bytes. size ( ) ; return size > 0? m_offset > size : 
+ // On Serenity, dbgln goes to a non-stderr output
+ static bool is_rich_debug_enabled =
+ #if defined(AK_OS_SERENITY)

@@ -1,0 +1,16 @@
+diff --git a/json/src/json.hpp b/json/src/json.hpp
+index 2ec1292..9d622f0 100644
+--- a/json/src/json.hpp
++++ b/json/src/json.hpp
+@@ -6913,6 +6913,11 @@ class basic_json
+         // store and increment index
+         const size_t current_idx = idx++;
+ 
++        if (current_idx >= v.size())
++        {
++            throw std::out_of_range("Index out of range while parsing MessagePack");
++        }
++
+         if (v[current_idx] <= 0xbf)
+         {
+             if (v[current_idx] <= 0x7f) // positive fixint

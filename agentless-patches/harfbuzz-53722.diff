@@ -1,0 +1,24 @@
+diff --git a/harfbuzz/src/hb-buffer.cc b/harfbuzz/src/hb-buffer.cc
+index a4c8c36..3701394 100644
+--- a/harfbuzz/src/hb-buffer.cc
++++ b/harfbuzz/src/hb-buffer.cc
+@@ -1426,8 +1426,10 @@ hb_buffer_set_length (hb_buffer_t  *buffer,
+   if (unlikely (hb_object_is_immutable (buffer)))
+     return length == 0;
+ 
+-  if (unlikely (!buffer->ensure (length)))
++  if (unlikely (!buffer->ensure (length))) {
++    buffer->successful = false;
+     return false;
++  }
+ 
+   /* Wipe the new space */
+   if (length > buffer->len) {
+@@ -1437,6 +1439,7 @@ hb_buffer_set_length (hb_buffer_t  *buffer,
+   }
+ 
+   buffer->len = length;
++  buffer->successful = true;
+ 
+   if (!length)
+   {

@@ -1,0 +1,33 @@
+diff --git a/AK/Format.h b/AK/Format.h
+index 8c9f3184d1..86403b36e8 100644
+--- a/AK/Format.h
++++ b/AK/Format.h
+@@ -255,9 +255,13 @@ public:
+     static_assert(sizeof...(Parameters) <= max_format_arguments);
+ 
+     explicit VariadicFormatParams(const Parameters&... parameters)
+-        : m_data({ TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }... })
+     {
+-        this->set_parameters(m_data);
++        if constexpr (sizeof...(Parameters) > 0) {
++            m_data = { TypeErasedParameter { &parameters, TypeErasedParameter::get_type<Parameters>(), __format_value<Parameters> }... };
++            this->set_parameters(m_data);
++        } else {
++            this->set_parameters({});
++        }
+     }
+ 
+ private:
+@@ -533,7 +537,11 @@ void vdbgln(StringView fmtstr, TypeErasedFormatParams);
+ template<typename... Parameters>
+ void dbgln(CheckedFormatString<Parameters...>&& fmtstr, const Parameters&... parameters)
+ {
+-    vdbgln(fmtstr.view(), VariadicFormatParams { parameters... });
++    if constexpr (sizeof...(Parameters) > 0) {
++        vdbgln(fmtstr.view(), VariadicFormatParams { parameters... });
++    } else {
++        vdbgln(fmtstr.view(), VariadicFormatParams {});
++    }
+ }
+ 
+ inline void dbgln() { dbgln(""); }

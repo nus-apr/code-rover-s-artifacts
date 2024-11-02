@@ -1,0 +1,18 @@
+diff --git a/imagemagick/coders/png.c b/imagemagick/coders/png.c
+index 201d66c..8f7351c 100644
+--- a/imagemagick/coders/png.c
++++ b/imagemagick/coders/png.c
+@@ -6857,8 +6857,11 @@ static Image *ReadOneMNGImage(MngInfo* mng_info,const ImageInfo *image_info,
+             "exit ReadJNGImage() with error");
+         if (mng_info->image != (Image *) NULL)
+           {
+-            CloseBlob(mng_info->image);
+-            mng_info->image=DestroyImageList(mng_info->image);
++            if (mng_info->image != (Image *) NULL)
++              {
++                CloseBlob(mng_info->image);
++                mng_info->image=DestroyImageList(mng_info->image);
++              }
+           }
+         return((Image *) NULL);
+       }

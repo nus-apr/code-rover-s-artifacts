@@ -1,0 +1,21 @@
+diff --git a/snmplib/asn1.c b/snmplib/asn1.c
+index d575476420..66950c66a0 100644
+--- a/snmplib/asn1.c
++++ b/snmplib/asn1.c
+@@ -1226,6 +1226,16 @@ asn_build_header(u_char * data,
+         ERROR_MSG(ebuf);
+         return NULL;
+     }
++
++    if (*datalength < 1 + length) {
++        snprintf(ebuf, sizeof(ebuf),
++                "insufficient buffer length: %lu, required: %lu",
++                (unsigned long)*datalength, (unsigned long)(1 + length));
++        ebuf[ sizeof(ebuf)-1 ] = 0;
++        ERROR_MSG(ebuf);
++        return NULL;
++    }
++
+     *data++ = type;
+     (*datalength)--;
+     return asn_build_length(data, datalength, length);

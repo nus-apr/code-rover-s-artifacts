@@ -1,0 +1,20 @@
+diff --git a/src/flb_http_client.c b/src/flb_http_client.c
+index 5cde41eb3..48eaa3798 100644
+--- a/src/flb_http_client.c
++++ b/src/flb_http_client.c
+@@ -1101,13 +1101,13 @@ int flb_http_do(struct flb_http_client *c, size_t *bytes)
+ 
+     /* check enough space for the ending CRLF */
+     if (header_available(c, crlf) != 0) {
+-        new_size = c->header_size + 2;
++        new_size = c->header_len + 2; // Ensure CRLF is 2 bytes
+         tmp = flb_realloc(c->header_buf, new_size);
+         if (!tmp) {
+             return -1;
+         }
+         c->header_buf = tmp;
+-        c->header_len = new_size;
++        c->header_size = new_size; // Correctly update header_size
+     }
+ 
+     /* Append the ending header CRLF */

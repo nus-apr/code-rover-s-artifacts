@@ -1,0 +1,17 @@
+diff --git a/FuzzerTracePC.cpp b/FuzzerTracePC.cpp
+index c473577..4074f9c 100644
+--- a/FuzzerTracePC.cpp
++++ b/FuzzerTracePC.cpp
+@@ -400,7 +400,11 @@ void TracePC::HandleCmp(uintptr_t PC, T Arg1, T Arg2) {
+ 
+ static size_t InternalStrnlen(const char *S, size_t MaxLen) {
+   size_t Len = 0;
+-  for (; Len < MaxLen && S[Len]; Len++) {}
++  if (S == nullptr) return 0; // Ensure S is not null
++  for (; Len < MaxLen && S[Len]; Len++) {
++    // Ensure we do not read beyond the allocated buffer
++    if (Len >= MaxLen) break;
++  }
+   return Len;
+ }
+ 

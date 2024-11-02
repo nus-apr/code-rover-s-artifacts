@@ -1,0 +1,40 @@
+diff --git a/src/njs_json.c b/src/njs_json.c
+index e740070..5cf08df 100644
+--- a/src/njs_json.c
++++ b/src/njs_json.c
+@@ -1529,12 +1529,13 @@ njs_json_append_string(njs_chb_t *chain, const njs_value_t *value, char quote)
+     end = p + str.size;
+     length = str.length;
+ 
+-    dst = njs_chb_reserve(chain, length + 2);
++    // Calculate the maximum required buffer size, assuming worst-case scenario for escape sequences
++    dst = njs_chb_reserve(chain, length * 6 + 2);
+     if (njs_slow_path(dst == NULL)) {
+         return;
+     }
+ 
+-    dst_end = dst + length + 2;
++    dst_end = dst + length * 6 + 2;
+ 
+     *dst++ = quote;
+ 
+@@ -1584,7 +1585,18 @@ njs_json_append_string(njs_chb_t *chain, const njs_value_t *value, char quote)
+          * space.
+          */
+ 
+-        while (p < end && (dst_end - dst) > 6) {
++        while (p < end) {
++            if (dst_end - dst <= 6) {
++                njs_chb_written(chain, dst - chain->last->pos);
++
++                dst = njs_chb_reserve(chain, 64);
++                if (njs_slow_path(dst == NULL)) {
++                    return;
++                }
++
++                dst_end = dst + 64;
++            }
++
+             if (*p < ' ' || (*p == '\"' && quote == '\"') || *p == '\\') {
+                 break;
+             }

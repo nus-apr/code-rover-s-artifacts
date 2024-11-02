@@ -1,0 +1,12 @@
+diff --git a/php-src/oniguruma/src/regparse.c b/php-src/oniguruma/src/regparse.c
+index 43e0f42..ff2366b 100644
+--- a/php-src/oniguruma/src/regparse.c
++++ b/php-src/oniguruma/src/regparse.c
+@@ -2128,6 +2128,7 @@ onig_node_free(Node* node)
+ 
+   node_free_body(node);
+   xfree(node);
++  node = NULL;
+ }
+ 
+ static void

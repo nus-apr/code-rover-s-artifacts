@@ -1,0 +1,34 @@
+diff --git a/src/core/thread/lowpan.cpp b/src/core/thread/lowpan.cpp
+index 531b320ae..c3dc1a229 100644
+--- a/src/core/thread/lowpan.cpp
++++ b/src/core/thread/lowpan.cpp
+@@ -976,7 +976,7 @@ int Lowpan::DecompressUdpHeader(Ip6::UdpHeader &aUdpHeader, const uint8_t *aBuf,
+     uint16_t       remaining = aBufLength;
+     uint8_t        udpCtl;
+ 
+-    VerifyOrExit(remaining >= 1);
++    VerifyOrExit(remaining >= 1, error = OT_ERROR_PARSE);
+     udpCtl = cur[0];
+     cur++;
+     remaining--;
+@@ -1150,7 +1150,7 @@ otError MeshHeader::Init(const uint8_t *aFrame, uint8_t aFrameLength)
+ {
+     otError error = OT_ERROR_NONE;
+ 
+-    VerifyOrExit(aFrameLength >= 1, error = OT_ERROR_FAILED);
++    VerifyOrExit(aFrameLength >= 1, error = OT_ERROR_PARSE);
+     mDispatchHopsLeft = *aFrame++;
+     aFrameLength--;
+ 
+diff --git a/src/core/thread/mesh_forwarder.cpp b/src/core/thread/mesh_forwarder.cpp
+index 6398181bf..ff9cf0094 100644
+--- a/src/core/thread/mesh_forwarder.cpp
++++ b/src/core/thread/mesh_forwarder.cpp
+@@ -1583,6 +1583,7 @@ otError MeshForwarder::GetFramePriority(uint8_t *           aFrame,
+     }
+     else
+     {
++        VerifyOrExit(aFrameLength >= sizeof(Ip6::UdpHeader), error = OT_ERROR_PARSE);
+         memcpy(&udpHeader, aFrame, sizeof(Ip6::UdpHeader));
+     }
+ 

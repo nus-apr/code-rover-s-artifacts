@@ -1,0 +1,26 @@
+diff --git a/src/symbol.c b/src/symbol.c
+index add093d14..5d28aad6e 100644
+--- a/src/symbol.c
++++ b/src/symbol.c
+@@ -60,7 +60,7 @@ presym_find(const char *name, size_t len)
+ static const char*
+ presym_sym2name(mrb_sym sym, mrb_int *lenp)
+ {
+-  if (sym > MRB_PRESYM_MAX) return NULL;
++  if (sym <= 0 || sym > MRB_PRESYM_MAX) return NULL;
+   if (lenp) *lenp = presym_table[sym-1].len;
+   return presym_table[sym-1].name;
+ }
+@@ -321,8 +321,10 @@ sym2name_len(mrb_state *mrb, mrb_sym sym, char *buf, mrb_int *lenp)
+ 
+   sym >>= SYMBOL_SHIFT;
+   {
+-    const char *name = presym_sym2name(sym, lenp);
+-    if (name) return name;
++    if (sym > 0) {
++      const char *name = presym_sym2name(sym, lenp);
++      if (name) return name;
++    }
+   }
+   sym -= MRB_PRESYM_MAX;
+   

@@ -1,0 +1,15 @@
+diff --git a/crypto/buf/buf.c b/crypto/buf/buf.c
+index 146b1e0..c6f3df5 100644
+--- a/crypto/buf/buf.c
++++ b/crypto/buf/buf.c
+@@ -74,9 +74,7 @@ BUF_MEM *BUF_MEM_new(void) {
+   }
+ 
+   OPENSSL_memset(ret, 0, sizeof(BUF_MEM));
+-  return ret;
+-}
+-
++, sizeof ( * header 
+ void BUF_MEM_free(BUF_MEM *buf) {
+   if (buf == NULL) {
+     return;

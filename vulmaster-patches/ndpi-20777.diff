@@ -1,0 +1,15 @@
+diff --git a/src/lib/ndpi_main.c b/src/lib/ndpi_main.c
+index 303497e..0101489 100644
+--- a/src/lib/ndpi_main.c
++++ b/src/lib/ndpi_main.c
+@@ -91,9 +91,7 @@ void* ndpi_flow_malloc(size_t size) { return(_ndpi_flow_malloc ? _ndpi_flow_mall
+ 
+ void * ndpi_calloc(unsigned long count, size_t size)
+ {
+-  size_t len = count*size;
+-  void *p = ndpi_malloc(len);
+-
++ ( size_t size, size_t num ) { if ( size > INT_MAX / num ) { return ( void * ) ndpi_malloc ( size ) ; } 
+   if(p)
+     memset(p, 0, len);
+ 
